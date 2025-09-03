@@ -1,26 +1,88 @@
-﻿using SimulationEngine.Cli;
+﻿using SimulationEngine.Designs.REBEL2.Fetch;
+using SimulationEngine.Designs.SubCircuits.Latches;
 using SimulationEngine.Infrastructure.DataModel;
 using SimulationEngine.Infrastructure.DataModel.Initializer;
+using SimulationEngine.Simulator.Core.Engine;
 
-var dbContext = new SimulationEngineDbContextFactory().CreateDbContext(args);
-await Initializer.Initialize(dbContext);
-
-foreach (var truthTable in dbContext.TruthTables)
+static void setInputsPrintOutputs(SimulationSession simSession, byte[] inputs)
 {
-    Console.WriteLine($"Title: {truthTable.Title}");
-    Console.WriteLine($"HeptaIndex: {truthTable.HeptaIndex}");
-    Console.WriteLine($"Definition: {string.Join(", ", truthTable.Definition)}");
-    Console.WriteLine();
+    simSession.SetInputs(inputs);
+    Console.WriteLine($"Inputs: {string.Join(", ", inputs)} - Outputs: {string.Join(", ", simSession.GetOutputs())}");
+    //Console.WriteLine();
 }
 
-try
-{
-    await Helpers.AddTriHalfAdderIfNotExists(dbContext);
-    await dbContext.SaveChangesAsync();
-}
-catch (Exception e)
-{
-    Console.WriteLine(e);
-}
 
-Console.WriteLine(dbContext.SubCircuits.Count());
+//var progCtr = new ProgCtr2();
+
+////var dbContext = new SimulationEngineDbContextFactory().CreateDbContext(args);
+////await Initializer.Initialize(dbContext);
+
+////dbContext.SubCircuits.Add(progCtr);
+////dbContext.SaveChanges();
+////return;
+
+
+//var progCtrSim = SimulationSession.Build(progCtr, trace: false);
+////progCtrSim.DumpElaborationSummary();
+////return;
+
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 2, 0, 1]);
+//setInputsPrintOutputs(progCtrSim, [0, 2, 1, 2]);
+//setInputsPrintOutputs(progCtrSim, [2, 2, 1, 2]);
+//setInputsPrintOutputs(progCtrSim, [0, 2, 2, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 2, 2, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 2, 1, 1]);
+//setInputsPrintOutputs(progCtrSim, [2, 2, 1, 1]);
+//setInputsPrintOutputs(progCtrSim, [0, 2, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [2, 2, 0, 0]);
+//setInputsPrintOutputs(progCtrSim, [0, 0, 2, 2]);
+//setInputsPrintOutputs(progCtrSim, [2, 0, 2, 2]);
+
+var latch2 = new _2Latch2();
+var latch2Sim = SimulationSession.Build(latch2, trace: true);
+setInputsPrintOutputs(latch2Sim, [0, 0, 0]);
+setInputsPrintOutputs(latch2Sim, [2, 0, 0]);
+setInputsPrintOutputs(latch2Sim, [0, 0, 1]);
+setInputsPrintOutputs(latch2Sim, [2, 0, 1]);
+setInputsPrintOutputs(latch2Sim, [0, 0, 2]);
+setInputsPrintOutputs(latch2Sim, [2, 0, 2]);
+setInputsPrintOutputs(latch2Sim, [0, 2, 2]);
+setInputsPrintOutputs(latch2Sim, [2, 2, 2]);
+setInputsPrintOutputs(latch2Sim, [0, 2, 2]);

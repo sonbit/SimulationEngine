@@ -1,14 +1,15 @@
+using SimulationEngine.Domain.Utils;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SimulationEngine.Domain.Models
+namespace SimulationEngine.Domain.Models;
+
+public class TruthTable : Base
 {
-    public class TruthTable
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string HeptaIndex { get; set; }
-        public byte[] Definition { get; set; }
-        
-        public List<LogicGate> LogicGates { get; set; }
-    }
+    public string Title { get; set; }
+    public string HeptaIndex { get; set; }
+
+    public List<LogicGate> LogicGates { get; set; } = [];
+
+    [NotMapped] public byte[] Definition => HeptaIndexConverter.GetByteArray(HeptaIndex);
 }

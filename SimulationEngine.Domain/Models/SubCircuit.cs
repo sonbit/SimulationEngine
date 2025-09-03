@@ -1,18 +1,22 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
-namespace SimulationEngine.Domain.Models
+namespace SimulationEngine.Domain.Models;
+
+public class SubCircuit : Base
 {
-    public class SubCircuit
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        
-        public SubCircuit Parent { get; set; }
-        public int? ParentId { get; set; }
-        public List<SubCircuit> Children { get; set; }
-        public List<Input> Inputs { get; set; }
-        public List<LogicGate> LogicGates { get; set; }
-        public List<Output> Outputs { get; set; }
-        public List<Wire> Wires { get; set; }
-    }
+    public string Title { get; set; }
+
+    public SubCircuit Parent { get; set; }
+    public int? ParentId { get; set; }
+    public List<SubCircuit> SubCircuits { get; set; } = [];
+    public List<LogicGate> LogicGates { get; set; } = [];
+    public List<Port> Ports { get; set; } = [];
+    public List<Wire> Wires { get; set; } = [];
+
+    [NotMapped] public List<Port> Inputs => [.. Ports?.Where(p => p.Role.ToString().StartsWith("In"))];
+    [NotMapped] public List<Port> Outputs => [.. Ports?.Where(p => p.Role.ToString().StartsWith("Out"))];
+
+    public SubCircuit() => Title ??= GetType().Name.Trim('_');
 }

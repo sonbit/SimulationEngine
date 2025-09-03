@@ -8,6 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\SimulationEngine.Application\SimulationEngine.Application.csproj" />
+      <ProjectReference Include="..\SimulationEngine.Designs\SimulationEngine.Designs.csproj" />
       <ProjectReference Include="..\SimulationEngine.Infrastructure\SimulationEngine.Infrastructure.csproj" />
     </ItemGroup>
 

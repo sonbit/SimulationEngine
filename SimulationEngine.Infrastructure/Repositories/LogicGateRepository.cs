@@ -5,41 +5,36 @@ using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
 
-namespace SimulationEngine.Infrastructure.Repositories
+namespace SimulationEngine.Infrastructure.Repositories;
+
+public class LogicGateRepository(SimulationEngineDbContext dbContext) : IBaseRepository<LogicGate>
 {
-    public class LogicGateRepository : IBaseRepository<LogicGate>
+    public async Task Create(LogicGate logicGate)
     {
-        private readonly SimulationEngineDbContext _dbContext;
-        
-        public LogicGateRepository(SimulationEngineDbContext dbContext) => _dbContext = dbContext;
-        
-        public async Task Create(LogicGate logicGate)
-        {
-            await _dbContext.LogicGates.AddAsync(logicGate);
-        }
+        await dbContext.LogicGates.AddAsync(logicGate);
+    }
 
-        public async Task<ICollection<LogicGate>> Read()
-        {
-            return await _dbContext.LogicGates.ToArrayAsync();
-        }
+    public async Task<ICollection<LogicGate>> Read()
+    {
+        return await dbContext.LogicGates.ToArrayAsync();
+    }
 
-        public async Task<LogicGate> Read(int id)
-        {
-            return await _dbContext.LogicGates.FindAsync(id);
-        }
+    public async Task<LogicGate> Read(int id)
+    {
+        return await dbContext.LogicGates.FindAsync(id);
+    }
 
-        public async Task Update(int id, LogicGate logicGate)
-        {
-            var existingLogicGate = await Read(id);
-            if (existingLogicGate != null)
-                _dbContext.Entry(existingLogicGate).CurrentValues.SetValues(logicGate);
-        }
+    public async Task Update(int id, LogicGate logicGate)
+    {
+        var existingLogicGate = await Read(id);
+        if (existingLogicGate != null)
+            dbContext.Entry(existingLogicGate).CurrentValues.SetValues(logicGate);
+    }
 
-        public async Task Delete(int id)
-        {
-            var existingLogicGate = await Read(id);
-            if (existingLogicGate != null)
-                _dbContext.LogicGates.Remove(existingLogicGate);
-        }
+    public async Task Delete(int id)
+    {
+        var existingLogicGate = await Read(id);
+        if (existingLogicGate != null)
+            dbContext.LogicGates.Remove(existingLogicGate);
     }
 }

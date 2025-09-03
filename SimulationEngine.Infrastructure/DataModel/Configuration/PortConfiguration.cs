@@ -1,34 +1,27 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimulationEngine.Domain.Models;
 
-namespace SimulationEngine.Infrastructure.DataModel.Configuration
+namespace SimulationEngine.Infrastructure.DataModel.Configuration;
+
+internal class PortConfiguration
 {
-    internal static class PortConfiguration
+    internal static void Configure(EntityTypeBuilder<Port> entity)
     {
-        internal static void Configure(EntityTypeBuilder<Port> entity)
-        {
-            entity
-                .ToTable($"{nameof(Port).ToLower()}s")
-                .HasKey(port => port.Id);
+        entity.HasBaseType<Terminal>();
 
-            entity
-                .Property(port => port.Id)
-                .ValueGeneratedOnAdd();
+        entity
+            .Property(port => port.Role)
+            .HasConversion<string>()
+            .HasColumnName(nameof(Port.Role));
 
-            entity
-                .Property(port => port.Title)
-                .HasMaxLength(50);
+        entity
+            .HasOne(port => port.SubCircuit)
+            .WithMany(subCircuit => subCircuit.Ports)
+            .HasForeignKey(port => port.SubCircuitId);
 
-            entity
-                .HasOne(port => port.Input)
-                .WithMany(input => input.Ports)
-                .HasForeignKey(port => port.InputId);
-            
-            entity
-                .HasOne(port => port.Output)
-                .WithMany(output => output.Ports)
-                .HasForeignKey(port => port.OutputId);
-        }
+        entity
+            .HasIndex(port => new { port.SubCircuitId, port.Role })
+            .IsUnique();
     }
 }

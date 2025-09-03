@@ -1,22 +1,32 @@
-namespace SimulationEngine.Domain.Models
+using SimulationEngine.Domain.Extensions;
+using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Utils;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+
+namespace SimulationEngine.Domain.Models;
+
+public class LogicGate : Base
 {
-    public class LogicGate
+    public LogicGate() { }
+
+    public LogicGate(string heptaIndex)
     {
-        public int Id { get; set; }
-        
-        public Port PortA { get; set; }
-        public int? PortAId { get; set; }
-        public Port PortB { get; set; }
-        public int? PortBId { get; set; }
-        public Port PortC { get; set; }
-        public int? PortCId { get; set; }
-        public Port PortD { get; set; }
-        public int? PortDId { get; set; }
-        public Port PortQ { get; set; }
-        public int? PortQId { get; set; }
-        public TruthTable TruthTable { get; set; }
-        public int TruthTableId { get; set; }
-        public SubCircuit SubCircuit { get; set; }
-        public int? SubCircuitId { get; set; }
+        this.AddPins(heptaIndex);
+
+        TruthTable = new TruthTable { HeptaIndex = heptaIndex };
     }
+
+    public List<Pin> Pins { get; set; } = [];
+    public SubCircuit SubCircuit { get; set; }
+    public int SubCircuitId { get; set; }
+    public TruthTable TruthTable { get; set; }
+    public int TruthTableId { get; set; }
+
+    [NotMapped] public Pin A => Pins.SingleOrDefault(p => p.Role == PinRole.A);
+    [NotMapped] public Pin B => Pins.SingleOrDefault(p => p.Role == PinRole.B);
+    [NotMapped] public Pin C => Pins.SingleOrDefault(p => p.Role == PinRole.C);
+    [NotMapped] public Pin D => Pins.SingleOrDefault(p => p.Role == PinRole.D);
+    [NotMapped] public Pin Q => Pins.SingleOrDefault(p => p.Role == PinRole.Q);
 }
