@@ -1,4 +1,4 @@
-﻿namespace SimulationEngine.Simulator.Algorithms;
+﻿namespace SimulationEngine.Simulator.Utils;
 
 internal sealed class UnionFind<T>(IEqualityComparer<T> equalityComparer)
 {

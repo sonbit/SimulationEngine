@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Simulator.Algorithms;
 using SimulationEngine.Simulator.Core.Interfaces;
 using SimulationEngine.Simulator.Core.Model;
 using SimulationEngine.Simulator.Processes;
