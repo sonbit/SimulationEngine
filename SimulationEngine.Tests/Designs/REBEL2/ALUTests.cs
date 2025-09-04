@@ -1279,11 +1279,11 @@ public class ALUTests(ITestOutputHelper output) : BaseDesignTest(output)
     {
         RunTest(new CMP2(), """
             0000 00001
-            0001 00012
-            0100 00012
-            0020 00000
-            2000 00000
-            2001 00000
+            0001 01002
+            0100 01000
+            0020 20002
+            2000 20000
+            2001 20010
             0101 01011
             0102 01011
             0201 02010
