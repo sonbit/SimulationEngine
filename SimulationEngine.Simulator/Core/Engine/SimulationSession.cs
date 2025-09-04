@@ -133,20 +133,20 @@ public partial class SimulationSession
 
         UnionAllWiresRecursive(subCircuit, unionFind);
 
-        var rootToNet = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
+        var rootTerminalToNet = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
 
         foreach (var terminal in EnumerateAllTerminalsRecursive(subCircuit))
         {
-            var root = unionFind.Find(terminal);
-            if (!rootToNet.TryGetValue(root, out var net))
+            var rootTerminal = unionFind.Find(terminal);
+            if (!rootTerminalToNet.TryGetValue(rootTerminal, out var net))
             {
-                net = new Net($"net({root.Title})");
-                rootToNet[root] = net;
+                net = new Net($"net({rootTerminal.Title})");
+                rootTerminalToNet[rootTerminal] = net;
             }
             map[terminal] = net;
         }
 
-        return [.. rootToNet.Values];
+        return [.. rootTerminalToNet.Values];
     }
 
     private static void BuildProcesses(SubCircuit subCircuit, Dictionary<Terminal, Net> netOf, List<IProcess> processes, string path)
