@@ -15,8 +15,4 @@
       <ProjectReference Include="..\SimulationEngine.Domain\SimulationEngine.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Migrations\" />
-    </ItemGroup>
-
 </Project>
