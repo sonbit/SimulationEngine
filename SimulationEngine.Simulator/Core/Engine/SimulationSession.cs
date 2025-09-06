@@ -90,7 +90,7 @@ public partial class SimulationSession
         {
             foreach (var logicGate in subCircuit.LogicGates)
             {
-                if (logicGate.Pins != null) yield return logicGate.A;
+                if (logicGate.A != null) yield return logicGate.A;
                 if (logicGate.B != null) yield return logicGate.B;
                 if (logicGate.C != null) yield return logicGate.C;
                 if (logicGate.D != null) yield return logicGate.D;
@@ -194,7 +194,7 @@ public partial class SimulationSession
                         "Instantiate distinct copies for each use.");
             }
 
-            int index = 0;
+            var index = 0;
             foreach (var child in subCircuit.SubCircuits!)
                 BuildProcesses(child, netOf, processes, $"{path}#{index++}/{child.Title}");
         }
