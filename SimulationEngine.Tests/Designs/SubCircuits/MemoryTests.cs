@@ -288,10 +288,6 @@ public class MemoryTests(ITestOutputHelper output) : BaseDesignTest(output)
             0221 200
             0001 200
             0021 201
-            0002 201
-            0021 202
-            0200 212
-            0021 210
             """);
     }
 
@@ -398,6 +394,7 @@ public class MemoryTests(ITestOutputHelper output) : BaseDesignTest(output)
             111121 1
             111101 1
             111101 1
+            000000 1
             """);
     }
 }

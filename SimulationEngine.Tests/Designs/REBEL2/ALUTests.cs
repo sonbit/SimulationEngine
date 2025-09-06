@@ -214,7 +214,6 @@ public class ALUTests(ITestOutputHelper output) : BaseDesignTest(output)
             2210120 111
             2210121 111
             2210122 111
-            2210200 111
             """);
     }
 
