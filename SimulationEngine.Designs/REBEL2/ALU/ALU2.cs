@@ -39,11 +39,12 @@ public class ALU2 : SubCircuit
         var addSub2 = new AddSub2 { Parent = this };
         var cmp2 = new CMP2 { Parent = this };
         var cmp2Tritwise = new CMP2Tritwise { Parent = this };
-        var _2MUX2_0 = new _2MUX2_Reverse { Parent = this };
-        var _2MUX2_1 = new _2MUX2_Reverse { Parent = this };
-        var _2MUX2_2 = new _2MUX2_Reverse { Parent = this };
+        var _2MUX2_0 = new _2MUX2 { Parent = this };
+        var _2MUX2_1 = new _2MUX2 { Parent = this };
+        var _2MUX2_2 = new _2MUX2 { Parent = this };
         var _3MUX2_0 = new _3MUX2 { Parent = this };
         var _3MUX2_1 = new _3MUX2 { Parent = this };
+        SubCircuits = [shift2, _2TritMul, addSub2, cmp2, cmp2Tritwise, _2MUX2_0, _2MUX2_1, _2MUX2_2, _3MUX2_0, _3MUX2_1];
 
         this.AddWires([
             (A1, shift2.A1),
@@ -82,12 +83,12 @@ public class ALU2 : SubCircuit
             (_2TritMul.Q0, _2MUX2_0.A0),
 
             (Func0, _3MUX2_0.Sel),
-            (cmp2.Min1, _3MUX2_0.C1),
-            (cmp2.Min0, _3MUX2_0.C0),
+            (cmp2.Max1, _3MUX2_0.C1),
+            (cmp2.Max0, _3MUX2_0.C0),
             (cmp2.Cmp, _3MUX2_0.B1),
             (cmp2.Cmp, _3MUX2_0.B0),
-            (cmp2.Max1, _3MUX2_0.A1),
-            (cmp2.Max0, _3MUX2_0.A0),
+            (cmp2.Min1, _3MUX2_0.A1),
+            (cmp2.Min0, _3MUX2_0.A0),
 
             (addSub2.Q2, DGDDDDDAD.C),
             (Func2, DGDDDDDAD.B),

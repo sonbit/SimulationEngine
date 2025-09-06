@@ -11,10 +11,10 @@ public class CMP2 : SubCircuit
     public Port B0 => Ports.Single(p => p.Role == PortRole.In1);
     public Port A1 => Ports.Single(p => p.Role == PortRole.In2);
     public Port A0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Max1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Max0 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Min1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Min0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port Min1 => Ports.Single(p => p.Role == PortRole.Out0);
+    public Port Min0 => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port Max1 => Ports.Single(p => p.Role == PortRole.Out2);
+    public Port Max0 => Ports.Single(p => p.Role == PortRole.Out3);
     public Port Cmp => Ports.Single(p => p.Role == PortRole.Out4);
 
     public CMP2()
@@ -24,15 +24,15 @@ public class CMP2 : SubCircuit
             (nameof(B0), PortRole.In1),
             (nameof(A1), PortRole.In2),
             (nameof(A0), PortRole.In3),
-            (nameof(Max1), PortRole.Out0),
-            (nameof(Max0), PortRole.Out1),
-            (nameof(Min1), PortRole.Out2),
-            (nameof(Min1), PortRole.Out3),
+            (nameof(Min1), PortRole.Out0),
+            (nameof(Min0), PortRole.Out1),
+            (nameof(Max1), PortRole.Out2),
+            (nameof(Max1), PortRole.Out3),
             (nameof(Cmp), PortRole.Out4)]);
 
         var _2TritComp = new _2TritComp { Parent = this };
-        var _2MUX2_0 = new _2MUX2_Reverse { Parent = this };
-        var _2MUX2_1 = new _2MUX2_Reverse { Parent = this };
+        var _2MUX2_0 = new _2MUX2 { Parent = this };
+        var _2MUX2_1 = new _2MUX2 { Parent = this };
         SubCircuits = [_2TritComp, _2MUX2_0, _2MUX2_1];
 
         this.AddWires([
@@ -53,10 +53,10 @@ public class CMP2 : SubCircuit
             (B1, _2MUX2_1.A1),
             (B0, _2MUX2_1.A0),
 
-            (_2MUX2_0.Q1, Max1),
-            (_2MUX2_0.Q0, Max0),
-            (_2MUX2_1.Q1, Min1),
-            (_2MUX2_1.Q0, Min0),
+            (_2MUX2_0.Q1, Min1),
+            (_2MUX2_0.Q0, Min0),
+            (_2MUX2_1.Q1, Max1),
+            (_2MUX2_1.Q0, Max0),
             (_2TritComp.Q, Cmp)]);
     }
 }
