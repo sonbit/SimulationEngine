@@ -1,6 +1,6 @@
 namespace SimulationEngine.Domain.Models;
 
-public class Wire : Base
+public class Wire : BaseEntity
 {
     public Terminal StartTerminal { get; set; }
     public int StartTerminalId { get; set; }

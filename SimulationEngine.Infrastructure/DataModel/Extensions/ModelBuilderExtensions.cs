@@ -13,7 +13,7 @@ public static class ModelBuilderExtensions
             if (entity is null || entityType.IsOwned() || entityType.BaseType != null) 
                 continue;
 
-            var idPropertyString = nameof(Base.Id);
+            var idPropertyString = nameof(BaseEntity.Id);
             if (entityType.FindProperty(idPropertyString) != null)
             {
                 var entityTypeBuilder = modelBuilder.Entity(entity);

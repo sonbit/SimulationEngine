@@ -2,7 +2,7 @@
 
 namespace SimulationEngine.Domain.Models;
 
-public abstract class Terminal : Base
+public abstract class Terminal : BaseEntity
 {
     public TerminalType Type { get; private set; }
     public string Title { get; set; }

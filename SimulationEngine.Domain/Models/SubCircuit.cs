@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace SimulationEngine.Domain.Models;
 
-public class SubCircuit : Base
+public class SubCircuit : BaseEntity
 {
     public string Title { get; set; }
 

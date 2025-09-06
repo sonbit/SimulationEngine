@@ -1,6 +1,6 @@
 ﻿namespace SimulationEngine.Domain.Models;
 
-public abstract class Base
+public abstract class BaseEntity
 {
     public int Id { get; set; }
 }

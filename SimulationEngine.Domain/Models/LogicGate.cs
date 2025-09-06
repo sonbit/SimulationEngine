@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SimulationEngine.Domain.Models;
 
-public class LogicGate : Base
+public class LogicGate : BaseEntity
 {
     public LogicGate() { }
 
