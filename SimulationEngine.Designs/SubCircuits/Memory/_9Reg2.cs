@@ -40,26 +40,26 @@ public class _9Reg2 : SubCircuit
             (nameof(RdData01), PortRole.Out2),
             (nameof(RdData00), PortRole.Out3)]);
 
-        var _9DEMUX = new _9DEMUX { Parent = this };
+        var _9BDEMUX = new _9BDEMUX { Parent = this };
         var _8RegArray2 = new _8RegArray2 { Parent = this };
         var _9MUX2_0 = new _9MUX2 { Parent = this };
         var _9MUX2_1 = new _9MUX2 { Parent = this };
-        SubCircuits = [_9DEMUX, _8RegArray2, _9MUX2_0, _9MUX2_1];
+        SubCircuits = [_9BDEMUX, _8RegArray2, _9MUX2_0, _9MUX2_1];
 
         this.AddWires([
-            (WrAddr1, _9DEMUX.Sel1),
-            (WrAddr0, _9DEMUX.Sel0),
-            (WrReg, _9DEMUX.Clk),
+            (WrAddr1, _9BDEMUX.Sel1),
+            (WrAddr0, _9BDEMUX.Sel0),
+            (WrReg, _9BDEMUX.Clk),
 
-            (_9DEMUX.ClkQ8, _8RegArray2.Clk8),
-            (_9DEMUX.ClkQ7, _8RegArray2.Clk7),
-            (_9DEMUX.ClkQ6, _8RegArray2.Clk6),
-            (_9DEMUX.ClkQ5, _8RegArray2.Clk5),
-            (_9DEMUX.ClkQ4, _8RegArray2.Clk4),
-            (_9DEMUX.ClkQ3, _8RegArray2.Clk3),
-            (_9DEMUX.ClkQ2, _8RegArray2.Clk2),
-            (_9DEMUX.ClkQ1, _8RegArray2.Clk1),
-            (_9DEMUX.ClkQ0, _8RegArray2.Clk0),
+            (_9BDEMUX.ClkQ8, _8RegArray2.Clk8),
+            (_9BDEMUX.ClkQ7, _8RegArray2.Clk7),
+            (_9BDEMUX.ClkQ6, _8RegArray2.Clk6),
+            (_9BDEMUX.ClkQ5, _8RegArray2.Clk5),
+            (_9BDEMUX.ClkQ4, _8RegArray2.Clk4),
+            (_9BDEMUX.ClkQ3, _8RegArray2.Clk3),
+            (_9BDEMUX.ClkQ2, _8RegArray2.Clk2),
+            (_9BDEMUX.ClkQ1, _8RegArray2.Clk1),
+            (_9BDEMUX.ClkQ0, _8RegArray2.Clk0),
             (WrData1, _8RegArray2.Din1),
             (WrData0, _8RegArray2.Din0),
 

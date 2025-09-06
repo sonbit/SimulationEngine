@@ -27,31 +27,31 @@ public class Register9 : SubCircuit
             (nameof(WrData), PortRole.In5),
             (nameof(Q), PortRole.Out0)]);
 
-        var _9Demux = new _9DEMUX { Parent = this };
+        var demux = new DEMUX { Parent = this };
         var ram3_0 = new RAM3 { Parent = this };
         var ram3_1 = new RAM3 { Parent = this };
         var ram3_2 = new RAM3 { Parent = this };
         var mux = new MUX { Parent = this };
-        SubCircuits = [_9Demux, ram3_0, ram3_1, ram3_2, mux];
+        SubCircuits = [demux, ram3_0, ram3_1, ram3_2, mux];
 
         this.AddWires([
-            (WrAddr1, _9Demux.Sel1),
-            (WrAddr0, _9Demux.Sel0),
-            (Clk, _9Demux.Clk),
+            (WrAddr1, demux.Sel1),
+            (WrAddr0, demux.Sel0),
+            (Clk, demux.Clk),
 
-            (_9Demux.ClkQ8, ram3_0.Clk2),
-            (_9Demux.ClkQ7, ram3_0.Clk1),
-            (_9Demux.ClkQ6, ram3_0.Clk0),
+            (demux.ClkQ8, ram3_0.Clk2),
+            (demux.ClkQ7, ram3_0.Clk1),
+            (demux.ClkQ6, ram3_0.Clk0),
             (WrData, ram3_0.A),
 
-            (_9Demux.ClkQ5, ram3_1.Clk2),
-            (_9Demux.ClkQ4, ram3_1.Clk1),
-            (_9Demux.ClkQ3, ram3_1.Clk0),
+            (demux.ClkQ5, ram3_1.Clk2),
+            (demux.ClkQ4, ram3_1.Clk1),
+            (demux.ClkQ3, ram3_1.Clk0),
             (WrData, ram3_1.A),
 
-            (_9Demux.ClkQ2, ram3_2.Clk2),
-            (_9Demux.ClkQ1, ram3_2.Clk1),
-            (_9Demux.ClkQ0, ram3_2.Clk0),
+            (demux.ClkQ2, ram3_2.Clk2),
+            (demux.ClkQ1, ram3_2.Clk1),
+            (demux.ClkQ0, ram3_2.Clk0),
             (WrData, ram3_2.A),
 
             (RdAddr1, mux.Addr1),

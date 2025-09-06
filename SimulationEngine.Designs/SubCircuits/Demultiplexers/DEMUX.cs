@@ -4,7 +4,7 @@ using SimulationEngine.Domain.Models.Enums;
 
 namespace SimulationEngine.Designs.SubCircuits.Demultiplexers;
 
-public class _9DEMUX : SubCircuit
+public class DEMUX : SubCircuit
 {
     public Port Sel1 => Ports.Single(p => p.Role == PortRole.In0);
     public Port Sel0 => Ports.Single(p => p.Role == PortRole.In1);
@@ -19,7 +19,7 @@ public class _9DEMUX : SubCircuit
     public Port ClkQ1 => Ports.Single(p => p.Role == PortRole.Out7);
     public Port ClkQ0 => Ports.Single(p => p.Role == PortRole.Out8);
 
-    public _9DEMUX()
+    public DEMUX()
     {
         this.AddPorts([
             (nameof(Sel1), PortRole.In0),
