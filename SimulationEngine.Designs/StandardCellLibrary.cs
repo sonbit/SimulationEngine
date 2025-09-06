@@ -4,8 +4,8 @@ public static class StandardCellLibrary
 {
     public static Dictionary<string, string> GetArity1() => new()
     {
-        { "2", "INVERT" },
-        { "K", "BUFFER" },
+        //{ "2", "INVERT" },
+        //{ "K", "BUFFER" },
         { "0", "CONST_LOW" },
         { "2", "NTI" },
         { "5", "STI" },
@@ -37,7 +37,7 @@ public static class StandardCellLibrary
         { "R99", "ANY" },
         { "4HH", "NANY" },
         { "7PB", "SUM" },
-        { "RDC", "CONS" },
+        //{ "RDC", "CONS" },
         { "4DE", "NCONS" },
         { "PC0", "MIN" },
         { "ZRP", "MAX" },

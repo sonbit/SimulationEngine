@@ -23,13 +23,11 @@ internal static class TruthTableConfiguration
             .WithOne(logicGate => logicGate.TruthTable)
             .HasForeignKey(logicGate => logicGate.TruthTableId);
 
-        //entity
-        //    .HasIndex(truthTable => truthTable.HeptaIndex)
-        //    .IsUnique();
+        entity
+            .HasIndex(truthTable => truthTable.HeptaIndex)
+            .IsUnique();
 
         entity
             .ToTable(table => table.HasCheckConstraint("CK_TruthTable_HeptaIndexLength", "length([HeptaIndex]) IN (1,3,9,27,81)"));
     }
 }
-
-// Enfore truthtable uniqueness / reuse - Same for subcircuits / logic gates if it can be proen to be equal - e.g. same logic gates and same amount of ports
