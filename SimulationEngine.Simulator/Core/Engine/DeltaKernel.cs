@@ -26,7 +26,7 @@ internal sealed class DeltaKernel
         foreach (var process in processes) 
             ScheduleDelta(process);
 
-        RunToQuiescence();
+        IterateProcesses();
     }
 
     public void Set(Net net, byte value)
@@ -35,10 +35,10 @@ internal sealed class DeltaKernel
             Console.WriteLine($"set {net.Name} -> {value}");
 
         net.Propose(value, this, null);
-        RunToQuiescence();
+        IterateProcesses();
     }
 
-    private void RunToQuiescence()
+    private void IterateProcesses()
     {
         int iterations = 0;
 

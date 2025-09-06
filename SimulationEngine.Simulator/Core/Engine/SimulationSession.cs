@@ -52,21 +52,21 @@ public partial class SimulationSession
 
     public void SetInput(string title, byte value)
     {
-        if (!_inputByTitle.TryGetValue(title, out var p))
+        if (!_inputByTitle.TryGetValue(title, out var port))
             throw new KeyNotFoundException($"Input '{title}' not found. Known: {string.Join(", ", _inputByTitle.Keys)}");
 
-        _deltaKernel.Set(_netOfTerminals[p], value);
+        _deltaKernel.Set(_netOfTerminals[port], value);
     }
 
-    public byte[] GetOutputs() => [.. SubCircuit.Outputs.Select(p => GetOutput(p.Title))];
+    public byte[] GetOutputs() => [.. SubCircuit.Outputs.Select(port => GetOutput(port.Title))];
 
 
     public byte GetOutput(string title)
     {
-        if (!_outputByTitle.TryGetValue(title, out var p))
+        if (!_outputByTitle.TryGetValue(title, out var port))
             throw new KeyNotFoundException($"Output '{title}' not found. Known: {string.Join(", ", _outputByTitle.Keys)}");
 
-        return _netOfTerminals[p].Current;
+        return _netOfTerminals[port].CurrentValue;
     }
 
     private static void ReportNetIssues(IEnumerable<Net> nets)

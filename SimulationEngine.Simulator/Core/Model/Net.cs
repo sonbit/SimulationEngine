@@ -6,13 +6,13 @@ namespace SimulationEngine.Simulator.Core.Model;
 internal sealed class Net(string name)
 {
     public string Name { get; } = name;
-    public byte Current { get; private set; }
-    public byte Next { get; private set; }
+    public byte CurrentValue { get; private set; }
+    public byte NextValue { get; private set; }
     public bool Dirty { get; private set; }
 
     public IProcess? Driver { get; private set; }
     public int DriverCount { get; private set; }
-    public IProcess? LastWriter { get; private set; }
+    public IProcess? LastDriver { get; private set; }
 
     public List<IProcess> Fanout { get; private set; } = [];
 
@@ -24,12 +24,12 @@ internal sealed class Net(string name)
 
     public void Propose(byte value, DeltaKernel simKernel, IProcess? process = null)
     {
-        if (Dirty && Next == value) 
+        if (Dirty && NextValue == value) 
             return;
 
-        Next = value;
+        NextValue = value;
         Dirty = true;
-        LastWriter = process;
+        LastDriver = process;
 
         simKernel.MarkNetDirty(this);
     }
@@ -40,12 +40,12 @@ internal sealed class Net(string name)
             return false;
         Dirty = false;
 
-        if (Current == Next) 
+        if (CurrentValue == NextValue) 
             return false;
-        Current = Next;
+        CurrentValue = NextValue;
 
         if (simKernel.Trace) 
-            Console.WriteLine($"  commit {Name} := {Current} (by {LastWriter?.Name ?? "stimulus"})");
+            Console.WriteLine($"  commit {Name} := {CurrentValue} (by {LastDriver?.Name ?? "stimulus"})");
 
         foreach (var process in Fanout) 
             simKernel.ScheduleDelta(process);

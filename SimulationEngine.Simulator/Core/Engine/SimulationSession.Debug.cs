@@ -28,11 +28,11 @@ public partial class SimulationSession
             Console.WriteLine($"  [{tag}] {net.Name} members=({string.Join(", ", portTitles)})");
         }
 
-        foreach (var n in noFanout.Take(5))
-            Show(n, _netOfTerminals, "no-fanout");
+        foreach (var net in noFanout.Take(5))
+            Show(net, _netOfTerminals, "no-fanout");
 
-        foreach (var n in noDriver.Where(n => !_inputByTitle.Values.Any(p => _netOfTerminals[p] == n)).Take(5))
-            Show(n, _netOfTerminals, "no-driver");
+        foreach (var net in noDriver.Where(n => !_inputByTitle.Values.Any(p => _netOfTerminals[p] == n)).Take(5))
+            Show(net, _netOfTerminals, "no-driver");
     }
 
     public void PrintOutputDetails(Port port) => PrintOutputDetails(port.Title);
@@ -56,14 +56,14 @@ public partial class SimulationSession
         {
             Console.WriteLine($"[diag] {portTitle}: driven by {gateProcess.Name}");
 
-            var a = gateProcess._a?.Current ?? 0;
-            var b = gateProcess._b?.Current ?? 0;
-            var c = gateProcess._c?.Current ?? 0;
-            var d = gateProcess._d?.Current ?? 0;
+            var a = gateProcess._a?.CurrentValue ?? 0;
+            var b = gateProcess._b?.CurrentValue ?? 0;
+            var c = gateProcess._c?.CurrentValue ?? 0;
+            var d = gateProcess._d?.CurrentValue ?? 0;
 
             Console.WriteLine($"       inputs: A={a} B={b} C={c} D={d}");
         }
 
-        Console.WriteLine($"  LastWriter: {net.LastWriter?.Name ?? "stimulus"}");
+        Console.WriteLine($"  LastWriter: {net.LastDriver?.Name ?? "stimulus"}");
     }
 }
