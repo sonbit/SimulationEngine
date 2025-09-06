@@ -42,5 +42,21 @@ public enum PortRole
     Out16,
     Out17,
     Out18,
-    Out19
+    Out19,
+    Out20,
+    Out21,
+    Out22,
+    Out23,
+    Out24,
+    Out25,
+    Out26,
+    Out27,
+    Out28,
+    Out29,
+    Out30,
+    Out31,
+    Out32,
+    Out33,
+    Out34,
+    Out35
 }
