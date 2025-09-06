@@ -44,7 +44,7 @@ public abstract class BaseDesignTest(ITestOutputHelper output)
         }
 
         stopWatch.Stop();
-        output.WriteLine($"Elapsed time: {stopWatch.ElapsedMilliseconds}ms");
+        output.WriteLine($"Elapsed time: {stopWatch.Elapsed}");
     }
 
     private static string GetEvaluationString(int lineNumber, TestVector testVector, byte[] outputs, bool equal)
