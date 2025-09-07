@@ -1,79 +1,76 @@
-﻿using SimulationEngine.Designs.REBEL2.Fetch;
-using SimulationEngine.Designs.SubCircuits.Latches;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using SimulationEngine.Application.Services;
+using SimulationEngine.Application.Services.Interfaces;
+using SimulationEngine.Cli.Commands;
+using SimulationEngine.Cli.Commands.Database.SubCircuit;
+using SimulationEngine.Cli.Commands.Database.TruthTable;
+using SimulationEngine.Cli.Commands.Simulation;
+using SimulationEngine.Cli.Composition;
+using SimulationEngine.Cli.IOHandlers;
+using SimulationEngine.Cli.Renderers;
+using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
-using SimulationEngine.Simulator.Core.Engine;
+using SimulationEngine.Infrastructure.Repositories;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
-static void setInputsPrintOutputs(SimulationSession simSession, byte[] inputs)
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureLogging(logging =>
+    {
+        logging.ClearProviders();
+    })
+    .ConfigureServices(services =>
+    {
+        services.AddDbContext<SimulationEngineDbContext>(opts => opts.UseSqlite("Data Source=SimulationEngine.db"));
+        services.AddScoped<ISubCircuitRepository, SubCircuitRepository>();
+        services.AddScoped<ITruthTableRepository, TruthTableRepository>();
+        services.AddScoped<ISubCircuitService, SubCircuitService>();
+        services.AddScoped<ITruthTableService, TruthTableService>();
+
+        services.AddSingleton(sp => AnsiConsole.Console);
+        services.AddSingleton<IInteraction, Interaction>();
+        services.AddSingleton<IRenderer, Renderer>();
+
+        services.AddScoped<SubCircuitFindCommand>();
+        services.AddScoped<SubCircuitListCommand>();
+        services.AddScoped<SubCircuitShowTreeCommand>();
+
+        services.AddScoped<TruthTableFindCommand>();
+        services.AddScoped<TruthTableListCommand>();
+    })
+    .Build();
+
+var app = new CommandApp(new TypeRegistrar(host.Services));
+app.Configure(cfg =>
 {
-    simSession.SetInputs(inputs);
-    Console.WriteLine($"Inputs: {string.Join(", ", inputs)} - Outputs: {string.Join(", ", simSession.GetOutputs())}");
-    //Console.WriteLine();
-}
+    cfg.SetApplicationName(nameof(SimulationEngine));
 
+    cfg.AddCommand<MainMenuCommand>("menu");
 
-//var progCtr = new ProgCtr2();
+    cfg.AddBranch("simulation", sim =>
+    {
+        sim.AddCommand<SimListCommand>("list").WithDescription("List SubCircuits");
+        sim.AddCommand<SimRunCommand>("run").WithDescription("Simulate a SubCircuit by Id");
+    });
 
-//var progCtrSim = SimulationSession.Build(progCtr, trace: false);
-////progCtrSim.DumpElaborationSummary();
-////return;
+    cfg.AddBranch("db", db =>
+    {
+        db.AddBranch("subcircuits", sc =>
+        {
+            sc.AddCommand<SubCircuitListCommand>("list").WithDescription("List SubCircuits; optionally pick one");
+            sc.AddCommand<SubCircuitFindCommand>("find").WithDescription("Find SubCircuit by Id");
+            sc.AddCommand<SubCircuitShowTreeCommand>("tree").WithDescription("Show a tree of SubCircuit's children and truth tables");
+        });
 
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 2, 0, 1]);
-//setInputsPrintOutputs(progCtrSim, [0, 2, 1, 2]);
-//setInputsPrintOutputs(progCtrSim, [2, 2, 1, 2]);
-//setInputsPrintOutputs(progCtrSim, [0, 2, 2, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 2, 2, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 2, 1, 1]);
-//setInputsPrintOutputs(progCtrSim, [2, 2, 1, 1]);
-//setInputsPrintOutputs(progCtrSim, [0, 2, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [2, 2, 0, 0]);
-//setInputsPrintOutputs(progCtrSim, [0, 0, 2, 2]);
-//setInputsPrintOutputs(progCtrSim, [2, 0, 2, 2]);
+        db.AddBranch("truthtables", tt =>
+        {
+            tt.AddCommand<TruthTableListCommand>("list").WithDescription("List TruthTables");
+            tt.AddCommand<TruthTableFindCommand>("find").WithDescription("Find TruthTable by Id");
+        });
+    });
+});
 
-var latch2 = new _2Latch2();
-var latch2Sim = SimulationSession.Build(latch2, trace: true);
-setInputsPrintOutputs(latch2Sim, [0, 0, 0]);
-setInputsPrintOutputs(latch2Sim, [2, 0, 0]);
-setInputsPrintOutputs(latch2Sim, [0, 0, 1]);
-setInputsPrintOutputs(latch2Sim, [2, 0, 1]);
-setInputsPrintOutputs(latch2Sim, [0, 0, 2]);
-setInputsPrintOutputs(latch2Sim, [2, 0, 2]);
-setInputsPrintOutputs(latch2Sim, [0, 2, 2]);
-setInputsPrintOutputs(latch2Sim, [2, 2, 2]);
-setInputsPrintOutputs(latch2Sim, [0, 2, 2]);
+await app.RunAsync(args.Length == 0 ? ["menu"] : args);
