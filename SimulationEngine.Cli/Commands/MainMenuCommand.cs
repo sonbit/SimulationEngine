@@ -1,4 +1,6 @@
 ﻿using SimulationEngine.Cli.Commands.Database;
+using SimulationEngine.Cli.Commands.Database.SubCircuit;
+using SimulationEngine.Cli.Commands.Database.TruthTable;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
 using Spectre.Console;
@@ -22,16 +24,18 @@ public sealed class MainMenuCommand : AsyncCommand
             });
             cfg.AddBranch("db", db =>
             {
+                db.AddCommand<DatabaseMenuCommand>("menu");
+
                 db.AddBranch("subcircuits", sub =>
                 {
-                    sub.AddCommand<DbSubListCommand>("list");
-                    sub.AddCommand<DbSubFindCommand>("find");
-                    sub.AddCommand<DbSubTreeCommand>("tree");
+                    sub.AddCommand<SubCircuitListCommand>("list");
+                    sub.AddCommand<SubCircuitFindCommand>("find");
+                    sub.AddCommand<SubCircuitShowTreeCommand>("tree");
                 });
                 db.AddBranch("truthtables", tt =>
                 {
-                    tt.AddCommand<DbTtListCommand>("list");
-                    tt.AddCommand<DbTtFindCommand>("find");
+                    tt.AddCommand<TruthTableListCommand>("list");
+                    tt.AddCommand<TruthTableFindCommand>("find");
                 });
             });
         });
@@ -54,7 +58,7 @@ public sealed class MainMenuCommand : AsyncCommand
                     await _inner.RunAsync(["simulation", "list"]);
                     break;
                 case MainChoice.Database:
-                    await _inner.RunAsync(["db", "subcircuits", "list"]);
+                    await _inner.RunAsync(["db", "menu"]);
                     break;
                 case MainChoice.Exit:
                     return 0;

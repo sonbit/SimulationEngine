@@ -1,57 +1,65 @@
 ﻿using Microsoft.VisualBasic;
 using SimulationEngine.Application.Services.Interfaces;
+using SimulationEngine.Application.Utils;
 using SimulationEngine.Cli.IOHandlers;
 using SimulationEngine.Domain.Models;
+using SimulationEngine.Simulator.Core.Engine;
 using Spectre.Console;
 using Spectre.Console.Cli;
 using System.Text;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
-public sealed class SimListCommand(ISubCircuitService svc, IInteraction interaction) : AsyncCommand
+public sealed class SimListCommand(ISubCircuitService service, IInteraction interaction) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
-        var all = await svc.GetAllAsync();
-
-        // Let user choose path
-        var path = AnsiConsole.Prompt(
-            new SelectionPrompt<string>().Title("Simulation")
-                .AddChoices("Pick from list", "Enter id", "Back"));
+        var path = AnsiConsole.Prompt(new SelectionPrompt<string>().Title("Simulation").AddChoices("Pick from list", "Enter id", "Back"));
 
         SubCircuit? subCircuit = path switch
         {
-            "Pick from list" => interaction.SelectOrBack("Select subcircuit", all, s => $"{s.Title} [grey]({s.Id})[/]"),
-            "Enter id" => await svc.GetByIdAsync(interaction.AskId("Enter id:")),
+            "Pick from list" => interaction.SelectOrBack("Select subcircuit", await service.GetAllAsync(), s => $"{s.Title} [grey]({s.Id})[/]"),
+            "Enter id" => await service.GetByIdAsync(interaction.AskId("Enter id:")),
             _ => null
         };
 
-        if (subCircuit is null) return 0;
+        if (subCircuit is null) 
+            return 0;
 
-        await SimulatorReplAsync(subCircuit, _sim);
+        var simulationSession = SimulationSession.Build(subCircuit);
+
+        await SimulatorReplAsync(simulationSession);
         return 0;
     }
 
-    public static async Task SimulatorReplAsync(SubCircuitDto sub, ISimulator sim, CancellationToken ct)
+    public static async Task SimulatorReplAsync(SimulationSession simulationSession)
     {
-        AnsiConsole.MarkupLine($"[bold green]Simulator[/] — {Markup.Escape(sub.Title)} [grey]({sub.Id})[/]");
-        using var session = await sim.StartAsync(sub, ct);
+        AnsiConsole.MarkupLine($"[bold green]Simulator[/] — {Markup.Escape(simulationSession.SubCircuit.Title)} [grey]({simulationSession.SubCircuit.Id})[/]");
 
         AnsiConsole.MarkupLine("[grey]Type input lines. Press [bold]Esc[/] to go back.[/]");
         Console.TreatControlCAsInput = true;
 
         var buffer = new StringBuilder();
-        while (!ct.IsCancellationRequested)
+        while (true)
         {
             if (Console.KeyAvailable)
             {
                 var key = Console.ReadKey(intercept: true);
-                if (key.Key == ConsoleKey.Escape) break;
+                if (key.Key == ConsoleKey.Escape) 
+                    break;
+
                 if (key.Key == ConsoleKey.Enter)
                 {
                     var line = buffer.ToString();
                     buffer.Clear();
-                    await session.FeedAsync(line, ct);
+
+                    if (line.Length != simulationSession.SubCircuit.Inputs.Count)
+                    {
+                        AnsiConsole.MarkupLine($"[red]Input length must be {simulationSession.SubCircuit.Inputs.Count}[/]");
+                        continue;
+                    }
+
+                    simulationSession.SetInputs(TestStringConverter.Convert(line)[0].Inputs);
                     AnsiConsole.MarkupLine($"[blue]›[/] {Markup.Escape(line)}");
                 }
                 else if (key.Key == ConsoleKey.Backspace && buffer.Length > 0)
@@ -63,7 +71,7 @@ public sealed class SimListCommand(ISubCircuitService svc, IInteraction interact
                     buffer.Append(key.KeyChar);
                 }
             }
-            await Task.Delay(10, ct);
+            await Task.Delay(10);
         }
     }
 }

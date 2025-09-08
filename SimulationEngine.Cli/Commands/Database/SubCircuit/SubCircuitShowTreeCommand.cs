@@ -18,27 +18,27 @@ public sealed class SubCircuitShowTreeCommand(ISubCircuitService svc) : AsyncCom
 
         var tree = new Tree($"[yellow]{Markup.Escape(root.Title)}[/] [grey]({root.Id})[/]");
 
-        async Task AddSub(TreeNode node, Guid id, int depth)
-        {
-            // children subcircuits
-            var children = await svc.GetChildrenAsync(id);
-            foreach (var c in children)
-            {
-                var n = node.AddNode($"[blue]{Markup.Escape(c.Title)}[/] [grey]({c.Id})[/]");
-                await AddSub(n, c.Id, depth + 1);
-            }
+        //async Task AddSub(TreeNode node, Guid id, int depth)
+        //{
+        //    // children subcircuits
+        //    var children = await svc.GetChildrenAsync(id);
+        //    foreach (var c in children)
+        //    {
+        //        var n = node.AddNode($"[blue]{Markup.Escape(c.Title)}[/] [grey]({c.Id})[/]");
+        //        await AddSub(n, c.Id, depth + 1);
+        //    }
 
-            // truth tables on this node
-            var tts = await svc.GetTruthTablesAsync(id);
-            if (tts.Count > 0)
-            {
-                var ttNode = node.AddNode("[purple]TruthTables[/]");
-                foreach (var tt in tts)
-                    ttNode.AddNode($"{Markup.Escape(tt.HeptaIndex)} [grey]({tt.Id})[/]");
-            }
-        }
+        //    // truth tables on this node
+        //    var tts = await svc.GetTruthTablesAsync(id);
+        //    if (tts.Count > 0)
+        //    {
+        //        var ttNode = node.AddNode("[purple]TruthTables[/]");
+        //        foreach (var tt in tts)
+        //            ttNode.AddNode($"{Markup.Escape(tt.HeptaIndex)} [grey]({tt.Id})[/]");
+        //    }
+        //}
 
-        await AddSub(tree.AddNode($"[green]{Markup.Escape(root.Title)}[/]"), root.Id, 0);
+        //await AddSub(tree.AddNode($"[green]{Markup.Escape(root.Title)}[/]"), root.Id, 0);
         AnsiConsole.Write(tree);
         return 0;
     }

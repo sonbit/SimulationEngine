@@ -1,17 +1,35 @@
 ﻿using SimulationEngine.Application.Services.Interfaces;
 using SimulationEngine.Cli.Commands.Settings;
+using SimulationEngine.Cli.IOHandlers;
+using SimulationEngine.Cli.Renderers;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.TruthTable;
 
-public sealed class TruthTableFindCommand(ITruthTableService svc) : AsyncCommand<FindByIdSettings>
+public sealed class TruthTableFindCommand(ITruthTableService service, IRenderer renderer, IInteraction interaction) : AsyncCommand<FindByIdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings s)
     {
-        var x = await svc.GetByIdAsync(s.Id);
-        if (x is null) { AnsiConsole.MarkupLine("[red]Not found[/]"); return 1; }
-        AnsiConsole.Write(new Panel($"[bold]{Markup.Escape(x.HeptaIndex)}[/]\n[grey]{x.Id}[/]").Header("TruthTable"));
-        return 0;
+        var id = s.Id;
+
+        if (id == 0 && int.TryParse(await interaction.PromptValidateAsync("Id"), out var promptId))
+            id = promptId;
+
+        if (id == 0)
+        {
+            renderer.DrawError("Invalid id");
+            return 1;
+        }
+
+        var truthTable = await service.GetByIdAsync(id);
+        if (truthTable is null) 
+        {
+            renderer.DrawError("Not found");
+            return 1; 
+        }
+
+        AnsiConsole.Write(new Panel($"[bold]{Markup.Escape(truthTable.HeptaIndex)}[/]\n[grey]{truthTable.Id}[/]").Header("TruthTable"));
+        return 2;
     }
 }
