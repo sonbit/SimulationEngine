@@ -1,26 +1,23 @@
 ﻿using SimulationEngine.Application.Services.Interfaces;
 using SimulationEngine.Cli.IOHandlers;
+using SimulationEngine.Cli.Renderers;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.SubCircuit;
 
-public sealed class SubCircuitListCommand(ISubCircuitService svc, IInteraction interaction) : AsyncCommand
+public sealed class SubCircuitListCommand(ISubCircuitService svc, IInteraction interaction, IRenderer renderer) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
-        var all = await svc.GetAllAsync();
+        var subCircuits = await svc.GetAllAsync();
 
-        var table = new Table().RoundedBorder().Expand().Title("SubCircuits");
-        table.AddColumn("Id"); table.AddColumn("Title");
-        foreach (var s in all)
-            table.AddRow($"{s.Id}", Markup.Escape(s.Title));
-        AnsiConsole.Write(table);
+        renderer.DrawTable(subCircuits);
 
         // Optional: allow quick select to view a single item
-        var pick = interaction.SelectOrBack("Select to view or Back", all, s => $"{s.Title} ({s.Id})");
-        if (pick is not null)
-            AnsiConsole.Panel($"[bold]{Markup.Escape(pick.Title)}[/]\n[grey]{pick.Id}[/]", "SubCircuit");
+        var pickedSubCircuit = interaction.SelectOrBack("Select to view or Back", subCircuits, s => $"{s.Title} ({s.Id})");
+        if (pickedSubCircuit is not null)
+            renderer.DrawPanel($"[bold]{Markup.Escape(pickedSubCircuit.Title)}[/]\n[grey]{pickedSubCircuit.Id}[/]", "SubCircuit");
 
         return 0;
     }

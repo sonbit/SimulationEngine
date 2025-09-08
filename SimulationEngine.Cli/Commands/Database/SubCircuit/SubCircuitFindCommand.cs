@@ -1,17 +1,23 @@
 ﻿using SimulationEngine.Application.Services.Interfaces;
 using SimulationEngine.Cli.Commands.Settings;
+using SimulationEngine.Cli.Renderers;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.SubCircuit;
 
-public sealed class SubCircuitFindCommand(ISubCircuitService svc) : AsyncCommand<FindByIdSettings>
+public sealed class SubCircuitFindCommand(ISubCircuitService service, IRenderer renderer) : AsyncCommand<FindByIdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings s)
     {
-        var item = await svc.GetByIdAsync(s.Id);
-        if (item is null) { AnsiConsole.MarkupLine("[red]Not found[/]"); return 1; }
-        AnsiConsole.Write(new Panel($"[bold]{Markup.Escape(item.Title)}[/]\n[grey]{item.Id}[/]").Header("SubCircuit").RoundedBorder());
+        var subCircuit = await service.GetByIdAsync(s.Id);
+        if (subCircuit is null) 
+        {
+            renderer.DrawError("Not found");
+            return 1; 
+        }
+
+        AnsiConsole.Write(new Panel($"[bold]{Markup.Escape(subCircuit.Title)}[/]\n[grey]{subCircuit.Id}[/]").Header("SubCircuit").RoundedBorder());
         return 0;
     }
 }

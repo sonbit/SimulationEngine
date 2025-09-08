@@ -6,6 +6,9 @@ namespace SimulationEngine.Cli.Renderers;
 
 public sealed class Renderer(IAnsiConsole console) : IRenderer
 {
+    public void DrawError(string error) =>
+        console.MarkupLine($"[red]{error}[/]");
+
     public void DrawHeader(string text, string color = "grey") => 
         console.Write(new Rule($"[bold]{text}[/]").RuleStyle(color));
 
