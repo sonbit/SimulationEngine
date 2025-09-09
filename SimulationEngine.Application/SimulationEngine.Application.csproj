@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SimulationEngine.Designs\SimulationEngine.Designs.csproj" />
     <ProjectReference Include="..\SimulationEngine.Domain\SimulationEngine.Domain.csproj" />
     <ProjectReference Include="..\SimulationEngine.Simulator\SimulationEngine.Simulator.csproj" />
   </ItemGroup>

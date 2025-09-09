@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Domain.Models;
 
-namespace SimulationEngine.Application.Services.Interfaces;
+namespace SimulationEngine.Application.Services.SubCircuits;
 
 public interface ISubCircuitService : IBaseService<SubCircuit>
 {

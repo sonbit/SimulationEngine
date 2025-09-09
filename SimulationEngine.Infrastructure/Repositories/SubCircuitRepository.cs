@@ -11,6 +11,6 @@ public class SubCircuitRepository(SimulationEngineDbContext dbContext) : BaseRep
 {
     private readonly SimulationEngineDbContext _dbContext = dbContext;
 
-    public Task<SubCircuit[]> GetAllByTitle(string title) =>
-        _dbContext.SubCircuits.AsNoTracking().Where(subCircuit => subCircuit.Title == title).ToArrayAsync();
+    public async Task<SubCircuit[]> GetAllByTitleAsync(string title) => 
+        await _dbContext.SubCircuits.AsNoTracking().Where(subCircuit => subCircuit.Title == title).ToArrayAsync();
 }
