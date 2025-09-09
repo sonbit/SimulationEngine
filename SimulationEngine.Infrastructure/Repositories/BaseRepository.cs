@@ -11,10 +11,16 @@ public class BaseRepository<TEntity>(SimulationEngineDbContext dbContext) : IBas
 {
     private readonly DbSet<TEntity> _dbSet = dbContext.Set<TEntity>();
 
-    public Task<TEntity> CreateAsync(TEntity entity)
+    public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        _dbSet.Add(entity);
-        return Task.FromResult(entity);
+        await _dbSet.AddAsync(entity);
+        return entity;
+    }
+
+    public async Task<IEnumerable<TEntity>> CreateRangeAsync(IEnumerable<TEntity> entities)
+    {
+        await _dbSet.AddRangeAsync(entities);
+        return entities;
     }
 
     public bool DeleteAsync(int id)
@@ -25,7 +31,7 @@ public class BaseRepository<TEntity>(SimulationEngineDbContext dbContext) : IBas
         return true;
     }
 
-    public async Task<List<TEntity>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
+    public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
 
     public Task<TEntity> GetByIdAsync(int id) => _dbSet.AsNoTracking().FirstOrDefaultAsync(entity => entity.Id == id);
 

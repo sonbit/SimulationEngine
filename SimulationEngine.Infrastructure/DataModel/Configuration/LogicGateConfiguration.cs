@@ -8,6 +8,10 @@ internal static class LogicGateConfiguration
     internal static void Configure(EntityTypeBuilder<LogicGate> entity)
     {
         entity
+            .Property(logicGate => logicGate.Hash)
+            .HasMaxLength(64);
+
+        entity
             .HasOne(logicGate => logicGate.SubCircuit)
             .WithMany(subCircuit => subCircuit.LogicGates)
             .HasForeignKey(logicGate => logicGate.SubCircuitId);
@@ -22,6 +26,11 @@ internal static class LogicGateConfiguration
             .WithOne(pin => pin.LogicGate)
             .HasForeignKey(pin => pin.LogicGateId);
 
-        entity.HasIndex(logicGate => logicGate.TruthTableId);
+        entity
+            .HasIndex(logicGate => logicGate.TruthTableId);
+
+        entity
+            .HasIndex(logicGate => logicGate.Hash)
+            .IsUnique();
     }
 }

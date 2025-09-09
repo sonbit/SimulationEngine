@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualBasic;
-using SimulationEngine.Application.Services.Interfaces;
+using SimulationEngine.Application.Services.SubCircuits;
 using SimulationEngine.Application.Utils;
 using SimulationEngine.Cli.IOHandlers;
 using SimulationEngine.Domain.Models;

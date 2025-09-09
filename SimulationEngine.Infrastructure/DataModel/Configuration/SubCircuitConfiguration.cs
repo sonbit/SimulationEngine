@@ -12,6 +12,10 @@ internal static class SubCircuitConfiguration
             .HasMaxLength(100);
 
         entity
+            .Property(subCircuit => subCircuit.Hash)
+            .HasMaxLength(64);
+
+        entity
             .HasOne(subCircuit => subCircuit.Parent)
             .WithMany(subCircuit => subCircuit.SubCircuits)
             .HasForeignKey(subCircuit => subCircuit.ParentId);
@@ -26,6 +30,11 @@ internal static class SubCircuitConfiguration
             .WithOne(wire => wire.SubCircuit)
             .HasForeignKey(wire => wire.SubCircuitId);
 
-        entity.HasIndex(subCircuit => subCircuit.ParentId);
+        entity
+            .HasIndex(subCircuit => subCircuit.ParentId);
+
+        entity
+            .HasIndex(subCircuit => subCircuit.Hash)
+            .IsUnique();
     }
 }

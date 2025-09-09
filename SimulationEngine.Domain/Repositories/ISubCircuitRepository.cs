@@ -5,5 +5,5 @@ namespace SimulationEngine.Domain.Repositories;
 
 public interface ISubCircuitRepository : IBaseRepository<SubCircuit>
 {
-    Task<SubCircuit[]> GetAllByTitle(string title);
+    Task<SubCircuit[]> GetAllByTitleAsync(string title);
 }

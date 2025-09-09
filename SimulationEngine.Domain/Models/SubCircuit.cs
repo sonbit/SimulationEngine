@@ -7,6 +7,7 @@ namespace SimulationEngine.Domain.Models;
 public class SubCircuit : BaseEntity
 {
     public string Title { get; set; }
+    public string Hash { get; set; }
 
     public SubCircuit Parent { get; set; }
     public int? ParentId { get; set; }

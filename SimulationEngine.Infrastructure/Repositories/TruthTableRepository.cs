@@ -2,6 +2,7 @@
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,9 +12,14 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : BaseRep
 {
     private readonly SimulationEngineDbContext _dbContext = dbContext;
 
-    public Task<TruthTable> GetByHeptaIndex(string heptaIndex) =>
-        _dbContext.TruthTables.AsNoTracking().FirstOrDefaultAsync(truthTable => truthTable.HeptaIndex == heptaIndex);
+    public void AttachRange(TruthTable[] truthTables) => _dbContext.TruthTables.AttachRange(truthTables);
 
-    public Task<TruthTable[]> GetAllByTitle(string title) =>
-        _dbContext.TruthTables.AsNoTracking().Where(truthTable => truthTable.Title == title).ToArrayAsync();
+    public async Task<TruthTable> GetByHeptaIndexAsync(string heptaIndex) =>
+        await _dbContext.TruthTables.AsNoTracking().FirstOrDefaultAsync(truthTable => truthTable.HeptaIndex == heptaIndex);
+
+    public async Task<TruthTable[]> GetAllByHeptaIndexAsync(HashSet<string> heptaIndexes) => 
+        await _dbContext.TruthTables.AsNoTracking().Where(truthTable => heptaIndexes.Contains(truthTable.HeptaIndex)).ToArrayAsync();
+
+    public async Task<TruthTable[]> GetAllByTitleAsync(string title) =>
+        await _dbContext.TruthTables.AsNoTracking().Where(truthTable => truthTable.Title == title).ToArrayAsync();
 }
