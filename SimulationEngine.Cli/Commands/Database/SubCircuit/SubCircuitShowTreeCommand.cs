@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Interfaces;
+﻿using SimulationEngine.Application.Services.SubCircuits;
 using Spectre.Console;
 using Spectre.Console.Cli;
 

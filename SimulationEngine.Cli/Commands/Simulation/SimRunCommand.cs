@@ -1,5 +1,5 @@
-﻿using SimulationEngine.Application.Services.Interfaces;
-using SimulationEngine.Application.Utils;
+﻿using SimulationEngine.Application.Converters;
+using SimulationEngine.Application.Services.SubCircuits;
 using SimulationEngine.Simulator.Core.Engine;
 using Spectre.Console;
 using Spectre.Console.Cli;

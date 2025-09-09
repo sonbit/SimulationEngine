@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Interfaces;
+﻿using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Renderers;
 using Spectre.Console.Cli;
 

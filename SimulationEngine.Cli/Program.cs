@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SimulationEngine.Application.Services;
-using SimulationEngine.Application.Services.Interfaces;
+using SimulationEngine.Application.Services.SubCircuits;
+using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Commands;
 using SimulationEngine.Cli.Commands.Database;
 using SimulationEngine.Cli.Commands.Database.SubCircuit;
@@ -14,8 +14,8 @@ using SimulationEngine.Cli.IOHandlers;
 using SimulationEngine.Cli.Renderers;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
-using SimulationEngine.Infrastructure.DataModel.Initializer;
 using SimulationEngine.Infrastructure.Repositories;
+using SimulationEngine.Infrastructure.UnitOfWork;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -27,6 +27,7 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddDbContext<SimulationEngineDbContext>(opts => opts.UseSqlite("Data Source=SimulationEngine.db"));
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ISubCircuitRepository, SubCircuitRepository>();
         services.AddScoped<ITruthTableRepository, TruthTableRepository>();
         services.AddScoped<ISubCircuitService, SubCircuitService>();
@@ -81,8 +82,5 @@ app.Configure(cfg =>
         });
     });
 });
-
-var dbContext = new SimulationEngineDbContextFactory().CreateDbContext(args);
-await Initializer.Initialize(dbContext);
 
 await app.RunAsync(args.Length == 0 ? ["menu"] : args);
