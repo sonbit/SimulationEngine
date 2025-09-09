@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimulationEngine.Domain.Utils;
+namespace SimulationEngine.Domain.Converters;
 
 public static class HeptaIndexConverter
 {

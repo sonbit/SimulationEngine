@@ -1,4 +1,4 @@
-using SimulationEngine.Domain.Utils;
+using SimulationEngine.Domain.Converters;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
