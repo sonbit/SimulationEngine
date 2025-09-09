@@ -1,7 +1,6 @@
 ﻿using SimulationEngine.Designs.REBEL2.Fetch;
 using SimulationEngine.Designs.SubCircuits.Latches;
 using SimulationEngine.Infrastructure.DataModel;
-using SimulationEngine.Infrastructure.DataModel.Initializer;
 using SimulationEngine.Simulator.Core.Engine;
 
 static void setInputsPrintOutputs(SimulationSession simSession, byte[] inputs)
@@ -13,14 +12,6 @@ static void setInputsPrintOutputs(SimulationSession simSession, byte[] inputs)
 
 
 //var progCtr = new ProgCtr2();
-
-////var dbContext = new SimulationEngineDbContextFactory().CreateDbContext(args);
-////await Initializer.Initialize(dbContext);
-
-////dbContext.SubCircuits.Add(progCtr);
-////dbContext.SaveChanges();
-////return;
-
 
 //var progCtrSim = SimulationSession.Build(progCtr, trace: false);
 ////progCtrSim.DumpElaborationSummary();
