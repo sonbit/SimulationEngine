@@ -1,6 +1,6 @@
-﻿using SimulationEngine.Domain.Models;
+﻿using SimulationEngine.Domain.Converters;
+using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
-using SimulationEngine.Domain.Utils;
 
 namespace SimulationEngine.Domain.Extensions;
 

@@ -5,11 +5,11 @@ namespace SimulationEngine.Application.Services;
 
 public class BaseService<TEntity>(IBaseRepository<TEntity> repository) : IBaseService<TEntity> where TEntity : BaseEntity
 {
-    public virtual Task<TEntity> CreateAsync(TEntity entity) => repository.CreateAsync(entity);
+    public virtual async Task<TEntity> CreateAsync(TEntity entity) => await repository.CreateAsync(entity);
 
-    public Task<List<TEntity>> GetAllAsync() => repository.GetAllAsync();
+    public async Task<IEnumerable<TEntity>> GetAllAsync() => await repository.GetAllAsync();
 
-    public Task<TEntity> GetByIdAsync(int id) => repository.GetByIdAsync(id);
+    public async Task<TEntity> GetByIdAsync(int id) => await repository.GetByIdAsync(id);
 
     public virtual Task Populate() => throw new NotImplementedException();
 }

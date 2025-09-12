@@ -1,4 +1,4 @@
-﻿namespace SimulationEngine.Application.Utils;
+﻿namespace SimulationEngine.Application.Converters;
 
 public sealed record TestVector(byte[] Inputs, byte[] ExpectedOutputs);
 

@@ -5,7 +5,7 @@ namespace SimulationEngine.Application.Services;
 public interface IBaseService<TEntity> where TEntity : BaseEntity
 {
     Task<TEntity> CreateAsync(TEntity entity);
-    Task<List<TEntity>> GetAllAsync();
+    Task<IEnumerable<TEntity>> GetAllAsync();
     Task<TEntity> GetByIdAsync(int id);
     Task Populate();
 }
