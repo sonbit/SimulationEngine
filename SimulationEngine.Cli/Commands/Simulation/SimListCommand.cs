@@ -1,6 +1,5 @@
 ﻿using SimulationEngine.Application.Converters;
 using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Application.Utils;
 using SimulationEngine.Cli.IOHandlers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator.Core.Engine;
