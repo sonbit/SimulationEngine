@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,14 +14,63 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : BaseRep
 {
     private readonly SimulationEngineDbContext _dbContext = dbContext;
 
-    public void AttachRange(TruthTable[] truthTables) => _dbContext.TruthTables.AttachRange(truthTables);
+    public override async Task<TruthTable> CreateOrGetAsync(TruthTable truthTable)
+    {
+        var local = _dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+        if (local is not null) 
+            return local;
+
+        var existing = await _dbContext.TruthTables.FirstOrDefaultAsync(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+        if (existing is not null)
+            return existing;
+
+        await _dbContext.TruthTables.AddAsync(truthTable);
+
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+            return truthTable;
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is SqliteException se && se.SqliteErrorCode == 19)
+        {
+            return _dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex) ?? 
+                await _dbContext.TruthTables.FirstAsync(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+        }
+    }
+
+    public async Task<List<TruthTable>> CreateOrGetRangeAsync(List<TruthTable> truthTables)
+    {
+        var heptaIndexes = GetHeptaIndexes(truthTables);
+
+        var existingTruthTables = await _dbContext.TruthTables
+            .AsNoTracking()
+            .Where(tt => heptaIndexes.Contains(tt.HeptaIndex))
+            .ToDictionaryAsync(tt => tt.HeptaIndex, StringComparer.Ordinal);
+
+        var dbTruthTables = new List<TruthTable>(truthTables.Count);
+
+        foreach (var truthTable in truthTables)
+        {
+            if (existingTruthTables.TryGetValue(truthTable.HeptaIndex, out var existing))
+            {
+                dbTruthTables.Add(existing);
+                continue;
+            }
+
+            var newTruthTable = await CreateOrGetAsync(truthTable);
+            dbTruthTables.Add(newTruthTable);
+            existingTruthTables[truthTable.HeptaIndex] = newTruthTable;
+        }
+
+        return dbTruthTables;
+    }
 
     public async Task<TruthTable> GetByHeptaIndexAsync(string heptaIndex) =>
         await _dbContext.TruthTables.AsNoTracking().FirstOrDefaultAsync(truthTable => truthTable.HeptaIndex == heptaIndex);
 
-    public async Task<TruthTable[]> GetAllByHeptaIndexAsync(HashSet<string> heptaIndexes) => 
-        await _dbContext.TruthTables.AsNoTracking().Where(truthTable => heptaIndexes.Contains(truthTable.HeptaIndex)).ToArrayAsync();
+    public async Task<List<TruthTable>> GetAllByTitleAsync(string title) =>
+        await _dbContext.TruthTables.AsNoTracking().Where(truthTable => truthTable.Title == title).ToListAsync();
 
-    public async Task<TruthTable[]> GetAllByTitleAsync(string title) =>
-        await _dbContext.TruthTables.AsNoTracking().Where(truthTable => truthTable.Title == title).ToArrayAsync();
+    private static HashSet<string> GetHeptaIndexes(List<TruthTable> truthTables) =>
+        truthTables.Select(truthTable => truthTable.HeptaIndex).ToHashSet(StringComparer.Ordinal);
 }
