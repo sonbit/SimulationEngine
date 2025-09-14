@@ -23,9 +23,8 @@ internal static class WireConfiguration
             .WithMany(subCircuit => subCircuit.Wires)
             .HasForeignKey(wire => wire.SubCircuitId);
 
-        entity.HasIndex(wire => wire.StartTerminalId);
-        entity.HasIndex(wire => wire.EndTerminalId);
-        entity.HasIndex(wire => wire.SubCircuitId);
+        entity
+            .HasIndex(w => new { w.SubCircuitId, w.StartTerminalId, w.EndTerminalId }).IsUnique();
 
         entity
             .ToTable(table => table.HasCheckConstraint("CK_Wire_DifferentTerminals", "[StartTerminalId] <> [EndTerminalId]"));

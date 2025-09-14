@@ -1,15 +1,13 @@
 ﻿using SimulationEngine.Application.Services.TruthTables;
-using SimulationEngine.Cli.Handlers.Renderer;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.TruthTable;
 
-public sealed class TruthTableListCommand(ITruthTableService service, IRenderer renderer) : AsyncCommand
+public sealed class TruthTablePopulateCommand(ITruthTableService service) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
-        var truthTables = await service.GetAllAsync();
-        renderer.DrawTable(truthTables);
+        await service.Populate();
         return 0;
     }
 }

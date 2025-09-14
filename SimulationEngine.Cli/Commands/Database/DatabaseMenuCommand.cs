@@ -3,7 +3,6 @@ using SimulationEngine.Cli.Commands.Database.TruthTable;
 using SimulationEngine.Cli.Composition;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using System;
 
 namespace SimulationEngine.Cli.Commands.Database;
 
@@ -21,18 +20,22 @@ public sealed class DatabaseMenuCommand : AsyncCommand
                 sub.AddCommand<SubCircuitListCommand>("list");
                 sub.AddCommand<SubCircuitFindCommand>("find");
                 sub.AddCommand<SubCircuitShowTreeCommand>("tree");
+                sub.AddCommand<SubCircuitPopulateCommand>("populate");
             });
             cfg.AddBranch("truthtables", tt =>
             {
                 tt.AddCommand<TruthTableListCommand>("list");
                 tt.AddCommand<TruthTableFindCommand>("find");
+                tt.AddCommand<TruthTablePopulateCommand>("populate");
             });
+            cfg.AddCommand<DatabaseCreateCommand>("create");
+            cfg.AddCommand<DatabaseDeleteCommand>("delete");
         });
     }
 
-    enum DatabaseOption { SubCircuits, TruthTables, Back }
-    enum SubCircuitOption { List, FindById, Tree, Back }
-    enum TruthTableOption { List, FindById, Back }
+    enum DatabaseOption { SubCircuits, TruthTables, Create, Delete, Back }
+    enum SubCircuitOption { List, FindById, Tree, Populate, Back }
+    enum TruthTableOption { List, FindById, Populate, Back }
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
@@ -41,16 +44,30 @@ public sealed class DatabaseMenuCommand : AsyncCommand
             var entity = AnsiConsole.Prompt(
                 new SelectionPrompt<DatabaseOption>()
                     .Title("Database")
-                    .AddChoices(DatabaseOption.SubCircuits, DatabaseOption.TruthTables, DatabaseOption.Back));
+                    .AddChoices(DatabaseOption.SubCircuits, DatabaseOption.TruthTables, DatabaseOption.Create, DatabaseOption.Delete, DatabaseOption.Back));
 
-            if (entity == DatabaseOption.Back) 
-                return 0;
+            switch (entity)
+            {
+                case DatabaseOption.SubCircuits:
+                    await ShowSubcircuitsMenuAsync();
+                    break;
 
-            if (entity == DatabaseOption.SubCircuits)
-                await ShowSubcircuitsMenuAsync();
-            else
-                await ShowTruthTablesMenuAsync();
-        }       
+                case DatabaseOption.TruthTables:
+                    await ShowTruthTablesMenuAsync();
+                    break;
+
+                case DatabaseOption.Create:
+                    await _inner.RunAsync(["create"]);
+                    break;
+
+                case DatabaseOption.Delete:
+                    await _inner.RunAsync(["delete"]);
+                    break;
+
+                case DatabaseOption.Back:
+                    return 0;
+            }              
+        }
     }
 
     private async Task ShowSubcircuitsMenuAsync()
@@ -60,7 +77,7 @@ public sealed class DatabaseMenuCommand : AsyncCommand
             var action = AnsiConsole.Prompt(
                 new SelectionPrompt<SubCircuitOption>()
                     .Title("[bold]SubCircuits[/]")
-                    .AddChoices(SubCircuitOption.List, SubCircuitOption.FindById, SubCircuitOption.Tree, SubCircuitOption.Back));
+                    .AddChoices(SubCircuitOption.List, SubCircuitOption.FindById, SubCircuitOption.Tree, SubCircuitOption.Populate, SubCircuitOption.Back));
 
             switch (action)
             {
@@ -77,6 +94,11 @@ public sealed class DatabaseMenuCommand : AsyncCommand
                     var id = 0;
                     await _inner.RunAsync(["subcircuits", "tree", "--id", id.ToString()]);
                     break;
+
+                case SubCircuitOption.Populate:
+                    await _inner.RunAsync(["subcircuits", "populate"]);
+                    break;
+
                 case SubCircuitOption.Back:
                     return;
             }
@@ -90,7 +112,7 @@ public sealed class DatabaseMenuCommand : AsyncCommand
             var action = AnsiConsole.Prompt(
                 new SelectionPrompt<TruthTableOption>()
                     .Title("[bold]TruthTables[/]")
-                    .AddChoices(TruthTableOption.List, TruthTableOption.FindById, TruthTableOption.Back));
+                    .AddChoices(TruthTableOption.List, TruthTableOption.FindById, TruthTableOption.Populate, TruthTableOption.Back));
 
             switch (action)
             {
@@ -100,6 +122,10 @@ public sealed class DatabaseMenuCommand : AsyncCommand
 
                 case TruthTableOption.FindById:
                     await _inner.RunAsync(["truthtables", "find", "--interactive"]);
+                    break;
+
+                case TruthTableOption.Populate:
+                    await _inner.RunAsync(["truthtables", "populate"]);
                     break;
 
                 case TruthTableOption.Back:

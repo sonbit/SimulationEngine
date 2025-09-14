@@ -1,9 +1,9 @@
 ﻿using Spectre.Console;
 using System.Threading.Tasks;
 
-namespace SimulationEngine.Cli.IOHandlers;
+namespace SimulationEngine.Cli.Handlers.IO;
 
-public sealed class Interaction(IAnsiConsole console) : IInteraction
+public sealed class InputOutput(IAnsiConsole console) : IInputOutput
 {
     public Task<bool> ConfirmAsync(string prompt, bool defaultValue = true) =>
         console.PromptAsync(new ConfirmationPrompt(prompt) { DefaultValue = defaultValue });

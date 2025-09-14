@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SimulationEngine.Application.Services.Database;
 using SimulationEngine.Application.Services.SubCircuits;
 using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Commands;
@@ -10,8 +11,8 @@ using SimulationEngine.Cli.Commands.Database.SubCircuit;
 using SimulationEngine.Cli.Commands.Database.TruthTable;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
-using SimulationEngine.Cli.IOHandlers;
-using SimulationEngine.Cli.Renderers;
+using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
 using SimulationEngine.Infrastructure.Repositories;
@@ -28,13 +29,14 @@ var host = Host.CreateDefaultBuilder(args)
     {
         services.AddDbContext<SimulationEngineDbContext>(opts => opts.UseSqlite("Data Source=SimulationEngine.db"));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<ISubCircuitRepository, SubCircuitRepository>();
         services.AddScoped<ITruthTableRepository, TruthTableRepository>();
         services.AddScoped<ISubCircuitService, SubCircuitService>();
         services.AddScoped<ITruthTableService, TruthTableService>();
 
         services.AddSingleton(sp => AnsiConsole.Console);
-        services.AddSingleton<IInteraction, Interaction>();
+        services.AddSingleton<IInputOutput, InputOutput>();
         services.AddSingleton<IRenderer, Renderer>();
 
         services.AddScoped<SubCircuitFindCommand>();

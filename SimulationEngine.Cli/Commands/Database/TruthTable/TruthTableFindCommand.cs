@@ -1,19 +1,19 @@
 ﻿using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Commands.Settings;
-using SimulationEngine.Cli.IOHandlers;
-using SimulationEngine.Cli.Renderers;
+using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.Renderer;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.TruthTable;
 
-public sealed class TruthTableFindCommand(ITruthTableService service, IRenderer renderer, IInteraction interaction) : AsyncCommand<FindByIdSettings>
+public sealed class TruthTableFindCommand(ITruthTableService service, IRenderer renderer, IInputOutput inputOutput) : AsyncCommand<FindByIdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings s)
     {
         var id = s.Id;
 
-        if (id == 0 && int.TryParse(await interaction.PromptValidateAsync("Id"), out var promptId))
+        if (id == 0 && int.TryParse(await inputOutput.PromptValidateAsync("Id"), out var promptId))
             id = promptId;
 
         if (id == 0)

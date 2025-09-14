@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Converters;
 using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.IOHandlers;
+using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator.Core.Engine;
 using Spectre.Console;
@@ -9,7 +9,7 @@ using System.Text;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
-public sealed class SimListCommand(ISubCircuitService service, IInteraction interaction) : AsyncCommand
+public sealed class SimListCommand(ISubCircuitService service, IInputOutput inputOutput) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
@@ -17,8 +17,8 @@ public sealed class SimListCommand(ISubCircuitService service, IInteraction inte
 
         SubCircuit? subCircuit = path switch
         {
-            "Pick from list" => interaction.SelectOrBack("Select subcircuit", await service.GetAllAsync(), s => $"{s.Title} [grey]({s.Id})[/]"),
-            "Enter id" => await service.GetByIdAsync(interaction.AskId("Enter id:")),
+            "Pick from list" => inputOutput.SelectOrBack("Select subcircuit", await service.GetAllAsync(), s => $"{s.Title} [grey]({s.Id})[/]"),
+            "Enter id" => await service.GetByIdAsync(inputOutput.AskId("Enter id:")),
             _ => null
         };
 

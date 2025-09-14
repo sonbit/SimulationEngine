@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Reflection;
 
-namespace SimulationEngine.Cli.Renderers;
+namespace SimulationEngine.Cli.Handlers.Renderer;
 
 public sealed class Renderer(IAnsiConsole console) : IRenderer
 {
@@ -11,13 +11,6 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
 
     public void DrawHeader(string text, string color = "grey") => 
         console.Write(new Rule($"[bold]{text}[/]").RuleStyle(color));
-
-    public void DrawPage<T>(IPaginator<T> paginator, IEnumerable<T> source, string title)
-    {
-        console.Write(new Rule($"[bold]{title} (Page {paginator.Page}/{paginator.TotalPages})[/]"));
-        DrawTable(paginator.CurrentPageItems(source));
-        console.MarkupLine("[grey]n = next, p = prev, q = quit[/]");
-    }
 
     public void DrawPanel(string title, string body) => 
         console.Write(new Panel(body).Header(title).Border(BoxBorder.Rounded));

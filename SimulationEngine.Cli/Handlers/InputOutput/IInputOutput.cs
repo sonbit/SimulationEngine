@@ -1,6 +1,6 @@
-﻿namespace SimulationEngine.Cli.IOHandlers;
+﻿namespace SimulationEngine.Cli.Handlers.IO;
 
-public interface IInteraction
+public interface IInputOutput
 {
     int AskId(string title);
     Task<bool> ConfirmAsync(string prompt, bool defaultValue = true);
