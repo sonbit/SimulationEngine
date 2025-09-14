@@ -1,6 +1,6 @@
 ﻿namespace SimulationEngine.Simulator.Utils;
 
-internal sealed class UnionFind<T>(IEqualityComparer<T> equalityComparer)
+internal sealed class UnionFind<T>(IEqualityComparer<T> equalityComparer) where T : notnull
 {
     private readonly Dictionary<T, T> _parent = new(equalityComparer);
     private readonly Dictionary<T, int> _rank = new(equalityComparer);

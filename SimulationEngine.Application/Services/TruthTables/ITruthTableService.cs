@@ -4,6 +4,6 @@ namespace SimulationEngine.Application.Services.TruthTables;
 
 public interface ITruthTableService : IBaseService<TruthTable>
 {
-    Task<TruthTable[]> GetAllByTitle(string title);
+    Task<List<TruthTable>> GetAllByTitle(string title);
     Task<TruthTable> GetByHeptaIndex(string heptaIndex);
 }

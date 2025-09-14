@@ -1,6 +1,7 @@
 ﻿using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
+using System.Linq;
 
 namespace SimulationEngine.Domain.Extensions;
 
@@ -21,5 +22,18 @@ public static class LogicGateExtensions
         if (arity == 4)
             logicGate.AddPin(PinRole.D);
         logicGate.AddPin(PinRole.Q);
+    }
+
+    public static int GetPinMask(this LogicGate logicGate)
+    {
+        return logicGate.Pins.Aggregate(0, (mask, pin) => mask | pin.Role switch
+        {
+            PinRole.A => 1,
+            PinRole.B => 2,
+            PinRole.C => 4,
+            PinRole.D => 8,
+            PinRole.Q => 16,
+            _ => 0
+        });
     }
 }

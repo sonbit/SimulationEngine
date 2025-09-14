@@ -6,10 +6,9 @@ namespace SimulationEngine.Domain.Repositories;
 
 public interface IBaseRepository<TEntity> where TEntity : BaseEntity
 {
-    Task<TEntity> CreateAsync(TEntity entity);
-    Task<IEnumerable<TEntity>> CreateRangeAsync(IEnumerable<TEntity> entities);
+    Task<TEntity> CreateOrGetAsync(TEntity entity);
     bool DeleteAsync(int id);
-    Task<IEnumerable<TEntity>> GetAllAsync();
+    Task<List<TEntity>> GetAllAsync();
     Task<TEntity> GetByIdAsync(int id);
     Task<bool> UpdateAsync(int id, TEntity source);
 }

@@ -7,21 +7,11 @@ using System.Threading.Tasks;
 
 namespace SimulationEngine.Infrastructure.Repositories;
 
-public class BaseRepository<TEntity>(SimulationEngineDbContext dbContext) : IBaseRepository<TEntity> where TEntity : BaseEntity, new()
+public abstract class BaseRepository<TEntity>(SimulationEngineDbContext dbContext) : IBaseRepository<TEntity> where TEntity : BaseEntity, new()
 {
     private readonly DbSet<TEntity> _dbSet = dbContext.Set<TEntity>();
 
-    public async Task<TEntity> CreateAsync(TEntity entity)
-    {
-        await _dbSet.AddAsync(entity);
-        return entity;
-    }
-
-    public async Task<IEnumerable<TEntity>> CreateRangeAsync(IEnumerable<TEntity> entities)
-    {
-        await _dbSet.AddRangeAsync(entities);
-        return entities;
-    }
+    public abstract Task<TEntity> CreateOrGetAsync(TEntity entity);
 
     public bool DeleteAsync(int id)
     {
@@ -31,7 +21,7 @@ public class BaseRepository<TEntity>(SimulationEngineDbContext dbContext) : IBas
         return true;
     }
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
+    public async Task<List<TEntity>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
 
     public Task<TEntity> GetByIdAsync(int id) => _dbSet.AsNoTracking().FirstOrDefaultAsync(entity => entity.Id == id);
 
