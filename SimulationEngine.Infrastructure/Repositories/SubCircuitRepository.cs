@@ -67,8 +67,15 @@ public class SubCircuitRepository(
     public async Task<SubCircuit[]> GetAllByTitleAsync(string title) => 
         await _dbContext.SubCircuits.AsNoTracking().Where(subCircuit => subCircuit.Title == title).ToArrayAsync();
 
-    private async Task<SubCircuit> GetByHashAsync(string hash, CancellationToken ct = default) =>
-        await _dbContext.SubCircuits.AsNoTracking().FirstOrDefaultAsync(s => s.Hash == hash, ct);
+    public async Task<SubCircuit> GetByIdRecursivelyAsync(int id)
+    {
+        var subCircuit = await GetAsync(id);
+        await GetRecursivelyAsync(subCircuit);
+        return subCircuit;
+    }
+
+    private async Task<SubCircuit> GetByHashAsync(string hash) =>
+        await _dbContext.SubCircuits.AsNoTracking().FirstOrDefaultAsync(subCircuit => subCircuit.Hash == hash);
 
     private async Task<List<LogicGate>> GetLogicGatesWithDbTruthTables(List<LogicGate> logicGates)
     {
@@ -86,5 +93,43 @@ public class SubCircuitRepository(
         }
 
         return list;
+    }
+
+    private async Task<SubCircuit> GetAsync(int id)
+    {
+        var subCircuit = await _dbContext.SubCircuits
+            .AsNoTracking()
+            .Where(subCircuit => subCircuit.Id == id)
+            .Include(subCircuit => subCircuit.Ports)
+            .Include(subCircuit => subCircuit.LogicGates)
+                .ThenInclude(logicGate => logicGate.Pins)
+            .Include(subCircuit => subCircuit.LogicGates)
+                .ThenInclude(logicGate => logicGate.TruthTable)
+            .Include(subCircuit => subCircuit.Wires)
+                .ThenInclude(wire => wire.StartTerminal)
+            .Include(subCircuit => subCircuit.Wires)
+                .ThenInclude(wire => wire.EndTerminal)
+            .SingleAsync();
+
+        subCircuit.SubCircuits = await _dbContext.SubCircuits
+            .AsNoTracking()
+            .Where(subCircuit => subCircuit.ParentId == id)
+            .ToListAsync();
+
+        return subCircuit;
+    }
+
+    private async Task GetRecursivelyAsync(SubCircuit subCircuit)
+    {
+        if (subCircuit?.SubCircuits.Count == 0) 
+            return;
+
+        for (int i = 0; i < subCircuit.SubCircuits.Count; i++)
+        {
+            var childSubCircuitId = subCircuit.SubCircuits[i].Id;
+            var childSubCircuit = await GetAsync(childSubCircuitId);
+            subCircuit.SubCircuits[i] = childSubCircuit;
+            await GetRecursivelyAsync(childSubCircuit);
+        }
     }
 }

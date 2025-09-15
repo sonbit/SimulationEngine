@@ -11,7 +11,7 @@ using SimulationEngine.Cli.Commands.Database.SubCircuit;
 using SimulationEngine.Cli.Commands.Database.TruthTable;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
-using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.InputOutput;
 using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;

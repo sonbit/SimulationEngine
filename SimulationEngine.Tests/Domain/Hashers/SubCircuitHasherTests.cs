@@ -28,7 +28,7 @@ public class SubCircuitHasherTests
         var subCircuitChild = ModelBuilders.CreateSubCircuit("SubCircuitChild");
         subCircuitX.SubCircuits.Add(subCircuitChild);
 
-        var logicGate = subCircuitX.AddLogicGate("PPP");
+        var logicGate = subCircuitX.AddLogicGate("20K");
 
         subCircuitX.AddWires([
             (logicGate.Q, subCircuitX.Ports[1]),

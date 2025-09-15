@@ -1,15 +1,17 @@
 ﻿using SimulationEngine.Application.Converters;
 using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.InputOutput;
+using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator.Core.Engine;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using Spectre.Console.Rendering;
 using System.Text;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
-public sealed class SimListCommand(ISubCircuitService service, IInputOutput inputOutput) : AsyncCommand
+public sealed class SimListCommand(ISubCircuitService service, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
@@ -25,52 +27,110 @@ public sealed class SimListCommand(ISubCircuitService service, IInputOutput inpu
         if (subCircuit is null) 
             return 0;
 
+        subCircuit = await service.GetByIdRecursively(subCircuit.Id);
+
         var simulationSession = SimulationSession.Build(subCircuit);
 
-        await SimulatorReplAsync(simulationSession);
+        await SimulatorReplAsync(simulationSession, inputOutput, renderer);
         return 0;
     }
 
-    public static async Task SimulatorReplAsync(SimulationSession simulationSession)
+    public static async Task SimulatorReplAsync(SimulationSession session, IInputOutput intputOutput, IRenderer renderer)
     {
-        AnsiConsole.MarkupLine($"[bold green]Simulator[/] — {Markup.Escape(simulationSession.SubCircuit.Title)} [grey]({simulationSession.SubCircuit.Id})[/]");
+        var sub = session.SubCircuit;
+        var inputCount = sub.Inputs.Count;
+        var inputNames = string.Join(", ", sub.Inputs.Select(p => p.Title));
 
-        AnsiConsole.MarkupLine("[grey]Type input lines. Press [bold]Esc[/] to go back.[/]");
-        Console.TreatControlCAsInput = true;
+        renderer.DrawHeader($"Simulator — {sub.Title} ({sub.Id})");
+        AnsiConsole.MarkupLine($"[grey]Type {inputCount} inputs ({Markup.Escape(inputNames)}). Press [bold]Esc[/] to go back.[/]");
 
-        var buffer = new StringBuilder();
-        while (true)
+        var stringBuilder = new StringBuilder();
+        var history = new List<(string In, string Out)>();
+        string? statusText = null;
+        var isError = false;
+        var done = false;
+
+        IRenderable Screen() => renderer.Stack(
+            history.Count > 0 ? renderer.HistoryPanel(history) : Text.Empty,
+            renderer.InputPanel(stringBuilder, inputCount, statusText, isError)
+        );
+
+        await AnsiConsole.Live(Screen()).AutoClear(false).StartAsync(async ctx =>
         {
-            if (Console.KeyAvailable)
+            ctx.UpdateTarget(Screen());
+            ctx.Refresh();
+
+            while (!done)
             {
+                if (!Console.KeyAvailable) 
+                { 
+                    await Task.Delay(16); 
+                    continue; 
+                }
+
                 var key = Console.ReadKey(intercept: true);
-                if (key.Key == ConsoleKey.Escape) 
-                    break;
-
-                if (key.Key == ConsoleKey.Enter)
+                switch (key.Key)
                 {
-                    var line = buffer.ToString();
-                    buffer.Clear();
+                    case ConsoleKey.Escape:
+                        done = true;
+                        break;
 
-                    if (line.Length != simulationSession.SubCircuit.Inputs.Count)
-                    {
-                        AnsiConsole.MarkupLine($"[red]Input length must be {simulationSession.SubCircuit.Inputs.Count}[/]");
-                        continue;
-                    }
+                    case ConsoleKey.Backspace:
+                        if (stringBuilder.Length <= 0)
+                            break;
+                      
+                        stringBuilder.Remove(stringBuilder.Length - 1, 1);
+                        statusText = null;
+                        break;
 
-                    simulationSession.SetInputs(TestStringConverter.Convert(line)[0].Inputs);
-                    AnsiConsole.MarkupLine($"[blue]›[/] {Markup.Escape(line)}");
+                    case ConsoleKey.Enter:
+                        var inputString = stringBuilder.ToString();
+                        if (inputString.Length != inputCount)
+                        {
+                            statusText = $"Input length must be {inputCount}";
+                            isError = true;
+                            break;
+                        }
+
+                        session.SetInputs(TestStringConverter.Convert(inputString)[0].Inputs);
+
+                        var outputs = session.GetOutputs();
+                        var outputString = TestStringConverter.Convert(outputs);
+
+                        history.Add((inputString, outputString));
+                        if (history.Count > 200) 
+                            history.RemoveAt(0);
+
+                        statusText = $"{inputString} {outputString}";
+                        isError = false;
+                        stringBuilder.Clear();
+                        break;
+      
+                    default:
+                        if (char.IsControl(key.KeyChar) || !char.IsDigit(key.KeyChar))
+                            break;
+
+                        if (!"012".Contains(key.KeyChar))
+                        {
+                            statusText = "Only ternary input (0, 1, 2) is accepted";
+                            isError = true;
+                        }
+                        else if (stringBuilder.Length >= inputCount)
+                        {
+                            statusText = $"Max {inputCount} digits";
+                            isError = true;
+                        }
+                        else
+                        {
+                            stringBuilder.Append(key.KeyChar);
+                            statusText = null;
+                        }
+                        break;
                 }
-                else if (key.Key == ConsoleKey.Backspace && buffer.Length > 0)
-                {
-                    buffer.Remove(buffer.Length - 1, 1);
-                }
-                else if (!char.IsControl(key.KeyChar))
-                {
-                    buffer.Append(key.KeyChar);
-                }
+
+                ctx.UpdateTarget(Screen());
+                ctx.Refresh();
             }
-            await Task.Delay(10);
-        }
+        });
     }
 }

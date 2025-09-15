@@ -1,5 +1,7 @@
 ﻿using SimulationEngine.Application.Converters;
 using SimulationEngine.Application.Services.SubCircuits;
+using SimulationEngine.Cli.Handlers.InputOutput;
+using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Simulator.Core.Engine;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -12,7 +14,7 @@ public sealed class SimRunSettings : CommandSettings
     [CommandOption("--file <PATH>")] public FileInfo? File { get; set; }
 }
 
-public sealed class SimRunCommand(ISubCircuitService service) : AsyncCommand<SimRunSettings>
+public sealed class SimRunCommand(ISubCircuitService service, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<SimRunSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx, SimRunSettings s)
     {
@@ -40,7 +42,7 @@ public sealed class SimRunCommand(ISubCircuitService service) : AsyncCommand<Sim
             return 0;
         }
 
-        await SimListCommand.SimulatorReplAsync(simulationSession);
+        await SimListCommand.SimulatorReplAsync(simulationSession, inputOutput, renderer);
         return 0;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Commands.Settings;
-using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.InputOutput;
 using SimulationEngine.Cli.Handlers.Renderer;
 using Spectre.Console;
 using Spectre.Console.Cli;

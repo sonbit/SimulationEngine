@@ -12,11 +12,13 @@ public static class TestStringConverter
         foreach (var row in rows)
         {
             var parts = row.Split([' ', ','], StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length != 2)
-                throw new ArgumentException("Test string is invalid - Expected format: \"012,012\"");
 
             var inputs = parts[0].Select(CharToTernary).ToArray();
-            var expectedOutputs = parts[1].Select(CharToTernary).ToArray();
+
+            var expectedOutputs = Array.Empty<byte>();
+            if (parts.Length > 1)
+                expectedOutputs = [.. parts[1].Select(CharToTernary)];
+
             testVectors.Add(new TestVector(inputs, expectedOutputs));
         }
 
