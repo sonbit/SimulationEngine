@@ -23,9 +23,9 @@ internal static class TruthTableConfiguration
             .WithOne(logicGate => logicGate.TruthTable)
             .HasForeignKey(logicGate => logicGate.TruthTableId);
 
-        //entity
-        //    .HasIndex(truthTable => truthTable.HeptaIndex)
-        //    .IsUnique();
+        entity
+            .HasIndex(truthTable => truthTable.HeptaIndex)
+            .IsUnique();
 
         entity
             .ToTable(table => table.HasCheckConstraint("CK_TruthTable_HeptaIndexLength", "length([HeptaIndex]) IN (1,3,9,27,81)"));

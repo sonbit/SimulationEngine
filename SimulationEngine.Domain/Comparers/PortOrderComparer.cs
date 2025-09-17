@@ -1,5 +1,5 @@
-﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Extensions;
+using SimulationEngine.Domain.Models;
 using System.Collections.Generic;
 
 namespace SimulationEngine.Domain.Comparers;
@@ -19,11 +19,10 @@ public class PortOrderComparer : IComparer<Port>
         if (portY is null)
             return 1;
 
-        var inPrefix = nameof(PortRole.In0)[..2];
-        bool portXIn = portX.Role.ToString().StartsWith(inPrefix);
-        bool portYIn = portY.Role.ToString().StartsWith(inPrefix);
-        if (portXIn != portYIn) 
-            return portXIn ? -1 : 1;
+        var portXIsInput = portX.Role.IsInput();
+        var portYIsInput = portY.Role.IsInput();
+        if (portXIsInput != portYIsInput) 
+            return portXIsInput ? -1 : 1;
 
         int cmp = ((int)portX.Role).CompareTo((int)portY.Role);
         if (cmp != 0) 

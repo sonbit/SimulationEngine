@@ -1,130 +1,62 @@
 ﻿using SimulationEngine.Domain.Codecs;
 using SimulationEngine.Domain.Comparers;
-using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Hashers.Utils;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SimulationEngine.Domain.Hashers;
 
 public static class SubCircuitHasher
 {
-    public static string ComputeAndAssignHash(SubCircuit subCircuit)
+    private const char Separator = '|';
+
+    public static string Compute(SubCircuit subCircuit, IReadOnlyList<SubCircuitPlacement> placements)
     {
-        foreach (var subCircuitChild in subCircuit.SubCircuits ?? Enumerable.Empty<SubCircuit>())
-            subCircuitChild.Hash = ComputeAndAssignHash(subCircuitChild);
+        var sb = new StringBuilder();
 
-        var logicGates = (subCircuit.LogicGates ?? [])
-            .OrderBy(logicGate => logicGate, LogicGateOrderComparer.Instance)
-            .ToList();
+        BuildString(sb, [nameof(SubCircuit.Title), subCircuit.Title], true);
 
-        var subCircuits = (subCircuit.SubCircuits ?? [])
-            .OrderBy(subCircuit => subCircuit.Hash, StringComparer.Ordinal)
-            .ThenBy(subCircuit => subCircuit.Title, StringComparer.Ordinal)
-            .ToList();
+        var ports = subCircuit.Ports.OrderBy(p => p, PortOrderComparer.Instance).ToList();
+        foreach (var port in ports)
+            BuildString(sb, [nameof(Port), $"{port.Role}", port.Title]);
 
-        var wireEncodings = new List<(string From, string To)>();
-        foreach (var wire in subCircuit.Wires ?? Enumerable.Empty<Wire>())
+        var logicGates = subCircuit.LogicGates.OrderBy(logicGate => logicGate, LogicGateOrderComparer.Instance).ToList();
+        foreach (var logicGate in logicGates)
         {
-            var encodingX = TerminalCodec.Encode(wire.StartTerminal, subCircuit, logicGates, subCircuits);
-            var encodingY = TerminalCodec.Encode(wire.EndTerminal, subCircuit, logicGates, subCircuits);
+            BuildString(sb, [nameof(LogicGate), logicGate.TruthTable.HeptaIndex]);
 
-            if (string.CompareOrdinal(encodingX, encodingY) <= 0) 
-                wireEncodings.Add((encodingX, encodingY));
-            else 
-                wireEncodings.Add((encodingY, encodingX));
+            var pins = logicGate.Pins.OrderBy(x => x.Role).ToList();
+            foreach (var pin in pins)
+                BuildString(sb, [$"{pin.Role}"], false, ',');
+
+            sb.Append(Environment.NewLine);
         }
 
-        wireEncodings.Sort((wireX, wireY) =>
-        {
-            int cmp = string.CompareOrdinal(wireX.From, wireY.From);
-            if (cmp != 0) 
-                return cmp;
-            return string.CompareOrdinal(wireX.To, wireY.To);
-        });
-
-        var portsOrdered = (subCircuit.Ports ?? [])
-            .OrderBy(port => port, PortOrderComparer.Instance)
+        var encodedWires = subCircuit.Wires
+            .Select(wire => $"{TerminalCodec.Encode(wire.StartTerminal)}->{TerminalCodec.Encode(wire.EndTerminal)}")
+            .OrderBy(encodedWire => encodedWire, StringComparer.Ordinal)
             .ToList();
 
-        var inputs = portsOrdered
-            .Where(port => port.Role.ToString().StartsWith(nameof(PortRole.In0)[..2]))
-            .ToList();
+        foreach (var wire in encodedWires)
+            BuildString(sb, [nameof(Wire), wire], true);
 
-        var outputs = portsOrdered
-            .Where(port => port.Role.ToString().StartsWith(nameof(PortRole.Out0)[..3]))
-            .ToList();
+        placements = [.. placements
+            .OrderBy(x => x.ChildSubCircuit.Hash, StringComparer.Ordinal)
+            .ThenBy(x => x.Ordinal)];
 
-        var bytes = WriteAndGetBytes(inputs, outputs, subCircuits, logicGates, wireEncodings);
-        return Sha256Hasher.Hash(bytes);
+        foreach (var placement in placements)
+            BuildString(sb, ["Placement", placement.ChildSubCircuit.Hash, $"{placement.Ordinal}"], true);
+
+        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(sb.ToString()));
+        return Convert.ToHexString(bytes);
     }
 
-    private static byte[] WriteAndGetBytes(List<Port> inputs, List<Port> outputs, List<SubCircuit> subCircuits, List<LogicGate> logicGates, List<(string From, string To)> wireEncodings)
+    private static void BuildString(StringBuilder sb, List<string> strings, bool newLineEnd = false, char separator = Separator)
     {
-        return JsonWriter.Write(jsonWriter =>
-        {
-            jsonWriter.WriteStartObject();
-            jsonWriter.WritePropertyName(nameof(SubCircuit));
-
-            jsonWriter.WriteStartObject();
-            jsonWriter.WritePropertyName(nameof(PortRole.In0)[..2]);
-            jsonWriter.WriteStartArray();
-
-            foreach (var port in inputs) 
-                jsonWriter.WriteStringValue(port.Title ?? port.Role.ToString());
-
-            jsonWriter.WriteEndArray();
-
-            jsonWriter.WritePropertyName(nameof(PortRole.Out0)[..3]);
-            jsonWriter.WriteStartArray();
-
-            foreach (var port in outputs) 
-                jsonWriter.WriteStringValue(port.Title ?? port.Role.ToString());
-
-            jsonWriter.WriteEndArray();
-            jsonWriter.WriteEndObject();
-
-            jsonWriter.WritePropertyName($"{nameof(LogicGate)}s");
-            jsonWriter.WriteStartArray();
-
-            foreach (var logicGate in logicGates)
-            {
-                jsonWriter.WriteStartObject();
-                jsonWriter.WriteString(nameof(TruthTable), logicGate.TruthTable?.HeptaIndex ?? string.Empty);
-
-                jsonWriter.WriteNumber("mask", logicGate.GetPinMask());
-
-                jsonWriter.WriteEndObject();
-            }
-            jsonWriter.WriteEndArray();
-
-            jsonWriter.WritePropertyName($"{nameof(SubCircuit)}s");
-            jsonWriter.WriteStartArray();
-
-            foreach (var subCircuit in subCircuits)
-            {
-                jsonWriter.WriteStartObject();
-                jsonWriter.WriteString(nameof(SubCircuit.Hash), subCircuit.Hash ?? string.Empty);
-                jsonWriter.WriteEndObject();
-            }
-            jsonWriter.WriteEndArray();
-
-            jsonWriter.WritePropertyName($"{nameof(Wire)}s");
-            jsonWriter.WriteStartArray();
-
-            foreach (var (from, to) in wireEncodings)
-            {
-                jsonWriter.WriteStartArray();
-                jsonWriter.WriteStringValue(from);
-                jsonWriter.WriteStringValue(to);
-                jsonWriter.WriteEndArray();
-            }
-
-            jsonWriter.WriteEndArray();
-            jsonWriter.WriteEndObject();
-        });
+        for (var i = 0; i < strings.Count; i++)
+            sb.Append(strings[i]).Append(newLineEnd && i == (strings.Count - 1) ? Environment.NewLine : separator);
     }
 }

@@ -10,7 +10,7 @@ public static class TerminalCodec
 {
     private const string ChildPort = $"Child{nameof(Port)}";
     private const string LogicGatePin = $"{nameof(LogicGate)}{nameof(Port)}";
-    private const string Separator = "|";
+    private const char Separator = '|';
     private const string TopPort = $"Top{nameof(Port)}";
 
     public static Terminal Decode(string code, List<Port> ports, List<LogicGate> logicGates, List<SubCircuit> subCircuits)
@@ -34,19 +34,11 @@ public static class TerminalCodec
         }
     }
 
-    public static string Encode(Terminal terminal, SubCircuit subCircuit, List<LogicGate> logicGates, List<SubCircuit> subCircuits)
+    public static string Encode(Terminal terminal) => terminal switch
     {
-        if (terminal is Port port)
-        {
-            if (ReferenceEquals(port.SubCircuit, subCircuit))
-                return $"{TopPort}{Separator}{port.Role}";
-            else
-                return $"{ChildPort}{Separator}{subCircuits.IndexOf(port.SubCircuit)}{Separator}{port.Role}";
-        }
-
-        if (terminal is Pin pin)
-            return $"{LogicGatePin}{Separator}{logicGates.IndexOf(pin.LogicGate)}{Separator}{pin.Role}";
-
-        throw new NotSupportedException("Unknown terminal type.");
-    }
+        Port port => $"{TopPort}{Separator}{port.Role}",
+        Pin pin => $"{LogicGatePin}{Separator}{pin.Role}",
+        PortPlacement portPlacement => $"{nameof(PortPlacement)}{Separator}{portPlacement.IsInput}{Separator}{portPlacement.IndexWithinChild}",
+        _ => throw new NotSupportedException("Unknwon terminal type")
+    };
 }

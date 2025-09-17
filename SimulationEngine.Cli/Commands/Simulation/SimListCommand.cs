@@ -27,7 +27,7 @@ public sealed class SimListCommand(ISubCircuitService service, IInputOutput inpu
         if (subCircuit is null) 
             return 0;
 
-        subCircuit = await service.GetByIdRecursively(subCircuit.Id);
+        subCircuit = await service.GetAsync(subCircuit.Id);
 
         var simulationSession = SimulationSession.Build(subCircuit);
 

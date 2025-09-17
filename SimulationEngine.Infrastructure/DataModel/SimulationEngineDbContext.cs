@@ -12,7 +12,9 @@ public class SimulationEngineDbContext : DbContext
     public SimulationEngineDbContext(DbContextOptions<SimulationEngineDbContext> options) : base(options) { }
     
     public DbSet<LogicGate> LogicGates { get; set; }
+    public DbSet<PortPlacement> PortPlacements { get; set; }
     public DbSet<SubCircuit> SubCircuits { get; set; }
+    public DbSet<SubCircuitPlacement> SubCircuitPlacements { get; set; }
     public DbSet<Terminal> Terminals { get; set; }
     public DbSet<TruthTable> TruthTables { get; set; }
     public DbSet<Wire> Wires { get; set; }
@@ -22,7 +24,9 @@ public class SimulationEngineDbContext : DbContext
         modelBuilder.Entity<LogicGate>(LogicGateConfiguration.Configure);
         modelBuilder.Entity<Pin>(PinConfiguration.Configure);
         modelBuilder.Entity<Port>(PortConfiguration.Configure);
+        modelBuilder.Entity<PortPlacement>(PortPlacementConfiguration.Configure);
         modelBuilder.Entity<SubCircuit>(SubCircuitConfiguration.Configure);
+        modelBuilder.Entity<SubCircuitPlacement>(SubCircuitPlacementConfiguration.Configure);
         modelBuilder.Entity<Terminal>(TerminalConfiguration.Configure);
         modelBuilder.Entity<TruthTable>(TruthTableConfiguration.Configure);
         modelBuilder.Entity<Wire>(WireConfiguration.Configure);

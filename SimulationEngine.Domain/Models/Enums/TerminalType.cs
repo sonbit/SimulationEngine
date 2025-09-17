@@ -3,5 +3,6 @@
 public enum TerminalType
 {
     Pin,
-    Port
+    Port,
+    PortPlacement
 }

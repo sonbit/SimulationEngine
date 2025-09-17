@@ -1,8 +1,6 @@
 ﻿using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SimulationEngine.Domain.Comparers;
 
@@ -21,47 +19,27 @@ public sealed class LogicGateOrderComparer : IComparer<LogicGate>
         if (logicGateY is null) 
             return 1;
 
-        string hiX = logicGateX.TruthTable?.HeptaIndex ?? "";
-        string hiY = logicGateY.TruthTable?.HeptaIndex ?? "";
+        var logicGateXHeptaIndex = logicGateX.TruthTable?.HeptaIndex ?? "";
+        var logicGateYHeptaIndex = logicGateY.TruthTable?.HeptaIndex ?? "";
 
-        int cmp = string.CompareOrdinal(hiX, hiY);
+        int cmp = string.CompareOrdinal(logicGateXHeptaIndex, logicGateYHeptaIndex);
         if (cmp != 0) 
             return cmp;
 
-        int maskX = logicGateX.GetPinMask(); 
-        int maskY = logicGateY.GetPinMask();
+        int logicGateXPinMask = logicGateX.GetPinMask(); 
+        int logicGateYPinMask = logicGateY.GetPinMask();
 
-        cmp = maskX.CompareTo(maskY);
+        cmp = logicGateXPinMask.CompareTo(logicGateYPinMask);
         if (cmp != 0) 
             return cmp;
 
-        int arX = logicGateX.Pins?.Count ?? 0;
-        int arY = logicGateY.Pins?.Count ?? 0;
+        int logicGateXPinCount = logicGateX.Pins?.Count ?? 0;
+        int logicGateYPinCount = logicGateY.Pins?.Count ?? 0;
 
-        cmp = arX.CompareTo(arY);
+        cmp = logicGateXPinCount.CompareTo(logicGateYPinCount);
         if (cmp != 0) 
             return cmp;
 
         return 0;
-    }
-
-    private static int PinMask(LogicGate g)
-    {
-        int m = 0;
-
-        foreach (var p in g.Pins ?? Enumerable.Empty<Pin>())
-        {
-            m |= p.Role switch
-            {
-                PinRole.A => 1,
-                PinRole.B => 2,
-                PinRole.C => 4,
-                PinRole.D => 8,
-                PinRole.Q => 16,
-                _ => 0
-            };
-        }
-
-        return m;
     }
 }

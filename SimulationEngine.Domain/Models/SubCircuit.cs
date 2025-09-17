@@ -1,3 +1,5 @@
+using SimulationEngine.Domain.Comparers;
+using SimulationEngine.Domain.Extensions;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -9,15 +11,15 @@ public class SubCircuit : BaseEntity
     public string Title { get; set; }
     public string Hash { get; set; }
 
-    public SubCircuit Parent { get; set; }
-    public int? ParentId { get; set; }
-    public List<SubCircuit> SubCircuits { get; set; } = [];
+    [NotMapped] public SubCircuit Parent { get; set; }
+    [NotMapped] public int? ParentId { get; set; }
     public List<LogicGate> LogicGates { get; set; } = [];
     public List<Port> Ports { get; set; } = [];
     public List<Wire> Wires { get; set; } = [];
 
-    [NotMapped] public List<Port> Inputs => [.. Ports?.Where(p => p.Role.ToString().StartsWith("In"))];
-    [NotMapped] public List<Port> Outputs => [.. Ports?.Where(p => p.Role.ToString().StartsWith("Out"))];
+    [NotMapped] public List<Port> Inputs => [.. Ports?.Where(p => p.Role.IsInput()).OrderBy(p => p, PortOrderComparer.Instance)];
+    [NotMapped] public List<SubCircuit> SubCircuits { get; set; } = [];
+    [NotMapped] public List<Port> Outputs => [.. Ports?.Where(p => p.Role.IsOutput()).OrderBy(p => p, PortOrderComparer.Instance)];
 
     public SubCircuit() => Title ??= GetType().Name.Trim('_');
 }

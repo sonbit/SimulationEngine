@@ -6,9 +6,7 @@ namespace SimulationEngine.Application.Services.SubCircuits;
 
 public class SubCircuitService(ISubCircuitRepository repository) : BaseService<SubCircuit>(repository), ISubCircuitService
 {
-    public async Task<SubCircuit[]> GetAllByTitle(string title) => await repository.GetAllByTitleAsync(title);
-
-    public async Task<SubCircuit> GetByIdRecursively(int id) => await repository.GetByIdRecursivelyAsync(id);
+    public async Task<SubCircuit> GetAsync(int id) => await repository.GetAsync(id);
 
     public async override Task Populate()
     {

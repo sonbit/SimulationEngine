@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
@@ -21,6 +20,7 @@ internal static class TerminalConfiguration
         entity
             .HasDiscriminator(terminal => terminal.Type)
             .HasValue<Pin>(TerminalType.Pin)
-            .HasValue<Port>(TerminalType.Port);
+            .HasValue<Port>(TerminalType.Port)
+            .HasValue<PortPlacement>(TerminalType.PortPlacement);
     }
 }

@@ -66,8 +66,8 @@ public static class SubCircuitExtensions
 
         foreach (var sourceWire in source.Wires ?? Enumerable.Empty<Wire>())
         {
-            var encodedWireX = TerminalCodec.Encode(sourceWire.StartTerminal, source, sourceLogicGates, sourceSubCircuits);
-            var encodedWireY = TerminalCodec.Encode(sourceWire.EndTerminal, source, sourceLogicGates, sourceSubCircuits);
+            var encodedWireX = TerminalCodec.Encode(sourceWire.StartTerminal);
+            var encodedWireY = TerminalCodec.Encode(sourceWire.EndTerminal);
 
             if (string.CompareOrdinal(encodedWireX, encodedWireY) > 0)
                 (encodedWireX, encodedWireY) = (encodedWireY, encodedWireX);
