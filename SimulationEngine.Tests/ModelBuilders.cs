@@ -6,16 +6,17 @@ namespace SimulationEngine.Tests;
 
 public static class ModelBuilders
 {
-    public static SubCircuit CreateSubCircuit(string title = "Id", string truthTable = "20K")
+    public static SubCircuit CreateSubCircuit(string title = "Id", string truthTable = "20K", bool flipWireOrder = false)
     {
         var subCircuit = new SubCircuit { Title = title };
         subCircuit.AddPorts([(nameof(PortRole.In0), PortRole.In0), (nameof(PortRole.Out0), PortRole.Out0)]);
 
         var logicGate = subCircuit.AddLogicGate(truthTable);
 
-        subCircuit.AddWires([
-            (subCircuit.Ports[0], logicGate.A),
-            (logicGate.Q, subCircuit.Ports[1])]);
+        if (!flipWireOrder)
+            subCircuit.AddWires([(subCircuit.Ports[0], logicGate.A), (logicGate.Q, subCircuit.Ports[1])]);
+        else 
+            subCircuit.AddWires([(logicGate.Q, subCircuit.Ports[1]), (subCircuit.Ports[0], logicGate.A)]);
 
         return subCircuit;
     }

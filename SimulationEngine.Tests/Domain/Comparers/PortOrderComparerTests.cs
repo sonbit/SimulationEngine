@@ -1,4 +1,5 @@
 ﻿using SimulationEngine.Domain.Comparers;
+using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
 
@@ -68,7 +69,7 @@ public sealed class PortOrderComparerTests
 
         list.Sort(PortOrderComparer.Instance);
 
-        Assert.True(list.Take(3).All(p => p.Role.ToString().StartsWith("In", StringComparison.Ordinal)));
+        Assert.True(list.Take(3).All(p => p.Role.IsInput()));
         Assert.Equal(PortRole.In0, list[0].Role);
         Assert.Equal(PortRole.In1, list[1].Role);
         Assert.Equal(PortRole.In2, list[2].Role);
