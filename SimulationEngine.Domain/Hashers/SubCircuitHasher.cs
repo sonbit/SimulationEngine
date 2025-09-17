@@ -1,5 +1,5 @@
-﻿using SimulationEngine.Domain.Codecs;
-using SimulationEngine.Domain.Comparers;
+﻿using SimulationEngine.Domain.Comparers;
+using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -36,7 +36,7 @@ public static class SubCircuitHasher
         }
 
         var encodedWires = subCircuit.Wires
-            .Select(wire => $"{TerminalCodec.Encode(wire.StartTerminal)}->{TerminalCodec.Encode(wire.EndTerminal)}")
+            .Select(wire => $"{TerminalEncoder.Encode(wire.StartTerminal)}->{TerminalEncoder.Encode(wire.EndTerminal)}")
             .OrderBy(encodedWire => encodedWire, StringComparer.Ordinal)
             .ToList();
 

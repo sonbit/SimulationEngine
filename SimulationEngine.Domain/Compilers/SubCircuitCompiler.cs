@@ -1,6 +1,6 @@
-﻿using SimulationEngine.Domain.Codecs;
-using SimulationEngine.Domain.Comparers;
+﻿using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Compilers.Models;
+using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Hashers;
 using SimulationEngine.Domain.Models;
@@ -108,7 +108,7 @@ public static class SubCircuitCompiler
                 _ => throw new InvalidOperationException("Unsupported wire end")
             };
 
-            if (string.CompareOrdinal(TerminalCodec.Encode(startTerminal), TerminalCodec.Encode(endTerminal)) > 0) 
+            if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
                 (startTerminal, endTerminal) = (endTerminal, startTerminal);
 
             subCircuit.Wires.Add(new Wire { SubCircuit = subCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });

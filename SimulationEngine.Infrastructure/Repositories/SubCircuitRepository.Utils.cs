@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SimulationEngine.Domain.Codecs;
 using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Compilers.Models;
+using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
@@ -104,7 +104,7 @@ public partial class SubCircuitRepository
         {
             var startTerminal = Translate(wire.StartTerminal);
             var endTerminal = Translate(wire.EndTerminal);
-            if (string.CompareOrdinal(TerminalCodec.Encode(startTerminal), TerminalCodec.Encode(endTerminal)) > 0) 
+            if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
                 (startTerminal, endTerminal) = (endTerminal, startTerminal);
 
             newWires.Add(new Wire { SubCircuit = subCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
@@ -206,7 +206,7 @@ public partial class SubCircuitRepository
             var startTerminal = MapTerminal(wire.StartTerminal);
             var endTerminal = MapTerminal(wire.EndTerminal);
 
-            if (string.CompareOrdinal(TerminalCodec.Encode(startTerminal), TerminalCodec.Encode(endTerminal)) > 0) 
+            if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
                 (startTerminal, endTerminal) = (endTerminal, startTerminal);
 
             _dbContext.Wires.Add(new Wire { SubCircuit = newSubCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
