@@ -4,4 +4,5 @@ public interface IDatabaseService
 {
     Task<bool> EnsureDatabaseCreatedAsync();
     Task<bool> EnsureDatabaseDeletedAsync();
+    Task<bool> EnsureDatabaseRecreatedAsync();
 }

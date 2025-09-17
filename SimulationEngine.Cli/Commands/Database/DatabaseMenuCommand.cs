@@ -28,12 +28,11 @@ public sealed class DatabaseMenuCommand : AsyncCommand
                 tt.AddCommand<TruthTableFindCommand>("find");
                 tt.AddCommand<TruthTablePopulateCommand>("populate");
             });
-            cfg.AddCommand<DatabaseCreateCommand>("create");
-            cfg.AddCommand<DatabaseDeleteCommand>("delete");
+            cfg.AddCommand<DatabaseRecreateCommand>("recreate");
         });
     }
 
-    enum DatabaseOption { SubCircuits, TruthTables, Create, Delete, Back }
+    enum DatabaseOption { SubCircuits, TruthTables, Recreate, Back }
     enum SubCircuitOption { List, FindById, Tree, Populate, Back }
     enum TruthTableOption { List, FindById, Populate, Back }
 
@@ -44,7 +43,7 @@ public sealed class DatabaseMenuCommand : AsyncCommand
             var entity = AnsiConsole.Prompt(
                 new SelectionPrompt<DatabaseOption>()
                     .Title("Database")
-                    .AddChoices(DatabaseOption.SubCircuits, DatabaseOption.TruthTables, DatabaseOption.Create, DatabaseOption.Delete, DatabaseOption.Back));
+                    .AddChoices(DatabaseOption.SubCircuits, DatabaseOption.TruthTables, DatabaseOption.Recreate, DatabaseOption.Back));
 
             switch (entity)
             {
@@ -56,12 +55,8 @@ public sealed class DatabaseMenuCommand : AsyncCommand
                     await ShowTruthTablesMenuAsync();
                     break;
 
-                case DatabaseOption.Create:
-                    await _inner.RunAsync(["create"]);
-                    break;
-
-                case DatabaseOption.Delete:
-                    await _inner.RunAsync(["delete"]);
+                case DatabaseOption.Recreate:
+                    await _inner.RunAsync(["recreate"]);
                     break;
 
                 case DatabaseOption.Back:
