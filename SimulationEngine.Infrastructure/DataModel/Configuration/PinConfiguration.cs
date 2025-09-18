@@ -8,12 +8,11 @@ internal class PinConfiguration
 {
     internal static void Configure(EntityTypeBuilder<Pin> entity)
     {
-        entity.HasBaseType<Terminal>();
-
         entity
             .Property(pin => pin.Role)
             .HasConversion<string>()
-            .HasColumnName(nameof(Pin.Role));
+            .HasColumnName(nameof(Pin.Role))
+            .IsRequired();
 
         entity
             .HasOne(pin => pin.LogicGate)

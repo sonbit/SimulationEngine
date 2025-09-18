@@ -12,6 +12,8 @@ public class SimulationEngineDbContext : DbContext
     public SimulationEngineDbContext(DbContextOptions<SimulationEngineDbContext> options) : base(options) { }
     
     public DbSet<LogicGate> LogicGates { get; set; }
+    public DbSet<Pin> Pins { get; set; }
+    public DbSet<Port> Ports { get; set; }
     public DbSet<PortPlacement> PortPlacements { get; set; }
     public DbSet<SubCircuit> SubCircuits { get; set; }
     public DbSet<SubCircuitPlacement> SubCircuitPlacements { get; set; }

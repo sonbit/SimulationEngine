@@ -8,12 +8,11 @@ internal class PortConfiguration
 {
     internal static void Configure(EntityTypeBuilder<Port> entity)
     {
-        entity.HasBaseType<Terminal>();
-
         entity
             .Property(port => port.Role)
             .HasConversion<string>()
-            .HasColumnName(nameof(Port.Role));
+            .HasColumnName(nameof(Port.Role))
+            .IsRequired();
 
         entity
             .HasOne(port => port.SubCircuit)

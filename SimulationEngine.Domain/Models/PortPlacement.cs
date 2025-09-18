@@ -1,6 +1,6 @@
 ﻿namespace SimulationEngine.Domain.Models;
 
-public sealed class PortPlacement : Terminal
+public class PortPlacement : Terminal
 {
     public bool IsInput { get; set; }
     public int IndexWithinChild { get; set; }
