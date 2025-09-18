@@ -27,7 +27,7 @@ public class CMP2 : SubCircuit
             (nameof(Min1), PortRole.Out0),
             (nameof(Min0), PortRole.Out1),
             (nameof(Max1), PortRole.Out2),
-            (nameof(Max1), PortRole.Out3),
+            (nameof(Max0), PortRole.Out3),
             (nameof(Cmp), PortRole.Out4)]);
 
         var _2TritComp = new _2TritComp();
