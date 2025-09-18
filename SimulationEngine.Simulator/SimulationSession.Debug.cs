@@ -11,7 +11,7 @@ public partial class SimulationSession
 
         Console.WriteLine($"[elab] gates:   {_processes.Count}");
         Console.WriteLine($"[elab] nets:    {nets.Count}");
-        Console.WriteLine($"[elab] inputs:  {_inputByTitle.Count}, outputs: {_outputByTitle.Count}");
+        Console.WriteLine($"[elab] inputs:  {_inputPortByRole.Count}, outputs: {_outputPortByRole.Count}");
 
         var noDriver = nets.Where(n => n.DriverCount == 0).ToList();
         var noFanout = nets.Where(n => n.Fanout.Count == 0).ToList();
@@ -30,18 +30,16 @@ public partial class SimulationSession
         foreach (var net in noFanout.Take(5))
             Show(net, _netOfTerminals, "no-fanout");
 
-        foreach (var net in noDriver.Where(n => !_inputByTitle.Values.Any(p => _netOfTerminals[p] == n)).Take(5))
+        foreach (var net in noDriver.Where(n => !_inputPortByRole.Values.Any(p => _netOfTerminals[p] == n)).Take(5))
             Show(net, _netOfTerminals, "no-driver");
     }
 
-    public void PrintOutputDetails(Port port) => PrintOutputDetails(port.Title);
-
-    public void PrintOutputDetails(string portTitle)
+    public void PrintOutputDetails(Port port)
     {
-        var outputPort = _outputByTitle[portTitle];
+        var outputPort = _outputPortByRole[port.Role];
         var net = _netOfTerminals[outputPort];
 
-        Console.WriteLine($"[explain] {portTitle}: {net}");
+        Console.WriteLine($"[explain] {port.Role}: {net}");
 
         if (net.Driver is null)
         {
@@ -53,7 +51,7 @@ public partial class SimulationSession
 
         if (net.Driver is TruthTableProcess gateProcess)
         {
-            Console.WriteLine($"[diag] {portTitle}: driven by {gateProcess.Name}");
+            Console.WriteLine($"[diag] {port.Role}: driven by {gateProcess.Name}");
 
             var a = gateProcess._a?.CurrentValue ?? 0;
             var b = gateProcess._b?.CurrentValue ?? 0;

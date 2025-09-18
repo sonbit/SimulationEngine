@@ -1,4 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Simulator.Comparers;
 using SimulationEngine.Simulator.Finders;
 using SimulationEngine.Simulator.Models;
@@ -12,8 +13,8 @@ public partial class SimulationSession
     private readonly List<IProcess> _processes = [];
     private readonly Dictionary<Terminal, Net> _netOfTerminals = new(ReferenceEqualityComparer<Terminal>.Instance);
 
-    private readonly Dictionary<string, Port> _inputByTitle = new(StringComparer.Ordinal);
-    private readonly Dictionary<string, Port> _outputByTitle = new(StringComparer.Ordinal);
+    private readonly Dictionary<PortRole, Port> _inputPortByRole = [];
+    private readonly Dictionary<PortRole, Port> _outputPortByRole = [];
 
     public bool Trace 
     { 
@@ -34,10 +35,10 @@ public partial class SimulationSession
             ReportNetIssues(simSession._netOfTerminals.Values);
 
         foreach (var port in subCircuit.Inputs ?? Enumerable.Empty<Port>())
-            simSession._inputByTitle[port.Title] = port;
+            simSession._inputPortByRole[port.Role] = port;
 
         foreach (var port in subCircuit.Outputs ?? Enumerable.Empty<Port>())
-            simSession._outputByTitle[port.Title] = port;
+            simSession._outputPortByRole[port.Role] = port;
 
         simSession._deltaKernel.Prime(simSession._processes);
         return simSession;
@@ -46,24 +47,23 @@ public partial class SimulationSession
     public void SetInputs(byte[] values)
     {
         for (int i = 0; i < values.Length; i++)
-            SetInput(SubCircuit.Ports[i].Title, values[i]);
+            SetInput(SubCircuit.Ports[i].Role, values[i]);
     }
 
-    public void SetInput(string title, byte value)
+    public void SetInput(PortRole portRole, byte value)
     {
-        if (!_inputByTitle.TryGetValue(title, out var port))
-            throw new KeyNotFoundException($"Input '{title}' not found. Known: {string.Join(", ", _inputByTitle.Keys)}");
+        if (!_inputPortByRole.TryGetValue(portRole, out var port))
+            throw new KeyNotFoundException($"Input '{portRole}' not found. Known: {string.Join(", ", _inputPortByRole.Keys)}");
 
         _deltaKernel.Set(_netOfTerminals[port], value);
     }
 
-    public byte[] GetOutputs() => [.. SubCircuit.Outputs.Select(port => GetOutput(port.Title))];
+    public byte[] GetOutputs() => [.. SubCircuit.Outputs.Select(port => GetOutput(port.Role))];
 
-
-    public byte GetOutput(string title)
+    public byte GetOutput(PortRole portRole)
     {
-        if (!_outputByTitle.TryGetValue(title, out var port))
-            throw new KeyNotFoundException($"Output '{title}' not found. Known: {string.Join(", ", _outputByTitle.Keys)}");
+        if (!_outputPortByRole.TryGetValue(portRole, out var port))
+            throw new KeyNotFoundException($"Output '{portRole}' not found. Known: {string.Join(", ", _outputPortByRole.Keys)}");
 
         return _netOfTerminals[port].CurrentValue;
     }
