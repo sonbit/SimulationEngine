@@ -1,7 +1,4 @@
-﻿using SimulationEngine.Simulator.Core.Engine;
-using SimulationEngine.Simulator.Core.Interfaces;
-
-namespace SimulationEngine.Simulator.Core.Model;
+﻿namespace SimulationEngine.Simulator.Models;
 
 internal sealed class Net(string name)
 {

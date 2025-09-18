@@ -1,8 +1,4 @@
-﻿using SimulationEngine.Simulator.Core.Engine;
-using SimulationEngine.Simulator.Core.Interfaces;
-using SimulationEngine.Simulator.Core.Model;
-
-namespace SimulationEngine.Simulator.Processes;
+﻿namespace SimulationEngine.Simulator.Models;
 
 internal sealed class TruthTableProcess : IProcess
 {

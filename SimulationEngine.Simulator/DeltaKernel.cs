@@ -1,7 +1,6 @@
-﻿using SimulationEngine.Simulator.Core.Interfaces;
-using SimulationEngine.Simulator.Core.Model;
+﻿using SimulationEngine.Simulator.Models;
 
-namespace SimulationEngine.Simulator.Core.Engine;
+namespace SimulationEngine.Simulator;
 
 internal sealed class DeltaKernel
 {

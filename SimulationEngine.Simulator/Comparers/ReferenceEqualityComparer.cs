@@ -1,4 +1,4 @@
-﻿namespace SimulationEngine.Simulator.Utils;
+﻿namespace SimulationEngine.Simulator.Comparers;
 
 internal sealed class ReferenceEqualityComparer<T> : IEqualityComparer<T> where T : class
 {

@@ -1,6 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Simulator.Core.Model;
-using SimulationEngine.Simulator.Processes;
+using SimulationEngine.Simulator.Models;
 
 namespace SimulationEngine.Simulator.Core.Engine;
 

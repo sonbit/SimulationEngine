@@ -1,8 +1,7 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Simulator.Core.Interfaces;
-using SimulationEngine.Simulator.Core.Model;
-using SimulationEngine.Simulator.Processes;
-using SimulationEngine.Simulator.Utils;
+using SimulationEngine.Simulator.Comparers;
+using SimulationEngine.Simulator.Finders;
+using SimulationEngine.Simulator.Models;
 
 namespace SimulationEngine.Simulator.Core.Engine;
 
@@ -108,7 +107,7 @@ public partial class SimulationSession
         }
     }
 
-    private static void UnionAllWiresRecursive(SubCircuit subCircuit, UnionFind<Terminal> unionFind)
+    private static void UnionAllWiresRecursive(SubCircuit subCircuit, UnionFinder<Terminal> unionFind)
     {
         foreach (var wire in subCircuit.Wires ?? Enumerable.Empty<Wire>())
         {
@@ -126,7 +125,7 @@ public partial class SimulationSession
 
     private static List<Net> BuildNets(SubCircuit subCircuit, Dictionary<Terminal, Net> map)
     {
-        var unionFind = new UnionFind<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
+        var unionFind = new UnionFinder<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
 
         foreach (var terminal in EnumerateAllTerminalsRecursive(subCircuit)) 
             unionFind.Add(terminal);
