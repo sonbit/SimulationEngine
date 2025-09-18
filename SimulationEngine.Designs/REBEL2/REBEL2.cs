@@ -10,9 +10,9 @@ public class REBEL2 : SubCircuit
 
     public REBEL2()
     {
-        var fetch = new Fetch.Fetch { Parent = this };
-        var decode = new Decode.Decode { Parent = this };
-        var alu = new ALU2 { Parent = this };
+        var fetch = new Fetch.Fetch();
+        var decode = new Decode.Decode();
+        var alu = new ALU2();
         SubCircuits = [fetch, decode, alu];
 
         this.AddWires([

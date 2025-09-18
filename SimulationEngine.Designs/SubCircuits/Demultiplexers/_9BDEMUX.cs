@@ -35,10 +35,10 @@ public class _9BDEMUX : SubCircuit
             (nameof(ClkQ1), PortRole.Out7),
             (nameof(ClkQ0), PortRole.Out8)]);
 
-        var _3BDEMUX_0 = new _3BDEMUX { Parent = this };
-        var _3BDEMUX_1 = new _3BDEMUX { Parent = this };
-        var _3BDEMUX_2 = new _3BDEMUX { Parent = this };
-        var _3BDEMUX_3 = new _3BDEMUX { Parent = this };
+        var _3BDEMUX_0 = new _3BDEMUX();
+        var _3BDEMUX_1 = new _3BDEMUX();
+        var _3BDEMUX_2 = new _3BDEMUX();
+        var _3BDEMUX_3 = new _3BDEMUX();
         SubCircuits = [_3BDEMUX_0, _3BDEMUX_1, _3BDEMUX_2, _3BDEMUX_3];
 
         this.AddWires([

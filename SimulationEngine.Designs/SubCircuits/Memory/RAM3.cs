@@ -26,9 +26,9 @@ public class RAM3 : SubCircuit
             (nameof(Q1), PortRole.Out1),
             (nameof(Q0), PortRole.Out2)]);
 
-        var tff0 = new TFlipFlop { Parent = this };
-        var tff1 = new TFlipFlop { Parent = this };
-        var tff2 = new TFlipFlop { Parent = this };
+        var tff0 = new TFlipFlop();
+        var tff1 = new TFlipFlop();
+        var tff2 = new TFlipFlop();
         SubCircuits = [tff0, tff1, tff2];
 
         this.AddWires([

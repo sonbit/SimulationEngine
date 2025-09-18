@@ -97,8 +97,8 @@ public class _2xFetch : SubCircuit
             (nameof(Rd01_1), PortRole.Out22),
             (nameof(Rd00_1), PortRole.Out23)]);
 
-        var fetch_0 = new Fetch { Parent = this };
-        var fetch_1 = new Fetch { Parent = this };
+        var fetch_0 = new Fetch();
+        var fetch_1 = new Fetch();
         SubCircuits = [fetch_0, fetch_1];
 
         this.AddWires([

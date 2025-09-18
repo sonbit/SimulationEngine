@@ -27,11 +27,11 @@ public class Register9 : SubCircuit
             (nameof(WrData), PortRole.In5),
             (nameof(Q), PortRole.Out0)]);
 
-        var demux = new DEMUX { Parent = this };
-        var ram3_0 = new RAM3 { Parent = this };
-        var ram3_1 = new RAM3 { Parent = this };
-        var ram3_2 = new RAM3 { Parent = this };
-        var mux = new MUX { Parent = this };
+        var demux = new DEMUX();
+        var ram3_0 = new RAM3();
+        var ram3_1 = new RAM3();
+        var ram3_2 = new RAM3();
+        var mux = new MUX();
         SubCircuits = [demux, ram3_0, ram3_1, ram3_2, mux];
 
         this.AddWires([

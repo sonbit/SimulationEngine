@@ -70,15 +70,15 @@ public class _8RegArray2 : SubCircuit
             (nameof(Q01), PortRole.Out16),
             (nameof(Q00), PortRole.Out17)]);
 
-        var _2Latch2_0 = new _2Latch2 { Parent = this };
-        var _2Latch2_1 = new _2Latch2 { Parent = this };
-        var _2Latch2_2 = new _2Latch2 { Parent = this };
-        var _2Latch2_3 = new _2Latch2 { Parent = this };
-        var _2Latch2_4 = new _2Latch2 { Parent = this };
-        var _2Latch2_5 = new _2Latch2 { Parent = this };
-        var _2Latch2_6 = new _2Latch2 { Parent = this };
-        var _2Latch2_7 = new _2Latch2 { Parent = this };
-        var _2Latch2_8 = new _2Latch2 { Parent = this };
+        var _2Latch2_0 = new _2Latch2();
+        var _2Latch2_1 = new _2Latch2();
+        var _2Latch2_2 = new _2Latch2();
+        var _2Latch2_3 = new _2Latch2();
+        var _2Latch2_4 = new _2Latch2();
+        var _2Latch2_5 = new _2Latch2();
+        var _2Latch2_6 = new _2Latch2();
+        var _2Latch2_7 = new _2Latch2();
+        var _2Latch2_8 = new _2Latch2();
         SubCircuits = [_2Latch2_0, _2Latch2_1, _2Latch2_2, _2Latch2_3, _2Latch2_4, _2Latch2_5, _2Latch2_6, _2Latch2_7, _2Latch2_8];
 
         this.AddWires([

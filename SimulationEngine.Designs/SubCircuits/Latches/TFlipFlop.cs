@@ -19,8 +19,8 @@ public class TFlipFlop : SubCircuit
 
         var _2 = this.AddLogicGate("2");
 
-        var btl0 = new BTLatch { Parent = this };
-        var btl1 = new BTLatch { Parent = this };
+        var btl0 = new BTLatch();
+        var btl1 = new BTLatch();
         SubCircuits = [btl0, btl1];
 
         this.AddWires([

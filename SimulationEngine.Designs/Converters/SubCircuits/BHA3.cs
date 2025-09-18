@@ -27,9 +27,9 @@ public class BHA3 : SubCircuit
             (nameof(Q1), PortRole.Out2),
             (nameof(Q0), PortRole.Out3)]);
 
-        var bha0 = new BHA { Parent = this };
-        var bha1 = new BHA { Parent = this };
-        var bha2 = new BHA { Parent = this };
+        var bha0 = new BHA();
+        var bha1 = new BHA();
+        var bha2 = new BHA();
         SubCircuits = [bha0, bha1, bha2];
 
         this.AddWires([

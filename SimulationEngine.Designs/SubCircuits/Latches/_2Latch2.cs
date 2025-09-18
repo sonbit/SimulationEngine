@@ -21,8 +21,8 @@ public class _2Latch2 : SubCircuit
             (nameof(Q1), PortRole.Out0),
             (nameof(Q0), PortRole.Out1)]);
 
-        var btl0 = new BTLatch { Parent = this };
-        var btl1 = new BTLatch { Parent = this };
+        var btl0 = new BTLatch();
+        var btl1 = new BTLatch();
         SubCircuits = [btl0, btl1];
 
         this.AddWires([

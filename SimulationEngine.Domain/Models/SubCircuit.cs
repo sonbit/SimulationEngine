@@ -8,11 +8,11 @@ namespace SimulationEngine.Domain.Models;
 
 public class SubCircuit : BaseEntity
 {
+    public SubCircuit() => Title ??= GetType().Name.Trim('_');
+
     public string Title { get; set; }
     public string Hash { get; set; }
 
-    [NotMapped] public SubCircuit Parent { get; set; }
-    [NotMapped] public int? ParentId { get; set; }
     public List<LogicGate> LogicGates { get; set; } = [];
     public List<Port> Ports { get; set; } = [];
     public List<Wire> Wires { get; set; } = [];
@@ -20,6 +20,4 @@ public class SubCircuit : BaseEntity
     [NotMapped] public List<Port> Inputs => [.. Ports?.Where(p => p.Role.IsInput()).OrderBy(p => p, PortOrderComparer.Instance)];
     [NotMapped] public List<SubCircuit> SubCircuits { get; set; } = [];
     [NotMapped] public List<Port> Outputs => [.. Ports?.Where(p => p.Role.IsOutput()).OrderBy(p => p, PortOrderComparer.Instance)];
-
-    public SubCircuit() => Title ??= GetType().Name.Trim('_');
 }

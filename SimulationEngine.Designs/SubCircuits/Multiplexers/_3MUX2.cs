@@ -29,8 +29,8 @@ public class _3MUX2 : SubCircuit
             (nameof(Q1), PortRole.Out0),
             (nameof(Q0), PortRole.Out1)]);
 
-        var _3MUX1_0 = new _3MUX1 { Parent = this };
-        var _3MUX1_1 = new _3MUX1 { Parent = this };
+        var _3MUX1_0 = new _3MUX1();
+        var _3MUX1_1 = new _3MUX1();
         SubCircuits = [_3MUX1_0, _3MUX1_1];
 
         this.AddWires([

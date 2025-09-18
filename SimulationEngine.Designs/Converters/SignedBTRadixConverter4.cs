@@ -28,10 +28,10 @@ public class SignedBTRadixConverter4 : SubCircuit
             (nameof(Q1), PortRole.Out2),
             (nameof(Q0), PortRole.Out3)]);
 
-        var xor3 = new XOR3 { Parent = this };
-        var bha3 = new BHA3 { Parent = this };
-        var unsignedBT_RadixConverter4 = new UnsignedBT_RadixConverter4 { Parent = this };
-        var conditionalSTI4 = new ConditionalSTI4 { Parent = this };
+        var xor3 = new XOR3();
+        var bha3 = new BHA3();
+        var unsignedBT_RadixConverter4 = new UnsignedBT_RadixConverter4();
+        var conditionalSTI4 = new ConditionalSTI4();
         SubCircuits = [xor3, bha3, unsignedBT_RadixConverter4, conditionalSTI4];
 
         this.AddWires([

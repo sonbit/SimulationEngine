@@ -25,10 +25,10 @@ public class ProgCtr2 : SubCircuit
             (nameof(Pc1), PortRole.Out0),
             (nameof(Pc0), PortRole.Out1)]);
 
-        var _2MUX2 = new _2MUX2() { Parent = this };
-        var dle0 = new DLatchEdge() { Parent = this };
-        var dle1 = new DLatchEdge() { Parent = this };
-        var inc2 = new Increment2() { Parent = this };
+        var _2MUX2 = new _2MUX2();
+        var dle0 = new DLatchEdge();
+        var dle1 = new DLatchEdge();
+        var inc2 = new Increment2();
         SubCircuits = [_2MUX2, dle0, dle1, inc2];
 
         this.AddWires([

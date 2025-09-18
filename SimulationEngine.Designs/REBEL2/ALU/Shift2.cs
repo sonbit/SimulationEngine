@@ -31,8 +31,8 @@ public class Shift2 : SubCircuit
         var _063TGT360 = this.AddLogicGate("063TGT360");
         var _630GTG036 = this.AddLogicGate("630GTG036");
 
-        var _3MUX1_0 = new _3MUX1 { Parent = this };
-        var _3MUX1_1 = new _3MUX1 { Parent = this };
+        var _3MUX1_0 = new _3MUX1();
+        var _3MUX1_1 = new _3MUX1();
         SubCircuits = [_3MUX1_0, _3MUX1_1];
 
         this.AddWires([

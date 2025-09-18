@@ -17,8 +17,8 @@ public class DLatchEdge : SubCircuit
             (nameof(Din), PortRole.In1),
             (nameof(Dout), PortRole.Out0)]);
 
-        var btl0 = new BTLatch { Parent = this };
-        var btl1 = new BTLatch { Parent = this };
+        var btl0 = new BTLatch();
+        var btl1 = new BTLatch();
         SubCircuits = [btl0, btl1];
 
         var inv0 = this.AddLogicGate("5");

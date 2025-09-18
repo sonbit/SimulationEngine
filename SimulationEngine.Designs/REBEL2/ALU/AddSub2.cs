@@ -32,8 +32,8 @@ public class AddSub2 : SubCircuit
         var inv0 = this.AddLogicGate("5");
         var inv1 = this.AddLogicGate("5");
 
-        var _2MUX2 = new _2MUX2() { Parent = this };
-        var _2TritAdder = new _2TritAdder() { Parent = this };
+        var _2MUX2 = new _2MUX2();
+        var _2TritAdder = new _2TritAdder();
         SubCircuits = [_2MUX2, _2TritAdder];
 
         this.AddWires([

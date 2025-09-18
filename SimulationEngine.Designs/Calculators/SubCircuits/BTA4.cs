@@ -27,10 +27,10 @@ public class BTA4 : SubCircuit
             (nameof(S1), PortRole.Out2),
             (nameof(S0), PortRole.Out3)]);
 
-        var bta0 = new BTA { Parent = this };
-        var bta1 = new BTA { Parent = this };
-        var bta2 = new BTA { Parent = this };
-        var bta3 = new BTA { Parent = this };
+        var bta0 = new BTA();
+        var bta1 = new BTA();
+        var bta2 = new BTA();
+        var bta3 = new BTA();
         SubCircuits = [bta0, bta1, bta2, bta3];
 
         this.AddWires([

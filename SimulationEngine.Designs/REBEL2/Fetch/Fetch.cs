@@ -70,8 +70,8 @@ public class Fetch : SubCircuit
             (nameof(Rd01), PortRole.Out10),
             (nameof(Rd00), PortRole.Out11)]);
 
-        var progCtr2 = new ProgCtr2 { Parent = this };
-        var _9Reg10_1 = new _9Reg10_1 { Parent = this };
+        var progCtr2 = new ProgCtr2();
+        var _9Reg10_1 = new _9Reg10_1();
         SubCircuits = [progCtr2, _9Reg10_1];
 
         this.AddWires([

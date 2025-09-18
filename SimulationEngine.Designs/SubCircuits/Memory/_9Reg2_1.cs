@@ -31,9 +31,9 @@ public class _9Reg2_1 : SubCircuit
             (nameof(Q1), PortRole.Out0),
             (nameof(Q0), PortRole.Out1)]);
 
-        var _9BDEMUX = new _9BDEMUX { Parent = this };
-        var _8RegArray2 = new _8RegArray2 { Parent = this };
-        var _9MUX2 = new _9MUX2() { Parent = this };
+        var _9BDEMUX = new _9BDEMUX();
+        var _8RegArray2 = new _8RegArray2();
+        var _9MUX2 = new _9MUX2();
         SubCircuits = [_9BDEMUX, _8RegArray2, _9MUX2];
 
         this.AddWires([

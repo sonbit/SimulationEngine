@@ -38,10 +38,10 @@ public class SyTriDirLoadCounter4 : SubCircuit
         var cons_1 = this.AddLogicGate("RDC");
         var cons_2 = this.AddLogicGate("RDC");
 
-        var syTriDirLoadCounter4_0 = new SyTriDirLoadCounter { Parent = this };
-        var syTriDirLoadCounter4_1 = new SyTriDirLoadCounter { Parent = this };
-        var syTriDirLoadCounter4_2 = new SyTriDirLoadCounter { Parent = this };
-        var syTriDirLoadCounter4_3 = new SyTriDirLoadCounter { Parent = this };
+        var syTriDirLoadCounter4_0 = new SyTriDirLoadCounter();
+        var syTriDirLoadCounter4_1 = new SyTriDirLoadCounter();
+        var syTriDirLoadCounter4_2 = new SyTriDirLoadCounter();
+        var syTriDirLoadCounter4_3 = new SyTriDirLoadCounter();
         SubCircuits = [syTriDirLoadCounter4_0, syTriDirLoadCounter4_1, syTriDirLoadCounter4_2, syTriDirLoadCounter4_3];
 
         this.AddWires([

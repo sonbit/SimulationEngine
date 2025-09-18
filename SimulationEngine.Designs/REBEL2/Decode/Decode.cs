@@ -86,8 +86,8 @@ public class Decode : SubCircuit
 
         var K00 = this.AddLogicGate("K00");
 
-        var execCtrl = new ExecCtrl { Parent = this };
-        var _9Reg2 = new _9Reg2() { Parent = this };
+        var execCtrl = new ExecCtrl();
+        var _9Reg2 = new _9Reg2();
         SubCircuits = [execCtrl, _9Reg2];
 
         this.AddWires([

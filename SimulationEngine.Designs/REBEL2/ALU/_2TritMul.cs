@@ -33,8 +33,8 @@ public class _2TritMul : SubCircuit
         var PD5_2 = this.AddLogicGate("PD5");
         var PD5_3 = this.AddLogicGate("PD5");
 
-        var triHalfAdder_0 = new TriHalfAdder { Parent = this };
-        var triHalfAdder_1 = new TriHalfAdder { Parent = this };
+        var triHalfAdder_0 = new TriHalfAdder();
+        var triHalfAdder_1 = new TriHalfAdder();
         SubCircuits = [triHalfAdder_0, triHalfAdder_1];
 
         this.AddWires([

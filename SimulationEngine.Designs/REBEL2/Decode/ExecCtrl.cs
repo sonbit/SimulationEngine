@@ -42,7 +42,7 @@ public class ExecCtrl : SubCircuit
         var HHH088088 = this.AddLogicGate("HHH088088");
         var ZXZ = this.AddLogicGate("ZXZ");
 
-        var aluCtrl2 = new ALUCtrl2 { Parent = this };
+        var aluCtrl2 = new ALUCtrl2();
         SubCircuits = [aluCtrl2];
 
         this.AddWires([

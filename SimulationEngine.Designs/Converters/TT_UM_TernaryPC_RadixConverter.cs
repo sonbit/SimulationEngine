@@ -39,9 +39,9 @@ public class TT_UM_TernaryPC_RadixConverter : SubCircuit
             (nameof(RC1), PortRole.Out5),
             (nameof(RC0), PortRole.Out6)]);
 
-        var syTriDirLoadCounter4 = new SyTriDirLoadCounter4 { Parent = this };
-        var bTSignedRadixConverter = new BTSignedRadixConverter4 { Parent = this };
-        var signedBTRadixConverter4 = new SignedBTRadixConverter4 { Parent = this };
+        var syTriDirLoadCounter4 = new SyTriDirLoadCounter4();
+        var bTSignedRadixConverter = new BTSignedRadixConverter4();
+        var signedBTRadixConverter4 = new SignedBTRadixConverter4();
         SubCircuits = [syTriDirLoadCounter4, bTSignedRadixConverter, signedBTRadixConverter4];
 
         this.AddWires([

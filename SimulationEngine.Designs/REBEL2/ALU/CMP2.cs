@@ -30,9 +30,9 @@ public class CMP2 : SubCircuit
             (nameof(Max1), PortRole.Out3),
             (nameof(Cmp), PortRole.Out4)]);
 
-        var _2TritComp = new _2TritComp { Parent = this };
-        var _2MUX2_0 = new _2MUX2 { Parent = this };
-        var _2MUX2_1 = new _2MUX2 { Parent = this };
+        var _2TritComp = new _2TritComp();
+        var _2MUX2_0 = new _2MUX2();
+        var _2MUX2_1 = new _2MUX2();
         SubCircuits = [_2TritComp, _2MUX2_0, _2MUX2_1];
 
         this.AddWires([

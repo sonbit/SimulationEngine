@@ -34,16 +34,16 @@ public class ALU2 : SubCircuit
 
         var DGDDDDDAD = this.AddLogicGate("DGDDDDDAD");
 
-        var shift2 = new Shift2 { Parent = this };
-        var _2TritMul = new _2TritMul { Parent = this };
-        var addSub2 = new AddSub2 { Parent = this };
-        var cmp2 = new CMP2 { Parent = this };
-        var cmp2Tritwise = new CMP2Tritwise { Parent = this };
-        var _2MUX2_0 = new _2MUX2 { Parent = this };
-        var _2MUX2_1 = new _2MUX2 { Parent = this };
-        var _2MUX2_2 = new _2MUX2 { Parent = this };
-        var _3MUX2_0 = new _3MUX2 { Parent = this };
-        var _3MUX2_1 = new _3MUX2 { Parent = this };
+        var shift2 = new Shift2();
+        var _2TritMul = new _2TritMul();
+        var addSub2 = new AddSub2();
+        var cmp2 = new CMP2();
+        var cmp2Tritwise = new CMP2Tritwise();
+        var _2MUX2_0 = new _2MUX2();
+        var _2MUX2_1 = new _2MUX2();
+        var _2MUX2_2 = new _2MUX2();
+        var _3MUX2_0 = new _3MUX2();
+        var _3MUX2_1 = new _3MUX2();
         SubCircuits = [shift2, _2TritMul, addSub2, cmp2, cmp2Tritwise, _2MUX2_0, _2MUX2_1, _2MUX2_2, _3MUX2_0, _3MUX2_1];
 
         this.AddWires([

@@ -123,8 +123,8 @@ public class _2xDecode : SubCircuit
             (nameof(Imm01_1), PortRole.Out34),
             (nameof(Imm00_1), PortRole.Out35)]);
 
-        var decode_0 = new Decode { Parent = this };
-        var decode_1 = new Decode { Parent = this };
+        var decode_0 = new Decode();
+        var decode_1 = new Decode();
         SubCircuits = [decode_0, decode_1];
 
         this.AddWires([

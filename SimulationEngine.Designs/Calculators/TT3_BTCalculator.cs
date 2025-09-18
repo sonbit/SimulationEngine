@@ -29,9 +29,9 @@ public class TT3_BTCalculator : SubCircuit
             (nameof(S1), PortRole.Out2),
             (nameof(S0), PortRole.Out3)]);
 
-        var btm4 = new BTM4 { Parent = this };
-        var bta4 = new BTA4 { Parent = this };
-        var deselect4 = new Deselect4 { Parent = this };
+        var btm4 = new BTM4();
+        var bta4 = new BTA4();
+        var deselect4 = new Deselect4();
         SubCircuits = [btm4, bta4, deselect4];
 
         this.AddWires([

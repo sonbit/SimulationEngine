@@ -61,11 +61,11 @@ public class _9Reg10_1 : SubCircuit
             (nameof(Rd01), PortRole.Out8),
             (nameof(Rd00), PortRole.Out9)]);
 
-        var _9Reg21_0 = new _9Reg2_1 { Parent = this };
-        var _9Reg21_1 = new _9Reg2_1 { Parent = this };
-        var _9Reg21_2 = new _9Reg2_1 { Parent = this };
-        var _9Reg21_3 = new _9Reg2_1 { Parent = this };
-        var _9Reg21_4 = new _9Reg2_1 { Parent = this };
+        var _9Reg21_0 = new _9Reg2_1();
+        var _9Reg21_1 = new _9Reg2_1();
+        var _9Reg21_2 = new _9Reg2_1();
+        var _9Reg21_3 = new _9Reg2_1();
+        var _9Reg21_4 = new _9Reg2_1();
         SubCircuits = [_9Reg21_0, _9Reg21_1, _9Reg21_2, _9Reg21_3, _9Reg21_4];
 
         this.AddWires([

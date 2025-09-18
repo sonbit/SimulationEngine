@@ -25,7 +25,7 @@ public class SyTriDirLoadCounter : SubCircuit
         var _7PB = this.AddLogicGate("7PB");
         var PPPPPPZD0 = this.AddLogicGate("PPPPPPZD0");
 
-        var tff = new TFlipFlop { Parent = this };
+        var tff = new TFlipFlop();
         SubCircuits = [tff];
 
         this.AddWires([

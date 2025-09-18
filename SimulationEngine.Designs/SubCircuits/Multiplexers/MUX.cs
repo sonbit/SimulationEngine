@@ -35,10 +35,10 @@ public class MUX : SubCircuit
             (nameof(A0), PortRole.In10),
             (nameof(Q), PortRole.Out0)]);
 
-        var _3MUX_0 = new _3MUX { Parent = this };
-        var _3MUX_1 = new _3MUX { Parent = this };
-        var _3MUX_2 = new _3MUX { Parent = this };
-        var _3MUX_3 = new _3MUX { Parent = this };
+        var _3MUX_0 = new _3MUX();
+        var _3MUX_1 = new _3MUX();
+        var _3MUX_2 = new _3MUX();
+        var _3MUX_3 = new _3MUX();
         SubCircuits = [_3MUX_0, _3MUX_1, _3MUX_2, _3MUX_3];
 
         this.AddWires([
