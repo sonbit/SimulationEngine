@@ -73,7 +73,7 @@ public partial class SubCircuitRepository
 
             var ordered = childSubCircuit.Ports.OrderBy(po => po, PortOrderComparer.Instance).ToList();
             var inputPorts = ordered.Where(po => po.Role.IsInput()).ToList();
-            var outputPorts = ordered.Where(po => !po.Role.IsInput()).ToList();
+            var outputPorts = ordered.Where(po => po.Role.IsOutput()).ToList();
             ordinalToChild[subCircuitPlacement.Ordinal] = (childSubCircuit, inputPorts, outputPorts);
         }
 

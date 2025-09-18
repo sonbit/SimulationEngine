@@ -85,7 +85,7 @@ public static class SubCircuitCompiler
             var isInput = childPort.Role.IsInput();
             var list = isInput 
                 ? ordered.Where(po => po.Role.IsInput()).ToList() 
-                : [.. ordered.Where(po => !po.Role.IsInput())];
+                : [.. ordered.Where(po => po.Role.IsOutput())];
 
             int childPortIndex = list.IndexOf(childPort);
             return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
