@@ -38,6 +38,7 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
 
         var prompt = new SelectionPrompt<object>()
             .Title(title)
+            .PageSize(20)
             .AddChoices(items.Cast<object>().Append("Back"))
             .UseConverter(o => o is T t ? label(t) : o.ToString()!);
 

@@ -37,12 +37,15 @@ public sealed class SimListCommand(ISubCircuitService service, IInputOutput inpu
 
     public static async Task SimulatorReplAsync(SimulationSession session, IInputOutput intputOutput, IRenderer renderer)
     {
-        var sub = session.SubCircuit;
-        var inputCount = sub.Inputs.Count;
-        var inputNames = string.Join(", ", sub.Inputs.Select(p => p.Title));
+        var subCircuit = session.SubCircuit;
+        var inputCount = subCircuit.Inputs.Count;
+        var outputCount = subCircuit.Outputs.Count;
+        var inputNames = string.Join(", ", subCircuit.Inputs.Select(p => p.Title));
+        var outputNames = string.Join(", ", subCircuit.Outputs.Select(p => p.Title));
 
-        renderer.DrawHeader($"Simulator — {sub.Title} ({sub.Id})");
-        AnsiConsole.MarkupLine($"[grey]Type {inputCount} inputs ({Markup.Escape(inputNames)}). Press [bold]Esc[/] to go back.[/]");
+        renderer.DrawHeader($"Simulator — {subCircuit.Title} ({subCircuit.Id})");
+        AnsiConsole.MarkupLine(
+            $"[grey]Type {inputCount} inputs ({Markup.Escape(inputNames)}) to get {outputCount} outputs ({Markup.Escape(outputNames)}). Press [bold]Esc[/] to go back.[/]");
 
         var stringBuilder = new StringBuilder();
         var history = new List<(string In, string Out)>();
