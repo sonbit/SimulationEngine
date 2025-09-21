@@ -1,65 +1,46 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Multiplexers;
 
 public class _9MUX2 : SubCircuit
 {
-    public Port Sel1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Sel0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port D81 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port D80 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port D71 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port D70 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port D61 => Ports.Single(p => p.Role == PortRole.In6);
-    public Port D60 => Ports.Single(p => p.Role == PortRole.In7);
-    public Port D51 => Ports.Single(p => p.Role == PortRole.In8);
-    public Port D50 => Ports.Single(p => p.Role == PortRole.In9);
-    public Port D41 => Ports.Single(p => p.Role == PortRole.In10);
-    public Port D40 => Ports.Single(p => p.Role == PortRole.In11);
-    public Port D31 => Ports.Single(p => p.Role == PortRole.In12);
-    public Port D30 => Ports.Single(p => p.Role == PortRole.In13);
-    public Port D21 => Ports.Single(p => p.Role == PortRole.In14);
-    public Port D20 => Ports.Single(p => p.Role == PortRole.In15);
-    public Port D11 => Ports.Single(p => p.Role == PortRole.In16);
-    public Port D10 => Ports.Single(p => p.Role == PortRole.In17);
-    public Port D01 => Ports.Single(p => p.Role == PortRole.In18);
-    public Port D00 => Ports.Single(p => p.Role == PortRole.In19);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port Sel1 => Inputs[0];
+    public Port Sel0 => Inputs[1];
+    public Port D81 => Inputs[2];
+    public Port D80 => Inputs[3];
+    public Port D71 => Inputs[4];
+    public Port D70 => Inputs[5];
+    public Port D61 => Inputs[6];
+    public Port D60 => Inputs[7];
+    public Port D51 => Inputs[8];
+    public Port D50 => Inputs[9];
+    public Port D41 => Inputs[10];
+    public Port D40 => Inputs[11];
+    public Port D31 => Inputs[12];
+    public Port D30 => Inputs[13];
+    public Port D21 => Inputs[14];
+    public Port D20 => Inputs[15];
+    public Port D11 => Inputs[16];
+    public Port D10 => Inputs[17];
+    public Port D01 => Inputs[18];
+    public Port D00 => Inputs[19];
+    public Port Q1 => Outputs[0];
+    public Port Q0 => Outputs[1];
 
     public _9MUX2()
     {
-        this.AddPorts([
-            (nameof(Sel1), PortRole.In0),
-            (nameof(Sel0), PortRole.In1),
-            (nameof(D81), PortRole.In2),
-            (nameof(D80), PortRole.In3),
-            (nameof(D71), PortRole.In4),
-            (nameof(D70), PortRole.In5),
-            (nameof(D61), PortRole.In6),
-            (nameof(D60), PortRole.In7),
-            (nameof(D51), PortRole.In8),
-            (nameof(D50), PortRole.In9),
-            (nameof(D41), PortRole.In10),
-            (nameof(D40), PortRole.In11),
-            (nameof(D31), PortRole.In12),
-            (nameof(D30), PortRole.In13),
-            (nameof(D21), PortRole.In14),
-            (nameof(D20), PortRole.In15),
-            (nameof(D11), PortRole.In16),
-            (nameof(D10), PortRole.In17),
-            (nameof(D01), PortRole.In18),
-            (nameof(D00), PortRole.In19),
-            (nameof(Q1), PortRole.Out0),
-            (nameof(Q0), PortRole.Out1)]);
+        this.AddInputs(
+            nameof(Sel1), nameof(Sel0), 
+            nameof(D81), nameof(D80), nameof(D71), nameof(D70), nameof(D61), nameof(D60), 
+            nameof(D51), nameof(D50), nameof(D41), nameof(D40), nameof(D31), nameof(D30), 
+            nameof(D21), nameof(D20), nameof(D11), nameof(D10), nameof(D01), nameof(D00));
+        this.AddOutputs(nameof(Q1), nameof(Q0));
 
-        var _3MUX2_0 = new _3MUX2();
-        var _3MUX2_1 = new _3MUX2();
-        var _3MUX2_2 = new _3MUX2();
-        var _3MUX2_3 = new _3MUX2();
-        SubCircuits = [_3MUX2_0, _3MUX2_1, _3MUX2_2, _3MUX2_3];
+        var _3MUX2_0 = this.AddSubCircuit(new _3MUX2());
+        var _3MUX2_1 = this.AddSubCircuit(new _3MUX2());
+        var _3MUX2_2 = this.AddSubCircuit(new _3MUX2());
+        var _3MUX2_3 = this.AddSubCircuit(new _3MUX2());
 
         this.AddWires([
             (Sel0, _3MUX2_0.Sel),
@@ -95,6 +76,7 @@ public class _9MUX2 : SubCircuit
             (_3MUX2_2.Q0, _3MUX2_3.A0),
 
             (_3MUX2_3.Q1, Q1),
-            (_3MUX2_3.Q0, Q0)]);
+            (_3MUX2_3.Q0, Q0)
+        ]);
     }
 }

@@ -1,27 +1,24 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Latches;
 
 public class TFlipFlop : SubCircuit
 {
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Q => Ports.Single(p => p.Role == PortRole.Out0);
+    public Port Clk => Inputs[0];
+    public Port A => Inputs[1];
+    public Port Q => Outputs[0];
 
     public TFlipFlop()
     {
-        this.AddPorts([
-            (nameof(Clk), PortRole.In0),
-            (nameof(A), PortRole.In1),
-            (nameof(Q), PortRole.Out0)]);
+        this.AddBinaryInput(nameof(Clk));
+        this.AddInput(nameof(A));
+        this.AddOutputs(nameof(Q));
 
         var _2 = this.AddLogicGate("2");
 
-        var btl0 = new BTLatch();
-        var btl1 = new BTLatch();
-        SubCircuits = [btl0, btl1];
+        var btl0 = this.AddSubCircuit(new BTLatch());
+        var btl1 = this.AddSubCircuit(new BTLatch());
 
         this.AddWires([
             (Clk, _2.A),
@@ -32,6 +29,7 @@ public class TFlipFlop : SubCircuit
             (Clk, btl1.Clk),
             (btl0.Dout, btl1.Din),
 
-            (btl1.Dout, Q)]);
+            (btl1.Dout, Q)
+        ]);
     }
 }

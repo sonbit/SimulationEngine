@@ -1,10 +1,9 @@
-﻿using SimulationEngine.Domain.Comparers;
-using SimulationEngine.Domain.Compilers.Models;
+﻿using SimulationEngine.Domain.Compilers.Models;
 using SimulationEngine.Domain.Encoders;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Hashers;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
+using SimulationEngine.Domain.Models.Placements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,12 +29,8 @@ public static class SubCircuitCompiler
         var subCircuit = new SubCircuit
         {
             Title = authorSubCircuit.Title,
-            Ports = [.. authorSubCircuit.Ports.Select(port => new Port { Title = port.Title, Role = port.Role })],
-            LogicGates = [.. authorSubCircuit.LogicGates.Select(logicGate => new LogicGate
-            {
-                TruthTable = logicGate.TruthTable,
-                Pins = [.. logicGate.Pins.Select(pin => new Pin { Role = pin.Role })]
-            })],
+            Ports = [.. authorSubCircuit.Ports.Select(port => new Port(port))],
+            LogicGates = [.. authorSubCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
             Wires = []
         };
 
@@ -63,15 +58,11 @@ public static class SubCircuitCompiler
                 PortPlacements = []
             };
 
-            var orderedPorts = childSubCircuit.Ports.OrderBy(port => port, PortOrderComparer.Instance).ToList();
-            var inputCount = orderedPorts.Count(port => port.Role.IsInput());
-            var outputCount = orderedPorts.Count - inputCount;
+            for (int i = 0; i < subCircuit.Inputs.Count; i++) 
+                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = subCircuit.Inputs[i].Name });
 
-            for (int i = 0; i < inputCount; i++) 
-                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = $"{nameof(PortRole.In0)[..2]}{i}" });
-
-            for (int i = 0; i < outputCount; i++)
-                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = $"{nameof(PortRole.Out0)[..3]}{i}" });
+            for (int i = 0; i < subCircuit.Outputs.Count; i++)
+                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = subCircuit.Outputs[i].Name });
 
             subCircuitPlacements.Add(subCircuitPlacement);
         }
@@ -81,13 +72,10 @@ public static class SubCircuitCompiler
             int childSubCircuitIndex = authorSubCircuit.SubCircuits.IndexOf(childSubCircuit);
             var subCircuitPlacement = subCircuitPlacements[childSubCircuitIndex];
 
-            var ordered = childSubCircuit.Ports.OrderBy(po => po, PortOrderComparer.Instance).ToList();
-            var isInput = childPort.Role.IsInput();
-            var list = isInput 
-                ? ordered.Where(po => po.Role.IsInput()).ToList() 
-                : [.. ordered.Where(po => po.Role.IsOutput())];
+            var isInput = childPort.IsInput();
+            var ports = isInput ? childSubCircuit.Inputs : childSubCircuit.Outputs;
 
-            int childPortIndex = list.IndexOf(childPort);
+            int childPortIndex = ports.IndexOf(childPort);
             return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
         }
 

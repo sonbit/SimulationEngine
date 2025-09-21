@@ -1,41 +1,30 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
+using SimulationEngine.Domain.Models.Metadata.Enums;
 
 namespace SimulationEngine.Designs.SubCircuits.Deselectors;
 
 public class Deselect4 : SubCircuit
 {
-    public Port Sel => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A3 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A2 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port B3 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port B2 => Ports.Single(p => p.Role == PortRole.In6);
-    public Port B1 => Ports.Single(p => p.Role == PortRole.In7);
-    public Port B0 => Ports.Single(p => p.Role == PortRole.In8);
-    public Port S3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port S2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port S1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port S0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port Sel => Inputs[0];
+    public Port A3 => Inputs[1];
+    public Port A2 => Inputs[2];
+    public Port A1 => Inputs[3];
+    public Port A0 => Inputs[4];
+    public Port B3 => Inputs[5];
+    public Port B2 => Inputs[6];
+    public Port B1 => Inputs[7];
+    public Port B0 => Inputs[8];
+    public Port S3 => Outputs[0];
+    public Port S2 => Outputs[1];
+    public Port S1 => Outputs[2];
+    public Port S0 => Outputs[3];
 
     public Deselect4()
     {
-        this.AddPorts([
-            (nameof(Sel), PortRole.In0),
-            (nameof(A3), PortRole.In1),
-            (nameof(A2), PortRole.In2),
-            (nameof(A1), PortRole.In3),
-            (nameof(A0), PortRole.In4),
-            (nameof(B3), PortRole.In5),
-            (nameof(B2), PortRole.In6),
-            (nameof(B1), PortRole.In7),
-            (nameof(B0), PortRole.In8),
-            (nameof(S3), PortRole.Out0),
-            (nameof(S2), PortRole.Out1),
-            (nameof(S1), PortRole.Out2),
-            (nameof(S0), PortRole.Out3)]);
+        this.AddBinaryInput(nameof(Sel));
+        this.AddInputs(nameof(A3), nameof(A2), nameof(A1), nameof(A0), nameof(B3), nameof(B2), nameof(B1), nameof(B0));
+        this.AddOutputs(nameof(S3), nameof(S2), nameof(S1), nameof(S0));
 
         var inv = this.AddLogicGate("2");
 
@@ -95,6 +84,7 @@ public class Deselect4 : SubCircuit
             (vp0_0.Q, S3),
             (vp0_1.Q, S2),
             (vp0_2.Q, S1),
-            (vp0_3.Q, S0)]);
+            (vp0_3.Q, S0)
+        ]);
     }
 }

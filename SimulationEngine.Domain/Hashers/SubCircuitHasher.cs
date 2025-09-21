@@ -1,6 +1,7 @@
 ﻿using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Placements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +20,9 @@ public static class SubCircuitHasher
 
         BuildString(sb, [nameof(SubCircuit.Title), subCircuit.Title], true);
 
-        var ports = subCircuit.Ports.OrderBy(p => p, PortOrderComparer.Instance).ToList();
+        var ports = subCircuit.OrderedPorts;
         foreach (var port in ports)
-            BuildString(sb, [nameof(Port), $"{port.Role}", port.Title]);
+            BuildString(sb, [nameof(Port), port.Name, port.Title]);
 
         var logicGates = subCircuit.LogicGates.OrderBy(logicGate => logicGate, LogicGateOrderComparer.Instance).ToList();
         foreach (var logicGate in logicGates)

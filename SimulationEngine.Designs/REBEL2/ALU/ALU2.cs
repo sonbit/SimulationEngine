@@ -1,50 +1,39 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
 public class ALU2 : SubCircuit
 {
-    public Port Func2 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Func1 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Func0 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port B1 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port B0 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In6);
-    public Port Cout => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out2);
+    public Port Func2 => Inputs[0];
+    public Port Func1 => Inputs[1];
+    public Port Func0 => Inputs[2];
+    public Port B1 => Inputs[3];
+    public Port B0 => Inputs[4];
+    public Port A1 => Inputs[5];
+    public Port A0 => Inputs[6];
+    public Port Cout => Outputs[0];
+    public Port Q1 => Outputs[1];
+    public Port Q0 => Outputs[2];
 
     public ALU2()
     {
-        this.AddPorts([
-            (nameof(Func2), PortRole.In0),
-            (nameof(Func1), PortRole.In1),
-            (nameof(Func0), PortRole.In2),
-            (nameof(B1), PortRole.In3),
-            (nameof(B0), PortRole.In4),
-            (nameof(A1), PortRole.In5),
-            (nameof(A0), PortRole.In6),
-            (nameof(Cout), PortRole.Out0),
-            (nameof(Q1), PortRole.Out1),
-            (nameof(Q0), PortRole.Out2)]);
+        this.AddInputs(nameof(Func2), nameof(Func1), nameof(Func0), nameof(B1), nameof(B0), nameof(A1), nameof(A0));
+        this.AddOutputs(nameof(Cout), nameof(Q1), nameof(Q0));
 
         var DGDDDDDAD = this.AddLogicGate("DGDDDDDAD");
 
-        var shift2 = new Shift2();
-        var _2TritMul = new _2TritMul();
-        var addSub2 = new AddSub2();
-        var cmp2 = new CMP2();
-        var cmp2Tritwise = new CMP2Tritwise();
-        var _2MUX2_0 = new _2MUX2();
-        var _2MUX2_1 = new _2MUX2();
-        var _2MUX2_2 = new _2MUX2();
-        var _3MUX2_0 = new _3MUX2();
-        var _3MUX2_1 = new _3MUX2();
-        SubCircuits = [shift2, _2TritMul, addSub2, cmp2, cmp2Tritwise, _2MUX2_0, _2MUX2_1, _2MUX2_2, _3MUX2_0, _3MUX2_1];
+        var shift2 = this.AddSubCircuit(new Shift2());
+        var _2TritMul = this.AddSubCircuit(new _2TritMul());
+        var addSub2 = this.AddSubCircuit(new AddSub2());
+        var cmp2 = this.AddSubCircuit(new CMP2());
+        var cmp2Tritwise = this.AddSubCircuit(new CMP2Tritwise());
+        var _2MUX2_0 = this.AddSubCircuit(new _2MUX2());
+        var _2MUX2_1 = this.AddSubCircuit(new _2MUX2());
+        var _2MUX2_2 = this.AddSubCircuit(new _2MUX2());
+        var _3MUX2_0 = this.AddSubCircuit(new _3MUX2());
+        var _3MUX2_1 = this.AddSubCircuit(new _3MUX2());
 
         this.AddWires([
             (A1, shift2.A1),
@@ -116,6 +105,7 @@ public class ALU2 : SubCircuit
 
             (DGDDDDDAD.Q, Cout),
             (_3MUX2_1.Q1, Q1),
-            (_3MUX2_1.Q0, Q0)]);
+            (_3MUX2_1.Q0, Q0)
+        ]);
     }
 }

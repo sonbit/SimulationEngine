@@ -1,5 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Metadata.Enums;
 using SimulationEngine.Simulator.Comparers;
 using SimulationEngine.Simulator.Finders;
 using SimulationEngine.Simulator.Models;
@@ -12,9 +12,6 @@ public partial class SimulationSession
     private readonly DeltaKernel _deltaKernel = new();
     private readonly List<IProcess> _processes = [];
     private readonly Dictionary<Terminal, Net> _netOfTerminals = new(ReferenceEqualityComparer<Terminal>.Instance);
-
-    private readonly Dictionary<PortRole, Port> _inputPortByRole = [];
-    private readonly Dictionary<PortRole, Port> _outputPortByRole = [];
 
     public bool Trace 
     { 
@@ -34,38 +31,78 @@ public partial class SimulationSession
         if (trace)
             ReportNetIssues(simSession._netOfTerminals.Values);
 
-        foreach (var port in subCircuit.Inputs ?? Enumerable.Empty<Port>())
-            simSession._inputPortByRole[port.Role] = port;
-
-        foreach (var port in subCircuit.Outputs ?? Enumerable.Empty<Port>())
-            simSession._outputPortByRole[port.Role] = port;
-
         simSession._deltaKernel.Prime(simSession._processes);
         return simSession;
     }
 
+    public void SetInput(Port port, byte value) => _deltaKernel.Set(_netOfTerminals[port], value);
+
     public void SetInputs(byte[] values)
     {
+        if (values.Length != SubCircuit.Inputs.Count)
+            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}.");
+
         for (int i = 0; i < values.Length; i++)
-            SetInput(SubCircuit.Ports[i].Role, values[i]);
+            SetInput(SubCircuit.Inputs[i], values[i]);
     }
 
-    public void SetInput(PortRole portRole, byte value)
+    public void SetInputsWithRadix(string values)
     {
-        if (!_inputPortByRole.TryGetValue(portRole, out var port))
-            throw new KeyNotFoundException($"Input '{portRole}' not found. Known: {string.Join(", ", _inputPortByRole.Keys)}");
+        if (values.Length != SubCircuit.Inputs.Count)
+            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}.");
 
-        _deltaKernel.Set(_netOfTerminals[port], value);
+        var byteArray = new byte[values.Length];
+
+        for (int i = 0; i < values.Length; i++)
+        {
+            var port = SubCircuit.Inputs[i];
+            byteArray[i] = port.PortMetadata.Radix switch
+            {
+                Radix.Binary or Radix.BinarySigned => (values[i] == '1') ? (byte)2 : Convert.ToByte(values[i]),
+                Radix.TernaryBalanced => values[i] switch
+                {
+                    '1' => 2,
+                    '0' => 1,
+                    '-' => 0,
+                    _ => throw new InvalidOperationException($"Invalid balanced ternary digit '{values[i]}' for port {port.Name}."),
+                },
+                Radix.TernaryUnbalanced => Convert.ToByte(values[i]),
+                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}."),
+            };
+        }
+
+        SetInputs(byteArray);
     }
 
-    public byte[] GetOutputs() => [.. SubCircuit.Outputs.Select(port => GetOutput(port.Role))];
+    public byte GetOutput(Port port) => _netOfTerminals[port].CurrentValue;
 
-    public byte GetOutput(PortRole portRole)
+    public byte[] GetOutputs() => [.. SubCircuit.Outputs.Select(GetOutput)];
+
+    public string GetOutputsWithRadix()
     {
-        if (!_outputPortByRole.TryGetValue(portRole, out var port))
-            throw new KeyNotFoundException($"Output '{portRole}' not found. Known: {string.Join(", ", _outputPortByRole.Keys)}");
+        var chars = new char[SubCircuit.Outputs.Count];
 
-        return _netOfTerminals[port].CurrentValue;
+        for (int i = 0; i < SubCircuit.Outputs.Count; i++)
+        {
+            var port = SubCircuit.Outputs[i];
+            var value = GetOutput(port);
+
+            chars[i] = port.PortMetadata.Radix switch
+            {
+                Radix.Binary or Radix.BinarySigned => (value == 2) ? '1' : '0',
+                Radix.TernaryBalanced => value switch
+                {
+                    2 => '1',
+                    1 => '0',
+                    0 => '-',
+                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{value}' for port {port.Name}."),
+                },
+                Radix.TernaryUnbalanced => (char)value,
+                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}."),
+            };
+        }
+
+        return new string(chars);
     }
 
     private static void ReportNetIssues(IEnumerable<Net> nets)

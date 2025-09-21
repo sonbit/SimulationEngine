@@ -1,38 +1,29 @@
 ﻿using SimulationEngine.Designs.Calculators.SubCircuits;
 using SimulationEngine.Designs.SubCircuits.Deselectors;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Calculators;
 
 public class TT3_BTCalculator : SubCircuit
 {
-    public Port X1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port X0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Y1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Y0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port S3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port S2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port S1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port S0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port X1 => Inputs[0];
+    public Port X0 => Inputs[1];
+    public Port Y1 => Inputs[2];
+    public Port Y0 => Inputs[3];
+    public Port S3 => Outputs[0];
+    public Port S2 => Outputs[1];
+    public Port S1 => Outputs[2];
+    public Port S0 => Outputs[3];
 
     public TT3_BTCalculator()
     {
-        this.AddPorts([
-            (nameof(X1), PortRole.In0),
-            (nameof(X0), PortRole.In1),
-            (nameof(Y1), PortRole.In2),
-            (nameof(Y0), PortRole.In3),
-            (nameof(S3), PortRole.Out0),
-            (nameof(S2), PortRole.Out1),
-            (nameof(S1), PortRole.Out2),
-            (nameof(S0), PortRole.Out3)]);
+        this.AddInputs(nameof(X1), nameof(X0), nameof(Y1), nameof(Y0));
+        this.AddOutputs(nameof(S3), nameof(S2), nameof(S1), nameof(S0));
 
-        var btm4 = new BTM4();
-        var bta4 = new BTA4();
-        var deselect4 = new Deselect4();
-        SubCircuits = [btm4, bta4, deselect4];
+        var btm4 = this.AddSubCircuit(new BTM4());
+        var bta4 = this.AddSubCircuit(new BTA4());
+        var deselect4 = this.AddSubCircuit(new Deselect4());
 
         this.AddWires([
             (X1, btm4.X1),
@@ -58,6 +49,7 @@ public class TT3_BTCalculator : SubCircuit
             (deselect4.S3, S3),
             (deselect4.S2, S2),
             (deselect4.S1, S1),
-            (deselect4.S0, S0)]);
+            (deselect4.S0, S0)
+        ]);
     }
 }

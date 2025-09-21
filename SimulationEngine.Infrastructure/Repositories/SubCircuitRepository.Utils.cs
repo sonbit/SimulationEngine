@@ -2,9 +2,8 @@
 using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Compilers.Models;
 using SimulationEngine.Domain.Encoders;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Placements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,10 +70,7 @@ public partial class SubCircuitRepository
             var childSubCircuit = await BuildInstanceFromTemplateAsync(childSubCircuitTemplate, childSubCircuitTemplatePlacements);
             childSubCircuits.Add(childSubCircuit);
 
-            var ordered = childSubCircuit.Ports.OrderBy(po => po, PortOrderComparer.Instance).ToList();
-            var inputPorts = ordered.Where(po => po.Role.IsInput()).ToList();
-            var outputPorts = ordered.Where(po => po.Role.IsOutput()).ToList();
-            ordinalToChild[subCircuitPlacement.Ordinal] = (childSubCircuit, inputPorts, outputPorts);
+            ordinalToChild[subCircuitPlacement.Ordinal] = (childSubCircuit, childSubCircuit.Inputs, childSubCircuit.Outputs);
         }
 
         subCircuit.SubCircuits = childSubCircuits;
@@ -123,9 +119,7 @@ public partial class SubCircuitRepository
         {
             Title = placed.SubCircuit.Title,
             Hash = placed.SubCircuit.Hash,
-            Ports = [.. placed.SubCircuit.Ports
-                .OrderBy(port => port, PortOrderComparer.Instance)
-                .Select(port => new Port { Title = port.Title, Role = port.Role })],
+            Ports = [.. placed.SubCircuit.OrderedPorts.Select(port => new Port(port))],
             LogicGates = [],
             Wires = []
         };
@@ -147,9 +141,8 @@ public partial class SubCircuitRepository
         }
         await _dbContext.SaveChangesAsync();
 
-        var portMap = placed.SubCircuit.Ports
-            .OrderBy(port => port, PortOrderComparer.Instance)
-            .Zip(newSubCircuit.Ports.OrderBy(port => port, PortOrderComparer.Instance))
+        var portMap = placed.SubCircuit.OrderedPorts
+            .Zip(newSubCircuit.OrderedPorts)
             .ToDictionary(portPair => portPair.First, portPair => portPair.Second);
 
         var subCircuitPlacements = new List<SubCircuitPlacement>(placed.SubCircuitPlacementInfos.Count);
@@ -168,15 +161,11 @@ public partial class SubCircuitRepository
             _dbContext.SubCircuitPlacements.Add(subCircuitPlacement);
             await _dbContext.SaveChangesAsync();
 
-            var childPorts = childSubCircuit.Ports.OrderBy(po => po, PortOrderComparer.Instance).ToList();
-            var childInputPortsCount = childPorts.Count(po => po.Role.IsInput());
-            var childOutputPortsCount = childPorts.Count - childInputPortsCount;
+            for (int i = 0; i < childSubCircuit.Inputs.Count; i++) 
+                _dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Name });
 
-            for (int i = 0; i < childInputPortsCount; i++) 
-                _dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = $"{nameof(PortRole.In0)[..2]}{i}" });
-
-            for (int i = 0; i < childOutputPortsCount; i++)
-                _dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = $"{nameof(PortRole.Out0)[..3]}{i}" });
+            for (int i = 0; i < childSubCircuit.Outputs.Count; i++)
+                _dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Name });
 
             await _dbContext.SaveChangesAsync();
 
@@ -218,25 +207,19 @@ public partial class SubCircuitRepository
 
     private static SubCircuit CloneShallow(SubCircuit subCircuit, out Dictionary<Port, Port> portMap, out Dictionary<Pin, Pin> pinMap)
     {
-        var ports = subCircuit.Ports
-            .OrderBy(port => port, PortOrderComparer.Instance)
-            .ToList();
+        var ports = subCircuit.OrderedPorts;
 
         var parent = new SubCircuit
         {
             Title = subCircuit.Title,
-            Ports = [.. ports.Select(port => new Port { Title = port.Title, Role = port.Role })],
-            LogicGates = [.. subCircuit.LogicGates.Select(logicGate => new LogicGate
-            {
-                TruthTable = logicGate.TruthTable,
-                Pins = [.. logicGate.Pins.Select(pin => new Pin { Role = pin.Role })]
-            })],
+            Ports = [.. ports.Select(port => new Port(port))],
+            LogicGates = [.. subCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
             Wires = [],
             SubCircuits = []
         };
 
         portMap = ports
-            .Zip(parent.Ports)
+            .Zip(parent.OrderedPorts)
             .ToDictionary(z => z.First, z => z.Second);
 
         var gateMap = subCircuit.LogicGates

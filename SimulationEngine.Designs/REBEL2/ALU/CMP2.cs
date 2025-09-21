@@ -1,39 +1,29 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
 public class CMP2 : SubCircuit
 {
-    public Port B1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port B0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Min1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Min0 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Max1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Max0 => Ports.Single(p => p.Role == PortRole.Out3);
-    public Port Cmp => Ports.Single(p => p.Role == PortRole.Out4);
+    public Port B1 => Inputs[0];
+    public Port B0 => Inputs[1];
+    public Port A1 => Inputs[2];
+    public Port A0 => Inputs[3];
+    public Port Min1 => Outputs[0];
+    public Port Min0 => Outputs[1];
+    public Port Max1 => Outputs[2];
+    public Port Max0 => Outputs[3];
+    public Port Cmp => Outputs[4];
 
     public CMP2()
     {
-        this.AddPorts([
-            (nameof(B1), PortRole.In0),
-            (nameof(B0), PortRole.In1),
-            (nameof(A1), PortRole.In2),
-            (nameof(A0), PortRole.In3),
-            (nameof(Min1), PortRole.Out0),
-            (nameof(Min0), PortRole.Out1),
-            (nameof(Max1), PortRole.Out2),
-            (nameof(Max0), PortRole.Out3),
-            (nameof(Cmp), PortRole.Out4)]);
+        this.AddInputs(nameof(B1), nameof(B0), nameof(A1), nameof(A0));
+        this.AddOutputs(nameof(Min1), nameof(Min0), nameof(Max1), nameof(Max0), nameof(Cmp));
 
-        var _2TritComp = new _2TritComp();
-        var _2MUX2_0 = new _2MUX2();
-        var _2MUX2_1 = new _2MUX2();
-        SubCircuits = [_2TritComp, _2MUX2_0, _2MUX2_1];
+        var _2TritComp = this.AddSubCircuit(new _2TritComp());
+        var _2MUX2_0 = this.AddSubCircuit(new _2MUX2());
+        var _2MUX2_1 = this.AddSubCircuit(new _2MUX2());
 
         this.AddWires([
             (B1, _2TritComp.B1),
@@ -57,6 +47,7 @@ public class CMP2 : SubCircuit
             (_2MUX2_0.Q0, Min0),
             (_2MUX2_1.Q1, Max1),
             (_2MUX2_1.Q0, Max0),
-            (_2TritComp.Q, Cmp)]);
+            (_2TritComp.Q, Cmp)
+        ]);
     }
 }

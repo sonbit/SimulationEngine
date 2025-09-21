@@ -1,41 +1,32 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Adders;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
 public class _2TritMul : SubCircuit
 {
-    public Port B1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port B0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port B1 => Inputs[0];
+    public Port B0 => Inputs[1];
+    public Port A1 => Inputs[2];
+    public Port A0 => Inputs[3];
+    public Port Q3 => Outputs[0];
+    public Port Q2 => Outputs[1];
+    public Port Q1 => Outputs[2];
+    public Port Q0 => Outputs[3];
 
     public _2TritMul()
     {
-        this.AddPorts([
-            (nameof(B1), PortRole.In0),
-            (nameof(B0), PortRole.In1),
-            (nameof(A1), PortRole.In2),
-            (nameof(A0), PortRole.In3),
-            (nameof(Q3), PortRole.Out0),
-            (nameof(Q2), PortRole.Out1),
-            (nameof(Q1), PortRole.Out2),
-            (nameof(Q0), PortRole.Out3)]);
+        this.AddInputs(nameof(B1), nameof(B0), nameof(A1), nameof(A0));
+        this.AddOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
         var PD5_0 = this.AddLogicGate("PD5");
         var PD5_1 = this.AddLogicGate("PD5");
         var PD5_2 = this.AddLogicGate("PD5");
         var PD5_3 = this.AddLogicGate("PD5");
 
-        var triHalfAdder_0 = new TriHalfAdder();
-        var triHalfAdder_1 = new TriHalfAdder();
-        SubCircuits = [triHalfAdder_0, triHalfAdder_1];
+        var triHalfAdder_0 = this.AddSubCircuit(new TriHalfAdder());
+        var triHalfAdder_1 = this.AddSubCircuit(new TriHalfAdder());
 
         this.AddWires([
             (B1, PD5_0.B),
@@ -59,6 +50,7 @@ public class _2TritMul : SubCircuit
             (triHalfAdder_1.Cout, Q3),
             (triHalfAdder_1.Q, Q2),
             (triHalfAdder_0.Q, Q1),
-            (PD5_3.Q, Q0)]);
+            (PD5_3.Q, Q0)
+        ]);
     }
 }

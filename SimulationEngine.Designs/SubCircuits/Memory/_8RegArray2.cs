@@ -1,85 +1,62 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Latches;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Memory;
 
 public class _8RegArray2 : SubCircuit
 {
-    public Port Clk8 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Clk7 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Clk6 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Clk5 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Clk4 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port Clk3 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port Clk2 => Ports.Single(p => p.Role == PortRole.In6);
-    public Port Clk1 => Ports.Single(p => p.Role == PortRole.In7);
-    public Port Clk0 => Ports.Single(p => p.Role == PortRole.In8);
-    public Port Din1 => Ports.Single(p => p.Role == PortRole.In9);
-    public Port Din0 => Ports.Single(p => p.Role == PortRole.In10);
-    public Port Q81 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q80 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q71 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Q70 => Ports.Single(p => p.Role == PortRole.Out3);
-    public Port Q61 => Ports.Single(p => p.Role == PortRole.Out4);
-    public Port Q60 => Ports.Single(p => p.Role == PortRole.Out5);
-    public Port Q51 => Ports.Single(p => p.Role == PortRole.Out6);
-    public Port Q50 => Ports.Single(p => p.Role == PortRole.Out7);
-    public Port Q41 => Ports.Single(p => p.Role == PortRole.Out8);
-    public Port Q40 => Ports.Single(p => p.Role == PortRole.Out9);
-    public Port Q31 => Ports.Single(p => p.Role == PortRole.Out10);
-    public Port Q30 => Ports.Single(p => p.Role == PortRole.Out11);
-    public Port Q21 => Ports.Single(p => p.Role == PortRole.Out12);
-    public Port Q20 => Ports.Single(p => p.Role == PortRole.Out13);
-    public Port Q11 => Ports.Single(p => p.Role == PortRole.Out14);
-    public Port Q10 => Ports.Single(p => p.Role == PortRole.Out15);
-    public Port Q01 => Ports.Single(p => p.Role == PortRole.Out16);
-    public Port Q00 => Ports.Single(p => p.Role == PortRole.Out17);
+    public Port Clk8 => Inputs[0];
+    public Port Clk7 => Inputs[1];
+    public Port Clk6 => Inputs[2];
+    public Port Clk5 => Inputs[3];
+    public Port Clk4 => Inputs[4];
+    public Port Clk3 => Inputs[5];
+    public Port Clk2 => Inputs[6];
+    public Port Clk1 => Inputs[7];
+    public Port Clk0 => Inputs[8];
+    public Port Din1 => Inputs[9];
+    public Port Din0 => Inputs[10];
+    public Port Q81 => Outputs[0];
+    public Port Q80 => Outputs[1];
+    public Port Q71 => Outputs[2];
+    public Port Q70 => Outputs[3];
+    public Port Q61 => Outputs[4];
+    public Port Q60 => Outputs[5];
+    public Port Q51 => Outputs[6];
+    public Port Q50 => Outputs[7];
+    public Port Q41 => Outputs[8];
+    public Port Q40 => Outputs[9];
+    public Port Q31 => Outputs[10];
+    public Port Q30 => Outputs[11];
+    public Port Q21 => Outputs[12];
+    public Port Q20 => Outputs[13];
+    public Port Q11 => Outputs[14];
+    public Port Q10 => Outputs[15];
+    public Port Q01 => Outputs[16];
+    public Port Q00 => Outputs[17];
 
     public _8RegArray2()
     {
-        this.AddPorts([
-            (nameof(Clk8), PortRole.In0),
-            (nameof(Clk7), PortRole.In1),
-            (nameof(Clk6), PortRole.In2),
-            (nameof(Clk5), PortRole.In3),
-            (nameof(Clk4), PortRole.In4),
-            (nameof(Clk3), PortRole.In5),
-            (nameof(Clk2), PortRole.In6),
-            (nameof(Clk1), PortRole.In7),
-            (nameof(Clk0), PortRole.In8),
-            (nameof(Din1), PortRole.In9),
-            (nameof(Din0), PortRole.In10),
-            (nameof(Q81), PortRole.Out0),
-            (nameof(Q80), PortRole.Out1),
-            (nameof(Q71), PortRole.Out2),
-            (nameof(Q70), PortRole.Out3),
-            (nameof(Q61), PortRole.Out4),
-            (nameof(Q60), PortRole.Out5),
-            (nameof(Q51), PortRole.Out6),
-            (nameof(Q50), PortRole.Out7),
-            (nameof(Q41), PortRole.Out8),
-            (nameof(Q40), PortRole.Out9),
-            (nameof(Q31), PortRole.Out10),
-            (nameof(Q30), PortRole.Out11),
-            (nameof(Q21), PortRole.Out12),
-            (nameof(Q20), PortRole.Out13),
-            (nameof(Q11), PortRole.Out14),
-            (nameof(Q10), PortRole.Out15),
-            (nameof(Q01), PortRole.Out16),
-            (nameof(Q00), PortRole.Out17)]);
+        this.AddBinaryInputs(
+            nameof(Clk8), nameof(Clk7), nameof(Clk6),
+            nameof(Clk5), nameof(Clk4), nameof(Clk3),
+            nameof(Clk2), nameof(Clk1), nameof(Clk0));
+        this.AddInputs(nameof(Din1), nameof(Din0));
+        this.AddOutputs(
+            nameof(Q81), nameof(Q80), nameof(Q71), nameof(Q70), nameof(Q61), nameof(Q60), 
+            nameof(Q51), nameof(Q50), nameof(Q41), nameof(Q40), nameof(Q31), nameof(Q30), 
+            nameof(Q21), nameof(Q20), nameof(Q11), nameof(Q10), nameof(Q01), nameof(Q00));
 
-        var _2Latch2_0 = new _2Latch2();
-        var _2Latch2_1 = new _2Latch2();
-        var _2Latch2_2 = new _2Latch2();
-        var _2Latch2_3 = new _2Latch2();
-        var _2Latch2_4 = new _2Latch2();
-        var _2Latch2_5 = new _2Latch2();
-        var _2Latch2_6 = new _2Latch2();
-        var _2Latch2_7 = new _2Latch2();
-        var _2Latch2_8 = new _2Latch2();
-        SubCircuits = [_2Latch2_0, _2Latch2_1, _2Latch2_2, _2Latch2_3, _2Latch2_4, _2Latch2_5, _2Latch2_6, _2Latch2_7, _2Latch2_8];
+        var _2Latch2_0 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_1 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_2 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_3 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_4 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_5 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_6 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_7 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_8 = this.AddSubCircuit(new _2Latch2());
 
         this.AddWires([
             (Clk8, _2Latch2_0.Clk),
@@ -135,6 +112,7 @@ public class _8RegArray2 : SubCircuit
             (_2Latch2_7.Q1, Q11),
             (_2Latch2_7.Q0, Q10),
             (_2Latch2_8.Q1, Q01),
-            (_2Latch2_8.Q0, Q00)]);
+            (_2Latch2_8.Q0, Q00)
+        ]);
     }
 }

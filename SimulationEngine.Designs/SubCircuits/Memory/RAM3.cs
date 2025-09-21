@@ -1,35 +1,28 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Latches;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Memory;
 
 public class RAM3 : SubCircuit
 {
-    public Port Clk2 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Clk1 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Clk0 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out2);
+    public Port Clk2 => Inputs[0];
+    public Port Clk1 => Inputs[1];
+    public Port Clk0 => Inputs[2];
+    public Port A => Inputs[3];
+    public Port Q2 => Outputs[0];
+    public Port Q1 => Outputs[1];
+    public Port Q0 => Outputs[2];
 
     public RAM3()
     {
-        this.AddPorts([
-            (nameof(Clk2), PortRole.In0),
-            (nameof(Clk1), PortRole.In1),
-            (nameof(Clk0), PortRole.In2),
-            (nameof(A), PortRole.In3),
-            (nameof(Q2), PortRole.Out0),
-            (nameof(Q1), PortRole.Out1),
-            (nameof(Q0), PortRole.Out2)]);
+        this.AddBinaryInputs(nameof(Clk2), nameof(Clk1), nameof(Clk0));
+        this.AddInput(nameof(A));
+        this.AddOutputs(nameof(Q2), nameof(Q1), nameof(Q0));
 
-        var tff0 = new TFlipFlop();
-        var tff1 = new TFlipFlop();
-        var tff2 = new TFlipFlop();
-        SubCircuits = [tff0, tff1, tff2];
+        var tff0 = this.AddSubCircuit(new TFlipFlop());
+        var tff1 = this.AddSubCircuit(new TFlipFlop());
+        var tff2 = this.AddSubCircuit(new TFlipFlop());
 
         this.AddWires([
             (Clk2, tff0.Clk),
@@ -43,6 +36,7 @@ public class RAM3 : SubCircuit
 
             (tff0.Q, Q2),
             (tff1.Q, Q1),
-            (tff2.Q, Q0)]);
+            (tff2.Q, Q0)
+        ]);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimulationEngine.Domain.Models;
+namespace SimulationEngine.Domain.Models.Placements;
 
 public class SubCircuitPlacement : BaseEntity
 {

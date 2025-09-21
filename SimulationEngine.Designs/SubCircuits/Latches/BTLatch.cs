@@ -1,21 +1,19 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Latches;
 
 public class BTLatch : SubCircuit
 {
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Din => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Dout => Ports.Single(p => p.Role == PortRole.Out0);
+    public Port Clk => Inputs[0];
+    public Port Din => Inputs[1];
+    public Port Dout => Outputs[0];
 
     public BTLatch()
     {
-        this.AddPorts([
-            (nameof(Clk), PortRole.In0), 
-            (nameof(Din), PortRole.In1), 
-            (nameof(Dout), PortRole.Out0)]);
+        this.AddBinaryInput(nameof(Clk));
+        this.AddInput(nameof(Din));
+        this.AddOutputs(nameof(Dout));
 
         var ZD0PPPPPP = this.AddLogicGate("ZD0PPPPPP");
 
@@ -24,6 +22,7 @@ public class BTLatch : SubCircuit
             (Din, ZD0PPPPPP.A),
 
             (ZD0PPPPPP.Q, ZD0PPPPPP.B),
-            (ZD0PPPPPP.Q, Dout)]);
+            (ZD0PPPPPP.Q, Dout)
+        ]);
     }
 }

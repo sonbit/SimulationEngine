@@ -11,7 +11,7 @@ public partial class SimulationSession
 
         Console.WriteLine($"[elab] gates:   {_processes.Count}");
         Console.WriteLine($"[elab] nets:    {nets.Count}");
-        Console.WriteLine($"[elab] inputs:  {_inputPortByRole.Count}, outputs: {_outputPortByRole.Count}");
+        Console.WriteLine($"[elab] inputs:  {SubCircuit.Inputs.Count}, outputs: {SubCircuit.Outputs.Count}");
 
         var noDriver = nets.Where(n => n.DriverCount == 0).ToList();
         var noFanout = nets.Where(n => n.Fanout.Count == 0).ToList();
@@ -30,37 +30,36 @@ public partial class SimulationSession
         foreach (var net in noFanout.Take(5))
             Show(net, _netOfTerminals, "no-fanout");
 
-        foreach (var net in noDriver.Where(n => !_inputPortByRole.Values.Any(p => _netOfTerminals[p] == n)).Take(5))
+        foreach (var net in noDriver.Where(n => !SubCircuit.Inputs.Any(p => _netOfTerminals[p] == n)).Take(5))
             Show(net, _netOfTerminals, "no-driver");
     }
 
     public void PrintOutputDetails(Port port)
     {
-        var outputPort = _outputPortByRole[port.Role];
-        var net = _netOfTerminals[outputPort];
+        var net = _netOfTerminals[port];
 
-        Console.WriteLine($"[explain] {port.Role}: {net}");
+        Console.WriteLine($"[explain] {port.Name}: {net}");
 
         if (net.Driver is null)
         {
-            Console.WriteLine("  No driver registered.");
+            Console.WriteLine("\tNo driver registered.");
             return;
         }
 
-        Console.WriteLine($"  Driver: {net.Driver.Name}");
+        Console.WriteLine($"\tDriver: {net.Driver.Name}");
 
         if (net.Driver is TruthTableProcess gateProcess)
         {
-            Console.WriteLine($"[diag] {port.Role}: driven by {gateProcess.Name}");
+            Console.WriteLine($"[diag] {port.Name}: driven by {gateProcess.Name}");
 
             var a = gateProcess._a?.CurrentValue ?? 0;
             var b = gateProcess._b?.CurrentValue ?? 0;
             var c = gateProcess._c?.CurrentValue ?? 0;
             var d = gateProcess._d?.CurrentValue ?? 0;
 
-            Console.WriteLine($"       inputs: A={a} B={b} C={c} D={d}");
+            Console.WriteLine($"\t\tinputs: A={a} B={b} C={c} D={d}");
         }
 
-        Console.WriteLine($"  LastWriter: {net.LastDriver?.Name ?? "stimulus"}");
+        Console.WriteLine($"\tLastWriter: {net.LastDriver?.Name ?? "stimulus"}");
     }
 }

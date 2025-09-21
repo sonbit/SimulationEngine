@@ -1,32 +1,27 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Latches;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Counters;
 
 public class SyTriDirLoadCounter : SubCircuit
 {
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In0);
-    public Port LdEn => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Dir => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q => Ports.Single(p => p.Role == PortRole.Out0);
+    public Port Clk => Inputs[0];
+    public Port LdEn => Inputs[1];
+    public Port A => Inputs[2];
+    public Port Dir => Inputs[3];
+    public Port Q => Outputs[0];
 
     public SyTriDirLoadCounter()
     {
-        this.AddPorts([
-            (nameof(Clk), PortRole.In0),
-            (nameof(LdEn), PortRole.In1),
-            (nameof(A), PortRole.In2),
-            (nameof(Dir), PortRole.In3),
-            (nameof(Q), PortRole.Out0)]);
+        this.AddBinaryInputs(nameof(Clk), nameof(LdEn));
+        this.AddInputs(nameof(A), nameof(Dir));
+        this.AddOutputs(nameof(Q));
 
         var _7PB = this.AddLogicGate("7PB");
         var PPPPPPZD0 = this.AddLogicGate("PPPPPPZD0");
 
-        var tff = new TFlipFlop();
-        SubCircuits = [tff];
+        var tff = this.AddSubCircuit(new TFlipFlop());
 
         this.AddWires([
             (Clk, tff.Clk),
@@ -39,6 +34,7 @@ public class SyTriDirLoadCounter : SubCircuit
             (A, PPPPPPZD0.B),
             (_7PB.Q, PPPPPPZD0.A),
 
-            (tff.Q, Q)]);
+            (tff.Q, Q)
+        ]);
     }
 }

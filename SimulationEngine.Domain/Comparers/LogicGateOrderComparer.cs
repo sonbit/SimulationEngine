@@ -1,5 +1,5 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 using System.Collections.Generic;
 
 namespace SimulationEngine.Domain.Comparers;

@@ -1,4 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Placements;
 
 namespace SimulationEngine.Domain.Compilers.Models;
 

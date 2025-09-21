@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Converters;
-using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Metadata.Enums;
 using System.Linq;
 
-namespace SimulationEngine.Domain.Extensions;
+namespace SimulationEngine.Domain.Models.Extensions;
 
 public static class LogicGateExtensions
 {
@@ -36,4 +36,7 @@ public static class LogicGateExtensions
             _ => 0
         });
     }
+
+    public static bool IsBinary(this LogicGate logicGate) => 
+        logicGate.LogicGateMetadata.Radix == Radix.Binary || logicGate.LogicGateMetadata.Radix == Radix.BinarySigned;
 }

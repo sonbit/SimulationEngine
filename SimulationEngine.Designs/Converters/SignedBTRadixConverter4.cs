@@ -1,38 +1,29 @@
 ﻿using SimulationEngine.Designs.Converters.SubCircuits;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters;
 
 public class SignedBTRadixConverter4 : SubCircuit
 {
-    public Port Sign => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A2 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port Sign => Inputs[0];
+    public Port A2 => Inputs[1];
+    public Port A1 => Inputs[2];
+    public Port A0 => Inputs[3];
+    public Port Q3 => Outputs[0];
+    public Port Q2 => Outputs[1];
+    public Port Q1 => Outputs[2];
+    public Port Q0 => Outputs[3];
 
     public SignedBTRadixConverter4()
     {
-        this.AddPorts([
-            (nameof(Sign), PortRole.In0),
-            (nameof(A2), PortRole.In1),
-            (nameof(A1), PortRole.In2),
-            (nameof(A0), PortRole.In3),
-            (nameof(Q3), PortRole.Out0),
-            (nameof(Q2), PortRole.Out1),
-            (nameof(Q1), PortRole.Out2),
-            (nameof(Q0), PortRole.Out3)]);
+        this.AddBinaryInputs(nameof(Sign), nameof(A2), nameof(A1), nameof(A0));
+        this.AddOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
-        var xor3 = new XOR3();
-        var bha3 = new BHA3();
-        var unsignedBT_RadixConverter4 = new UnsignedBT_RadixConverter4();
-        var conditionalSTI4 = new ConditionalSTI4();
-        SubCircuits = [xor3, bha3, unsignedBT_RadixConverter4, conditionalSTI4];
+        var xor3 = this.AddSubCircuit(new XOR3());
+        var bha3 = this.AddSubCircuit(new BHA3());
+        var unsignedBT_RadixConverter4 = this.AddSubCircuit(new UnsignedBT_RadixConverter4());
+        var conditionalSTI4 = this.AddSubCircuit(new ConditionalSTI4());
 
         this.AddWires([
             (Sign, xor3.Sign),
@@ -59,6 +50,7 @@ public class SignedBTRadixConverter4 : SubCircuit
             (conditionalSTI4.Q3, Q3),
             (conditionalSTI4.Q2, Q2),
             (conditionalSTI4.Q1, Q1),
-            (conditionalSTI4.Q0, Q0)]);
+            (conditionalSTI4.Q0, Q0)
+        ]);
     }
 }

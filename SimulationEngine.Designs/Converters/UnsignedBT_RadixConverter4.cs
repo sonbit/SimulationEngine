@@ -1,31 +1,23 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters;
 
 public class UnsignedBT_RadixConverter4 : SubCircuit
 {
-    public Port B3 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port B2 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port B1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port B0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port B3 => Inputs[0];
+    public Port B2 => Inputs[1];
+    public Port B1 => Inputs[2];
+    public Port B0 => Inputs[3];
+    public Port Q3 => Outputs[0];
+    public Port Q2 => Outputs[1];
+    public Port Q1 => Outputs[2];
+    public Port Q0 => Outputs[3];
 
     public UnsignedBT_RadixConverter4()
     {
-        this.AddPorts([
-            (nameof(B3), PortRole.In0),
-            (nameof(B2), PortRole.In1),
-            (nameof(B1), PortRole.In2),
-            (nameof(B0), PortRole.In3),
-            (nameof(Q3), PortRole.Out0),
-            (nameof(Q2), PortRole.Out1),
-            (nameof(Q1), PortRole.Out2),
-            (nameof(Q0), PortRole.Out3)]);
+        this.AddBinaryInputs(nameof(B3), nameof(B2), nameof(B1), nameof(B0));
+        this.AddOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
         var HHDDXXDDD = this.AddLogicGate("HHDDXXDDD");
         var HE4 = this.AddLogicGate("HE4");
@@ -78,6 +70,7 @@ public class UnsignedBT_RadixConverter4 : SubCircuit
             (RRD.Q, Q3),
             (_88R.Q, Q2),
             (XE2.Q, Q1),
-            (H4K.Q, Q0)]);
+            (H4K.Q, Q0)
+        ]);
     }
 }

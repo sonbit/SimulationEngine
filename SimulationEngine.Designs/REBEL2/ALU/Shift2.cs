@@ -1,39 +1,30 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
 public class Shift2 : SubCircuit
 {
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Imm1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Imm0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Dir => Ports.Single(p => p.Role == PortRole.In4);
-    public Port Ins => Ports.Single(p => p.Role == PortRole.In5);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port A1 => Inputs[0];
+    public Port A0 => Inputs[1];
+    public Port Imm1 => Inputs[2];
+    public Port Imm0 => Inputs[3];
+    public Port Dir => Inputs[4];
+    public Port Ins => Inputs[5];
+    public Port Q1 => Outputs[0];
+    public Port Q0 => Outputs[1];
 
     public Shift2()
     {
-        this.AddPorts([
-            (nameof(A1), PortRole.In0),
-            (nameof(A0), PortRole.In1),
-            (nameof(Imm1), PortRole.In2),
-            (nameof(Imm0), PortRole.In3),
-            (nameof(Dir), PortRole.In4),
-            (nameof(Ins), PortRole.In5),
-            (nameof(Q1), PortRole.Out0),
-            (nameof(Q0), PortRole.Out1)]);
+        this.AddInputs(nameof(A1), nameof(A0), nameof(Imm1), nameof(Imm0), nameof(Dir), nameof(Ins));
+        this.AddOutputs(nameof(Q1), nameof(Q0));
 
         var _063TGT360 = this.AddLogicGate("063TGT360");
         var _630GTG036 = this.AddLogicGate("630GTG036");
 
-        var _3MUX1_0 = new _3MUX1();
-        var _3MUX1_1 = new _3MUX1();
-        SubCircuits = [_3MUX1_0, _3MUX1_1];
+        var _3MUX1_0 = this.AddSubCircuit(new _3MUX1());
+        var _3MUX1_1 = this.AddSubCircuit(new _3MUX1());
 
         this.AddWires([
             (Dir, _063TGT360.C),
@@ -56,6 +47,7 @@ public class Shift2 : SubCircuit
             (Ins, _3MUX1_1.A),
 
             (_3MUX1_0.Q, Q1),
-            (_3MUX1_1.Q, Q0)]);
+            (_3MUX1_1.Q, Q0)
+        ]);
     }
 }

@@ -1,48 +1,36 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Counters;
 
 public class SyTriDirLoadCounter4 : SubCircuit
 {
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In0);
-    public Port LdEn => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A3 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A2 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port Dir => Ports.Single(p => p.Role == PortRole.In6);
-    public Port Q3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port Clk => Inputs[0];
+    public Port LdEn => Inputs[1];
+    public Port A3 => Inputs[2];
+    public Port A2 => Inputs[3];
+    public Port A1 => Inputs[4];
+    public Port A0 => Inputs[5];
+    public Port Dir => Inputs[6];
+    public Port Q3 => Outputs[0];
+    public Port Q2 => Outputs[1];
+    public Port Q1 => Outputs[2];
+    public Port Q0 => Outputs[3];
 
     public SyTriDirLoadCounter4()
     {
-        this.AddPorts([
-            (nameof(Clk), PortRole.In0),
-            (nameof(LdEn), PortRole.In1),
-            (nameof(A3), PortRole.In2),
-            (nameof(A2), PortRole.In3),
-            (nameof(A1), PortRole.In4),
-            (nameof(A0), PortRole.In5),
-            (nameof(Dir), PortRole.In6),
-            (nameof(Q3), PortRole.Out0),
-            (nameof(Q2), PortRole.Out1),
-            (nameof(Q1), PortRole.Out2),
-            (nameof(Q0), PortRole.Out3)]);
-
+        this.AddBinaryInputs(nameof(Clk), nameof(LdEn));
+        this.AddInputs(nameof(A3), nameof(A2), nameof(A1), nameof(A0), nameof(Dir));
+        this.AddOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
         var cons_0 = this.AddLogicGate("RDC");
         var cons_1 = this.AddLogicGate("RDC");
         var cons_2 = this.AddLogicGate("RDC");
 
-        var syTriDirLoadCounter4_0 = new SyTriDirLoadCounter();
-        var syTriDirLoadCounter4_1 = new SyTriDirLoadCounter();
-        var syTriDirLoadCounter4_2 = new SyTriDirLoadCounter();
-        var syTriDirLoadCounter4_3 = new SyTriDirLoadCounter();
-        SubCircuits = [syTriDirLoadCounter4_0, syTriDirLoadCounter4_1, syTriDirLoadCounter4_2, syTriDirLoadCounter4_3];
+        var syTriDirLoadCounter4_0 = this.AddSubCircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_1 = this.AddSubCircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_2 = this.AddSubCircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_3 = this.AddSubCircuit(new SyTriDirLoadCounter());
 
         this.AddWires([
             (Clk, syTriDirLoadCounter4_0.Clk),
@@ -77,6 +65,7 @@ public class SyTriDirLoadCounter4 : SubCircuit
             (syTriDirLoadCounter4_3.Q, Q3),
             (syTriDirLoadCounter4_2.Q, Q2),
             (syTriDirLoadCounter4_1.Q, Q1),
-            (syTriDirLoadCounter4_0.Q, Q0)]);
+            (syTriDirLoadCounter4_0.Q, Q0)
+        ]);
     }
 }

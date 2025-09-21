@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Designs.REBEL2.ALU;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2;
 

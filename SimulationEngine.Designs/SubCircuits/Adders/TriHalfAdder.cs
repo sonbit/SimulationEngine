@@ -1,23 +1,19 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Adders;
 
 public class TriHalfAdder : SubCircuit
 {
-    public Port B => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Cout => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port B => Inputs[0];
+    public Port A => Inputs[1];
+    public Port Cout => Outputs[0];
+    public Port Q => Outputs[1];
 
     public TriHalfAdder()
     {
-        this.AddPorts([
-            (nameof(B), PortRole.In0),
-            (nameof(A), PortRole.In1),
-            (nameof(Cout), PortRole.Out0),
-            (nameof(Q), PortRole.Out1)]);
+        this.AddInputs(nameof(B), nameof(A));
+        this.AddOutputs(nameof(Cout), nameof(Q));
 
         var RDC = this.AddLogicGate("RDC");
         var _7PB = this.AddLogicGate("7PB");
@@ -30,6 +26,7 @@ public class TriHalfAdder : SubCircuit
             (A, _7PB.A),
 
             (RDC.Q, Cout),
-            (_7PB.Q, Q)]);
+            (_7PB.Q, Q)
+        ]);
     }
 }

@@ -1,35 +1,29 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Latches;
 using SimulationEngine.Designs.SubCircuits.Multiplexers;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Fetch;
 
 public class ProgCtr2 : SubCircuit
 {
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In0);
-    public Port LdEn => Ports.Single(p => p.Role == PortRole.In1);
-    public Port LdAddr1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port LdAddr0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Pc1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Pc0 => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port Clk => Inputs[0];
+    public Port LdEn => Inputs[1];
+    public Port LdAddr1 => Inputs[2];
+    public Port LdAddr0 => Inputs[3];
+    public Port Pc1 => Outputs[0];
+    public Port Pc0 => Outputs[1];
 
     public ProgCtr2()
     {
-        this.AddPorts([
-            (nameof(Clk), PortRole.In0),
-            (nameof(LdEn), PortRole.In1),
-            (nameof(LdAddr1), PortRole.In2),
-            (nameof(LdAddr0), PortRole.In3),
-            (nameof(Pc1), PortRole.Out0),
-            (nameof(Pc0), PortRole.Out1)]);
+        this.AddBinaryInput(nameof(Clk));
+        this.AddInputs(nameof(LdEn), nameof(LdAddr1), nameof(LdAddr0));
+        this.AddOutputs(nameof(Pc1), nameof(Pc0));
 
-        var _2MUX2 = new _2MUX2();
-        var dle0 = new DLatchEdge();
-        var dle1 = new DLatchEdge();
-        var inc2 = new Increment2();
-        SubCircuits = [_2MUX2, dle0, dle1, inc2];
+        var _2MUX2 = this.AddSubCircuit(new _2MUX2());
+        var dle0 = this.AddSubCircuit(new DLatchEdge());
+        var dle1 = this.AddSubCircuit(new DLatchEdge());
+        var inc2 = this.AddSubCircuit(new Increment2());
 
         this.AddWires([
             (LdEn, _2MUX2.Sel),
@@ -48,6 +42,7 @@ public class ProgCtr2 : SubCircuit
             (dle1.Dout, inc2.X0),
 
             (dle0.Dout, Pc1),
-            (dle1.Dout, Pc0)]);
+            (dle1.Dout, Pc0)
+        ]);
     }
 }

@@ -1,36 +1,27 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters.SubCircuits;
 
 public class BHA3 : SubCircuit
 {
-    public Port D => Ports.Single(p => p.Role == PortRole.In0);
-    public Port C => Ports.Single(p => p.Role == PortRole.In1);
-    public Port B => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q3 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out3);
+    public Port D => Inputs[0];
+    public Port C => Inputs[1];
+    public Port B => Inputs[2];
+    public Port A => Inputs[3];
+    public Port Q3 => Outputs[0];
+    public Port Q2 => Outputs[1];
+    public Port Q1 => Outputs[2];
+    public Port Q0 => Outputs[3];
 
     public BHA3()
     {
-        this.AddPorts([
-            (nameof(D), PortRole.In0),
-            (nameof(C), PortRole.In1),
-            (nameof(B), PortRole.In2),
-            (nameof(A), PortRole.In3),
-            (nameof(Q3), PortRole.Out0),
-            (nameof(Q2), PortRole.Out1),
-            (nameof(Q1), PortRole.Out2),
-            (nameof(Q0), PortRole.Out3)]);
+        this.AddBinaryInputs(nameof(D), nameof(C), nameof(B), nameof(A));
+        this.AddBinaryOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
-        var bha0 = new BHA();
-        var bha1 = new BHA();
-        var bha2 = new BHA();
-        SubCircuits = [bha0, bha1, bha2];
+        var bha0 = this.AddSubCircuit(new BHA());
+        var bha1 = this.AddSubCircuit(new BHA());
+        var bha2 = this.AddSubCircuit(new BHA());
 
         this.AddWires([
             (D, bha0.B),
@@ -45,6 +36,7 @@ public class BHA3 : SubCircuit
             (bha2.Q1, Q3),
             (bha2.Q0, Q2),
             (bha1.Q0, Q1),
-            (bha0.Q0, Q0)]);
+            (bha0.Q0, Q0)
+        ]);
     }
 }

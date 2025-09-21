@@ -1,29 +1,22 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
 public class CMP2Tritwise : SubCircuit
 {
-    public Port Mode => Ports.Single(p => p.Role == PortRole.In0);
-    public Port B1 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port B0 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port Mode => Inputs[0];
+    public Port B1 => Inputs[1];
+    public Port B0 => Inputs[2];
+    public Port A1 => Inputs[3];
+    public Port A0 => Inputs[4];
+    public Port Q1 => Outputs[0];
+    public Port Q0 => Outputs[1];
 
     public CMP2Tritwise()
     {
-        this.AddPorts([
-            (nameof(Mode), PortRole.In0),
-            (nameof(B1), PortRole.In1),
-            (nameof(B0), PortRole.In2),
-            (nameof(A1), PortRole.In3),
-            (nameof(A0), PortRole.In4),
-            (nameof(Q1), PortRole.Out0),
-            (nameof(Q0), PortRole.Out1)]);
+        this.AddInputs(nameof(Mode), nameof(B1), nameof(B0), nameof(A1), nameof(A0));
+        this.AddOutputs(nameof(Q1), nameof(Q0));
 
         var ZRPH51PC0_0 = this.AddLogicGate("ZRPH51PC0");
         var ZRPH51PC0_1 = this.AddLogicGate("ZRPH51PC0");
@@ -38,6 +31,7 @@ public class CMP2Tritwise : SubCircuit
             (A0, ZRPH51PC0_1.A),
 
             (ZRPH51PC0_0.Q, Q1),
-            (ZRPH51PC0_1.Q, Q0)]);
+            (ZRPH51PC0_1.Q, Q0)
+        ]);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SimulationEngine.Domain.Models;
+﻿namespace SimulationEngine.Domain.Models.Placements;
 
 public class PortPlacement : Terminal
 {

@@ -4,6 +4,7 @@ using SimulationEngine.Designs.SubCircuits.Multiplexers;
 using SimulationEngine.Domain.Compilers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Placements;
 using SimulationEngine.Infrastructure.DataModel;
 using SimulationEngine.Infrastructure.Repositories;
 
@@ -125,7 +126,7 @@ public sealed class SubCircuitRepositoryTests
 
         var pinQWiredToOut0 = db3Mux.Wires.Any(wire =>
             wire.StartTerminal is Pin pinQ && pinQ.Role == PinRole.Q &&
-            wire.EndTerminal is Port portOut && portOut.Role == PortRole.Out0);
+            wire.EndTerminal is Port portOut && portOut.Direction == PortDirection.Output && portOut.Ordinal == 0);
 
         Assert.True(pinQWiredToOut0);
     }

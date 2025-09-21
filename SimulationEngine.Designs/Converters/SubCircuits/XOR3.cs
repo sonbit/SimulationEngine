@@ -1,29 +1,22 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters.SubCircuits;
 
 public class XOR3 : SubCircuit
 {
-    public Port Sign => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A2 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Q2 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out2);
+    public Port Sign => Inputs[0];
+    public Port A2 => Inputs[1];
+    public Port A1 => Inputs[2];
+    public Port A0 => Inputs[3];
+    public Port Q2 => Outputs[0];
+    public Port Q1 => Outputs[1];
+    public Port Q0 => Outputs[2];
 
     public XOR3()
     {
-        this.AddPorts([
-            (nameof(Sign), PortRole.In0),
-            (nameof(A2), PortRole.In1),
-            (nameof(A1), PortRole.In2),
-            (nameof(A0), PortRole.In3),
-            (nameof(Q2), PortRole.Out0),
-            (nameof(Q1), PortRole.Out1),
-            (nameof(Q0), PortRole.Out2)]);
+        this.AddBinaryInputs(nameof(Sign), nameof(A2), nameof(A1), nameof(A0));
+        this.AddBinaryOutputs(nameof(Q2), nameof(Q1), nameof(Q0));
 
         var xor0 = this.AddLogicGate("20K");
         var xor1 = this.AddLogicGate("20K");
@@ -41,6 +34,7 @@ public class XOR3 : SubCircuit
 
             (xor0.Q, Q2),
             (xor1.Q, Q1),
-            (xor2.Q, Q0)]);
+            (xor2.Q, Q0)
+        ]);
     }
 }

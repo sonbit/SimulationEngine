@@ -1,50 +1,38 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Demultiplexers;
 using SimulationEngine.Designs.SubCircuits.Multiplexers;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Memory;
 
 public class _9Reg2 : SubCircuit
 {
-    public Port RdAddr11 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port RdAddr10 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port RdAddr01 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port RdAddr00 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port WrAddr1 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port WrAddr0 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port WrData1 => Ports.Single(p => p.Role == PortRole.In6);
-    public Port WrData0 => Ports.Single(p => p.Role == PortRole.In7);
-    public Port WrReg => Ports.Single(p => p.Role == PortRole.In8);
-    public Port RdData11 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port RdData10 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port RdData01 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port RdData00 => Ports.Single(p => p.Role == PortRole.Out3);
-
+    public Port RdAddr11 => Inputs[0];
+    public Port RdAddr10 => Inputs[1];
+    public Port RdAddr01 => Inputs[2];
+    public Port RdAddr00 => Inputs[3];
+    public Port WrAddr1 => Inputs[4];
+    public Port WrAddr0 => Inputs[5];
+    public Port WrData1 => Inputs[6];
+    public Port WrData0 => Inputs[7];
+    public Port WrReg => Inputs[8];
+    public Port RdData11 => Outputs[0];
+    public Port RdData10 => Outputs[1];
+    public Port RdData01 => Outputs[2];
+    public Port RdData00 => Outputs[3];
 
     public _9Reg2()
     {
-        this.AddPorts([
-            (nameof(RdAddr11), PortRole.In0),
-            (nameof(RdAddr10), PortRole.In1),
-            (nameof(RdAddr01), PortRole.In2),
-            (nameof(RdAddr00), PortRole.In3),
-            (nameof(WrAddr1), PortRole.In4),
-            (nameof(WrAddr0), PortRole.In5),
-            (nameof(WrData1), PortRole.In6),
-            (nameof(WrData0), PortRole.In7),
-            (nameof(WrReg), PortRole.In8),
-            (nameof(RdData11), PortRole.Out0),
-            (nameof(RdData10), PortRole.Out1),
-            (nameof(RdData01), PortRole.Out2),
-            (nameof(RdData00), PortRole.Out3)]);
+        this.AddInputs(
+            nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr01), nameof(RdAddr00),
+            nameof(WrAddr1), nameof(WrAddr0), nameof(WrData1), nameof(WrData0));
+        this.AddBinaryInput(nameof(WrReg));
+        this.AddOutputs(nameof(RdData11), nameof(RdData10), nameof(RdData01), nameof(RdData00));
 
-        var _9BDEMUX = new _9BDEMUX();
-        var _8RegArray2 = new _8RegArray2();
-        var _9MUX2_0 = new _9MUX2();
-        var _9MUX2_1 = new _9MUX2();
-        SubCircuits = [_9BDEMUX, _8RegArray2, _9MUX2_0, _9MUX2_1];
+        var _9BDEMUX = this.AddSubCircuit(new _9BDEMUX());
+        var _8RegArray2 = this.AddSubCircuit(new _8RegArray2());
+        var _9MUX2_0 = this.AddSubCircuit(new _9MUX2());
+        var _9MUX2_1 = this.AddSubCircuit(new _9MUX2());
 
         this.AddWires([
             (WrAddr1, _9BDEMUX.Sel1),
@@ -108,6 +96,7 @@ public class _9Reg2 : SubCircuit
             (_9MUX2_0.Q1, RdData11),
             (_9MUX2_0.Q0, RdData10),
             (_9MUX2_1.Q1, RdData01),
-            (_9MUX2_1.Q0, RdData00)]);
+            (_9MUX2_1.Q0, RdData00)
+        ]);
     }
 }

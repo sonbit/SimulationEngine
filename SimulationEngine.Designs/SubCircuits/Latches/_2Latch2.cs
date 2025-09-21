@@ -1,29 +1,24 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Latches;
 
 public class _2Latch2 : SubCircuit
 {
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In0);
-    public Port A1 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A0 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Q1 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q0 => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port Clk => Inputs[0];
+    public Port A1 => Inputs[1];
+    public Port A0 => Inputs[2];
+    public Port Q1 => Outputs[0];
+    public Port Q0 => Outputs[1];
 
     public _2Latch2()
     {
-        this.AddPorts([
-            (nameof(Clk), PortRole.In0),
-            (nameof(A1), PortRole.In1),
-            (nameof(A0), PortRole.In2),
-            (nameof(Q1), PortRole.Out0),
-            (nameof(Q0), PortRole.Out1)]);
+        this.AddBinaryInput(nameof(Clk));
+        this.AddInputs(nameof(A1), nameof(A0));
+        this.AddOutputs(nameof(Q1), nameof(Q0));
 
-        var btl0 = new BTLatch();
-        var btl1 = new BTLatch();
-        SubCircuits = [btl0, btl1];
+        var btl0 = this.AddSubCircuit(new BTLatch());
+        var btl1 = this.AddSubCircuit(new BTLatch());
 
         this.AddWires([
             (Clk, btl0.Clk),
@@ -33,6 +28,7 @@ public class _2Latch2 : SubCircuit
             (A0, btl1.Din),
 
             (btl0.Dout, Q1),
-            (btl1.Dout, Q0)]);
+            (btl1.Dout, Q0)
+        ]);
     }
 }

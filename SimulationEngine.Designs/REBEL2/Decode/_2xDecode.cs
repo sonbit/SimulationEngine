@@ -1,127 +1,81 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Decode;
 
 public class _2xDecode : SubCircuit
 {
-    public Port Pc1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Pc0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Op1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Op0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Rs11 => Ports.Single(p => p.Role == PortRole.In4);
-    public Port Rs10 => Ports.Single(p => p.Role == PortRole.In5);
-    public Port Rs01 => Ports.Single(p => p.Role == PortRole.In6);
-    public Port Rs00 => Ports.Single(p => p.Role == PortRole.In7);
-    public Port Rd11 => Ports.Single(p => p.Role == PortRole.In8);
-    public Port Rd10 => Ports.Single(p => p.Role == PortRole.In9);
-    public Port Rd01 => Ports.Single(p => p.Role == PortRole.In10);
-    public Port Rd00 => Ports.Single(p => p.Role == PortRole.In11);
-    public Port WbReg => Ports.Single(p => p.Role == PortRole.In12);
-    public Port WrAddr1 => Ports.Single(p => p.Role == PortRole.In13);
-    public Port WrAddr0 => Ports.Single(p => p.Role == PortRole.In14);
-    public Port WrData1 => Ports.Single(p => p.Role == PortRole.In15);
-    public Port WrData0 => Ports.Single(p => p.Role == PortRole.In16);
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In17);
+    public Port Pc1 => Inputs[0];
+    public Port Pc0 => Inputs[1];
+    public Port Op1 => Inputs[2];
+    public Port Op0 => Inputs[3];
+    public Port Rs11 => Inputs[4];
+    public Port Rs10 => Inputs[5];
+    public Port Rs01 => Inputs[6];
+    public Port Rs00 => Inputs[7];
+    public Port Rd11 => Inputs[8];
+    public Port Rd10 => Inputs[9];
+    public Port Rd01 => Inputs[10];
+    public Port Rd00 => Inputs[11];
+    public Port WbReg => Inputs[12];
+    public Port WrAddr1 => Inputs[13];
+    public Port WrAddr0 => Inputs[14];
+    public Port WrData1 => Inputs[15];
+    public Port WrData0 => Inputs[16];
+    public Port Clk => Inputs[17];
 
-    public Port AluCtrl2_0 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port AluCtrl1_0 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port AluCtrl0_0 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port AluASel_0 => Ports.Single(p => p.Role == PortRole.Out3);
-    public Port AluBSel_0 => Ports.Single(p => p.Role == PortRole.Out4);
-    public Port AluAddSel1_0 => Ports.Single(p => p.Role == PortRole.Out5);
-    public Port AluAddSel0_0 => Ports.Single(p => p.Role == PortRole.Out6);
-    public Port AluTarSel_0 => Ports.Single(p => p.Role == PortRole.Out7);
-    public Port Reg11_0 => Ports.Single(p => p.Role == PortRole.Out8);
-    public Port Reg10_0 => Ports.Single(p => p.Role == PortRole.Out9);
-    public Port Reg01_0 => Ports.Single(p => p.Role == PortRole.Out10);
-    public Port Reg00_0 => Ports.Single(p => p.Role == PortRole.Out11);
-    public Port Imm11_0 => Ports.Single(p => p.Role == PortRole.Out12);
-    public Port Imm10_0 => Ports.Single(p => p.Role == PortRole.Out13);
-    public Port TarAddr1_0 => Ports.Single(p => p.Role == PortRole.Out14);
-    public Port TarAddr0_0=> Ports.Single(p => p.Role == PortRole.Out15);
-    public Port Imm01_0 => Ports.Single(p => p.Role == PortRole.Out16);
-    public Port Imm00_0 => Ports.Single(p => p.Role == PortRole.Out17);
+    public Port AluCtrl2_0 => Outputs[0];
+    public Port AluCtrl1_0 => Outputs[1];
+    public Port AluCtrl0_0 => Outputs[2];
+    public Port AluASel_0 => Outputs[3];
+    public Port AluBSel_0 => Outputs[4];
+    public Port AluAddSel1_0 => Outputs[5];
+    public Port AluAddSel0_0 => Outputs[6];
+    public Port AluTarSel_0 => Outputs[7];
+    public Port Reg11_0 => Outputs[8];
+    public Port Reg10_0 => Outputs[9];
+    public Port Reg01_0 => Outputs[10];
+    public Port Reg00_0 => Outputs[11];
+    public Port Imm11_0 => Outputs[12];
+    public Port Imm10_0 => Outputs[13];
+    public Port TarAddr1_0 => Outputs[14];
+    public Port TarAddr0_0=> Outputs[15];
+    public Port Imm01_0 => Outputs[16];
+    public Port Imm00_0 => Outputs[17];
 
-    public Port AluCtrl2_1 => Ports.Single(p => p.Role == PortRole.Out18);
-    public Port AluCtrl1_1 => Ports.Single(p => p.Role == PortRole.Out19);
-    public Port AluCtrl0_1 => Ports.Single(p => p.Role == PortRole.Out20);
-    public Port AluASel_1 => Ports.Single(p => p.Role == PortRole.Out21);
-    public Port AluBSel_1 => Ports.Single(p => p.Role == PortRole.Out22);
-    public Port AluAddSel1_1 => Ports.Single(p => p.Role == PortRole.Out23);
-    public Port AluAddSel0_1 => Ports.Single(p => p.Role == PortRole.Out24);
-    public Port AluTarSel_1 => Ports.Single(p => p.Role == PortRole.Out25);
-    public Port Reg11_1 => Ports.Single(p => p.Role == PortRole.Out26);
-    public Port Reg10_1 => Ports.Single(p => p.Role == PortRole.Out27);
-    public Port Reg01_1 => Ports.Single(p => p.Role == PortRole.Out28);
-    public Port Reg00_1 => Ports.Single(p => p.Role == PortRole.Out29);
-    public Port Imm11_1 => Ports.Single(p => p.Role == PortRole.Out30);
-    public Port Imm10_1 => Ports.Single(p => p.Role == PortRole.Out31);
-    public Port TarAddr1_1 => Ports.Single(p => p.Role == PortRole.Out32);
-    public Port TarAddr0_1 => Ports.Single(p => p.Role == PortRole.Out33);
-    public Port Imm01_1 => Ports.Single(p => p.Role == PortRole.Out34);
-    public Port Imm00_1 => Ports.Single(p => p.Role == PortRole.Out35);
+    public Port AluCtrl2_1 => Outputs[18];
+    public Port AluCtrl1_1 => Outputs[19];
+    public Port AluCtrl0_1 => Outputs[20];
+    public Port AluASel_1 => Outputs[21];
+    public Port AluBSel_1 => Outputs[22];
+    public Port AluAddSel1_1 => Outputs[23];
+    public Port AluAddSel0_1 => Outputs[24];
+    public Port AluTarSel_1 => Outputs[25];
+    public Port Reg11_1 => Outputs[26];
+    public Port Reg10_1 => Outputs[27];
+    public Port Reg01_1 => Outputs[28];
+    public Port Reg00_1 => Outputs[29];
+    public Port Imm11_1 => Outputs[30];
+    public Port Imm10_1 => Outputs[31];
+    public Port TarAddr1_1 => Outputs[32];
+    public Port TarAddr0_1 => Outputs[33];
+    public Port Imm01_1 => Outputs[34];
+    public Port Imm00_1 => Outputs[35];
 
     public _2xDecode()
     {
-        this.AddPorts([
-            (nameof(Pc1), PortRole.In0),
-            (nameof(Pc0), PortRole.In1),
-            (nameof(Op1), PortRole.In2),
-            (nameof(Op0), PortRole.In3),
-            (nameof(Rs11), PortRole.In4),
-            (nameof(Rs10), PortRole.In5),
-            (nameof(Rs01), PortRole.In6),
-            (nameof(Rs00), PortRole.In7),
-            (nameof(Rd11), PortRole.In8),
-            (nameof(Rd10), PortRole.In9),
-            (nameof(Rd01), PortRole.In10),
-            (nameof(Rd00), PortRole.In11),
-            (nameof(WbReg), PortRole.In12),
-            (nameof(WrAddr1), PortRole.In13),
-            (nameof(WrAddr0), PortRole.In14),
-            (nameof(WrData1), PortRole.In15),
-            (nameof(WrData0), PortRole.In16),
-            (nameof(Clk), PortRole.In17),
+        this.AddInputs(
+            nameof(Pc1), nameof(Pc0), nameof(Op1), nameof(Op0), nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00),
+            nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00), nameof(WbReg), nameof(WrAddr1), nameof(WrAddr0),
+            nameof(WrData1), nameof(WrData0), nameof(Clk));
+        this.AddOutputs(
+            nameof(AluCtrl2_0), nameof(AluCtrl1_0), nameof(AluCtrl0_0), nameof(AluASel_0), nameof(AluBSel_0), nameof(AluAddSel1_0), 
+            nameof(AluAddSel0_0), nameof(AluTarSel_0), nameof(Reg11_0), nameof(Reg10_0), nameof(Reg01_0), nameof(Reg00_0), 
+            nameof(Imm11_0), nameof(Imm10_0), nameof(TarAddr1_0), nameof(TarAddr0_0), nameof(Imm01_0), nameof(Imm00_0), 
 
-            (nameof(AluCtrl2_0), PortRole.Out0),
-            (nameof(AluCtrl1_0), PortRole.Out1),
-            (nameof(AluCtrl0_0), PortRole.Out2),
-            (nameof(AluASel_0), PortRole.Out3),
-            (nameof(AluBSel_0), PortRole.Out4),
-            (nameof(AluAddSel1_0), PortRole.Out5),
-            (nameof(AluAddSel0_0), PortRole.Out6),
-            (nameof(AluTarSel_0), PortRole.Out7),
-            (nameof(Reg11_0), PortRole.Out8),
-            (nameof(Reg10_0), PortRole.Out9),
-            (nameof(Reg01_0), PortRole.Out10),
-            (nameof(Reg00_0), PortRole.Out11),
-            (nameof(Imm11_0), PortRole.Out12),
-            (nameof(Imm10_0), PortRole.Out13),
-            (nameof(TarAddr1_0), PortRole.Out14),
-            (nameof(TarAddr0_0), PortRole.Out15),
-            (nameof(Imm01_0), PortRole.Out16),
-            (nameof(Imm00_0), PortRole.Out17),
-
-            (nameof(AluCtrl2_1), PortRole.Out18),
-            (nameof(AluCtrl1_1), PortRole.Out19),
-            (nameof(AluCtrl0_1), PortRole.Out20),
-            (nameof(AluASel_1), PortRole.Out21),
-            (nameof(AluBSel_1), PortRole.Out22),
-            (nameof(AluAddSel1_1), PortRole.Out23),
-            (nameof(AluAddSel0_1), PortRole.Out24),
-            (nameof(AluTarSel_1), PortRole.Out25),
-            (nameof(Reg11_1), PortRole.Out26),
-            (nameof(Reg10_1), PortRole.Out27),
-            (nameof(Reg01_1), PortRole.Out28),
-            (nameof(Reg00_1), PortRole.Out29),
-            (nameof(Imm11_1), PortRole.Out30),
-            (nameof(Imm10_1), PortRole.Out31),
-            (nameof(TarAddr1_1), PortRole.Out32),
-            (nameof(TarAddr0_1), PortRole.Out33),
-            (nameof(Imm01_1), PortRole.Out34),
-            (nameof(Imm00_1), PortRole.Out35)]);
+            nameof(AluCtrl2_1), nameof(AluCtrl1_1), nameof(AluCtrl0_1), nameof(AluASel_1), nameof(AluBSel_1), nameof(AluAddSel1_1), 
+            nameof(AluAddSel0_1), nameof(AluTarSel_1), nameof(Reg11_1), nameof(Reg10_1), nameof(Reg01_1), nameof(Reg00_1), 
+            nameof(Imm11_1), nameof(Imm10_1), nameof(TarAddr1_1), nameof(TarAddr0_1), nameof(Imm01_1), nameof(Imm00_1));
 
         var decode_0 = new Decode();
         var decode_1 = new Decode();
@@ -202,6 +156,7 @@ public class _2xDecode : SubCircuit
             (decode_1.TarAddr1, TarAddr1_1),
             (decode_1.TarAddr0, TarAddr0_1),
             (decode_1.Imm01, Imm01_1),
-            (decode_1.Imm00, Imm00_1)]);
+            (decode_1.Imm00, Imm00_1)
+        ]);
     }
 }

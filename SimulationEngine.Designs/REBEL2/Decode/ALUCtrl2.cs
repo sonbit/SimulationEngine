@@ -1,29 +1,22 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Decode;
 
 public class ALUCtrl2 : SubCircuit
 {
-    public Port Op1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Op0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Rd1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Rd0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port AluCtrl2 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port AluCtrl1 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port AluCtrl0 => Ports.Single(p => p.Role == PortRole.Out2);
+    public Port Op1 => Inputs[0];
+    public Port Op0 => Inputs[1];
+    public Port Rd1 => Inputs[2];
+    public Port Rd0 => Inputs[3];
+    public Port AluCtrl2 => Outputs[0];
+    public Port AluCtrl1 => Outputs[1];
+    public Port AluCtrl0 => Outputs[2];
 
     public ALUCtrl2()
     {
-        this.AddPorts([
-            (nameof(Op1), PortRole.In0),
-            (nameof(Op0), PortRole.In1),
-            (nameof(Rd1), PortRole.In2),
-            (nameof(Rd0), PortRole.In3),
-            (nameof(AluCtrl2), PortRole.Out0),
-            (nameof(AluCtrl1), PortRole.Out1),
-            (nameof(AluCtrl0), PortRole.Out2)]);
+        this.AddInputs(nameof(Op1), nameof(Op0), nameof(Rd1), nameof(Rd0));
+        this.AddOutputs(nameof(AluCtrl2), nameof(AluCtrl1), nameof(AluCtrl0));
 
         var GDD = this.AddLogicGate("GDD");
         var D17 = this.AddLogicGate("D17");
@@ -56,6 +49,7 @@ public class ALUCtrl2 : SubCircuit
 
             (GDD.Q, AluCtrl2),
             (PPPZD0ZD0_0.Q, AluCtrl1),
-            (PPPZD0ZD0_1.Q, AluCtrl0)]);
+            (PPPZD0ZD0_1.Q, AluCtrl0)
+        ]);
     }
 }

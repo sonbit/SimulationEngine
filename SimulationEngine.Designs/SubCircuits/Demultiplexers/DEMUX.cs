@@ -1,45 +1,36 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Demultiplexers;
 
 public class DEMUX : SubCircuit
 {
-    public Port Sel1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Sel0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In2);
-    public Port ClkQ8 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port ClkQ7 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port ClkQ6 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port ClkQ5 => Ports.Single(p => p.Role == PortRole.Out3);
-    public Port ClkQ4 => Ports.Single(p => p.Role == PortRole.Out4);
-    public Port ClkQ3 => Ports.Single(p => p.Role == PortRole.Out5);
-    public Port ClkQ2 => Ports.Single(p => p.Role == PortRole.Out6);
-    public Port ClkQ1 => Ports.Single(p => p.Role == PortRole.Out7);
-    public Port ClkQ0 => Ports.Single(p => p.Role == PortRole.Out8);
+    public Port Sel1 => Inputs[0];
+    public Port Sel0 => Inputs[1];
+    public Port Clk => Inputs[2];
+    public Port ClkQ8 => Outputs[0];
+    public Port ClkQ7 => Outputs[1];
+    public Port ClkQ6 => Outputs[2];
+    public Port ClkQ5 => Outputs[3];
+    public Port ClkQ4 => Outputs[4];
+    public Port ClkQ3 => Outputs[5];
+    public Port ClkQ2 => Outputs[6];
+    public Port ClkQ1 => Outputs[7];
+    public Port ClkQ0 => Outputs[8];
 
     public DEMUX()
     {
-        this.AddPorts([
-            (nameof(Sel1), PortRole.In0),
-            (nameof(Sel0), PortRole.In1),
-            (nameof(Clk), PortRole.In2),
-            (nameof(ClkQ8), PortRole.Out0),
-            (nameof(ClkQ7), PortRole.Out1),
-            (nameof(ClkQ6), PortRole.Out2),
-            (nameof(ClkQ5), PortRole.Out3),
-            (nameof(ClkQ4), PortRole.Out4),
-            (nameof(ClkQ3), PortRole.Out5),
-            (nameof(ClkQ2), PortRole.Out6),
-            (nameof(ClkQ1), PortRole.Out7),
-            (nameof(ClkQ0), PortRole.Out8)]);
+        this.AddInputs(nameof(Sel1), nameof(Sel0));
+        this.AddBinaryInput(nameof(Clk));
+        this.AddBinaryOutputs(
+            nameof(ClkQ8), nameof(ClkQ7), nameof(ClkQ6),
+            nameof(ClkQ5), nameof(ClkQ4), nameof(ClkQ3),
+            nameof(ClkQ2), nameof(ClkQ1), nameof(ClkQ0));
 
-        var _3DEMUX_0 = new _3DEMUX();
-        var _3DEMUX_1 = new _3DEMUX();
-        var _3DEMUX_2 = new _3DEMUX();
-        var _3DEMUX_3 = new _3DEMUX();
-        SubCircuits = [_3DEMUX_0, _3DEMUX_1, _3DEMUX_2, _3DEMUX_3];
+        var _3DEMUX_0 = this.AddSubCircuit(new _3DEMUX());
+        var _3DEMUX_1 = this.AddSubCircuit(new _3DEMUX());
+        var _3DEMUX_2 = this.AddSubCircuit(new _3DEMUX());
+        var _3DEMUX_3 = this.AddSubCircuit(new _3DEMUX());
 
         this.AddWires([
             (Sel1, _3DEMUX_0.Din),
@@ -62,6 +53,7 @@ public class DEMUX : SubCircuit
             (_3DEMUX_2.Q0, ClkQ3),
             (_3DEMUX_3.Q2, ClkQ2),
             (_3DEMUX_3.Q1, ClkQ1),
-            (_3DEMUX_3.Q0, ClkQ0)]);
+            (_3DEMUX_3.Q0, ClkQ0)
+        ]);
     }
 }

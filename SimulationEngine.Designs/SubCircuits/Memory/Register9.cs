@@ -1,38 +1,33 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Demultiplexers;
+using SimulationEngine.Designs.SubCircuits.Memory;
 using SimulationEngine.Designs.SubCircuits.Multiplexers;
-using SimulationEngine.Domain.Extensions;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Memory;
 
 public class Register9 : SubCircuit
 {
-    public Port RdAddr1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port RdAddr0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port WrAddr1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port WrAddr0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port Clk => Ports.Single(p => p.Role == PortRole.In4);
-    public Port WrData => Ports.Single(p => p.Role == PortRole.In5);
-    public Port Q => Ports.Single(p => p.Role == PortRole.Out0);
+    public Port RdAddr1 => Inputs[0];
+    public Port RdAddr0 => Inputs[1];
+    public Port WrAddr1 => Inputs[2];
+    public Port WrAddr0 => Inputs[3];
+    public Port Clk => Inputs[4];
+    public Port WrData => Inputs[5];
+    public Port Q => Outputs[0];
 
     public Register9()
     {
-        this.AddPorts([
-            (nameof(RdAddr1), PortRole.In0),
-            (nameof(RdAddr0), PortRole.In1),
-            (nameof(WrAddr1), PortRole.In2),
-            (nameof(WrAddr0), PortRole.In3),
-            (nameof(Clk), PortRole.In4),
-            (nameof(WrData), PortRole.In5),
-            (nameof(Q), PortRole.Out0)]);
+        this.AddInputs(nameof(RdAddr1), nameof(RdAddr0), nameof(WrAddr1), nameof(WrAddr0));
+        this.AddBinaryInput(nameof(Clk));
+        this.AddInput(nameof(WrData));
+        this.AddOutputs(nameof(Q));
 
-        var demux = new DEMUX();
-        var ram3_0 = new RAM3();
-        var ram3_1 = new RAM3();
-        var ram3_2 = new RAM3();
-        var mux = new MUX();
-        SubCircuits = [demux, ram3_0, ram3_1, ram3_2, mux];
+        var demux = this.AddSubCircuit(new DEMUX());
+        var ram3_0 = this.AddSubCircuit(new RAM3());
+        var ram3_1 = this.AddSubCircuit(new RAM3());
+        var ram3_2 = this.AddSubCircuit(new RAM3());
+        var mux = this.AddSubCircuit(new MUX());
 
         this.AddWires([
             (WrAddr1, demux.Sel1),
@@ -66,6 +61,7 @@ public class Register9 : SubCircuit
             (ram3_2.Q1, mux.A1),
             (ram3_2.Q0, mux.A0),
 
-            (mux.Q, Q)]);
+            (mux.Q, Q)
+        ]);
     }
 }

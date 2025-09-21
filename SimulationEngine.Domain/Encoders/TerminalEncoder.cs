@@ -1,4 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Placements;
 using System;
 
 namespace SimulationEngine.Domain.Encoders;
@@ -11,7 +12,7 @@ public static class TerminalEncoder
 
     public static string Encode(Terminal terminal) => terminal switch
     {
-        Port port => $"{TopPort}{Separator}{port.Role}",
+        Port port => $"{TopPort}{Separator}{port.Name}",
         Pin pin => $"{LogicGatePin}{Separator}{pin.Role}",
         PortPlacement portPlacement => $"{nameof(PortPlacement)}{Separator}{portPlacement.IsInput}{Separator}{portPlacement.IndexWithinChild}",
         _ => throw new NotSupportedException("Unknwon terminal type")

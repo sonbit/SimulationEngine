@@ -1,25 +1,20 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.SubCircuits.Adders;
 
 public class TriFullAdder : SubCircuit
 {
-    public Port C => Ports.Single(p => p.Role == PortRole.In0);
-    public Port B => Ports.Single(p => p.Role == PortRole.In1);
-    public Port A => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Cout => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port Q => Ports.Single(p => p.Role == PortRole.Out1);
+    public Port C => Inputs[0];
+    public Port B => Inputs[1];
+    public Port A => Inputs[2];
+    public Port Cout => Outputs[0];
+    public Port Q => Outputs[1];
 
     public TriFullAdder()
     {
-        this.AddPorts([
-            (nameof(C), PortRole.In0),
-            (nameof(B), PortRole.In1),
-            (nameof(A), PortRole.In2),
-            (nameof(Cout), PortRole.Out0),
-            (nameof(Q), PortRole.Out1)]);
+        this.AddInputs(nameof(C), nameof(B), nameof(A));
+        this.AddOutputs(nameof(Cout), nameof(Q));
 
         var XRDRDCDC9 = this.AddLogicGate("XRDRDCDC9");
         var B7P7PBPB7 = this.AddLogicGate("B7P7PBPB7");
@@ -34,6 +29,7 @@ public class TriFullAdder : SubCircuit
             (A, B7P7PBPB7.A),
 
             (XRDRDCDC9.Q, Cout),
-            (B7P7PBPB7.Q, Q)]);
+            (B7P7PBPB7.Q, Q)
+        ]);
     }
 }

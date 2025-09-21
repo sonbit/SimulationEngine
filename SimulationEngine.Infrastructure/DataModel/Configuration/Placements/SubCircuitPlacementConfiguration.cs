@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Placements;
 
-namespace SimulationEngine.Infrastructure.DataModel.Configuration;
+namespace SimulationEngine.Infrastructure.DataModel.Configuration.Placements;
 
 internal static class SubCircuitPlacementConfiguration
 {

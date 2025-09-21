@@ -1,39 +1,29 @@
-﻿using SimulationEngine.Domain.Extensions;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Enums;
+﻿using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Decode;
 
 public class ExecCtrl : SubCircuit
 {
-    public Port Op1 => Ports.Single(p => p.Role == PortRole.In0);
-    public Port Op0 => Ports.Single(p => p.Role == PortRole.In1);
-    public Port Rd1 => Ports.Single(p => p.Role == PortRole.In2);
-    public Port Rd0 => Ports.Single(p => p.Role == PortRole.In3);
-    public Port AluCtrl2 => Ports.Single(p => p.Role == PortRole.Out0);
-    public Port AluCtrl1 => Ports.Single(p => p.Role == PortRole.Out1);
-    public Port AluCtrl0 => Ports.Single(p => p.Role == PortRole.Out2);
-    public Port AluASel => Ports.Single(p => p.Role == PortRole.Out3);
-    public Port AluBSel => Ports.Single(p => p.Role == PortRole.Out4);
-    public Port AluAddSel1 => Ports.Single(p => p.Role == PortRole.Out5);
-    public Port AluAddSel0 => Ports.Single(p => p.Role == PortRole.Out6);
-    public Port AluTarSel => Ports.Single(p => p.Role == PortRole.Out7);
+    public Port Op1 => Inputs[0];
+    public Port Op0 => Inputs[1];
+    public Port Rd1 => Inputs[2];
+    public Port Rd0 => Inputs[3];
+    public Port AluCtrl2 => Outputs[0];
+    public Port AluCtrl1 => Outputs[1];
+    public Port AluCtrl0 => Outputs[2];
+    public Port AluASel => Outputs[3];
+    public Port AluBSel => Outputs[4];
+    public Port AluAddSel1 => Outputs[5];
+    public Port AluAddSel0 => Outputs[6];
+    public Port AluTarSel => Outputs[7];
 
     public ExecCtrl()
     {
-        this.AddPorts([
-            (nameof(Op1), PortRole.In0),
-            (nameof(Op0), PortRole.In1),
-            (nameof(Rd1), PortRole.In2),
-            (nameof(Rd0), PortRole.In3),
-            (nameof(AluCtrl2), PortRole.Out0),
-            (nameof(AluCtrl1), PortRole.Out1),
-            (nameof(AluCtrl0), PortRole.Out2),
-            (nameof(AluASel), PortRole.Out3),
-            (nameof(AluBSel), PortRole.Out4),
-            (nameof(AluAddSel1), PortRole.Out5),
-            (nameof(AluAddSel0), PortRole.Out6),
-            (nameof(AluTarSel), PortRole.Out7)]);
+        this.AddInputs(nameof(Op1), nameof(Op0), nameof(Rd1), nameof(Rd0));
+        this.AddOutputs(
+            nameof(AluCtrl2), nameof(AluCtrl1), nameof(AluCtrl0), nameof(AluASel), nameof(AluBSel), 
+            nameof(AluAddSel1), nameof(AluAddSel0), nameof(AluTarSel));
 
         var RDD = this.AddLogicGate("RDD");
         var MCD = this.AddLogicGate("MCD");
@@ -42,8 +32,7 @@ public class ExecCtrl : SubCircuit
         var HHH088088 = this.AddLogicGate("HHH088088");
         var ZXZ = this.AddLogicGate("ZXZ");
 
-        var aluCtrl2 = new ALUCtrl2();
-        SubCircuits = [aluCtrl2];
+        var aluCtrl2 = this.AddSubCircuit(new ALUCtrl2());
 
         this.AddWires([
             (Op1, aluCtrl2.Op1),

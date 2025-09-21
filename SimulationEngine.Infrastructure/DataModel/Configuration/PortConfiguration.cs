@@ -9,9 +9,9 @@ internal class PortConfiguration
     internal static void Configure(EntityTypeBuilder<Port> entity)
     {
         entity
-            .Property(port => port.Role)
+            .Property(port => port.Direction)
             .HasConversion<string>()
-            .HasColumnName(nameof(Port.Role))
+            .HasColumnName(nameof(Port.Direction))
             .IsRequired();
 
         entity
@@ -20,7 +20,7 @@ internal class PortConfiguration
             .HasForeignKey(port => port.SubCircuitId);
 
         entity
-            .HasIndex(port => new { port.SubCircuitId, port.Role })
+            .HasIndex(port => new { port.SubCircuitId, port.Direction, port.Ordinal })
             .IsUnique();
     }
 }
