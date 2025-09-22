@@ -15,7 +15,7 @@ public class TFlipFlop : SubCircuit
         this.AddInput(nameof(A));
         this.AddOutputs(nameof(Q));
 
-        var _2 = this.AddLogicGate("2");
+        var _2 = this.AddBinaryLogicGate("2");
 
         var btl0 = this.AddSubCircuit(new BTLatch());
         var btl1 = this.AddSubCircuit(new BTLatch());

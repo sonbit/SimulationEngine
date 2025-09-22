@@ -18,8 +18,8 @@ public class DLatchEdge : SubCircuit
         var btl0 = this.AddSubCircuit(new BTLatch());
         var btl1 = this.AddSubCircuit(new BTLatch());
 
-        var inv0 = this.AddLogicGate("5");
-        var inv1 = this.AddLogicGate("5");
+        var inv0 = this.AddBinaryLogicGate("2");
+        var inv1 = this.AddBinaryLogicGate("2");
 
         this.AddWires([
             (Clk, inv0.A),

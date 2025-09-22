@@ -38,5 +38,5 @@ public static class LogicGateExtensions
     }
 
     public static bool IsBinary(this LogicGate logicGate) => 
-        logicGate.LogicGateMetadata.Radix == Radix.Binary || logicGate.LogicGateMetadata.Radix == Radix.BinarySigned;
+        logicGate.TruthTable.Metadata.Radix == Radix.Binary || logicGate.TruthTable.Metadata.Radix == Radix.BinarySigned;
 }

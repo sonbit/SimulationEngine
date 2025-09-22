@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Demultiplexers;
-using SimulationEngine.Designs.SubCircuits.Memory;
 using SimulationEngine.Designs.SubCircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;

@@ -1,6 +1,5 @@
 ﻿using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Domain.Models.Metadata.Enums;
-using System.Runtime.CompilerServices;
 
 namespace SimulationEngine.Domain.Models.Extensions;
 
@@ -23,6 +22,9 @@ public static class SubCircuitExtensions
         foreach (var title in titles)
             subCircuit.AddBinaryInput(title);
     }
+
+    public static LogicGate AddBinaryLogicGate(this SubCircuit subCircuit, string heptaIndex) =>
+        subCircuit.AddLogicGate(heptaIndex, Radix.Binary);
 
     public static void AddBinaryOutputs(this SubCircuit subCircuit, int count)
     {
@@ -69,9 +71,9 @@ public static class SubCircuitExtensions
             subCircuit.AddInput(title, radix);
     }
 
-    public static LogicGate AddLogicGate(this SubCircuit subCircuit, string heptaIndex)
+    public static LogicGate AddLogicGate(this SubCircuit subCircuit, string heptaIndex, Radix radix = Radix.TernaryBalanced)
     {
-        var logicGate = new LogicGate(heptaIndex) { SubCircuit = subCircuit };
+        var logicGate = new LogicGate(heptaIndex, radix) { SubCircuit = subCircuit };
         subCircuit.LogicGates.Add(logicGate);
         return logicGate;
     }

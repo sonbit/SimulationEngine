@@ -4,14 +4,14 @@ using SimulationEngine.Domain.Models.Metadata;
 
 namespace SimulationEngine.Infrastructure.DataModel.Configuration.Metadata;
 
-internal class LogicGateMetadataConfiguration
+internal class TruthTableMetadataConfiguration
 {
-    internal static void Configure(EntityTypeBuilder<LogicGateMetadata> entity)
+    internal static void Configure(EntityTypeBuilder<TruthTableMetadata> entity)
     {
         entity
-            .Property(logicGateMetadata => logicGateMetadata.Radix)
+            .Property(truthTableMetadata => truthTableMetadata.Radix)
             .HasConversion<string>()
-            .HasColumnName(nameof(LogicGateMetadata.Radix))
+            .HasColumnName(nameof(TruthTableMetadata.Radix))
             .IsRequired();
     }
 }

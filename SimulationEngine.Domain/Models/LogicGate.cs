@@ -1,6 +1,7 @@
 using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Domain.Models.Metadata;
+using SimulationEngine.Domain.Models.Metadata.Enums;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,8 +15,13 @@ public class LogicGate : BaseEntity
     public LogicGate(string heptaIndex)
     {
         this.AddPins(heptaIndex);
-
         TruthTable = new TruthTable { HeptaIndex = heptaIndex };
+    }
+
+    public LogicGate(string heptaIndex, Radix radix)
+    {
+        this.AddPins(heptaIndex);
+        TruthTable = new TruthTable(radix) { HeptaIndex = heptaIndex };
     }
 
     public LogicGate(LogicGate logicGate)

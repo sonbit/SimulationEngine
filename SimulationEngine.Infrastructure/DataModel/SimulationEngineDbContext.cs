@@ -26,12 +26,12 @@ public class SimulationEngineDbContext : DbContext
     public DbSet<SubCircuitPlacement> SubCircuitPlacements { get; set; }
     public DbSet<Terminal> Terminals { get; set; }
     public DbSet<TruthTable> TruthTables { get; set; }
+    public DbSet<TruthTableMetadata> TruthTableMetadata { get; set; }
     public DbSet<Wire> Wires { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<LogicGate>(LogicGateConfiguration.Configure);
-        modelBuilder.Entity<LogicGateMetadata>(LogicGateMetadataConfiguration.Configure);
         modelBuilder.Entity<Pin>(PinConfiguration.Configure);
         modelBuilder.Entity<Port>(PortConfiguration.Configure);
         modelBuilder.Entity<PortMetadata>(PortMetadataConfiguration.Configure);
@@ -40,6 +40,7 @@ public class SimulationEngineDbContext : DbContext
         modelBuilder.Entity<SubCircuitPlacement>(SubCircuitPlacementConfiguration.Configure);
         modelBuilder.Entity<Terminal>(TerminalConfiguration.Configure);
         modelBuilder.Entity<TruthTable>(TruthTableConfiguration.Configure);
+        modelBuilder.Entity<TruthTableMetadata>(TruthTableMetadataConfiguration.Configure);
         modelBuilder.Entity<Wire>(WireConfiguration.Configure);
 
         modelBuilder.ApplyBaseConfiguration();
