@@ -1,5 +1,5 @@
-﻿using SimulationEngine.Cli.Commands.Database.SubCircuit;
-using SimulationEngine.Cli.Commands.Database.TruthTable;
+﻿using SimulationEngine.Cli.Commands.Database.SubCircuits;
+using SimulationEngine.Cli.Commands.Database.TruthTables;
 using SimulationEngine.Cli.Composition;
 using SimulationEngine.Cli.Extensions;
 using Spectre.Console;
@@ -19,16 +19,16 @@ public sealed class DatabaseMenuCommand : AsyncCommand
         {
             cfg.AddBranch("subcircuits", sub =>
             {
-                sub.AddCommand<SubCircuitListCommand>("list");
-                sub.AddCommand<SubCircuitFindCommand>("find");
-                sub.AddCommand<SubCircuitShowTreeCommand>("tree");
-                sub.AddCommand<SubCircuitPopulateCommand>("populate");
+                sub.AddCommand<SubCircuitsListCommand>("list");
+                sub.AddCommand<SubCircuitsFindCommand>("find");
+                sub.AddCommand<SubCircuitsShowTreeCommand>("tree");
+                sub.AddCommand<SubCircuitsPopulateCommand>("populate");
             });
             cfg.AddBranch("truthtables", tt =>
             {
-                tt.AddCommand<TruthTableListCommand>("list");
-                tt.AddCommand<TruthTableFindCommand>("find");
-                tt.AddCommand<TruthTablePopulateCommand>("populate");
+                tt.AddCommand<TruthTablesListCommand>("list");
+                tt.AddCommand<TruthTablesFindCommand>("find");
+                tt.AddCommand<TruthTablesPopulateCommand>("populate");
             });
             cfg.AddCommand<DatabaseRecreateCommand>("recreate");
         });

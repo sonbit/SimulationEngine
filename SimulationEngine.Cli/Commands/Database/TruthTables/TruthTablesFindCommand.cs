@@ -2,11 +2,13 @@
 using SimulationEngine.Cli.Commands.Settings;
 using SimulationEngine.Cli.Handlers.InputOutput;
 using SimulationEngine.Cli.Handlers.Renderer;
+using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Metadata;
 using Spectre.Console.Cli;
 
-namespace SimulationEngine.Cli.Commands.Database.TruthTable;
+namespace SimulationEngine.Cli.Commands.Database.TruthTables;
 
-public sealed class TruthTableFindCommand(ITruthTableService service, IRenderer renderer, IInputOutput inputOutput) : AsyncCommand<FindByIdSettings>
+public sealed class TruthTablesFindCommand(ITruthTableService service, IRenderer renderer, IInputOutput inputOutput) : AsyncCommand<FindByIdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings s)
     {
@@ -32,12 +34,12 @@ public sealed class TruthTableFindCommand(ITruthTableService service, IRenderer 
 
         renderer.NameValueTable(
         [
-            (nameof(Domain.Models.TruthTable.Id), truthTable.Id),
-            (nameof(Domain.Models.TruthTable.Title), truthTable.Title),
-            (nameof(Domain.Models.TruthTable.HeptaIndex), truthTable.HeptaIndex),
-            (nameof(Domain.Models.TruthTable.Definition), truthTable.Definition),
-            (nameof(Domain.Models.Metadata.TruthTableMetadata.Radix), truthTable.Metadata.Radix),
-            (nameof(Domain.Models.TruthTable.LogicGates), truthTable.LogicGates.Count),
+            (nameof(TruthTable.Id), truthTable.Id),
+            (nameof(TruthTable.Title), truthTable.Title),
+            (nameof(TruthTable.HeptaIndex), truthTable.HeptaIndex),
+            (nameof(TruthTable.Definition), truthTable.Definition),
+            (nameof(TruthTableMetadata.Radix), truthTable.Metadata.Radix),
+            (nameof(TruthTable.LogicGates), truthTable.LogicGates.Count),
         ]);
 
         return 2;

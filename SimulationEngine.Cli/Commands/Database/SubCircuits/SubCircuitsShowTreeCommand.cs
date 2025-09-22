@@ -6,9 +6,9 @@ using SimulationEngine.Domain.Models;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
-namespace SimulationEngine.Cli.Commands.Database.SubCircuit;
+namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
 
-public sealed class SubCircuitShowTreeCommand(ISubCircuitService service, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<FindByIdSettings>
+public sealed class SubCircuitsShowTreeCommand(ISubCircuitService service, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<FindByIdSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings settings)
     {
@@ -37,7 +37,7 @@ public sealed class SubCircuitShowTreeCommand(ISubCircuitService service, IInput
         return 0;
     }
 
-    public static void BuildTree(Domain.Models.SubCircuit parentSubCircuit, int maxDepth = 32)
+    public static void BuildTree(SubCircuit parentSubCircuit, int maxDepth = 32)
     {
         var tree = new Tree(GetSubCircuitLabel(parentSubCircuit));
         int depth = 0;
@@ -46,7 +46,7 @@ public sealed class SubCircuitShowTreeCommand(ISubCircuitService service, IInput
 
         AnsiConsole.Write(tree);
 
-        void Build(Domain.Models.SubCircuit subCircuit, Func<string, TreeNode> addChild, int depth)
+        void Build(SubCircuit subCircuit, Func<string, TreeNode> addChild, int depth)
         {
             if (depth >= maxDepth)
             {
@@ -68,6 +68,6 @@ public sealed class SubCircuitShowTreeCommand(ISubCircuitService service, IInput
     private static string GetLogicGateLabel(LogicGate logicGate) => 
         $"[blue]{Markup.Escape(logicGate.TruthTable.HeptaIndex)}[/]"; 
 
-    private static string GetSubCircuitLabel(Domain.Models.SubCircuit subCircuit) => 
+    private static string GetSubCircuitLabel(SubCircuit subCircuit) => 
         $"[yellow]{Markup.Escape(subCircuit.Title)}[/] [grey](Inputs: {subCircuit.Inputs.Count}, Outputs: {subCircuit.Outputs.Count}, Wires: {subCircuit.Wires.Count})[/]";
 }

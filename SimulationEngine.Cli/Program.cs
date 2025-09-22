@@ -7,8 +7,8 @@ using SimulationEngine.Application.Services.SubCircuits;
 using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Commands;
 using SimulationEngine.Cli.Commands.Database;
-using SimulationEngine.Cli.Commands.Database.SubCircuit;
-using SimulationEngine.Cli.Commands.Database.TruthTable;
+using SimulationEngine.Cli.Commands.Database.SubCircuits;
+using SimulationEngine.Cli.Commands.Database.TruthTables;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
 using SimulationEngine.Cli.Handlers.InputOutput;
@@ -39,12 +39,12 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IInputOutput, InputOutput>();
         services.AddSingleton<IRenderer, Renderer>();
 
-        services.AddScoped<SubCircuitFindCommand>();
-        services.AddScoped<SubCircuitListCommand>();
-        services.AddScoped<SubCircuitShowTreeCommand>();
+        services.AddScoped<SubCircuitsFindCommand>();
+        services.AddScoped<SubCircuitsListCommand>();
+        services.AddScoped<SubCircuitsShowTreeCommand>();
 
-        services.AddScoped<TruthTableFindCommand>();
-        services.AddScoped<TruthTableListCommand>();
+        services.AddScoped<TruthTablesFindCommand>();
+        services.AddScoped<TruthTablesListCommand>();
 
         services.AddScoped<DatabaseMenuCommand>();
 
@@ -72,15 +72,17 @@ app.Configure(cfg =>
 
         db.AddBranch("subcircuits", sc =>
         {
-            sc.AddCommand<SubCircuitListCommand>("list");
-            sc.AddCommand<SubCircuitFindCommand>("find");
-            sc.AddCommand<SubCircuitShowTreeCommand>("tree");
+            sc.AddCommand<SubCircuitsListCommand>("list");
+            sc.AddCommand<SubCircuitsFindCommand>("find");
+            sc.AddCommand<SubCircuitsShowTreeCommand>("tree");
+            sc.AddCommand<SubCircuitsPopulateCommand>("populate");
         });
 
         db.AddBranch("truthtables", tt =>
         {
-            tt.AddCommand<TruthTableListCommand>("list");
-            tt.AddCommand<TruthTableFindCommand>("find");
+            tt.AddCommand<TruthTablesListCommand>("list");
+            tt.AddCommand<TruthTablesFindCommand>("find");
+            tt.AddCommand<TruthTablesPopulateCommand>("populate");
         });
     });
 });

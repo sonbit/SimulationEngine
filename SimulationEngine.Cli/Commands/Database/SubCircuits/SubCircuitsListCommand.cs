@@ -1,10 +1,11 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
 using SimulationEngine.Cli.Handlers.Renderer;
+using SimulationEngine.Domain.Models;
 using Spectre.Console.Cli;
 
-namespace SimulationEngine.Cli.Commands.Database.SubCircuit;
+namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
 
-public sealed class SubCircuitListCommand(ISubCircuitService service, IRenderer renderer) : AsyncCommand
+public sealed class SubCircuitsListCommand(ISubCircuitService service, IRenderer renderer) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
@@ -20,13 +21,13 @@ public sealed class SubCircuitListCommand(ISubCircuitService service, IRenderer 
             SubCircuits = subCircuit.SubCircuits.Count,
             Wires = subCircuit.Wires.Count
         }), [
-            nameof(Domain.Models.SubCircuit.Id), 
-            nameof(Domain.Models.SubCircuit.Title),
-            nameof(Domain.Models.SubCircuit.Inputs),
-            nameof(Domain.Models.SubCircuit.LogicGates),
-            nameof(Domain.Models.SubCircuit.Outputs),
-            nameof(Domain.Models.SubCircuit.SubCircuits),
-            nameof(Domain.Models.SubCircuit.Wires)
+            nameof(SubCircuit.Id), 
+            nameof(SubCircuit.Title),
+            nameof(SubCircuit.Inputs),
+            nameof(SubCircuit.LogicGates),
+            nameof(SubCircuit.Outputs),
+            nameof(SubCircuit.SubCircuits),
+            nameof(SubCircuit.Wires)
         ]);
 
         return 0;

@@ -1,10 +1,12 @@
 ﻿using SimulationEngine.Application.Services.TruthTables;
 using SimulationEngine.Cli.Handlers.Renderer;
+using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Metadata;
 using Spectre.Console.Cli;
 
-namespace SimulationEngine.Cli.Commands.Database.TruthTable;
+namespace SimulationEngine.Cli.Commands.Database.TruthTables;
 
-public sealed class TruthTableListCommand(ITruthTableService service, IRenderer renderer) : AsyncCommand
+public sealed class TruthTablesListCommand(ITruthTableService service, IRenderer renderer) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext ctx)
     {
@@ -18,11 +20,11 @@ public sealed class TruthTableListCommand(ITruthTableService service, IRenderer 
             truthTable.Metadata.Radix,
             LogicGates = truthTable.LogicGates.Count
         }), [
-            nameof(Domain.Models.TruthTable.Id),
-            nameof(Domain.Models.TruthTable.Title),
-            nameof(Domain.Models.TruthTable.HeptaIndex),
-            nameof(Domain.Models.Metadata.TruthTableMetadata.Radix),
-            nameof(Domain.Models.TruthTable.LogicGates)
+            nameof(TruthTable.Id),
+            nameof(TruthTable.Title),
+            nameof(TruthTable.HeptaIndex),
+            nameof(TruthTableMetadata.Radix),
+            nameof(TruthTable.LogicGates)
         ]);
 
         return 0;
