@@ -3,8 +3,10 @@ using SimulationEngine.Cli.Commands.Database.SubCircuit;
 using SimulationEngine.Cli.Commands.Database.TruthTable;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
+using SimulationEngine.Cli.Extensions;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Commands;
 
@@ -41,7 +43,12 @@ public sealed class MainMenuCommand : AsyncCommand
         });
     }
 
-    private enum MainChoice { Simulation, Database, Exit }
+    private enum MainChoice 
+    { 
+        [Description("Simulation")] Simulation,
+        [Description("Database options")] Database,
+        [Description("Exit application")] Exit 
+    }
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
@@ -49,8 +56,9 @@ public sealed class MainMenuCommand : AsyncCommand
         {
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<MainChoice>()
-                    .Title("Main Menu")
-                    .AddChoices(MainChoice.Simulation, MainChoice.Database, MainChoice.Exit));
+                    .Title("Simulation Engine Main Menu")
+                    .AddChoices(MainChoice.Simulation, MainChoice.Database, MainChoice.Exit)
+                    .UseConverter(mainChoice => mainChoice.GetDescription()));
 
             switch (choice)
             {

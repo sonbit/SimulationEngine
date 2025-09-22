@@ -7,9 +7,18 @@ namespace SimulationEngine.Cli.Handlers.Renderer;
 
 public interface IRenderer
 {
+    void Clear();
+    void NameValueTable(IEnumerable<(string Name, object? Value)> rows, string? title = null);
+
+    // 2a) Property table: choose columns by property name, in order
+    void PropertyTable<T>(IEnumerable<T> rows, params string[] propertyOrder);
+
+    // 2b) Property table with custom headers
+    void PropertyTable<T>(IEnumerable<T> rows, params (string Property, string? Header)[] columns);
     void DrawError(string error);
     void DrawHeader(string text, string color = "grey");
     void DrawPanel(string title, string body);
+    void DrawPanel(string title, List<(string name, object value)> rows);
     void DrawRule(string title, string color = "grey");
     void DrawTable<T>(IEnumerable<T> rows);
     void DrawTable<T>(IEnumerable<T> rows, params (string Header, Func<T, object?> Value)[] columns);

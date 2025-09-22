@@ -1,8 +1,10 @@
 ﻿using SimulationEngine.Cli.Commands.Database.SubCircuit;
 using SimulationEngine.Cli.Commands.Database.TruthTable;
 using SimulationEngine.Cli.Composition;
+using SimulationEngine.Cli.Extensions;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Commands.Database;
 
@@ -32,9 +34,30 @@ public sealed class DatabaseMenuCommand : AsyncCommand
         });
     }
 
-    enum DatabaseOption { SubCircuits, TruthTables, Recreate, Back }
-    enum SubCircuitOption { List, FindById, Tree, Populate, Back }
-    enum TruthTableOption { List, FindById, Populate, Back }
+    private enum DatabaseOption 
+    { 
+        SubCircuits, 
+        TruthTables, 
+        [Description("Recreate database")] Recreate, 
+        Back 
+    }
+
+    private enum SubCircuitOption 
+    {
+        [Description("List all")] List,
+        [Description("Find by id")] FindById,
+        [Description("Find by id and show as a tree")] Tree,
+        [Description("Populate database with existing unique designs")] Populate,
+        Back 
+    }
+
+    private enum TruthTableOption 
+    {
+        [Description("List all")] List,
+        [Description("Find by id")] FindById,
+        [Description("Populate database with standard cell library")] Populate, 
+        Back 
+    }
 
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
@@ -42,8 +65,9 @@ public sealed class DatabaseMenuCommand : AsyncCommand
         {
             var entity = AnsiConsole.Prompt(
                 new SelectionPrompt<DatabaseOption>()
-                    .Title("Database")
-                    .AddChoices(DatabaseOption.SubCircuits, DatabaseOption.TruthTables, DatabaseOption.Recreate, DatabaseOption.Back));
+                    .Title("Database Actions")
+                    .AddChoices(DatabaseOption.SubCircuits, DatabaseOption.TruthTables, DatabaseOption.Recreate, DatabaseOption.Back)
+                    .UseConverter(databaseOption => databaseOption.GetDescription()));
 
             switch (entity)
             {
@@ -72,7 +96,10 @@ public sealed class DatabaseMenuCommand : AsyncCommand
             var action = AnsiConsole.Prompt(
                 new SelectionPrompt<SubCircuitOption>()
                     .Title("[bold]SubCircuits[/]")
-                    .AddChoices(SubCircuitOption.List, SubCircuitOption.FindById, SubCircuitOption.Tree, SubCircuitOption.Populate, SubCircuitOption.Back));
+                    .AddChoices(SubCircuitOption.List, SubCircuitOption.FindById, SubCircuitOption.Tree, SubCircuitOption.Populate, SubCircuitOption.Back)
+                    .UseConverter(subCircuitOption => subCircuitOption.GetDescription()));
+
+            AnsiConsole.Clear();
 
             switch (action)
             {
@@ -85,9 +112,7 @@ public sealed class DatabaseMenuCommand : AsyncCommand
                     break;
 
                 case SubCircuitOption.Tree:
-                    //var id = AskGuid("Enter subcircuit id:");
-                    var id = 0;
-                    await _inner.RunAsync(["subcircuits", "tree", "--id", id.ToString()]);
+                    await _inner.RunAsync(["subcircuits", "tree", "--interactive"]);
                     break;
 
                 case SubCircuitOption.Populate:
@@ -107,7 +132,10 @@ public sealed class DatabaseMenuCommand : AsyncCommand
             var action = AnsiConsole.Prompt(
                 new SelectionPrompt<TruthTableOption>()
                     .Title("[bold]TruthTables[/]")
-                    .AddChoices(TruthTableOption.List, TruthTableOption.FindById, TruthTableOption.Populate, TruthTableOption.Back));
+                    .AddChoices(TruthTableOption.List, TruthTableOption.FindById, TruthTableOption.Populate, TruthTableOption.Back)
+                    .UseConverter(truthTableOption => truthTableOption.GetDescription()));
+
+            AnsiConsole.Clear();
 
             switch (action)
             {
