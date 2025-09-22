@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Demultiplexers;
-using SimulationEngine.Designs.SubCircuits.Memory;
 using SimulationEngine.Designs.SubCircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
@@ -21,7 +20,7 @@ public class Register9 : SubCircuit
         this.AddInputs(nameof(RdAddr1), nameof(RdAddr0), nameof(WrAddr1), nameof(WrAddr0));
         this.AddBinaryInput(nameof(Clk));
         this.AddInput(nameof(WrData));
-        this.AddOutputs(nameof(Q));
+        this.AddOutput(nameof(Q));
 
         var demux = this.AddSubCircuit(new DEMUX());
         var ram3_0 = this.AddSubCircuit(new RAM3());

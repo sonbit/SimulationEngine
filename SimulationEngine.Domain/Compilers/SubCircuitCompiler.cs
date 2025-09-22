@@ -58,11 +58,11 @@ public static class SubCircuitCompiler
                 PortPlacements = []
             };
 
-            for (int i = 0; i < subCircuit.Inputs.Count; i++) 
-                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = subCircuit.Inputs[i].Name });
+            for (int i = 0; i < childSubCircuit.Inputs.Count; i++) 
+                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Name });
 
-            for (int i = 0; i < subCircuit.Outputs.Count; i++)
-                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = subCircuit.Outputs[i].Name });
+            for (int i = 0; i < childSubCircuit.Outputs.Count; i++)
+                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Name });
 
             subCircuitPlacements.Add(subCircuitPlacement);
         }
@@ -76,8 +76,8 @@ public static class SubCircuitCompiler
             var ports = isInput ? childSubCircuit.Inputs : childSubCircuit.Outputs;
 
             int childPortIndex = ports.IndexOf(childPort);
-            return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
-        }
+                return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
+            }
 
         foreach (var wire in authorSubCircuit.Wires)
         {
