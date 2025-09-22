@@ -31,4 +31,18 @@ public class _3MUX : SubCircuit
             (ZD0ZD0PPP.Q, Q)
         ]);
     }
+
+    public override string GetTests() => """
+        ---- -
+        -0++ 0
+        -+00 +
+        --00 -
+        0+0+ 0
+        00+0 +
+        0+-+ -
+        +++0 0
+        +00+ +
+        +++- -
+        ---- -
+    """;
 }

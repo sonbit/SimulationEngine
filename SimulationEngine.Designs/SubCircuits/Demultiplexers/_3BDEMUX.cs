@@ -35,4 +35,20 @@ public class _3BDEMUX : SubCircuit
             (_200.Q, Q0)
         ]);
     }
+
+    public override string GetTests() => """
+        -0 000
+        -1 001
+        00 000
+        01 010
+        00 000
+        +1 100
+        +0 000
+        -1 001
+        01 010
+        +1 100
+        00 000
+        +0 000
+        -0 000
+    """;
 }

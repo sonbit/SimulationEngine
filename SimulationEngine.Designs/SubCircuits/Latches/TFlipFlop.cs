@@ -32,4 +32,28 @@ public class TFlipFlop : SubCircuit
             (btl1.Dout, Q)
         ]);
     }
+
+    public override string GetTests() => """
+        0- -
+        1- -
+        00 -
+        10 0
+        0+ 0
+        1+ +
+        0- +
+        1- -
+        00 -
+        10 0
+        0+ 0
+        1+ +
+        0- +
+        1- -
+        00 -
+        10 0
+        0+ 0
+        1+ +
+        0- +
+        1- -
+        0- -
+    """;
 }

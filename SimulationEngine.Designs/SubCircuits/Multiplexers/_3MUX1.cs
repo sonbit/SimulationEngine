@@ -30,4 +30,18 @@ public class _3MUX1 : SubCircuit
             (PPPZD0ZD0.Q, Q)
         ]);
     }
+
+    public override string GetTests() => """
+        ---- -
+        -++0 0
+        -00+ +
+        -00- -
+        0+0+ 0
+        00+0 +
+        0+-+ -
+        +00+ 0
+        ++00 +
+        +-++ -
+        ---- -
+    """;
 }

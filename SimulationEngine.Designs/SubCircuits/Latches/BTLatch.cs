@@ -25,4 +25,23 @@ public class BTLatch : SubCircuit
             (ZD0PPPPPP.Q, Dout)
         ]);
     }
+
+    public override string GetTests() => """
+        0- -
+        00 -
+        10 0
+        0+ 0
+        1+ +
+        00 +
+        10 0
+        0- 0
+        1- -
+        0+ -
+        10 0
+        0+ 0
+        1+ +
+        0- +
+        1- -
+        0- -
+    """;
 }
