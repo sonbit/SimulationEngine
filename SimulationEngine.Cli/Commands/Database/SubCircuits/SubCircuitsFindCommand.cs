@@ -1,48 +1,25 @@
-﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Commands.Settings;
+﻿using SimulationEngine.Cli.Flows.Database;
 using SimulationEngine.Cli.Handlers.InputOutput;
 using SimulationEngine.Cli.Handlers.Renderer;
-using SimulationEngine.Domain.Models;
+using SimulationEngine.Cli.Settings;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
 
-public sealed class SubCircuitsFindCommand(ISubCircuitService service, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<FindByIdSettings>
+public sealed class SubCircuitsFindCommand(SubCircuitsFlow flow, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<FindSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings s)
+    public override async Task<int> ExecuteAsync(CommandContext context, FindSettings settings)
     {
-        var id = s.Id;
+        var id = settings.Id;
+        id ??= settings.Interactive ? await inputOutput.AskIdAsync("Enter an id") : 0;
 
-        if (id == 0 && int.TryParse(await inputOutput.PromptValidateAsync("Id"), out var promptId))
-            id = promptId;
-
-        if (id == 0)
+        if (id == null || id == 0)
         {
-            renderer.DrawError("Invalid id");
-            return 1;
+            renderer.DrawError("Missing --id (or use --interactive).");
+            return -1;
         }
 
-        var subCircuit = await service.GetAsync(id);
-        if (subCircuit is null)
-        {
-            renderer.DrawError($"SubCircuit with id {id} was not found");
-            return 1;
-        }
-
-        renderer.Clear();
-
-        renderer.NameValueTable(
-        [
-            (nameof(SubCircuit.Id), subCircuit.Id),
-            (nameof(SubCircuit.Title), subCircuit.Title),
-            (nameof(SubCircuit.Hash), subCircuit.Hash),
-            (nameof(SubCircuit.Inputs), subCircuit.Inputs.Count),
-            (nameof(SubCircuit.LogicGates), subCircuit.LogicGates.Count),
-            (nameof(SubCircuit.Outputs), subCircuit.Outputs.Count),
-            (nameof(SubCircuit.SubCircuits), subCircuit.SubCircuits.Count),
-            (nameof(SubCircuit.Wires), subCircuit.Wires.Count),
-        ]);
-
-        return 2;
+        await flow.SubCircuitsFindAsync(id ?? 0);
+        return 0;
     }
 }

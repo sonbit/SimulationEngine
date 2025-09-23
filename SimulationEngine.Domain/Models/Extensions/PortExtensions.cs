@@ -5,6 +5,9 @@ namespace SimulationEngine.Domain.Models.Extensions;
 
 public static class PortExtensions
 {
+    public static Radix GetRadix(this Port port) =>
+        port.PortMetadata.Radix;
+
     public static bool IsBinary(this Port port) => 
         port.PortMetadata.Radix == Radix.Binary || port.PortMetadata.Radix == Radix.BinarySigned;
 

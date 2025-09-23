@@ -9,11 +9,7 @@ public interface IRenderer
 {
     void Clear();
     void NameValueTable(IEnumerable<(string Name, object? Value)> rows, string? title = null);
-
-    // 2a) Property table: choose columns by property name, in order
     void PropertyTable<T>(IEnumerable<T> rows, params string[] propertyOrder);
-
-    // 2b) Property table with custom headers
     void PropertyTable<T>(IEnumerable<T> rows, params (string Property, string? Header)[] columns);
     void DrawError(string error);
     void DrawHeader(string text, string color = "grey");
@@ -24,7 +20,13 @@ public interface IRenderer
     void DrawTable<T>(IEnumerable<T> rows, params (string Header, Func<T, object?> Value)[] columns);
     void DrawTableAuto<T>(IEnumerable<T> rows, Func<PropertyInfo, bool>? filter = null);
     void DrawTree(string rootLabel, Action<Tree> build);
+    void DrawWarning(string warning);
     IRenderable HistoryPanel(IEnumerable<(string In, string Out)> history, string header = "History", bool newestFirst = false, int? max = null);
+    public IRenderable HistoryPanel(
+        IEnumerable<(string Input, string Output)> history,
+        string panelHeader,
+        string leftHeader,
+        string rightHeader);
     IRenderable InputPanel(StringBuilder buffer, int maxLen, string? status = null, bool statusIsError = false, string prompt = "› ");
     IRenderable Stack(params IRenderable[] blocks);
 }

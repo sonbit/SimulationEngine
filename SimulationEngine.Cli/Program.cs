@@ -11,6 +11,8 @@ using SimulationEngine.Cli.Commands.Database.SubCircuits;
 using SimulationEngine.Cli.Commands.Database.TruthTables;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
+using SimulationEngine.Cli.Flows.Database;
+using SimulationEngine.Cli.Flows.Simulation;
 using SimulationEngine.Cli.Handlers.InputOutput;
 using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Domain.Repositories;
@@ -28,10 +30,11 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddDbContext<SimulationEngineDbContext>(opts => opts.UseSqlite("Data Source=SimulationEngine.db"));
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<ISubCircuitRepository, SubCircuitRepository>();
         services.AddScoped<ITruthTableRepository, TruthTableRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<ISubCircuitService, SubCircuitService>();
         services.AddScoped<ITruthTableService, TruthTableService>();
 
@@ -39,15 +42,20 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IInputOutput, InputOutput>();
         services.AddSingleton<IRenderer, Renderer>();
 
+        services.AddScoped<DatabaseFlow>();
+        services.AddScoped<SubCircuitFlow>();
+        services.AddScoped<SubCircuitsFlow>();
+        services.AddScoped<TruthTablesFlow>();
+        services.AddScoped<SimulationFlow>();
+
         services.AddScoped<SubCircuitsFindCommand>();
         services.AddScoped<SubCircuitsListCommand>();
+        services.AddScoped<SubCircuitsPopulateCommand>();
         services.AddScoped<SubCircuitsShowTreeCommand>();
-
         services.AddScoped<TruthTablesFindCommand>();
         services.AddScoped<TruthTablesListCommand>();
-
+        services.AddScoped<TruthTablesPopulateCommand>();
         services.AddScoped<DatabaseMenuCommand>();
-
         services.AddScoped<MainMenuCommand>();
     })
     .Build();
@@ -60,28 +68,28 @@ app.Configure(cfg =>
 
     cfg.AddCommand<MainMenuCommand>("menu");
 
-    cfg.AddBranch("simulation", sim =>
+    cfg.AddBranch("sim", sim =>
     {
-        sim.AddCommand<SimListCommand>("list");
-        sim.AddCommand<SimRunCommand>("run");
+        sim.AddCommand<SimulationMenuCommand>("menu");
+        sim.AddCommand<SimulationRunCommand>("run");
     });
 
     cfg.AddBranch("db", db =>
     {
         db.AddCommand<DatabaseMenuCommand>("menu");
 
-        db.AddBranch("subcircuits", sc =>
+        db.AddBranch("sc", sc =>
         {
-            sc.AddCommand<SubCircuitsListCommand>("list");
             sc.AddCommand<SubCircuitsFindCommand>("find");
-            sc.AddCommand<SubCircuitsShowTreeCommand>("tree");
+            sc.AddCommand<SubCircuitsListCommand>("list");
             sc.AddCommand<SubCircuitsPopulateCommand>("populate");
+            sc.AddCommand<SubCircuitsShowTreeCommand>("tree");
         });
 
-        db.AddBranch("truthtables", tt =>
+        db.AddBranch("tt", tt =>
         {
-            tt.AddCommand<TruthTablesListCommand>("list");
             tt.AddCommand<TruthTablesFindCommand>("find");
+            tt.AddCommand<TruthTablesListCommand>("list");
             tt.AddCommand<TruthTablesPopulateCommand>("populate");
         });
     });

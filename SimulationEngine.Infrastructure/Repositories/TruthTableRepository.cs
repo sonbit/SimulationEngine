@@ -65,6 +65,12 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : BaseRep
         return dbTruthTables;
     }
 
+    public override async Task<List<TruthTable>> GetAllAsync() =>
+        await _dbContext.TruthTables.AsNoTracking().Include(truthTable => truthTable.LogicGates).ToListAsync();
+
+    public async Task<TruthTable> GetAsync(int id) =>
+        await _dbContext.TruthTables.AsNoTracking().Include(truthTable => truthTable.LogicGates).FirstOrDefaultAsync(truthTable => truthTable.Id == id);
+
     public async Task<TruthTable> GetByHeptaIndexAsync(string heptaIndex) =>
         await _dbContext.TruthTables.AsNoTracking().FirstOrDefaultAsync(truthTable => truthTable.HeptaIndex == heptaIndex);
 

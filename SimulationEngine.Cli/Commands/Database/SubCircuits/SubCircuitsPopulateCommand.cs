@@ -1,13 +1,13 @@
-﻿using SimulationEngine.Application.Services.SubCircuits;
+﻿using SimulationEngine.Cli.Flows.Database;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
 
-public sealed class SubCircuitsPopulateCommand(ISubCircuitService service) : AsyncCommand
+public sealed class SubCircuitsPopulateCommand(SubCircuitsFlow flow) : AsyncCommand
 {
-    public override async Task<int> ExecuteAsync(CommandContext ctx)
+    public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        await service.Populate();
+        await flow.SubCircuitsPopulateAsync();
         return 0;
     }
 }

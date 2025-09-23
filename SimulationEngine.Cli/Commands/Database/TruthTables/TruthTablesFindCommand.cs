@@ -1,47 +1,25 @@
-﻿using SimulationEngine.Application.Services.TruthTables;
-using SimulationEngine.Cli.Commands.Settings;
+﻿using SimulationEngine.Cli.Flows.Database;
 using SimulationEngine.Cli.Handlers.InputOutput;
 using SimulationEngine.Cli.Handlers.Renderer;
-using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Metadata;
+using SimulationEngine.Cli.Settings;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.TruthTables;
 
-public sealed class TruthTablesFindCommand(ITruthTableService service, IRenderer renderer, IInputOutput inputOutput) : AsyncCommand<FindByIdSettings>
+public sealed class TruthTablesFindCommand(TruthTablesFlow flow, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<FindSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext ctx, FindByIdSettings s)
+    public override async Task<int> ExecuteAsync(CommandContext context, FindSettings settings)
     {
-        var id = s.Id;
+        var id = settings.Id;
+        id ??= settings.Interactive ? await inputOutput.AskIdAsync("Enter an id") : 0;
 
-        if (id == 0 && int.TryParse(await inputOutput.PromptValidateAsync("Id"), out var promptId))
-            id = promptId;
-
-        if (id == 0)
+        if (id == null || id == 0)
         {
-            renderer.DrawError("Invalid id");
-            return 1;
+            renderer.DrawError("Missing --id (or use --interactive).");
+            return -1;
         }
 
-        var truthTable = await service.GetByIdAsync(id);
-        if (truthTable is null) 
-        {
-            renderer.DrawError($"TruthTable with id {id} was not found");
-            return 1; 
-        }
-
-        renderer.Clear();
-
-        renderer.NameValueTable(
-        [
-            (nameof(TruthTable.Id), truthTable.Id),
-            (nameof(TruthTable.Title), truthTable.Title),
-            (nameof(TruthTable.HeptaIndex), truthTable.HeptaIndex),
-            (nameof(TruthTable.Definition), truthTable.Definition),
-            (nameof(TruthTableMetadata.Radix), truthTable.Metadata.Radix),
-            (nameof(TruthTable.LogicGates), truthTable.LogicGates.Count),
-        ]);
-
-        return 2;
+        await flow.TruthTablesFindAsync(id ?? 0);
+        return 0;
     }
 }

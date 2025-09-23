@@ -8,6 +8,8 @@ public class TruthTableService(ITruthTableRepository repository) : BaseService<T
 {
     public async Task<List<TruthTable>> GetAllByTitle(string title) => await repository.GetAllByTitleAsync(title);
 
+    public async Task<TruthTable> GetAsync(int id) => await repository.GetAsync(id);
+
     public async Task<TruthTable> GetByHeptaIndex(string heptaIndex) => await repository.GetByHeptaIndexAsync(heptaIndex);
 
     public async override Task Populate()

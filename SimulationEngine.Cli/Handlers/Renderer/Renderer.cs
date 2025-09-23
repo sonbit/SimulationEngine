@@ -85,6 +85,9 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
         console.Write(table);
     }
 
+    public void DrawWarning(string warning) =>
+        console.MarkupLine($"[yellow]{Markup.Escape(warning)}[/]");
+
     //public void DrawTable<T>(IEnumerable<T> rows, params (string Header, Func<T, object?> Value)[] columns)
     //{
     //    var table = new Table().RoundedBorder().BorderColor(Color.Grey).Expand();
@@ -225,6 +228,26 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
         return new Panel(rows).Header(header).RoundedBorder();
     }
 
+    public IRenderable HistoryPanel(
+        IEnumerable<(string Input, string Output)> history,
+        string panelHeader,
+        string leftHeader, 
+        string rightHeader)
+    {
+        var table = new Table();
+        table.AddColumn(new TableColumn(Markup.Escape(leftHeader)).NoWrap());
+        table.AddColumn(new TableColumn(Markup.Escape(rightHeader)).NoWrap());
+
+        foreach (var (input, output) in history)
+        {
+            table.AddRow(
+                new Markup(Markup.Escape(input ?? "")),
+                new Markup(Markup.Escape(output ?? "")));
+        }
+
+        return new Panel(table).Header(Markup.Escape(panelHeader));
+    }
+
     public IRenderable InputPanel(StringBuilder buffer, int maxLen, string? status = null, bool statusIsError = false, string prompt = "> ")
     {
         var remainingInputs = Math.Max(0, maxLen - buffer.Length);
@@ -233,8 +256,8 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
 
         var parts = new List<IRenderable> { line };
 
-        if (!string.IsNullOrWhiteSpace(status))
-            parts.Add(new Text(status!, new Style(statusIsError ? Color.Red : Color.Grey)));
+        if (!string.IsNullOrWhiteSpace(status) && statusIsError)
+            parts.Add(new Text(status!, new Style(Color.Red)));
 
         return new Panel(new Rows(parts)).RoundedBorder();
     }

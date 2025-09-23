@@ -7,6 +7,7 @@ namespace SimulationEngine.Domain.Repositories;
 public interface ITruthTableRepository : IBaseRepository<TruthTable>
 {
     Task<List<TruthTable>> CreateOrGetRangeAsync(List<TruthTable> truthTables);
+    Task<TruthTable> GetAsync(int id);
     Task<List<TruthTable>> GetAllByTitleAsync(string title);
     Task<TruthTable> GetByHeptaIndexAsync(string heptaIndex);
 }

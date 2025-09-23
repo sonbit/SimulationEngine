@@ -1,13 +1,13 @@
-﻿using SimulationEngine.Application.Services.TruthTables;
+﻿using SimulationEngine.Cli.Flows.Database;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.TruthTables;
 
-public sealed class TruthTablesPopulateCommand(ITruthTableService service) : AsyncCommand
+public sealed class TruthTablesPopulateCommand(TruthTablesFlow flow) : AsyncCommand
 {
-    public override async Task<int> ExecuteAsync(CommandContext ctx)
+    public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        await service.Populate();
+        await flow.TruthTablesPopulateAsync();
         return 0;
     }
 }

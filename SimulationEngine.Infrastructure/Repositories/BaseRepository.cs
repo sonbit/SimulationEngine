@@ -21,7 +21,7 @@ public abstract class BaseRepository<TEntity>(SimulationEngineDbContext dbContex
         return true;
     }
 
-    public async Task<List<TEntity>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
+    public virtual async Task<List<TEntity>> GetAllAsync() => await _dbSet.AsNoTracking().ToListAsync();
 
     public Task<TEntity> GetByIdAsync(int id) => _dbSet.AsNoTracking().FirstOrDefaultAsync(entity => entity.Id == id);
 
