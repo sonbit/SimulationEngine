@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Services.Database;
-using SimulationEngine.Cli.IO;
-using SimulationEngine.Cli.UI;
+using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.UI;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;

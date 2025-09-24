@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Simulation;
-using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using Spectre.Console;
 using System.ComponentModel;

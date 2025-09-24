@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Cli.UI;
+﻿using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;

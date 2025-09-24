@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
+using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings;
 using SimulationEngine.Cli.Simulation;
-using SimulationEngine.Cli.UI;
 using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;

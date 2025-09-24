@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Services.TruthTables;
-using SimulationEngine.Cli.IO;
-using SimulationEngine.Cli.UI;
+using SimulationEngine.Cli.Handlers.IO;
+using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Metadata;
 using System.ComponentModel;

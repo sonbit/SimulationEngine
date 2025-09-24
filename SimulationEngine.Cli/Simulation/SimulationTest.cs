@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Cli.UI;
+﻿using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Designs;
 using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;

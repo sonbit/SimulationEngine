@@ -1,7 +1,7 @@
 ﻿using Spectre.Console.Rendering;
 using System.Text;
 
-namespace SimulationEngine.Cli.UI;
+namespace SimulationEngine.Cli.Handlers.UI;
 
 public interface IRenderer
 {

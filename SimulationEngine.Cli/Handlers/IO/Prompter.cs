@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Domain.Models.Extensions;
 using Spectre.Console;
 
-namespace SimulationEngine.Cli.IO;
+namespace SimulationEngine.Cli.Handlers.IO;
 
 public sealed class Prompter(IAnsiConsole console) : IPrompter
 {

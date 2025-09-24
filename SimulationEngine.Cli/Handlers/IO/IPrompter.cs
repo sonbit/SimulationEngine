@@ -1,4 +1,4 @@
-﻿namespace SimulationEngine.Cli.IO;
+﻿namespace SimulationEngine.Cli.Handlers.IO;
 
 public interface IPrompter
 {
