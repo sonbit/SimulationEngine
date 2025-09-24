@@ -57,24 +57,6 @@ public sealed class TruthTableRepositoryTests
     }
 
     [Fact]
-    public async Task GetAllByTitle()
-    {
-        using var db = new SqliteInMemoryDb();
-        await using var dbContext = db.NewContext();
-        var repo = new TruthTableRepository(dbContext);
-
-        await repo.CreateOrGetAsync(new TruthTable { HeptaIndex = "RDC", Title = "MAX" });
-        await repo.CreateOrGetAsync(new TruthTable { HeptaIndex = "RDC", Title = "MAX" });
-        await repo.CreateOrGetAsync(new TruthTable { HeptaIndex = "ZRP", Title = "MAX" });
-        await repo.CreateOrGetAsync(new TruthTable { HeptaIndex = "ZRP", Title = string.Empty });
-        await repo.CreateOrGetAsync(new TruthTable { HeptaIndex = "K00", Title = "MIN" });
-
-        var truthTables = await repo.GetAllByTitleAsync("MAX");
-        Assert.Equal(2, truthTables.Count);
-        Assert.All(truthTables, truthTable => Assert.Equal("MAX", truthTable.Title));
-    }
-
-    [Fact]
     public async Task GetByHeptaIndex()
     {
         using var db = new SqliteInMemoryDb();

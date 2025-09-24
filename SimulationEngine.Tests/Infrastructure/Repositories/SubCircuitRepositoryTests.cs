@@ -26,7 +26,7 @@ public sealed class SubCircuitRepositoryTests
 
         Assert.NotNull(newDbRam3);
 
-        var dbRam3 = await repository.GetAsync(newDbRam3.Id);
+        var dbRam3 = await repository.GetByIdAsync(newDbRam3.Id);
 
         Assert.NotNull(dbRam3);
         Assert.Equal(3, dbRam3.SubCircuits.Count);
@@ -67,7 +67,7 @@ public sealed class SubCircuitRepositoryTests
         var mux = new MUX();
 
         var newDbMux = await repository.CreateOrGetAsync(mux);
-        var dbMux = await repository.GetAsync(newDbMux.Id);
+        var dbMux = await repository.GetByIdAsync(newDbMux.Id);
 
         Assert.NotNull(dbMux);
         Assert.Equal(4, dbMux.SubCircuits.Count);
@@ -120,7 +120,7 @@ public sealed class SubCircuitRepositoryTests
         var _3mux = new _3MUX();
         var newDb3Mux = await repository.CreateOrGetAsync(_3mux);
 
-        var db3Mux = await repository.GetAsync(newDb3Mux.Id);
+        var db3Mux = await repository.GetByIdAsync(newDb3Mux.Id);
 
         Assert.NotNull(db3Mux);
 

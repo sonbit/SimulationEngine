@@ -48,7 +48,7 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
 
                 case MenuOptions.FindById:
                     id = await prompter.AskIdAsync("Enter subcircuit id:");
-                    subCircuit = await service.GetAsync(id);
+                    subCircuit = await service.GetByIdAsync(id);
                     if (subCircuit is null)
                         renderer.DrawError($"SubCircuit with id {id} was not found");
                     break;

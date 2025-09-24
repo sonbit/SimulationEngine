@@ -19,7 +19,7 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
             return 1;
         }
 
-        var subCircuit = await service.GetAsync(settings.Id ?? 0);
+        var subCircuit = await service.GetByIdAsync(settings.Id ?? 0);
         if (subCircuit is null) 
         { 
             renderer.DrawError($"Subcircuit with id {settings.Id} was not found."); 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Compilers.Models;
 using SimulationEngine.Domain.Encoders;
@@ -13,57 +14,7 @@ namespace SimulationEngine.Infrastructure.Repositories;
 
 public partial class SubCircuitRepository
 {
-    private async Task<(SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements)> GetSubCircuitWithChildren(int id)
-    {
-        var subCircuit = await _dbContext.SubCircuits
-            .AsNoTrackingWithIdentityResolution()
-            .AsSplitQuery()
-            .Where(subCircuit => subCircuit.Id == id)
-            .Include(subCircuit => subCircuit.Ports)
-                .ThenInclude(port => port.PortMetadata)
-            .Include(subCircuit => subCircuit.LogicGates)
-                .ThenInclude(logicGate => logicGate.LogicGateMetadata)
-            .Include(subCircuit => subCircuit.LogicGates)
-                .ThenInclude(logicGate => logicGate.Pins)
-            .Include(subCircuit => subCircuit.LogicGates)
-                .ThenInclude(logicGate => logicGate.TruthTable)
-            .Include(subCircuit => subCircuit.Wires)
-                .ThenInclude(wire => wire.StartTerminal)
-            .Include(subCircuit => subCircuit.Wires)
-                .ThenInclude(wire => wire.EndTerminal)
-            .SingleOrDefaultAsync();
-
-        if (subCircuit == null)
-            return (null, null);
-
-        var logicGateById = subCircuit.LogicGates.ToDictionary(logicGate => logicGate.Id);
-        foreach (var pin in subCircuit.LogicGates.SelectMany(logicGate => logicGate.Pins))
-        {
-            if (pin.LogicGate is null && logicGateById.TryGetValue(pin.LogicGateId, out var logicGate))
-                pin.LogicGate = logicGate;
-        }
-
-        foreach (var wire in subCircuit.Wires)
-        {
-            if (wire.StartTerminal is Pin startTerminalPin && startTerminalPin.LogicGate is null && logicGateById.TryGetValue(startTerminalPin.LogicGateId, out var startTerminalLogicGate))
-                startTerminalPin.LogicGate = startTerminalLogicGate;
-            if (wire.EndTerminal is Pin endTerminalPin && endTerminalPin.LogicGate is null && logicGateById.TryGetValue(endTerminalPin.LogicGateId, out var endTerminalLogicGate))
-                endTerminalPin.LogicGate = endTerminalLogicGate;
-        }
-
-        var subCircuitPlacements = await _dbContext.SubCircuitPlacements
-            .AsNoTrackingWithIdentityResolution()
-            .AsSplitQuery()
-            .Where(subCircuitPlacement => subCircuitPlacement.ParentSubCircuitId == id)
-            .Include(subCircuitPlacement => subCircuitPlacement.PortPlacements)
-            .Include(subCircuitPlacement => subCircuitPlacement.ChildSubCircuit)
-                .ThenInclude(subCircuit => subCircuit.Ports)
-            .ToListAsync();
-
-        return (subCircuit, subCircuitPlacements);
-    }
-
-    public async Task<SubCircuit> BuildInstanceFromTemplateAsync(SubCircuit placedParent, List<SubCircuitPlacement> placements)
+    private async Task<SubCircuit> BuildInstanceFromTemplateAsync(SubCircuit placedParent, List<SubCircuitPlacement> placements)
     {
         var subCircuit = CloneShallow(placedParent, out var portMap, out var pinMap);
 
@@ -114,6 +65,68 @@ public partial class SubCircuitRepository
         subCircuit.Wires = newWires;
 
         return subCircuit;
+    }
+
+    private static SubCircuit CloneShallow(SubCircuit subCircuit, out Dictionary<Port, Port> portMap, out Dictionary<Pin, Pin> pinMap)
+    {
+        var ports = subCircuit.OrderedPorts;
+
+        var parent = new SubCircuit
+        {
+            Title = subCircuit.Title,
+            Ports = [.. ports.Select(port => new Port(port))],
+            LogicGates = [.. subCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
+            Wires = [],
+            SubCircuits = []
+        };
+
+        portMap = ports
+            .Zip(parent.OrderedPorts)
+            .ToDictionary(z => z.First, z => z.Second);
+
+        var gateMap = subCircuit.LogicGates
+            .Zip(parent.LogicGates)
+            .ToDictionary(z => z.First, z => z.Second);
+
+        pinMap = subCircuit.LogicGates
+            .SelectMany(g => g.Pins)
+            .ToDictionary(src => src, src => gateMap[src.LogicGate].Pins
+            .Single(p => p.Role == src.Role));
+
+        return parent;
+    }
+
+    private async Task<(SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements)> GetSubCircuitWithChildren(int id)
+    {
+        var subCircuit = await GetSubCircuitQuery().SingleOrDefaultAsync(subCircuit => subCircuit.Id == id);
+        if (subCircuit == null)
+            return (null, null);
+
+        var logicGateById = subCircuit.LogicGates.ToDictionary(logicGate => logicGate.Id);
+        foreach (var pin in subCircuit.LogicGates.SelectMany(logicGate => logicGate.Pins))
+        {
+            if (pin.LogicGate is null && logicGateById.TryGetValue(pin.LogicGateId, out var logicGate))
+                pin.LogicGate = logicGate;
+        }
+
+        foreach (var wire in subCircuit.Wires)
+        {
+            if (wire.StartTerminal is Pin startTerminalPin && startTerminalPin.LogicGate is null && logicGateById.TryGetValue(startTerminalPin.LogicGateId, out var startTerminalLogicGate))
+                startTerminalPin.LogicGate = startTerminalLogicGate;
+            if (wire.EndTerminal is Pin endTerminalPin && endTerminalPin.LogicGate is null && logicGateById.TryGetValue(endTerminalPin.LogicGateId, out var endTerminalLogicGate))
+                endTerminalPin.LogicGate = endTerminalLogicGate;
+        }
+
+        var subCircuitPlacements = await _dbContext.SubCircuitPlacements
+            .AsNoTrackingWithIdentityResolution()
+            .AsSplitQuery()
+            .Where(subCircuitPlacement => subCircuitPlacement.ParentSubCircuitId == id)
+            .Include(subCircuitPlacement => subCircuitPlacement.PortPlacements)
+            .Include(subCircuitPlacement => subCircuitPlacement.ChildSubCircuit)
+                .ThenInclude(subCircuit => subCircuit.Ports)
+            .ToListAsync();
+
+        return (subCircuit, subCircuitPlacements);
     }
 
     private async Task<SubCircuit> PersistPlacedAsync(SubCircuitPlaced placed)
@@ -209,34 +222,5 @@ public partial class SubCircuitRepository
         await _dbContext.SaveChangesAsync();
 
         return newSubCircuit;
-    }
-
-    private static SubCircuit CloneShallow(SubCircuit subCircuit, out Dictionary<Port, Port> portMap, out Dictionary<Pin, Pin> pinMap)
-    {
-        var ports = subCircuit.OrderedPorts;
-
-        var parent = new SubCircuit
-        {
-            Title = subCircuit.Title,
-            Ports = [.. ports.Select(port => new Port(port))],
-            LogicGates = [.. subCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
-            Wires = [],
-            SubCircuits = []
-        };
-
-        portMap = ports
-            .Zip(parent.OrderedPorts)
-            .ToDictionary(z => z.First, z => z.Second);
-
-        var gateMap = subCircuit.LogicGates
-            .Zip(parent.LogicGates)
-            .ToDictionary(z => z.First, z => z.Second);
-        
-        pinMap = subCircuit.LogicGates
-            .SelectMany(g => g.Pins)
-            .ToDictionary(src => src, src => gateMap[src.LogicGate].Pins
-            .Single(p => p.Role == src.Role));
-
-        return parent;
     }
 }

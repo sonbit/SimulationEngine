@@ -80,7 +80,7 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
                 return;
             }
 
-            subCircuit = await service.GetAsync(id);
+            subCircuit = await service.GetByIdAsync(id);
             if (subCircuit is null)
             {
                 renderer.DrawError($"SubCircuit with id {id} was not found");

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace SimulationEngine.Domain.Repositories;
 
-public interface ISubCircuitRepository : IBaseRepository<SubCircuit>
+public interface ISubCircuitRepository : IBaseRepository<SubCircuit> 
 {
-    Task<SubCircuit> GetAsync(int id);
+    Task<SubCircuit> GetByTitleAsync(string title);
 }

@@ -90,7 +90,7 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
 
     private async Task DrawTruthTable(int id)
     {
-        var truthTable = await service.GetAsync(id);
+        var truthTable = await service.GetByIdAsync(id);
         if (truthTable is null)
         {
             renderer.DrawError($"TruthTable with id {id} was not found");

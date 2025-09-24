@@ -59,7 +59,7 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
             }
         }
 
-        var subCircuit = await service.GetAsync(id);
+        var subCircuit = await service.GetByIdAsync(id);
         if (subCircuit is null)
         {
             renderer.DrawError($"SubCircuit with id {id} was not found");
@@ -124,7 +124,7 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
         if (selectedSubCircuit?.Id is null)
             return;
 
-        var subCircuit = await service.GetAsync(selectedSubCircuit.Id);
+        var subCircuit = await service.GetByIdAsync(selectedSubCircuit.Id);
         if (subCircuit is null)
         {
             renderer.DrawError($"SubCircuit with id {selectedSubCircuit.Id} was not found");
