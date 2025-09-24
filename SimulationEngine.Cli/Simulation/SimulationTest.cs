@@ -28,13 +28,13 @@ public static class SimulationTest
             return;
         }
 
-        renderer.Clear();
-
         Simulate(subCircuit, testString, renderer);
     }
 
     private static void Simulate(SubCircuit subCircuit, string testString, IRenderer renderer)
     {
+        renderer.Clear();
+
         var simulationSession = SimulationSession.Build(subCircuit);
         var allPassed = true;
         var lineNumber = 1;

@@ -12,7 +12,9 @@ public static class SimulationFile
 {
     public static async Task<int> SimulateFileAsync(SubCircuit subCircuit, IPrompter prompter, IRenderer renderer, bool normalize)
     {
-        var file = await prompter.PickFileAsync("Pick a txt file with rows of inputs", Environment.CurrentDirectory, "*.txt");
+        var directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+        var file = await prompter.PickFileAsync("Pick a txt file with rows of inputs", directoryPath, "*.txt");
         if (file is null)
         {
             renderer.DrawError("No file selected");
@@ -34,6 +36,8 @@ public static class SimulationFile
 
     private static void Simulate(SubCircuit subCircuit, string testString, IRenderer renderer, bool normalize = false)
     {
+        renderer.Clear();
+
         var simulationSession = SimulationSession.Build(subCircuit);
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
 

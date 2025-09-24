@@ -46,7 +46,7 @@ public sealed class Prompter(IAnsiConsole console) : IPrompter
                     .PageSize(25)
                     .UseConverter(obj => obj switch
                     {
-                        string str when str == ParentDirectory => "[grey]..[/]",
+                        string str when str == ParentDirectory => "[yellow]..[/]",
                         DirectoryInfo directoryInfo => $"[yellow]{Markup.Escape(directoryInfo.Name)}[/]",
                         FileInfo fileInfo => $"[grey]{Markup.Escape(fileInfo.Name)}[/]",
                         string str when str == Cancel => "[red]Cancel[/]",
@@ -91,7 +91,7 @@ public sealed class Prompter(IAnsiConsole console) : IPrompter
         var prompt = new SelectionPrompt<object>()
             .Title(title)
             .PageSize(20)
-            .AddChoices("Back")
+            .AddChoices("[yellow]Back[/]")
             .AddChoices(choices.Cast<object>())
             .UseConverter(obj => obj is T t ? label(t) : obj.ToString()!);
 
