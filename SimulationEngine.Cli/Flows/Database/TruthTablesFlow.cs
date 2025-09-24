@@ -74,7 +74,9 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
             truthTable.HeptaIndex,
             truthTable.Metadata.Radix,
             LogicGates = truthTable.LogicGates.Count
-        }), [
+        }),
+        true,
+        [
             nameof(TruthTable.Id),
             nameof(TruthTable.Title),
             nameof(TruthTable.HeptaIndex),

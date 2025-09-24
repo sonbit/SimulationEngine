@@ -20,8 +20,9 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
     {
         Simulate,
         [Description("Simulate (Normalized)")] SimulateNormalized,
-        [Description("Simulate from file")] SimulateFile,
-        [Description("Simulate from file (Normalized)")] SimulateFileNormalized,
+        [Description("Simulate file")] SimulateFile,
+        [Description("Simulate file (Normalized)")] SimulateFileNormalized,
+        [Description("Simulate test")] SimulateTest,
         Back
     }
 
@@ -93,6 +94,10 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
                         renderer.Clear();
                         var file = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
                         SimulationFile.Simulate(subCircuit, file, renderer, simulationOption == SimulationOptions.SimulateFileNormalized);
+                        break;
+
+                    case SimulationOptions.SimulateTest:
+                        SimulationTest.Simulate(subCircuit, renderer);
                         break;
 
                     case SimulationOptions.Back:

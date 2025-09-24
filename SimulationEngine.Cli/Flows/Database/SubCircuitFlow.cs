@@ -16,6 +16,7 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
         [Description("Simulate (Normalized)")] SimulateNormalized,
         [Description("Simulate file")] SimulateFile,
         [Description("Simulate file (Normalized)")] SimulateFileNormalized,
+        [Description("Simulate test")] SimulateTest,
         [Description("Show as tree")] ShowTree,
         Back
     }
@@ -51,6 +52,10 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
                 case MenuOptions.SimulateFileNormalized:
                     var file = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
                     SimulationFile.Simulate(subCircuit, file, renderer, menuOption == MenuOptions.SimulateFileNormalized);
+                    break;
+
+                case MenuOptions.SimulateTest:
+                    SimulationTest.Simulate(subCircuit, renderer);
                     break;
 
                 case MenuOptions.ShowTree:

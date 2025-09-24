@@ -41,7 +41,7 @@ public static class SimulationRepl
             var historyRenderable = history.Count > 0
                 ? renderer.DrawHistoryPanel(
                     history,
-                    panelHeader: "Simulation History",
+                    panelHeader: "Simulation history",
                     leftHeader: "Inputs",
                     rightHeader: "Outputs")
                 : Text.Empty;
@@ -81,6 +81,13 @@ public static class SimulationRepl
                         break;
 
                     case ConsoleKey.Enter:
+                        if (buf.Length != inputCount)
+                        {
+                            status = $"Fill in remaining {inputCount - buf.Length}/{inputCount} inputs";
+                            isError = true;
+                            break;
+                        }
+
                         var inputString = buf.ToString();
                         var outputs = simulationSession.Simulate(inputString, normalize);
 

@@ -86,7 +86,8 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
         var prompt = new SelectionPrompt<object>()
             .Title(title)
             .PageSize(20)
-            .AddChoices(choices.Cast<object>().Append("Back"))
+            .AddChoices("Back")
+            .AddChoices(choices.Cast<object>())
             .UseConverter(obj => obj is T t ? label(t) : obj.ToString()!);
 
         var choice = await AnsiConsole.PromptAsync(prompt);

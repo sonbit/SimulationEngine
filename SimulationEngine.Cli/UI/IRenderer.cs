@@ -14,7 +14,7 @@ public interface IRenderer
     void DrawPanel(string title, string body);
     IRenderable DrawStack(params IRenderable[] blocks);
     void DrawTableWithNameValuePairs(IEnumerable<(string Name, object? Value)> rows);
-    void DrawTableFromPropertiesWithColumnNames<T>(IEnumerable<T> rows, params string[] propertyOrder);
+    void DrawTableFromPropertiesWithColumnNames<T>(IEnumerable<T> rows, bool expand = true, params string[] propertyOrder);
     void DrawWarning(string warning);
     void Write(IRenderable renderable);
 }

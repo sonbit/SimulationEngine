@@ -78,8 +78,8 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
         console.Write(table);
     }
 
-    public void DrawTableFromPropertiesWithColumnNames<T>(IEnumerable<T> rows, params string[] propertyOrder)
-        => DrawTableFromProperties(rows, [.. propertyOrder.Select(propertyName => (propertyName, (string?)null))]);
+    public void DrawTableFromPropertiesWithColumnNames<T>(IEnumerable<T> rows, bool expand = true, params string[] propertyOrder)
+        => DrawTableFromProperties(rows, expand, [.. propertyOrder.Select(propertyName => (propertyName, (string?)null))]);
 
     public void DrawWarning(string warning) =>
         console.MarkupLine($"[yellow]{Markup.Escape(warning)}[/]");
@@ -87,11 +87,14 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
     public void Write(IRenderable renderable) =>
         console.Write(renderable);
 
-    private void DrawTableFromProperties<T>(IEnumerable<T> rows, params (string Property, string? Header)[] columns)
+    private void DrawTableFromProperties<T>(IEnumerable<T> rows, bool expand = true, params (string Property, string? Header)[] columns)
     {
         var properties = GetProperties(typeof(T), columns.Select(column => column.Property));
 
-        var table = new Table().RoundedBorder().BorderColor(Color.Grey).Expand();
+        var table = new Table().RoundedBorder().BorderColor(Color.Grey);
+
+        if (expand)
+            table.Expand();
 
         for (int i = 0; i < columns.Length; i++)
             table.AddColumn(new TableColumn(Markup.Escape(columns[i].Header ?? properties[i].Name)));

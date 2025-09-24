@@ -88,7 +88,9 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
             Outputs = subCircuit.Outputs.Count,
             SubCircuits = subCircuit.SubCircuits.Count,
             Wires = subCircuit.Wires.Count
-        }), [
+        }), 
+        true,
+        [
             nameof(SubCircuit.Id),
             nameof(SubCircuit.Title),
             nameof(SubCircuit.Inputs),
