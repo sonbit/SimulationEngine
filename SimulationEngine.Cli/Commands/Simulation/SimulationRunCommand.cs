@@ -29,7 +29,7 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         }
 
         if (settings.File is not null)
-            return FileSimulation.Simulate(subCircuit, settings.File, renderer, settings.Normalize);
+            return SimulationFile.Simulate(subCircuit, settings.File, renderer, settings.Normalize);
 
         if (settings.InputStrings is not null)
             return SimulateInputStrings(subCircuit, settings.InputStrings, settings.Normalize);

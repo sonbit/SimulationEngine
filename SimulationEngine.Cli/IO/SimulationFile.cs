@@ -6,7 +6,7 @@ using Spectre.Console;
 
 namespace SimulationEngine.Cli.IO;
 
-public static class FileSimulation
+public static class SimulationFile
 {
     public static int Simulate(SubCircuit subCircuit, FileInfo? file, IRenderer renderer, bool normalize = false)
     {
