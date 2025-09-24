@@ -25,7 +25,7 @@ public static class SimulationRepl
 
         var inputCount = subCircuit.Inputs.Count;
         var outputCount = subCircuit.Outputs.Count;
-        AnsiConsole.MarkupLine($"[grey]Type {inputCount} inputs to get {outputCount} outputs. \nPress [bold]Esc[/] to go back.[/]");
+        renderer.DrawLine($"[grey]Type {inputCount} inputs to get {outputCount} outputs. \nPress [bold]Esc[/] to go back.[/]");
 
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
         var simulationSession = SimulationSession.Build(subCircuit);
@@ -39,16 +39,16 @@ public static class SimulationRepl
         IRenderable Screen()
         {
             var historyRenderable = history.Count > 0
-                ? renderer.HistoryPanel(
+                ? renderer.DrawHistoryPanel(
                     history,
                     panelHeader: "Simulation History",
                     leftHeader: "Inputs",
                     rightHeader: "Outputs")
                 : Text.Empty;
 
-            return renderer.Stack(
+            return renderer.DrawStack(
                 historyRenderable,
-                renderer.InputPanel(buf, inputCount, status, isError)
+                renderer.DrawInputPanel(buf, inputCount, status, isError)
             );
         }
 

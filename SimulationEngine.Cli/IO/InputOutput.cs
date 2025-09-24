@@ -7,14 +7,15 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
 {
     public async Task<int> AskIdAsync(string title)
     {
-        var idString = await AnsiConsole.PromptAsync(new TextPrompt<string>(title)
+        var idString = await AnsiConsole
+            .PromptAsync(new TextPrompt<string>(title)
             .ValidationErrorMessage("[red]Invalid Id[/]")
-            .Validate(s => int.TryParse(s, out _) ? ValidationResult.Success() : ValidationResult.Error("Invalid")));
+            .Validate(str => int.TryParse(str, out _) 
+                ? ValidationResult.Success() 
+                : ValidationResult.Error("Invalid Id")));
+
         return int.Parse(idString);
     }
-
-    public Task<bool> ConfirmAsync(string prompt, bool defaultValue = true) =>
-        console.PromptAsync(new ConfirmationPrompt(prompt) { DefaultValue = defaultValue });
 
     public async Task<FileInfo?> PickFileAsync(string title, string startDir, string searchPattern = "*.*")
     {
@@ -64,18 +65,6 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
         }
     }
 
-    public Task<string> PromptAsync(string prompt) =>
-        console.PromptAsync(new TextPrompt<string>(prompt));
-
-    public Task<string> PromptValidateAsync(string prompt, bool required = true)
-    {
-        return console
-            .PromptAsync(new TextPrompt<string>(prompt)
-                .Validate(v =>!required || !string.IsNullOrWhiteSpace(v) 
-                    ? ValidationResult.Success() 
-                    : ValidationResult.Error("Required")));
-    }
-
     public Task<TEnum> SelectEnumAsync<TEnum>(string title) where TEnum : struct, Enum
     {
         var prompt = new SelectionPrompt<TEnum>()
@@ -86,10 +75,9 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
         return console.PromptAsync(prompt);
     }
 
-    public T? SelectOrBack<T>(string title, IEnumerable<T> choices, Func<T, string> label, string emptyMessage = "") where T : notnull
+    public async Task<T?> SelectOrBackAsync<T>(string title, List<T> choices, Func<T, string> label, string emptyMessage = "") where T : notnull
     {
-        var items = choices.ToList();
-        if (items.Count == 0)
+        if (choices.Count == 0)
         {
             AnsiConsole.MarkupLine($"[yellow]{(!string.IsNullOrWhiteSpace(emptyMessage) ? emptyMessage : "No items in list")}[/]");
             return default;
@@ -98,10 +86,10 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
         var prompt = new SelectionPrompt<object>()
             .Title(title)
             .PageSize(20)
-            .AddChoices(items.Cast<object>().Append("Back"))
-            .UseConverter(o => o is T t ? label(t) : o.ToString()!);
+            .AddChoices(choices.Cast<object>().Append("Back"))
+            .UseConverter(obj => obj is T t ? label(t) : obj.ToString()!);
 
-        var choice = AnsiConsole.Prompt(prompt);
+        var choice = await AnsiConsole.PromptAsync(prompt);
         return choice is T value ? value : default;
     }
 }

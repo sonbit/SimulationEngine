@@ -2,7 +2,6 @@
 using SimulationEngine.Cli.IO;
 using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
-using Spectre.Console;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
@@ -80,7 +79,7 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
             return;
         }
 
-        renderer.PropertyTable(subCircuits.Select(subCircuit => new
+        renderer.DrawTableFromPropertiesWithColumnNames(subCircuits.Select(subCircuit => new
         {
             subCircuit.Id,
             subCircuit.Title,
@@ -115,11 +114,13 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
 
         renderer.Clear();
 
-        var selectedSubCircuit = AnsiConsole.Prompt(
-            new SelectionPrompt<SubCircuit>()
-                .Title("Select a subcircuit")
-                .UseConverter(subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]")
-                .AddChoices(subCircuits));
+        var selectedSubCircuit = await inputOutput.SelectOrBackAsync(
+            "Select a subcircuit",
+            subCircuits,
+            subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]");
+
+        if (selectedSubCircuit?.Id is null)
+            return;
 
         var subCircuit = await service.GetAsync(selectedSubCircuit.Id);
         if (subCircuit is null)

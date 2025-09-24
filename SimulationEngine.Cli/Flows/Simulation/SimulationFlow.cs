@@ -44,12 +44,12 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
                     break;
 
                 case MenuOptions.SelectFromList:
-                    subCircuit = inputOutput.SelectOrBack(
+                    subCircuit = await inputOutput.SelectOrBackAsync(
                         "Select subcircuit", 
                         await service.GetAllAsync(), 
                         subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]", 
                         "No subcircuits found")!;
-                    id = subCircuit.Id;
+                    id = subCircuit?.Id ?? 0;
                     break;
 
                 case MenuOptions.Back:
@@ -66,7 +66,7 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
 
             while (true)
             {
-                renderer.NameValueTable(
+                renderer.DrawTableWithNameValuePairs(
                 [
                     (nameof(SubCircuit.Id), id),
                     (nameof(SubCircuit.Title), subCircuit.Title),

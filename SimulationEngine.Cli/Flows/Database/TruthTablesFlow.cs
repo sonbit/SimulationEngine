@@ -3,7 +3,6 @@ using SimulationEngine.Cli.IO;
 using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Metadata;
-using Spectre.Console;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
@@ -68,7 +67,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
     {
         var truthTables = await service.GetAllAsync();
 
-        renderer.PropertyTable(truthTables.Select(truthTable => new
+        renderer.DrawTableFromPropertiesWithColumnNames(truthTables.Select(truthTable => new
         {
             truthTable.Id,
             truthTable.Title,
@@ -98,7 +97,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
 
         renderer.Clear();
 
-        renderer.NameValueTable(
+        renderer.DrawTableWithNameValuePairs(
         [
             (nameof(TruthTable.Id), truthTable.Id),
             (nameof(TruthTable.Title), truthTable.Title),
@@ -121,12 +120,12 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
 
         renderer.Clear();
 
-        var selectedTruthTable = AnsiConsole.Prompt(
-            new SelectionPrompt<TruthTable>()
-                .Title("Select a truthTable")
-                .UseConverter(truthTable => $"{truthTable.Title ?? truthTable.HeptaIndex} [grey]({truthTable.Id})[/]")
-                .AddChoices(truthTables));
+        var selectedTruthTable = await inputOutput.SelectOrBackAsync(
+            "Select a truthtable", 
+            truthTables, 
+            truthTable => $"{truthTable.Title ?? truthTable.HeptaIndex} [grey]({truthTable.Id}");
 
-        await DrawTruthTable(selectedTruthTable.Id);
+        if (selectedTruthTable is not null)
+            await DrawTruthTable(selectedTruthTable.Id);
     }
 }

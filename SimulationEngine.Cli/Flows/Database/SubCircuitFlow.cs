@@ -26,7 +26,7 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
 
         while (true)
         {
-            renderer.NameValueTable(
+            renderer.DrawTableWithNameValuePairs(
             [
                 (nameof(SubCircuit.Id), id),
                 (nameof(SubCircuit.Title), subCircuit.Title),
@@ -84,18 +84,21 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
             }
         }
 
+        if (subCircuit is null)
+            return;
+
         renderer.Clear();
-        BuildTree(subCircuit!);
+        BuildTree(subCircuit);
     }
 
-    private static void BuildTree(SubCircuit parentSubCircuit, int maxDepth = 32)
+    private void BuildTree(SubCircuit parentSubCircuit, int maxDepth = 32)
     {
         var tree = new Tree(GetSubCircuitLabel(parentSubCircuit));
         int depth = 0;
 
         Build(parentSubCircuit, text => tree.AddNode(text), depth);
 
-        AnsiConsole.Write(tree);
+        renderer.Write(tree);
 
         void Build(SubCircuit subCircuit, Func<string, TreeNode> addChild, int depth)
         {

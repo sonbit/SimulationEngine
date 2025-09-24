@@ -2,7 +2,6 @@
 using SimulationEngine.Cli.IO;
 using SimulationEngine.Cli.Settings;
 using SimulationEngine.Cli.UI;
-using SimulationEngine.Cli.UI;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
