@@ -32,14 +32,14 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
             for (var i = 0; i < outputs.Length; i++)
             {
                 var equal = outputs[i] == outputTest[i];
-                Assert.True(skipEvaluation || equal, GetEvaluationString2(lineNumber, inputTest, outputTest, outputs, equal));
+                Assert.True(skipEvaluation || equal, GetEvaluationString(lineNumber, inputTest, outputTest, outputs, equal));
 
                 if (skipEvaluation && !equal)
                     allEqual = false;
             }
 
             if (skipEvaluation)
-                testOutputHelper.WriteLine(GetEvaluationString2(lineNumber, inputTest, outputTest, outputs, allEqual));
+                testOutputHelper.WriteLine(GetEvaluationString(lineNumber, inputTest, outputTest, outputs, allEqual));
 
             lineNumber++;
         }
@@ -48,6 +48,6 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
         testOutputHelper.WriteLine($"Elapsed time: {stopWatch.Elapsed}");
     }
 
-    private static string GetEvaluationString2(int lineNumber, string testInputString, string testOutputString, string outputString, bool equal) => 
+    private static string GetEvaluationString(int lineNumber, string testInputString, string testOutputString, string outputString, bool equal) => 
         $"{lineNumber}: {testInputString} -> {testOutputString} {(equal ? "==" : "!=")} {outputString}";
 }
