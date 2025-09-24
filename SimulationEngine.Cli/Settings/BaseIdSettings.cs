@@ -7,7 +7,7 @@ public abstract class BaseIdSettings : CommandSettings
 {
     [CommandOption("--id <ID>")] public int? Id { get; set; }
 
-    public override ValidationResult Validate() => (Id.HasValue && Id.Value != 0)
+    public override ValidationResult Validate() => Id.HasValue && Id.Value != 0
         ? ValidationResult.Success() 
-        : ValidationResult.Error("Missing --id.");
+        : ValidationResult.Error("Missing --id");
 }

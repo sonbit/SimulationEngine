@@ -2,7 +2,7 @@
 
 namespace SimulationEngine.Cli.Settings;
 
-public sealed class SimulationRunSettings : BaseIdSettings
+public sealed class SimulationRunSettings : FindSettings
 {
     [CommandOption("--file <PATH>")] public FileInfo? File { get; set; }
     [CommandOption("--inputs <TEXT>")] public string? InputStrings { get; set; }

@@ -13,17 +13,38 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
 {
     public override async Task<int> ExecuteAsync(CommandContext context, SimulationRunSettings settings)
     {
-        if (settings.Id == null || settings.Id == 0)
+        if (settings?.Id > 0)
         {
-            renderer.DrawError($"Missing or invalid id");
-            return 1;
+            var subCircuit = await service.GetByIdAsync(settings.Id ?? 0);
+            return await SimulateAsync(subCircuit, settings);
+        }
+        else if (!string.IsNullOrWhiteSpace(settings?.Title))
+        {
+            var subCircuit = await service.GetByTitleAsync(settings.Title);
+            return await SimulateAsync(subCircuit, settings);
         }
 
-        var subCircuit = await service.GetByIdAsync(settings.Id ?? 0);
-        if (subCircuit is null) 
-        { 
-            renderer.DrawError($"Subcircuit with id {settings.Id} was not found."); 
-            return 1; 
+        renderer.DrawError("Provide --id or --title");
+        return 1;
+    }
+
+    private void Simulate(SubCircuit subCircuit, SimulationSession simulationSession, string inputs, bool normalize, HashSet<char>[] allowedValuesPerInput)
+    {
+        if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
+        {
+            renderer.DrawError(message);
+            return;
+        }
+
+        renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
+    }
+
+    private async Task<int> SimulateAsync(SubCircuit subCircuit, SimulationRunSettings settings)
+    {
+        if (subCircuit is null)
+        {
+            renderer.DrawError($"Subcircuit{(settings.Id > 0 ? $" with id {settings.Id} " : "")}was not found.");
+            return 1;
         }
 
         if (settings.File is not null)
@@ -36,17 +57,6 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
             return await SimulateStreamAsync(subCircuit, settings.Normalize);
 
         return await SimulationRepl.SimulateReplAsync(subCircuit, renderer, settings.Normalize);
-    }
-
-    private void Simulate(SubCircuit subCircuit, SimulationSession simulationSession, string inputs, bool normalize, HashSet<char>[] allowedValuesPerInput)
-    {
-        if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
-        {
-            renderer.DrawError(message);
-            return;
-        }
-
-        renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
     }
 
     private int SimulateInputStrings(SubCircuit subCircuit, string inputStrings, bool normalize)

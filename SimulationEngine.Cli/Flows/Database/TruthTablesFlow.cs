@@ -51,7 +51,7 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
     {
         if (id == 0) 
         {
-            id = await prompter.AskIdAsync("Enter an id");
+            id = await prompter.AskIdAsync("Enter TruthTable id:");
 
             if (id == 0)
             {
@@ -116,14 +116,14 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
 
         if (truthTables.Count == 0)
         {
-            renderer.DrawWarning("No truthtables found");
+            renderer.DrawWarning("No TruthTables found");
             return;
         }
 
         renderer.Clear();
 
         var selectedTruthTable = await prompter.SelectOrBackAsync(
-            "Select a truthtable", 
+            "Select a TruthTable", 
             truthTables, 
             truthTable => $"{truthTable.Title ?? truthTable.HeptaIndex} [grey]({truthTable.Id}");
 

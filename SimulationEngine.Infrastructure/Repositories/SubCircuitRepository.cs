@@ -14,14 +14,12 @@ namespace SimulationEngine.Infrastructure.Repositories;
 
 public partial class SubCircuitRepository(SimulationEngineDbContext dbContext, ITruthTableRepository truthTableRepository) : ISubCircuitRepository
 {
-    private readonly SimulationEngineDbContext _dbContext = dbContext;
-
     public async Task<SubCircuit> CreateOrGetAsync(SubCircuit subCircuit)
     {
         var subCircuitClosure = SubCircuitCompiler.Compile(subCircuit);
         var hash = subCircuitClosure.SubCircuitPlaced.SubCircuit.Hash;
         await EnsurePersistedAsync(hash, subCircuitClosure);
-        return await _dbContext.SubCircuits.AsNoTracking().FirstAsync(subCircuit => subCircuit.Hash == hash);
+        return await dbContext.SubCircuits.AsNoTracking().FirstAsync(subCircuit => subCircuit.Hash == hash);
     }
 
     public async Task<List<SubCircuit>> GetAllAsync() => await GetSubCircuitQuery().ToListAsync();
@@ -33,15 +31,24 @@ public partial class SubCircuitRepository(SimulationEngineDbContext dbContext, I
             return null;
 
         var subCircuit = await BuildInstanceFromTemplateAsync(template, subCircuitPlacements);
+        subCircuit.Id = id;
+
         return subCircuit;
     }
 
-    public async Task<SubCircuit> GetByTitleAsync(string title) => 
-        await GetSubCircuitQuery().FirstOrDefaultAsync(subCircuit => subCircuit.Title == title);
+    public async Task<SubCircuit> GetByTitleAsync(string title)
+    {
+        var titleLowerCase = title.ToLower();
+        var subCircuit = await dbContext.SubCircuits
+            .FirstOrDefaultAsync(subCiruit => subCiruit.Title.ToLower().Contains(titleLowerCase));
+
+        return await GetByIdAsync(subCircuit?.Id ?? 0);
+    }
 
     private async Task EnsurePersistedAsync(string hash, SubCircuitClosure subCircuitClosure)
     {
-        if (await _dbContext.SubCircuits.AsNoTracking().AnyAsync(s => s.Hash == hash)) return;
+        if (await dbContext.SubCircuits.AsNoTracking().AnyAsync(s => s.Hash == hash)) 
+            return;
 
         var placed = subCircuitClosure.MapByHash[hash];
         foreach (var childHash in placed.SubCircuitPlacementInfos.Select(p => p.ChildSubCircuitHash).Distinct(StringComparer.Ordinal))
@@ -52,8 +59,7 @@ public partial class SubCircuitRepository(SimulationEngineDbContext dbContext, I
 
     private IIncludableQueryable<SubCircuit, Terminal> GetSubCircuitQuery()
     {
-        return _dbContext.SubCircuits
-            .AsNoTrackingWithIdentityResolution()
+        return dbContext.SubCircuits.AsNoTrackingWithIdentityResolution()
             .AsSplitQuery()
             .Include(subCircuit => subCircuit.Ports)
                 .ThenInclude(port => port.PortMetadata)

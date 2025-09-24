@@ -18,7 +18,7 @@ public static class SimulationFile
         if (file is null)
         {
             renderer.DrawError("No file selected");
-            return -1;
+            return 1;
         }
 
         var testString = await File.ReadAllTextAsync(file.FullName);

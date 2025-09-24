@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Compilers.Models;
 using SimulationEngine.Domain.Encoders;
@@ -14,9 +13,9 @@ namespace SimulationEngine.Infrastructure.Repositories;
 
 public partial class SubCircuitRepository
 {
-    private async Task<SubCircuit> BuildInstanceFromTemplateAsync(SubCircuit placedParent, List<SubCircuitPlacement> placements)
+    private async Task<SubCircuit> BuildInstanceFromTemplateAsync(SubCircuit template, List<SubCircuitPlacement> placements)
     {
-        var subCircuit = CloneShallow(placedParent, out var portMap, out var pinMap);
+        var subCircuit = CloneShallow(template, out var portMap, out var pinMap);
 
         var childSubCircuits = new List<SubCircuit>(placements.Count);
         var ordinalToChild = new Dictionary<int, (SubCircuit child, List<Port> ins, List<Port> outs)>();
@@ -52,8 +51,8 @@ public partial class SubCircuitRepository
             _ => throw new InvalidOperationException()
         };
 
-        var newWires = new List<Wire>(placedParent.Wires.Count);
-        foreach (var wire in placedParent.Wires)
+        var newWires = new List<Wire>(template.Wires.Count);
+        foreach (var wire in template.Wires)
         {
             var startTerminal = Translate(wire.StartTerminal);
             var endTerminal = Translate(wire.EndTerminal);
@@ -99,6 +98,7 @@ public partial class SubCircuitRepository
     private async Task<(SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements)> GetSubCircuitWithChildren(int id)
     {
         var subCircuit = await GetSubCircuitQuery().SingleOrDefaultAsync(subCircuit => subCircuit.Id == id);
+
         if (subCircuit == null)
             return (null, null);
 
@@ -117,7 +117,7 @@ public partial class SubCircuitRepository
                 endTerminalPin.LogicGate = endTerminalLogicGate;
         }
 
-        var subCircuitPlacements = await _dbContext.SubCircuitPlacements
+        var subCircuitPlacements = await dbContext.SubCircuitPlacements
             .AsNoTrackingWithIdentityResolution()
             .AsSplitQuery()
             .Where(subCircuitPlacement => subCircuitPlacement.ParentSubCircuitId == id)
@@ -131,7 +131,7 @@ public partial class SubCircuitRepository
 
     private async Task<SubCircuit> PersistPlacedAsync(SubCircuitPlaced placed)
     {
-        if (await _dbContext.SubCircuits.AsNoTracking().FirstOrDefaultAsync(s => s.Hash == placed.SubCircuit.Hash) is { } existing)
+        if (await dbContext.SubCircuits.AsNoTracking().FirstOrDefaultAsync(s => s.Hash == placed.SubCircuit.Hash) is { } existing)
             return existing;
 
         var newSubCircuit = new SubCircuit
@@ -142,8 +142,8 @@ public partial class SubCircuitRepository
             LogicGates = [],
             Wires = []
         };
-        _dbContext.SubCircuits.Add(newSubCircuit);
-        await _dbContext.SaveChangesAsync();
+        dbContext.SubCircuits.Add(newSubCircuit);
+        await dbContext.SaveChangesAsync();
 
         var logicGateMap = new Dictionary<LogicGate, LogicGate>();
         foreach (var logicGate in placed.SubCircuit.LogicGates.OrderBy(x => x, LogicGateOrderComparer.Instance))
@@ -155,10 +155,10 @@ public partial class SubCircuitRepository
                 TruthTable = truthTable,
                 Pins = [.. logicGate.Pins.Select(pin => new Pin { Role = pin.Role })]
             };
-            _dbContext.LogicGates.Add(newLogicGate);
+            dbContext.LogicGates.Add(newLogicGate);
             logicGateMap[logicGate] = newLogicGate;
         }
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         var portMap = placed.SubCircuit.OrderedPorts
             .Zip(newSubCircuit.OrderedPorts)
@@ -167,7 +167,7 @@ public partial class SubCircuitRepository
         var subCircuitPlacements = new List<SubCircuitPlacement>(placed.SubCircuitPlacementInfos.Count);
         foreach (var subCircuitPlacementInfo in placed.SubCircuitPlacementInfos.OrderBy(p => p.SubCircuitPlacement.Ordinal))
         {
-            var childSubCircuit = await _dbContext.SubCircuits
+            var childSubCircuit = await dbContext.SubCircuits
                 .FirstAsync(subCircuit => subCircuit.Hash == subCircuitPlacementInfo.ChildSubCircuitHash);
 
             var subCircuitPlacement = new SubCircuitPlacement
@@ -177,16 +177,16 @@ public partial class SubCircuitRepository
                 Ordinal = subCircuitPlacementInfo.SubCircuitPlacement.Ordinal,
                 Title = subCircuitPlacementInfo.SubCircuitPlacement.Title
             };
-            _dbContext.SubCircuitPlacements.Add(subCircuitPlacement);
-            await _dbContext.SaveChangesAsync();
+            dbContext.SubCircuitPlacements.Add(subCircuitPlacement);
+            await dbContext.SaveChangesAsync();
 
-            for (int i = 0; i < childSubCircuit.Inputs.Count; i++) 
-                _dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Name });
+            for (int i = 0; i < childSubCircuit.Inputs.Count; i++)
+                dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Name });
 
             for (int i = 0; i < childSubCircuit.Outputs.Count; i++)
-                _dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Name });
+                dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Name });
 
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
             subCircuitPlacements.Add(subCircuitPlacement);
         }
@@ -217,9 +217,9 @@ public partial class SubCircuitRepository
             if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
                 (startTerminal, endTerminal) = (endTerminal, startTerminal);
 
-            _dbContext.Wires.Add(new Wire { SubCircuit = newSubCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
+            dbContext.Wires.Add(new Wire { SubCircuit = newSubCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
         }
-        await _dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync();
 
         return newSubCircuit;
     }

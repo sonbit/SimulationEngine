@@ -13,6 +13,7 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
         [Description("List all")] ListAll,
         [Description("Select from list")] SelectFromList,
         [Description("Find by id")] FindById,
+        [Description("Find by title (First match)")] FindByTitle,
         [Description("Populate database with existing subcircuits")] Populate,
         Back
     }
@@ -35,6 +36,10 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
                     await SubCircuitsFindAsync(); 
                     break;
 
+                case MenuOptions.FindByTitle:
+                    await SubCircuitsFindByTitleAsync();
+                    break;
+
                 case MenuOptions.Populate:
                     await SubCircuitsPopulateAsync();
                     break;
@@ -46,36 +51,50 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
         }
     }
 
-    public async Task SubCircuitsFindAsync(int id = 0)
+    public async Task SubCircuitsFindAsync(int? id = null)
     {
-        if (id == 0)
+        id ??= await prompter.AskIdAsync("Enter SubCircuit id:");
+        if (id.HasValue && id.Value == 0)
         {
-            id = await prompter.AskIdAsync("Enter an id");
-
-            if (id == 0)
-            {
-                renderer.DrawError("Invalid id");
-                return;
-            }
+            renderer.DrawError("Invalid id");
+            return;
         }
 
-        var subCircuit = await service.GetByIdAsync(id);
+        var subCircuit = await service.GetByIdAsync(id.Value);
         if (subCircuit is null)
         {
             renderer.DrawError($"SubCircuit with id {id} was not found");
             return;
         }
 
-        await subCircuitFlow.RunMenuAsync(subCircuit, id);
+        await subCircuitFlow.RunMenuAsync(subCircuit);
+    }
+
+    public async Task SubCircuitsFindByTitleAsync(string? title = null)
+    {
+        title ??= await prompter.AskAsync("Enter SubCircuit title (Full or partial, finds first match):");
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            renderer.DrawError("Invalid title");
+            return;
+        }
+
+        var subCircuit = await service.GetByTitleAsync(title);
+        if (subCircuit is null)
+        {
+            renderer.DrawError($"SubCircuit with title {title} was not found");
+            return;
+        }
+
+        await subCircuitFlow.RunMenuAsync(subCircuit);
     }
 
     public async Task SubCircuitsListAsync()
     {
         var subCircuits = await service.GetAllAsync();
-
         if (subCircuits.Count == 0)
         {
-            renderer.DrawWarning("No subcircuits found");
+            renderer.DrawWarning("No SubCircuits found");
             return;
         }
 
@@ -107,17 +126,16 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
     private async Task SubCircuitsSelectAsync()
     {
         var subCircuits = await service.GetAllAsync();
-
         if (subCircuits.Count == 0)
         {
-            renderer.DrawWarning("No subcircuits found");
+            renderer.DrawWarning("No SubCircuits found");
             return;
         }
 
         renderer.Clear();
 
         var selectedSubCircuit = await prompter.SelectOrBackAsync(
-            "Select a subcircuit",
+            "Select a SubCircuit",
             subCircuits,
             subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]");
 
@@ -133,6 +151,6 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
 
         renderer.Clear();
 
-        await subCircuitFlow.RunMenuAsync(subCircuit, selectedSubCircuit.Id);
+        await subCircuitFlow.RunMenuAsync(subCircuit);
     }
 }

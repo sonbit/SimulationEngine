@@ -8,6 +8,16 @@ public sealed class Prompter(IAnsiConsole console) : IPrompter
     private const string Cancel = "Cancel";
     private const string ParentDirectory = "..";
 
+    public async Task<string> AskAsync(string title)
+    {
+        return await AnsiConsole
+            .PromptAsync(new TextPrompt<string>(title)
+            .ValidationErrorMessage("[red]Invalid string[/]")
+            .Validate(str => !string.IsNullOrWhiteSpace(str)
+                ? ValidationResult.Success()
+                : ValidationResult.Error("Invalid string")));
+    }
+
     public async Task<int> AskIdAsync(string title)
     {
         var idString = await AnsiConsole

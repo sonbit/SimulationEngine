@@ -21,7 +21,7 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
         Back
     }
 
-    public async Task RunMenuAsync(SubCircuit subCircuit, int id)
+    public async Task RunMenuAsync(SubCircuit subCircuit)
     {
         renderer.Clear();
 
@@ -29,7 +29,7 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
         {
             renderer.DrawTableWithNameValuePairs(
             [
-                (nameof(SubCircuit.Id), id),
+                (nameof(SubCircuit.Id), subCircuit.Id),
                 (nameof(SubCircuit.Title), subCircuit.Title),
                 (nameof(SubCircuit.Hash), subCircuit.Hash),
                 (nameof(SubCircuit.Inputs), subCircuit.Inputs.Count),
@@ -39,7 +39,7 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
                 (nameof(SubCircuit.Wires), subCircuit.Wires.Count)
             ]);
 
-            var menuOption = await prompter.SelectEnumAsync<MenuOptions>($"[bold]{subCircuit.Title} ({id})[/]");
+            var menuOption = await prompter.SelectEnumAsync<MenuOptions>($"[bold]{subCircuit.Title} ({subCircuit.Id})[/]");
 
             switch (menuOption)
             {
@@ -72,7 +72,7 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
     {
         if (id == 0 && subCircuit == null)
         {
-            id = await prompter.AskIdAsync("Enter an id");
+            id = await prompter.AskIdAsync("Enter SubCircuit id:");
 
             if (id == 0)
             {

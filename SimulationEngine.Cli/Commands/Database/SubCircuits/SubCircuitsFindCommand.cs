@@ -8,18 +8,26 @@ namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
 
 public sealed class SubCircuitsFindCommand(SubCircuitsFlow flow, IPrompter prompter, IRenderer renderer) : AsyncCommand<FindSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, FindSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext ctx, FindSettings settings)
     {
-        var id = settings.Id;
-        id ??= settings.Interactive ? await prompter.AskIdAsync("Enter an id") : 0;
-
-        if (id == null || id == 0)
+        if (settings.Id is not null)
         {
-            renderer.DrawError("Missing --id (or use --interactive).");
-            return -1;
+            await flow.SubCircuitsFindAsync(settings.Id);
+            return 0;
+        }
+        else if (!string.IsNullOrWhiteSpace(settings.Title))
+        {
+            await flow.SubCircuitsFindByTitleAsync(settings.Title);
+            return 0;
+        }
+        else if (settings.Interactive)
+        {
+            var id = await prompter.AskIdAsync("Enter an id:");
+            await flow.SubCircuitsFindAsync(id);
+            return 0;
         }
 
-        await flow.SubCircuitsFindAsync(id ?? 0);
-        return 0;
+        renderer.DrawError("Provide --id or --title (or use --interactive)");
+        return 1;
     }
 }

@@ -11,12 +11,12 @@ public sealed class TruthTablesFindCommand(TruthTablesFlow flow, IPrompter promp
     public override async Task<int> ExecuteAsync(CommandContext context, FindSettings settings)
     {
         var id = settings.Id;
-        id ??= settings.Interactive ? await prompter.AskIdAsync("Enter an id") : 0;
+        id ??= settings.Interactive ? await prompter.AskIdAsync("Enter an id:") : 0;
 
         if (id == null || id == 0)
         {
             renderer.DrawError("Missing --id (or use --interactive).");
-            return -1;
+            return 1;
         }
 
         await flow.TruthTablesFindAsync(id ?? 0);

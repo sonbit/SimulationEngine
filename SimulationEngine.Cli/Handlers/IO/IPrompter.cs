@@ -2,6 +2,7 @@
 
 public interface IPrompter
 {
+    Task<string> AskAsync(string title);
     Task<int> AskIdAsync(string title);
     Task<FileInfo?> PickFileAsync(string title, string startDir, string searchPattern = "*.*");
     Task<TEnum> SelectEnumAsync<TEnum>(string title) where TEnum : struct, Enum;

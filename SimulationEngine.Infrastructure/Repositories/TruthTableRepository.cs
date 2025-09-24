@@ -13,11 +13,9 @@ namespace SimulationEngine.Infrastructure.Repositories;
 
 public class TruthTableRepository(SimulationEngineDbContext dbContext) : ITruthTableRepository
 {
-    private readonly SimulationEngineDbContext _dbContext = dbContext;
-
     public async Task<TruthTable> CreateOrGetAsync(TruthTable truthTable)
     {
-        var local = _dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+        var local = dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex);
         if (local is not null) 
             return local;
 
@@ -25,16 +23,16 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : ITruthT
         if (existing is not null)
             return existing;
 
-        await _dbContext.TruthTables.AddAsync(truthTable);
+        await dbContext.TruthTables.AddAsync(truthTable);
 
         try
         {
-            await _dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
             return truthTable;
         }
         catch (DbUpdateException ex) when (ex.InnerException is SqliteException se && se.SqliteErrorCode == 19)
         {
-            return _dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex) ?? 
+            return dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex) ?? 
                 await GetTruthTableQuery().FirstAsync(tt => tt.HeptaIndex == truthTable.HeptaIndex);
         }
     }
@@ -79,7 +77,7 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : ITruthT
 
     private IIncludableQueryable<TruthTable, List<LogicGate>> GetTruthTableQuery()
     {
-        return _dbContext.TruthTables
+        return dbContext.TruthTables
             .AsNoTracking()
             .Include(truthTable => truthTable.LogicGates);
     }
