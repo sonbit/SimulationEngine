@@ -29,14 +29,14 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
             for (var i = 0; i < outputs.Length; i++)
             {
                 var equal = outputs[i] == expectedOutputs[i];
-                Assert.True(skipEvaluation || equal, TestStringConverter.GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, equal));
+                Assert.True(skipEvaluation || equal, GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, equal));
 
                 if (skipEvaluation && !equal)
                     allEqual = false;
             }
 
             if (skipEvaluation)
-                testOutputHelper.WriteLine(TestStringConverter.GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, allEqual));
+                testOutputHelper.WriteLine(GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, allEqual));
 
             lineNumber++;
         }
@@ -44,4 +44,7 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
         stopWatch.Stop();
         testOutputHelper.WriteLine($"Elapsed time: {stopWatch.Elapsed}");
     }
+
+    private static string GetEvaluationString(int lineNumber, string inputs, string expectedOutputs, string outputs, bool equal) =>
+        $"{lineNumber}: {inputs} -> {expectedOutputs} {(equal ? "==" : "!=")} {outputs}";
 }
