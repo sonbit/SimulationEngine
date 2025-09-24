@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.TruthTables;
+﻿using SimulationEngine.Application.Services.Database.TruthTables;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Models;

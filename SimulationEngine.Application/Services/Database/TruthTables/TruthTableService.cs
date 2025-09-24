@@ -1,8 +1,9 @@
-﻿using SimulationEngine.Designs;
+﻿using SimulationEngine.Application.Services.Database.Base;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 
-namespace SimulationEngine.Application.Services.TruthTables;
+namespace SimulationEngine.Application.Services.Database.TruthTables;
 
 public class TruthTableService(ITruthTableRepository repository) : BaseService<TruthTable>(repository), ITruthTableService
 {

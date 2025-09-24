@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 
-namespace SimulationEngine.Application.Services;
+namespace SimulationEngine.Application.Services.Database.Base;
 
 public class BaseService<TEntity>(IBaseRepository<TEntity> repository) : IBaseService<TEntity> where TEntity : BaseEntity
 {

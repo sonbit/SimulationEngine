@@ -1,8 +1,9 @@
-﻿using SimulationEngine.Designs;
+﻿using SimulationEngine.Application.Services.Database.Base;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 
-namespace SimulationEngine.Application.Services.SubCircuits;
+namespace SimulationEngine.Application.Services.Database.SubCircuits;
 
 public class SubCircuitService(ISubCircuitRepository repository) : BaseService<SubCircuit>(repository), ISubCircuitService
 {

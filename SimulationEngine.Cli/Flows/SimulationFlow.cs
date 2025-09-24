@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.SubCircuits;
+﻿using SimulationEngine.Application.Services.Database.SubCircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Simulation;

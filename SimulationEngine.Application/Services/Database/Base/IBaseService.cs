@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Domain.Models;
 
-namespace SimulationEngine.Application.Services;
+namespace SimulationEngine.Application.Services.Database.Base;
 
 public interface IBaseService<TEntity> where TEntity : BaseEntity
 {
