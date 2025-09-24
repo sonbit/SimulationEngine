@@ -1,23 +1,18 @@
 ﻿using SimulationEngine.Application.Services.Database.SubCircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
-using SimulationEngine.Cli.Simulation;
 using SimulationEngine.Domain.Models;
 using Spectre.Console;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service)
+public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service, SimulationFlow flow)
 {
     private enum MenuOptions
     {
         Simulate,
-        [Description("Simulate (Normalized)")] SimulateNormalized,
-        [Description("Simulate file")] SimulateFile,
-        [Description("Simulate file (Normalized)")] SimulateFileNormalized,
-        [Description("Simulate test")] SimulateTest,
-        [Description("Show as tree")] ShowTree,
+        [Description("Show tree")] ShowTree,
         Back
     }
 
@@ -44,17 +39,7 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
             switch (menuOption)
             {
                 case MenuOptions.Simulate:
-                case MenuOptions.SimulateNormalized:
-                    await SimulationRepl.SimulateReplAsync(subCircuit, renderer, menuOption == MenuOptions.SimulateNormalized);
-                    break;
-
-                case MenuOptions.SimulateFile:
-                case MenuOptions.SimulateFileNormalized:
-                    await SimulationFile.SimulateFileAsync(subCircuit, prompter, renderer, menuOption == MenuOptions.SimulateFileNormalized);
-                    break;
-
-                case MenuOptions.SimulateTest:
-                    SimulationTest.Simulate(subCircuit, renderer);
+                    await flow.RunSimulationMenuAsync(subCircuit);
                     break;
 
                 case MenuOptions.ShowTree:

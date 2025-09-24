@@ -55,15 +55,19 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
             if (subCircuit == null)
                 continue;
 
-            renderer.Clear();
+            await RunSimulationMenuAsync(subCircuit);
+        }
+    }
 
-            var goBack = false;
+    public async Task RunSimulationMenuAsync(SubCircuit subCircuit)
+    {
+        renderer.Clear();
 
-            while (true)
-            {
-                renderer.DrawTableWithNameValuePairs(
-                [
-                    (nameof(SubCircuit.Id), subCircuit.Id),
+        while (true)
+        {
+            renderer.DrawTableWithNameValuePairs(
+            [
+                (nameof(SubCircuit.Id), subCircuit.Id),
                     (nameof(SubCircuit.Title), subCircuit.Title),
                     (nameof(SubCircuit.Hash), subCircuit.Hash),
                     (nameof(SubCircuit.Inputs), subCircuit.Inputs.Count),
@@ -71,35 +75,30 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
                     (nameof(SubCircuit.Outputs), subCircuit.Outputs.Count),
                     (nameof(SubCircuit.SubCircuits), subCircuit.SubCircuits.Count),
                     (nameof(SubCircuit.Wires), subCircuit.Wires.Count)
-                ]);
+            ]);
 
-                var simulationOption = await prompter.SelectEnumAsync<SimulationOptions>($"[bold]{subCircuit.Title} ({subCircuit.Id})[/]");
+            var simulationOption = await prompter.SelectEnumAsync<SimulationOptions>($"[bold]{subCircuit.Title} ({subCircuit.Id})[/]");
 
-                switch (simulationOption)
-                {
-                    case SimulationOptions.Simulate:
-                    case SimulationOptions.SimulateNormalized:
-                        renderer.Clear();
-                        await SimulationRepl.SimulateReplAsync(subCircuit, renderer, simulationOption == SimulationOptions.SimulateNormalized);
-                        break;
-
-                    case SimulationOptions.SimulateFile:
-                    case SimulationOptions.SimulateFileNormalized:
-                        await SimulationFile.SimulateFileAsync(subCircuit, prompter, renderer, simulationOption == SimulationOptions.SimulateFileNormalized);
-                        break;
-
-                    case SimulationOptions.SimulateTest:
-                        SimulationTest.Simulate(subCircuit, renderer);
-                        break;
-
-                    case SimulationOptions.Back:
-                        renderer.Clear();
-                        goBack = true;
-                        break;
-                }
-
-                if (goBack)
+            switch (simulationOption)
+            {
+                case SimulationOptions.Simulate:
+                case SimulationOptions.SimulateNormalized:
+                    renderer.Clear();
+                    await SimulationRepl.SimulateReplAsync(subCircuit, renderer, simulationOption == SimulationOptions.SimulateNormalized);
                     break;
+
+                case SimulationOptions.SimulateFile:
+                case SimulationOptions.SimulateFileNormalized:
+                    await SimulationFile.SimulateFileAsync(subCircuit, prompter, renderer, simulationOption == SimulationOptions.SimulateFileNormalized);
+                    break;
+
+                case SimulationOptions.SimulateTest:
+                    SimulationTest.Simulate(subCircuit, renderer);
+                    break;
+
+                case SimulationOptions.Back:
+                    renderer.Clear();
+                    return;
             }
         }
     }
