@@ -25,7 +25,8 @@ public static class SimulationRepl
 
         var inputCount = subCircuit.Inputs.Count;
         var outputCount = subCircuit.Outputs.Count;
-        renderer.DrawLine($"[grey]Type {inputCount} inputs to get {outputCount} outputs. \nPress [bold]Esc[/] to go back.[/]");
+        renderer.DrawLine($"[grey]Type or paste {inputCount} inputs to get {outputCount} outputs[/]");
+        renderer.DrawLine("[grey]Press [bold]Esc[/] when done[/]");
 
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
         var simulationSession = SimulationSession.Build(subCircuit);

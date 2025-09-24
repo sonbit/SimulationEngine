@@ -11,8 +11,8 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
 {
     private enum MenuOptions
     {
-        [Description("Find subcircuit by id")] FindById,
         [Description("Select subcircuit from list")] SelectFromList,
+        [Description("Find subcircuit by id")] FindById,
         Back
     }
 
@@ -37,20 +37,20 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
 
             switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Simulation: Pick a subcircuit[/]"))
             {
+                case MenuOptions.SelectFromList:
+                    subCircuit = await inputOutput.SelectOrBackAsync(
+                        "Select subcircuit",
+                        await service.GetAllAsync(),
+                        subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]",
+                        "No subcircuits found")!;
+                    id = subCircuit?.Id ?? 0;
+                    break;
+
                 case MenuOptions.FindById:
                     id = await inputOutput.AskIdAsync("Enter subcircuit id:");
                     subCircuit = await service.GetAsync(id);
                     if (subCircuit is null)
                         renderer.DrawError($"SubCircuit with id {id} was not found");
-                    break;
-
-                case MenuOptions.SelectFromList:
-                    subCircuit = await inputOutput.SelectOrBackAsync(
-                        "Select subcircuit", 
-                        await service.GetAllAsync(), 
-                        subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]", 
-                        "No subcircuits found")!;
-                    id = subCircuit?.Id ?? 0;
                     break;
 
                 case MenuOptions.Back:
