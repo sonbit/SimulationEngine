@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Cli.Flows.Simulation;
+﻿using SimulationEngine.Cli.Flows;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Simulation;

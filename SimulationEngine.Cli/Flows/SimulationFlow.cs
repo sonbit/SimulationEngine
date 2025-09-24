@@ -5,7 +5,7 @@ using SimulationEngine.Cli.Simulation;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
-namespace SimulationEngine.Cli.Flows.Simulation;
+namespace SimulationEngine.Cli.Flows;
 
 public sealed partial class SimulationFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service)
 {
