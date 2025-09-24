@@ -18,8 +18,8 @@ public static class VectorStringGenerator
         {
             if (index == subCircuit.Inputs.Count)
             {
-                simulationSession.SetInputs(inputValues);
-                var outputValues = simulationSession.GetOutputs();
+                simulationSession.SetInputBytes(inputValues);
+                var outputValues = simulationSession.GetOutputBytes();
 
                 sb.Append(TestStringConverter.Convert(inputValues));
                 sb.Append(' ');

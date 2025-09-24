@@ -21,34 +21,16 @@ public static class SimulationFile
                 return -1;
             }
 
-            if (normalize)
+            foreach (var (ch, index) in inputs.Select((ch, index) => (ch, index)))
             {
-                foreach (var (ch, index) in inputs.Select((ch, index) => (ch, index)))
-                {
-                    if ("012".Contains(ch))
-                        continue;
+                if (normalize && "012".Contains(ch) || !normalize && allowedValuesPerInput[index].Contains(ch))
+                    continue;
 
-                    renderer.DrawError($"Invalid character '{ch}' for input {index + 1}");
-                    return -1;
-                }
-
-                simulationSession.SetInputs(SimulationUtils.GetInputsAsByteArray(inputs));
-                AnsiConsole.WriteLine(SimulationUtils.GetOutputsAsString(simulationSession.GetOutputs()));
+                renderer.DrawError($"Invalid character '{ch}' for input {index + 1}");
+                return -1;
             }
-            else
-            {
-                foreach (var (ch, index) in inputs.Select((ch, index) => (ch, index)))
-                {
-                    if (allowedValuesPerInput[index].Contains(ch))
-                        continue;
 
-                    renderer.DrawError($"Invalid character '{ch}' for input {index + 1}");
-                    return -1;
-                }
-
-                simulationSession.SetInputsWithRadix(inputs);
-                AnsiConsole.WriteLine(simulationSession.GetOutputsWithRadix());
-            }
+            AnsiConsole.WriteLine(simulationSession.Simulate(inputs, normalize));
         }
 
         return 0;

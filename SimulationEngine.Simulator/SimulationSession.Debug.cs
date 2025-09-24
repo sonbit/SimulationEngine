@@ -62,4 +62,13 @@ public partial class SimulationSession
 
         Console.WriteLine($"\tLastWriter: {net.LastDriver?.Name ?? "stimulus"}");
     }
+
+    private static void ReportNetIssues(IEnumerable<Net> nets)
+    {
+        foreach (var net in nets)
+        {
+            if (net.Driver == null)
+                Console.WriteLine($"[diag] Net {net.Name} has NO drivers.");
+        }
+    }
 }

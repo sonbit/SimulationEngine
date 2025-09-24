@@ -20,12 +20,10 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
         foreach (var test in testRows)
         {
             var testParts = test.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
             var inputTest = testParts[0];
-            simulationSession.SetInputsWithRadix(inputTest);
-
-            var outputs = simulationSession.GetOutputsWithRadix();
             var outputTest = testParts[1];
+
+            var outputs = simulationSession.Simulate(inputTest);
 
             Assert.True(skipEvaluation || outputs.Length == outputTest.Length);
 

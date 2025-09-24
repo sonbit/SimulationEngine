@@ -88,23 +88,13 @@ public static class SimulationRepl
                             break;
                         }
 
-                        string outputText;
-                        if (normalize)
-                        {
-                            simulationSession.SetInputs(SimulationUtils.GetInputsAsByteArray(inputs));
-                            outputText = SimulationUtils.GetOutputsAsString(simulationSession.GetOutputs());
-                        }
-                        else
-                        {
-                            simulationSession.SetInputsWithRadix(inputText);
-                            outputText = simulationSession.GetOutputsWithRadix();
-                        }
+                        var outputs = simulationSession.Simulate(inputs, normalize);
 
-                        history.Add((inputText, outputText));
+                        history.Add((inputText, outputs));
                         if (history.Count > 200)
                             history.RemoveAt(0);
 
-                        status = $"{inputText} {outputText}";
+                        status = $"{inputText} {outputs}";
                         isError = false;
                         buf.Clear();
                         break;

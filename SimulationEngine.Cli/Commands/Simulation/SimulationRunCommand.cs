@@ -33,8 +33,8 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         {
             // Split inputstring - Consider a general method to handle all cases (E.g. one in SimulationSession)
             var simulationSession = SimulationSession.Build(subCircuit);
-            simulationSession.SetInputs(SimulationUtils.GetInputsAsByteArray(settings.Inputs));
-            AnsiConsole.WriteLine(SimulationUtils.GetOutputsAsString(simulationSession.GetOutputs()));
+            simulationSession.SetInputBytes(SimulationUtils.GetInputsAsByteArray(settings.Inputs));
+            AnsiConsole.WriteLine(SimulationUtils.GetOutputsAsString(simulationSession.GetOutputBytes()));
             return 0;
         }
 
