@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Handlers.InputOutput;
-using SimulationEngine.Cli.Handlers.Renderer;
+using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using Spectre.Console;
 using System.ComponentModel;
@@ -41,6 +41,7 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
                     break;
 
                 case MenuOptions.Back:
+                    renderer.Clear();
                     return;
             }
         }
@@ -66,12 +67,18 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
             return;
         }
 
-        await subCircuitFlow.RunMenuAsync(subCircuit);
+        await subCircuitFlow.RunMenuAsync(subCircuit, id);
     }
 
     public async Task SubCircuitsListAsync()
     {
         var subCircuits = await service.GetAllAsync();
+
+        if (subCircuits.Count == 0)
+        {
+            renderer.DrawWarning("No subcircuits found");
+            return;
+        }
 
         renderer.PropertyTable(subCircuits.Select(subCircuit => new
         {
@@ -106,6 +113,8 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
             return;
         }
 
+        renderer.Clear();
+
         var selectedSubCircuit = AnsiConsole.Prompt(
             new SelectionPrompt<SubCircuit>()
                 .Title("Select a subcircuit")
@@ -119,6 +128,8 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
             return;
         }
 
-        await subCircuitFlow.RunMenuAsync(subCircuit);
+        renderer.Clear();
+
+        await subCircuitFlow.RunMenuAsync(subCircuit, selectedSubCircuit.Id);
     }
 }

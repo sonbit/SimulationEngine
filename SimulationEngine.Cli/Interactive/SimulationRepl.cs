@@ -1,4 +1,5 @@
-﻿using SimulationEngine.Cli.Handlers.Renderer;
+﻿using SimulationEngine.Cli.UI;
+using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Simulator;
@@ -6,11 +7,11 @@ using Spectre.Console;
 using Spectre.Console.Rendering;
 using System.Text;
 
-namespace SimulationEngine.Cli.Flows.Shared;
+namespace SimulationEngine.Cli.Interactive;
 
 public static class SimulationRepl
 {
-    public static async Task ReplAsync(SubCircuit subCircuit, IRenderer renderer, bool normalize = false)
+    public static async Task<int> SimulateReplAsync(SubCircuit subCircuit, IRenderer renderer, bool normalize = false)
     {
         renderer.DrawHeader($"Simulator");
 
@@ -26,7 +27,7 @@ public static class SimulationRepl
         var outputCount = subCircuit.Outputs.Count;
         AnsiConsole.MarkupLine($"[grey]Type {inputCount} inputs to get {outputCount} outputs. \nPress [bold]Esc[/] to go back.[/]");
 
-        var allowedValuesPerInput = SimulationUtils.GetAllowedValuesPerInput(subCircuit);
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
         var simulationSession = SimulationSession.Build(subCircuit);
 
         var buf = new StringBuilder();
@@ -80,21 +81,14 @@ public static class SimulationRepl
                         break;
 
                     case ConsoleKey.Enter:
-                        var inputText = buf.ToString();
-                        if (inputText.Length != inputCount)
-                        {
-                            status = $"Input length must be {inputCount}";
-                            isError = true;
-                            break;
-                        }
+                        var inputString = buf.ToString();
+                        var outputs = simulationSession.Simulate(inputString, normalize);
 
-                        var outputs = simulationSession.Simulate(inputs, normalize);
-
-                        history.Add((inputText, outputs));
+                        history.Add((inputString, outputs));
                         if (history.Count > 200)
                             history.RemoveAt(0);
 
-                        status = $"{inputText} {outputs}";
+                        status = $"{inputString} {outputs}";
                         isError = false;
                         buf.Clear();
                         break;
@@ -111,40 +105,13 @@ public static class SimulationRepl
                             break;
                         }
 
-                        if (normalize)
-                        {
-                            if (ch is '0' or '1' or '2')
-                            {
-                                buf.Append(ch);
-                                status = null;
-                                isError = false;
-                            }
-                            else
-                            {
-                                status = "Only unbalanced ternary (0,1,2) is accepted";
-                                isError = true;
-                            }
-                        }
-                        else
-                        {
-                            var position = buf.Length;
-                            var allowedValues = allowedValuesPerInput[position];
+                        status = InputValidator.Validate(subCircuit, ch, buf.Length, normalize, allowedValuesPerInput);
+                        isError = status is not null;
 
-                            if (allowedValues.Contains(ch))
-                            {
-                                buf.Append(ch);
-                                status = null;
-                                isError = false;
-                            }
-                            else
-                            {
-                                var input = subCircuit.Inputs[position];
-                                status =
-                                    $"Input {position + 1} expects {input.GetRadix().GetDescription()} " +
-                                    $"values ({string.Join(", ", allowedValues.OrderBy(c => c).Select(c => c.ToString()))})";
-                                isError = true;
-                            }
-                        }
+                        if (isError)
+                            break;
+
+                        buf.Append(ch);
                         break;
                 }
 
@@ -154,5 +121,7 @@ public static class SimulationRepl
         });
 
         renderer.Clear();
+
+        return 0;
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text;
 
-namespace SimulationEngine.Cli.Handlers.Renderer;
+namespace SimulationEngine.Cli.UI;
 
 public sealed class Renderer(IAnsiConsole console) : IRenderer
 {

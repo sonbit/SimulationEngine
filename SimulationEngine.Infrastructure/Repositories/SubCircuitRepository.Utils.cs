@@ -31,7 +31,10 @@ public partial class SubCircuitRepository
                 .ThenInclude(wire => wire.StartTerminal)
             .Include(subCircuit => subCircuit.Wires)
                 .ThenInclude(wire => wire.EndTerminal)
-            .SingleAsync();
+            .SingleOrDefaultAsync();
+
+        if (subCircuit == null)
+            return (null, null);
 
         var logicGateById = subCircuit.LogicGates.ToDictionary(logicGate => logicGate.Id);
         foreach (var pin in subCircuit.LogicGates.SelectMany(logicGate => logicGate.Pins))

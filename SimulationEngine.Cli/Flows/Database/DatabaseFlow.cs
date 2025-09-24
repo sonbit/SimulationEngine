@@ -1,10 +1,11 @@
 ﻿using SimulationEngine.Application.Services.Database;
-using SimulationEngine.Cli.Handlers.InputOutput;
+using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.UI;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class DatabaseFlow(IInputOutput inputOutput, IDatabaseService service, SubCircuitsFlow subCircuitFlow, TruthTablesFlow truthTableFlow)
+public sealed class DatabaseFlow(IInputOutput inputOutput, IRenderer renderer, IDatabaseService service, SubCircuitsFlow subCircuitFlow, TruthTablesFlow truthTableFlow)
 {
     private enum MenuOptions
     {
@@ -18,7 +19,7 @@ public sealed class DatabaseFlow(IInputOutput inputOutput, IDatabaseService serv
     {
         while (true)
         {
-            var selected = await inputOutput.SelectEnumAsync<MenuOptions>("Database actions");
+            var selected = await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Database actions[/]");
 
             switch (selected)
             {
@@ -35,6 +36,7 @@ public sealed class DatabaseFlow(IInputOutput inputOutput, IDatabaseService serv
                     break;
 
                 case MenuOptions.Back:
+                    renderer.Clear();
                     return;
             }
         }

@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Domain.Models.Extensions;
 using Spectre.Console;
 
-namespace SimulationEngine.Cli.Handlers.InputOutput;
+namespace SimulationEngine.Cli.IO;
 
 public sealed class InputOutput(IAnsiConsole console) : IInputOutput
 {
@@ -86,12 +86,12 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
         return console.PromptAsync(prompt);
     }
 
-    public T? SelectOrBack<T>(string title, IEnumerable<T> choices, Func<T, string> label) where T : notnull
+    public T? SelectOrBack<T>(string title, IEnumerable<T> choices, Func<T, string> label, string emptyMessage = "") where T : notnull
     {
         var items = choices.ToList();
         if (items.Count == 0)
         {
-            AnsiConsole.MarkupLine("[yellow]No items.[/]");
+            AnsiConsole.MarkupLine($"[yellow]{(!string.IsNullOrWhiteSpace(emptyMessage) ? emptyMessage : "No items in list")}[/]");
             return default;
         }
 

@@ -18,7 +18,7 @@ public partial class SimulationSession
     public void SetInputBytes(byte[] values)
     {
         if (values.Length != SubCircuit.Inputs.Count)
-            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}.");
+            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}");
 
         for (int i = 0; i < values.Length; i++)
             SetInputByte(SubCircuit.Inputs[i], values[i]);
@@ -27,7 +27,7 @@ public partial class SimulationSession
     public void SetInputs(string values, bool isNormalized = false)
     {
         if (values.Length != SubCircuit.Inputs.Count)
-            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}.");
+            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}");
 
         if (isNormalized)
             SetInputBytes([.. values.Select(ch => (byte)(ch - '0'))]);
@@ -59,23 +59,23 @@ public partial class SimulationSession
                     2 => '1',
                     1 => '0',
                     0 => '0',
-                    _ => throw new InvalidOperationException($"Invalid binary value '{value}' for port {port.Name}."),
+                    _ => throw new InvalidOperationException($"Invalid binary value '{value}' for port {port.Name}"),
                 },
                 Radix.TernaryBalanced => value switch
                 {
                     2 => '+',
                     1 => '0',
                     0 => '-',
-                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{value}' for port {port.Name}."),
+                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{value}' for port {port.Name}"),
                 },
                 Radix.TernaryUnbalanced => value switch
                 {
                     2 => '2',
                     1 => '1',
                     0 => '0',
-                    _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{value}' for port {port.Name}."),
+                    _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{value}' for port {port.Name}"),
                 },
-                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}."),
+                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}"),
             };
         }
 
@@ -93,7 +93,7 @@ public partial class SimulationSession
     private void SetInputsWithRadix(string values)
     {
         if (values.Length != SubCircuit.Inputs.Count)
-            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}.");
+            throw new ArgumentException($"Input length mismatch: expected {SubCircuit.Inputs.Count}, got {values.Length}");
 
         var bytes = new byte[values.Length];
 
@@ -106,23 +106,23 @@ public partial class SimulationSession
                 {
                     '1' => 2,
                     '0' => 0,
-                    _ => throw new InvalidOperationException($"Invalid binary value '{values[i]}' for port {port.Name}."),
+                    _ => throw new InvalidOperationException($"Invalid binary value '{values[i]}' for port {port.Name}"),
                 },
                 Radix.TernaryBalanced => values[i] switch
                 {
                     '+' => 2,
                     '0' => 1,
                     '-' => 0,
-                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{values[i]}' for port {port.Name}."),
+                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{values[i]}' for port {port.Name}"),
                 },
                 Radix.TernaryUnbalanced => values[i] switch
                 {
                     '2' => 2,
                     '1' => 1,
                     '0' => 0,
-                    _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{values[i]}' for port {port.Name}."),
+                    _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{values[i]}' for port {port.Name}"),
                 },
-                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}."),
+                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}"),
             };
         }
 

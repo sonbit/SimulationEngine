@@ -1,8 +1,10 @@
-﻿using SimulationEngine.Application.Converters;
-using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Flows.Shared;
-using SimulationEngine.Cli.Handlers.Renderer;
+﻿using SimulationEngine.Application.Services.SubCircuits;
+using SimulationEngine.Cli.Interactive;
+using SimulationEngine.Cli.IO;
 using SimulationEngine.Cli.Settings;
+using SimulationEngine.Cli.UI;
+using SimulationEngine.Cli.Validators;
+using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -27,41 +29,61 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         }
 
         if (settings.File is not null)
-            return await SimulationEntry.SimulateAsync(subCircuit, renderer, settings.File, settings.Normalize);
+            return FileSimulation.Simulate(subCircuit, settings.File, renderer, settings.Normalize);
 
-        if (settings.Inputs is not null)
+        if (settings.InputStrings is not null)
+            return SimulateInputStrings(subCircuit, settings.InputStrings, settings.Normalize);
+
+        if (settings.Stream || Console.IsInputRedirected)
+            return await SimulateStreamAsync(subCircuit, settings.Normalize);
+
+        return await SimulationRepl.SimulateReplAsync(subCircuit, renderer, settings.Normalize);
+    }
+
+    private int SimulateInputStrings(SubCircuit subCircuit, string inputStrings, bool normalize)
+    {
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
+        var inputStringsArray = inputStrings.Split([',', ' ']);
+
+        var simulationSession = SimulationSession.Build(subCircuit);
+
+        foreach (var inputs in inputStringsArray)
         {
-            // Split inputstring - Consider a general method to handle all cases (E.g. one in SimulationSession)
-            var simulationSession = SimulationSession.Build(subCircuit);
-            simulationSession.SetInputBytes(SimulationUtils.GetInputsAsByteArray(settings.Inputs));
-            AnsiConsole.WriteLine(SimulationUtils.GetOutputsAsString(simulationSession.GetOutputBytes()));
-            return 0;
+            var validationErrorMessage = InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput);
+            if (validationErrorMessage is not null)
+            {
+                renderer.DrawError(validationErrorMessage);
+                return -1;
+            }
+
+            AnsiConsole.WriteLine(simulationSession.Simulate(inputs, normalize));
         }
 
-        //if (settings.Stream || Console.IsInputRedirected)
-        //    return await RunStdInAsync();
-
-        await SimulationRepl.ReplAsync(subCircuit, renderer, settings.Normalize);
         return 0;
     }
 
-    //private static async Task<int> RunStdInAsync(SimulationSession session, bool normalize)
-    //{
-    //    string? input;
-    //    while ((input = await Console.In.ReadLineAsync()) is not null)
-    //    {
-    //        if (string.Equals(input, "q", StringComparison.OrdinalIgnoreCase) || string.Equals(input, "quit", StringComparison.OrdinalIgnoreCase))
-    //            break;
+    private async Task<int> SimulateStreamAsync(SubCircuit subCircuit, bool normalize)
+    {
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
 
-    //        if (string.IsNullOrWhiteSpace(input)) continue;
+        var simulationSession = SimulationSession.Build(subCircuit);
 
-    //        var vectors = TestStringConverter.Convert(input);
-    //        foreach (var v in vectors)
-    //        {
-    //            session.SetInputs(v.Inputs);
-    //            Console.WriteLine(TestStringConverter.Convert(session.GetOutputs()));
-    //        }
-    //    }
-    //    return 0;
-    //}
+        string? inputs;
+        while ((inputs = await Console.In.ReadLineAsync()) is not null)
+        {
+            if (string.Equals(inputs, "q", StringComparison.OrdinalIgnoreCase) || string.Equals(inputs, "quit", StringComparison.OrdinalIgnoreCase))
+                break;
+
+            var validationErrorMessage = InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput);
+            if (validationErrorMessage is not null)
+            {
+                renderer.DrawError(validationErrorMessage);
+                continue;
+            } 
+
+            simulationSession.Simulate(inputs, normalize);
+        }
+
+        return 0;
+    }
 }

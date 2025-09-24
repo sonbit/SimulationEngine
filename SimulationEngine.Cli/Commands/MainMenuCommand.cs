@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Cli.Flows.Database;
 using SimulationEngine.Cli.Flows.Simulation;
-using SimulationEngine.Cli.Handlers.InputOutput;
+using SimulationEngine.Cli.IO;
 using Spectre.Console.Cli;
 using System.ComponentModel;
 
@@ -10,7 +10,7 @@ public sealed class MainMenuCommand(IInputOutput inputOutput, DatabaseFlow datab
 {
     private enum MenuOptions 
     { 
-        [Description("Simulation")] Simulation,
+        [Description("Simulate subcircuit")] Simulation,
         [Description("Database options")] Database,
         [Description("Exit application")] Exit 
     }
@@ -19,7 +19,7 @@ public sealed class MainMenuCommand(IInputOutput inputOutput, DatabaseFlow datab
     {
         while (true)
         {
-            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Main Menu[/]"))
+            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Simulation Engine Main Menu[/]"))
             {
                 case MenuOptions.Simulation:
                     await simulationFlow.RunMenuAsync();

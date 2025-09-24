@@ -3,7 +3,7 @@ using Spectre.Console.Rendering;
 using System.Reflection;
 using System.Text;
 
-namespace SimulationEngine.Cli.Handlers.Renderer;
+namespace SimulationEngine.Cli.UI;
 
 public interface IRenderer
 {

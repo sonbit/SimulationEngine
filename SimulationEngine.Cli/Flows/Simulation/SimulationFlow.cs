@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Flows.Shared;
-using SimulationEngine.Cli.Handlers.InputOutput;
-using SimulationEngine.Cli.Handlers.Renderer;
+using SimulationEngine.Cli.Interactive;
+using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
@@ -20,8 +20,8 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
     {
         Simulate,
         [Description("Simulate (Normalized)")] SimulateNormalized,
-        [Description("Simulate file")] SimulateFile,
-        [Description("Simulate file (Normalized)")] SimulateFileNormalized,
+        [Description("Simulate from file")] SimulateFile,
+        [Description("Simulate from file (Normalized)")] SimulateFileNormalized,
         Back
     }
 
@@ -29,34 +29,46 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
     {
         while (true)
         {
-            SubCircuit? subCircuit = null;
+            renderer.Clear();
 
-            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Simulation - Pick a subcircuit[/]"))
+            SubCircuit? subCircuit = null;
+            var id = 0;
+
+            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Simulation: Pick a subcircuit[/]"))
             {
                 case MenuOptions.FindById:
-                    var id = await inputOutput.AskIdAsync("Enter subcircuit id:");
+                    id = await inputOutput.AskIdAsync("Enter subcircuit id:");
                     subCircuit = await service.GetAsync(id);
+                    if (subCircuit is null)
+                        renderer.DrawError($"SubCircuit with id {id} was not found");
                     break;
 
                 case MenuOptions.SelectFromList:
-                    subCircuit = inputOutput.SelectOrBack("Select subcircuit", 
-                        await service.GetAllAsync(), subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]")!;
+                    subCircuit = inputOutput.SelectOrBack(
+                        "Select subcircuit", 
+                        await service.GetAllAsync(), 
+                        subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]", 
+                        "No subcircuits found")!;
+                    id = subCircuit.Id;
                     break;
 
                 case MenuOptions.Back:
+                    renderer.Clear();
                     return;
             }
 
-            if (subCircuit is null)
+            if (subCircuit == null)
                 continue;
 
             renderer.Clear();
+
+            var goBack = false;
 
             while (true)
             {
                 renderer.NameValueTable(
                 [
-                    (nameof(SubCircuit.Id), subCircuit.Id),
+                    (nameof(SubCircuit.Id), id),
                     (nameof(SubCircuit.Title), subCircuit.Title),
                     (nameof(SubCircuit.Hash), subCircuit.Hash),
                     (nameof(SubCircuit.Inputs), subCircuit.Inputs.Count),
@@ -66,32 +78,30 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
                     (nameof(SubCircuit.Wires), subCircuit.Wires.Count)
                 ]);
 
-                var normalize = false;
-                FileInfo? fileInfo = null;
+                var simulationOption = await inputOutput.SelectEnumAsync<SimulationOptions>($"[bold]{subCircuit.Title} ({id})[/]");
 
-                switch (await inputOutput.SelectEnumAsync<SimulationOptions>($"[bold]Simulation: {subCircuit.Title} ({subCircuit.Id})[/]"))
+                switch (simulationOption)
                 {
                     case SimulationOptions.Simulate:
-                        break;
-
                     case SimulationOptions.SimulateNormalized:
-                        normalize = true;
+                        renderer.Clear();
+                        await SimulationRepl.SimulateReplAsync(subCircuit, renderer, simulationOption == SimulationOptions.SimulateNormalized);
                         break;
 
                     case SimulationOptions.SimulateFile:
-                        fileInfo = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
-                        break;
-
                     case SimulationOptions.SimulateFileNormalized:
-                        normalize = true;
-                        fileInfo = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
+                        renderer.Clear();
+                        var file = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
+                        FileSimulation.Simulate(subCircuit, file, renderer, simulationOption == SimulationOptions.SimulateFileNormalized);
                         break;
 
                     case SimulationOptions.Back:
-                        return;
+                        goBack = true;
+                        break;
                 }
 
-                await SimulationEntry.SimulateAsync(subCircuit, renderer, fileInfo, normalize);
+                if (goBack)
+                    break;
             }
         }
     }

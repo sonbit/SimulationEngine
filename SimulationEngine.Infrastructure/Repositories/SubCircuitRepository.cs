@@ -27,6 +27,9 @@ public partial class SubCircuitRepository(
     public async Task<SubCircuit> GetAsync(int id)
     {
         var (template, subCircuitPlacements) = await GetSubCircuitWithChildren(id);
+        if (template == null && subCircuitPlacements == null)
+            return null;
+
         var subCircuit = await BuildInstanceFromTemplateAsync(template, subCircuitPlacements);
         return subCircuit;
     }

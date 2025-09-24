@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Services.TruthTables;
-using SimulationEngine.Cli.Handlers.InputOutput;
-using SimulationEngine.Cli.Handlers.Renderer;
+using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Metadata;
 using Spectre.Console;
@@ -15,7 +15,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
         [Description("List all")] ListAll,
         [Description("Select from list")] SelectFromList,
         [Description("Find by id")] FindById,
-        [Description("Populate database with existing subcircuits")] Populate,
+        [Description("Populate database with standard cell library")] Populate,
         Back
     }
 
@@ -42,6 +42,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
                     break;
 
                 case MenuOptions.Back:
+                    renderer.Clear();
                     return;
             }
         }
@@ -118,10 +119,12 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
             return;
         }
 
+        renderer.Clear();
+
         var selectedTruthTable = AnsiConsole.Prompt(
             new SelectionPrompt<TruthTable>()
                 .Title("Select a truthTable")
-                .UseConverter(truthTable => $"{truthTable.Title} [grey]({truthTable.Id})[/]")
+                .UseConverter(truthTable => $"{truthTable.Title ?? truthTable.HeptaIndex} [grey]({truthTable.Id})[/]")
                 .AddChoices(truthTables));
 
         await DrawTruthTable(selectedTruthTable.Id);
