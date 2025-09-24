@@ -21,10 +21,7 @@ public static class SimulationFile
             return 1;
         }
 
-        var testString = await File.ReadAllTextAsync(file.FullName);
-        Simulate(subCircuit, testString, renderer, normalize);
-
-        return 0;
+        return await SimulateFileAsync(subCircuit, file, renderer, normalize);
     }
 
     public static async Task<int> SimulateFileAsync(SubCircuit subCircuit, FileInfo file, IRenderer renderer, bool normalize)
