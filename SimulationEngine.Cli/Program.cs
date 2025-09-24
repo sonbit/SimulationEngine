@@ -77,6 +77,7 @@ app.Configure(cfg =>
     cfg.AddBranch("db", db =>
     {
         db.AddCommand<DatabaseMenuCommand>("menu");
+        db.AddCommand<DatabaseRecreateCommand>("recreate");
 
         db.AddBranch("sc", sc =>
         {
@@ -94,5 +95,7 @@ app.Configure(cfg =>
         });
     });
 });
+
+app.SetDefaultCommand<SimulationRunCommand>();
 
 await app.RunAsync(args.Length == 0 ? ["menu"] : args);

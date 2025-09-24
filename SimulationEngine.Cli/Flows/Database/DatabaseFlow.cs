@@ -32,7 +32,7 @@ public sealed class DatabaseFlow(IPrompter prompter, IRenderer renderer, IDataba
                     break;
 
                 case MenuOptions.RecreateDatabase:
-                    await service.EnsureDatabaseRecreatedAsync();
+                    await DatabaseRecreateAsync();
                     break;
 
                 case MenuOptions.Back:
@@ -41,4 +41,7 @@ public sealed class DatabaseFlow(IPrompter prompter, IRenderer renderer, IDataba
             }
         }
     }
+
+    public async Task DatabaseRecreateAsync() => 
+        await service.EnsureDatabaseRecreatedAsync();
 }

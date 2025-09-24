@@ -50,8 +50,8 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         if (settings.File is not null)
             return await SimulationFile.SimulateFileAsync(subCircuit, settings.File, renderer, settings.Normalize);
 
-        if (settings.InputStrings is not null)
-            return SimulateInputStrings(subCircuit, settings.InputStrings, settings.Normalize);
+        if (settings.Inputs.Length >0 && string.Join(' ',  settings.Inputs) is string inputs)
+            return SimulateInputStrings(subCircuit, inputs, settings.Normalize);
 
         if (settings.Stream || Console.IsInputRedirected)
             return await SimulateStreamAsync(subCircuit, settings.Normalize);

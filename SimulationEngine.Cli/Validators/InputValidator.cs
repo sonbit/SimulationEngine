@@ -51,5 +51,5 @@ public static class InputValidator
         $"{subCircuit.Inputs[index].GetRadix().GetDescription()}";
 
     private static string GetAllowedRadixValues(HashSet<char> allowedValuesForInput) =>
-        $"{string.Join(", ", allowedValuesForInput.OrderBy(c => c).Select(c => c.ToString()))}";
+        $"{string.Join(", ", allowedValuesForInput.Select(ch => ch.ToString()))}";
 }
