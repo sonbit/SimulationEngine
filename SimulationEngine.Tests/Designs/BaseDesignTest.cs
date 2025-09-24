@@ -1,4 +1,5 @@
-﻿using SimulationEngine.Domain.Models;
+﻿using SimulationEngine.Domain.Converters;
+using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using System.Diagnostics;
 using Xunit.Abstractions;
@@ -12,34 +13,30 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
         var simulationSession = SimulationSession.Build(subCircuit);
 
         var testString = subCircuit.GetTestString();
-        var testRows = testString.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).ToList();
+
+        var tests = TestStringConverter.GetInputOutputPairs(testString);
 
         var lineNumber = 1;
         var stopWatch = Stopwatch.StartNew();
 
-        foreach (var test in testRows)
+        foreach (var (inputs, expectedOutputs) in tests)
         {
-            var testParts = test.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var inputTest = testParts[0];
-            var outputTest = testParts[1];
-
-            var outputs = simulationSession.Simulate(inputTest);
-
-            Assert.True(skipEvaluation || outputs.Length == outputTest.Length);
-
             var allEqual = true;
+            var outputs = simulationSession.Simulate(inputs);
+
+            Assert.True(skipEvaluation || outputs.Length == expectedOutputs.Length);
 
             for (var i = 0; i < outputs.Length; i++)
             {
-                var equal = outputs[i] == outputTest[i];
-                Assert.True(skipEvaluation || equal, GetEvaluationString(lineNumber, inputTest, outputTest, outputs, equal));
+                var equal = outputs[i] == expectedOutputs[i];
+                Assert.True(skipEvaluation || equal, TestStringConverter.GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, equal));
 
                 if (skipEvaluation && !equal)
                     allEqual = false;
             }
 
             if (skipEvaluation)
-                testOutputHelper.WriteLine(GetEvaluationString(lineNumber, inputTest, outputTest, outputs, allEqual));
+                testOutputHelper.WriteLine(TestStringConverter.GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, allEqual));
 
             lineNumber++;
         }
@@ -47,7 +44,4 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
         stopWatch.Stop();
         testOutputHelper.WriteLine($"Elapsed time: {stopWatch.Elapsed}");
     }
-
-    private static string GetEvaluationString(int lineNumber, string testInputString, string testOutputString, string outputString, bool equal) => 
-        $"{lineNumber}: {testInputString} -> {testOutputString} {(equal ? "==" : "!=")} {outputString}";
 }
