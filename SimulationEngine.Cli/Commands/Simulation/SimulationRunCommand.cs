@@ -3,7 +3,7 @@ using SimulationEngine.Application.Services.SubCircuits;
 using SimulationEngine.Cli.Flows.Shared;
 using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Cli.Settings;
-using SimulationEngine.Simulator.Core.Engine;
+using SimulationEngine.Simulator;
 using Spectre.Console;
 using Spectre.Console.Cli;
 

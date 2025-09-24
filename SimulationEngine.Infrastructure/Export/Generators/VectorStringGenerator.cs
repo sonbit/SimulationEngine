@@ -1,8 +1,7 @@
 ﻿using SimulationEngine.Application.Converters;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Simulator.Core.Engine;
+using SimulationEngine.Simulator;
 using System;
-using System.Linq;
 using System.Text;
 
 namespace SimulationEngine.Infrastructure.Export.Generators;

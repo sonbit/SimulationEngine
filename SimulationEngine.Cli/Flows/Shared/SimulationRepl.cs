@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
-using SimulationEngine.Simulator.Core.Engine;
+using SimulationEngine.Simulator;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 using System.Text;

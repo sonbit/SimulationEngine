@@ -1,5 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Simulator.Core.Engine;
+using SimulationEngine.Simulator;
 using System.Diagnostics;
 using Xunit.Abstractions;
 

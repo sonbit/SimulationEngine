@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Cli.Handlers.Renderer;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Simulator.Core.Engine;
+using SimulationEngine.Simulator;
 using Spectre.Console;
 
 namespace SimulationEngine.Cli.Flows.Shared;

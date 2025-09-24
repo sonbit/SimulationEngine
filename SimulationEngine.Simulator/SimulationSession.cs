@@ -4,7 +4,7 @@ using SimulationEngine.Simulator.Comparers;
 using SimulationEngine.Simulator.Finders;
 using SimulationEngine.Simulator.Models;
 
-namespace SimulationEngine.Simulator.Core.Engine;
+namespace SimulationEngine.Simulator;
 
 public partial class SimulationSession
 {

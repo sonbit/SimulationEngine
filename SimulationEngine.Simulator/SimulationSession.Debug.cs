@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator.Models;
 
-namespace SimulationEngine.Simulator.Core.Engine;
+namespace SimulationEngine.Simulator;
 
 public partial class SimulationSession
 {
