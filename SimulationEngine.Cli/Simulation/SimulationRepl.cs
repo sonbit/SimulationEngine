@@ -7,7 +7,7 @@ using Spectre.Console;
 using Spectre.Console.Rendering;
 using System.Text;
 
-namespace SimulationEngine.Cli.Interactive;
+namespace SimulationEngine.Cli.Simulation;
 
 public static class SimulationRepl
 {

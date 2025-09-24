@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer, ITruthTableService service)
+public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITruthTableService service)
 {
     private enum MenuOptions
     {
@@ -22,7 +22,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
     {
         while (true)
         {
-            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]TruthTables[/]"))
+            switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]TruthTables[/]"))
             {
                 case MenuOptions.ListAll:
                     await TruthTablesListAsync(); 
@@ -51,7 +51,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
     {
         if (id == 0) 
         {
-            id = await inputOutput.AskIdAsync("Enter an id");
+            id = await prompter.AskIdAsync("Enter an id");
 
             if (id == 0)
             {
@@ -122,7 +122,7 @@ public sealed class TruthTablesFlow(IInputOutput inputOutput, IRenderer renderer
 
         renderer.Clear();
 
-        var selectedTruthTable = await inputOutput.SelectOrBackAsync(
+        var selectedTruthTable = await prompter.SelectOrBackAsync(
             "Select a truthtable", 
             truthTables, 
             truthTable => $"{truthTable.Title ?? truthTable.HeptaIndex} [grey]({truthTable.Id}");

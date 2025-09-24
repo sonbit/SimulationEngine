@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class DatabaseFlow(IInputOutput inputOutput, IRenderer renderer, IDatabaseService service, SubCircuitsFlow subCircuitFlow, TruthTablesFlow truthTableFlow)
+public sealed class DatabaseFlow(IPrompter prompter, IRenderer renderer, IDatabaseService service, SubCircuitsFlow subCircuitFlow, TruthTablesFlow truthTableFlow)
 {
     private enum MenuOptions
     {
@@ -19,7 +19,7 @@ public sealed class DatabaseFlow(IInputOutput inputOutput, IRenderer renderer, I
     {
         while (true)
         {
-            var selected = await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Database actions[/]");
+            var selected = await prompter.SelectEnumAsync<MenuOptions>("[bold]Database actions[/]");
 
             switch (selected)
             {

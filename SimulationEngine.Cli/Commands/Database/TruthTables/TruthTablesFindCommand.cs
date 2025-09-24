@@ -6,12 +6,12 @@ using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Database.TruthTables;
 
-public sealed class TruthTablesFindCommand(TruthTablesFlow flow, IInputOutput inputOutput, IRenderer renderer) : AsyncCommand<FindSettings>
+public sealed class TruthTablesFindCommand(TruthTablesFlow flow, IPrompter prompter, IRenderer renderer) : AsyncCommand<FindSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, FindSettings settings)
     {
         var id = settings.Id;
-        id ??= settings.Interactive ? await inputOutput.AskIdAsync("Enter an id") : 0;
+        id ??= settings.Interactive ? await prompter.AskIdAsync("Enter an id") : 0;
 
         if (id == null || id == 0)
         {

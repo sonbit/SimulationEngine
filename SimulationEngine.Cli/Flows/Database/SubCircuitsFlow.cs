@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer, ISubCircuitService service, SubCircuitFlow subCircuitFlow)
+public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service, SubCircuitFlow subCircuitFlow)
 {
     private enum MenuOptions
     {
@@ -21,7 +21,7 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
     {
         while (true)
         {
-            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]SubCircuits[/]"))
+            switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]SubCircuits[/]"))
             {
                 case MenuOptions.ListAll:
                     await SubCircuitsListAsync(); 
@@ -50,7 +50,7 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
     {
         if (id == 0)
         {
-            id = await inputOutput.AskIdAsync("Enter an id");
+            id = await prompter.AskIdAsync("Enter an id");
 
             if (id == 0)
             {
@@ -116,7 +116,7 @@ public sealed class SubCircuitsFlow(IInputOutput inputOutput, IRenderer renderer
 
         renderer.Clear();
 
-        var selectedSubCircuit = await inputOutput.SelectOrBackAsync(
+        var selectedSubCircuit = await prompter.SelectOrBackAsync(
             "Select a subcircuit",
             subCircuits,
             subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]");

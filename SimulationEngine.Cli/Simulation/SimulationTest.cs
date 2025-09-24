@@ -5,7 +5,7 @@ using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using System.Diagnostics;
 
-namespace SimulationEngine.Cli.Interactive;
+namespace SimulationEngine.Cli.Simulation;
 
 public static class SimulationTest
 {
@@ -30,10 +30,15 @@ public static class SimulationTest
 
         renderer.Clear();
 
+        Simulate(subCircuit, testString, renderer);
+    }
+
+    private static void Simulate(SubCircuit subCircuit, string testString, IRenderer renderer)
+    {
         var simulationSession = SimulationSession.Build(subCircuit);
         var allPassed = true;
         var lineNumber = 1;
-        var evaluationStrings = new List<string>();
+        var evaluationStrings = new List<TestResult>();
 
         var stopWatch = Stopwatch.StartNew();
 
@@ -42,7 +47,7 @@ public static class SimulationTest
             var outputs = simulationSession.Simulate(inputs);
             if (outputs.CompareTo(expectedOutputs) != 0)
                 allPassed = false;
-            evaluationStrings.Add(TestStringConverter.GetEvaluationString(lineNumber, inputs, expectedOutputs, outputs, outputs.CompareTo(expectedOutputs) == 0));
+            evaluationStrings.Add(TestStringConverter.GetResult(lineNumber, inputs, expectedOutputs, outputs, outputs.CompareTo(expectedOutputs) == 0));
             lineNumber++;
         }
 
@@ -51,15 +56,13 @@ public static class SimulationTest
         renderer.DrawTableFromPropertiesWithColumnNames(evaluationStrings
             .Select(evaluationString =>
             {
-                var parts = evaluationString.Split(' ');
-
                 return new
                 {
-                    No = parts[0].Trim(':'),
-                    Inputs = parts[1],
-                    Expected = parts[3],
-                    Outputs = parts[5],
-                    Eq = $"{(parts[4] == "==" ? "True" : "False")}",
+                    No = evaluationString.LineNumber,
+                    evaluationString.Inputs,
+                    Expected = evaluationString.ExpectedOutputs,
+                    evaluationString.Outputs,
+                    Eq = evaluationString.IsEqual,
                 };
             }),
             false,

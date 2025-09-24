@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Commands;
 
-public sealed class MainMenuCommand(IInputOutput inputOutput, DatabaseFlow databaseFlow, SimulationFlow simulationFlow) : AsyncCommand
+public sealed class MainMenuCommand(IPrompter prompter, DatabaseFlow databaseFlow, SimulationFlow simulationFlow) : AsyncCommand
 {
     private enum MenuOptions 
     { 
@@ -19,7 +19,7 @@ public sealed class MainMenuCommand(IInputOutput inputOutput, DatabaseFlow datab
     {
         while (true)
         {
-            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Simulation Engine Main Menu[/]"))
+            switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]Simulation Engine Main Menu[/]"))
             {
                 case MenuOptions.Simulation:
                     await simulationFlow.RunMenuAsync();

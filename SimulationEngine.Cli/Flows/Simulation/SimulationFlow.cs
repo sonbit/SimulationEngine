@@ -1,13 +1,13 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Interactive;
 using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.Simulation;
 using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Simulation;
 
-public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer renderer, ISubCircuitService service)
+public sealed partial class SimulationFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service)
 {
     private enum MenuOptions
     {
@@ -35,10 +35,10 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
             SubCircuit? subCircuit = null;
             var id = 0;
 
-            switch (await inputOutput.SelectEnumAsync<MenuOptions>("[bold]Simulation: Pick a subcircuit[/]"))
+            switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]Simulation: Pick a subcircuit[/]"))
             {
                 case MenuOptions.SelectFromList:
-                    subCircuit = await inputOutput.SelectOrBackAsync(
+                    subCircuit = await prompter.SelectOrBackAsync(
                         "Select subcircuit",
                         await service.GetAllAsync(),
                         subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]",
@@ -47,7 +47,7 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
                     break;
 
                 case MenuOptions.FindById:
-                    id = await inputOutput.AskIdAsync("Enter subcircuit id:");
+                    id = await prompter.AskIdAsync("Enter subcircuit id:");
                     subCircuit = await service.GetAsync(id);
                     if (subCircuit is null)
                         renderer.DrawError($"SubCircuit with id {id} was not found");
@@ -79,7 +79,7 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
                     (nameof(SubCircuit.Wires), subCircuit.Wires.Count)
                 ]);
 
-                var simulationOption = await inputOutput.SelectEnumAsync<SimulationOptions>($"[bold]{subCircuit.Title} ({id})[/]");
+                var simulationOption = await prompter.SelectEnumAsync<SimulationOptions>($"[bold]{subCircuit.Title} ({id})[/]");
 
                 switch (simulationOption)
                 {
@@ -91,9 +91,7 @@ public sealed partial class SimulationFlow(IInputOutput inputOutput, IRenderer r
 
                     case SimulationOptions.SimulateFile:
                     case SimulationOptions.SimulateFileNormalized:
-                        renderer.Clear();
-                        var file = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
-                        SimulationFile.Simulate(subCircuit, file, renderer, simulationOption == SimulationOptions.SimulateFileNormalized);
+                        await SimulationFile.SimulateFileAsync(subCircuit, prompter, renderer, simulationOption == SimulationOptions.SimulateFileNormalized);
                         break;
 
                     case SimulationOptions.SimulateTest:

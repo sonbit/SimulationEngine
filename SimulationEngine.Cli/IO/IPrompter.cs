@@ -1,6 +1,6 @@
 ﻿namespace SimulationEngine.Cli.IO;
 
-public interface IInputOutput
+public interface IPrompter
 {
     Task<int> AskIdAsync(string title);
     Task<FileInfo?> PickFileAsync(string title, string startDir, string searchPattern = "*.*");

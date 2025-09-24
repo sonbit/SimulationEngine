@@ -39,7 +39,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<ITruthTableService, TruthTableService>();
 
         services.AddSingleton(sp => AnsiConsole.Console);
-        services.AddSingleton<IInputOutput, InputOutput>();
+        services.AddSingleton<IPrompter, Prompter>();
         services.AddSingleton<IRenderer, Renderer>();
 
         services.AddScoped<DatabaseFlow>();

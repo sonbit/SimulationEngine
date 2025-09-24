@@ -1,7 +1,6 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Interactive;
-using SimulationEngine.Cli.IO;
 using SimulationEngine.Cli.Settings;
+using SimulationEngine.Cli.Simulation;
 using SimulationEngine.Cli.UI;
 using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
@@ -29,7 +28,7 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         }
 
         if (settings.File is not null)
-            return SimulationFile.Simulate(subCircuit, settings.File, renderer, settings.Normalize);
+            return await SimulationFile.SimulateFileAsync(subCircuit, settings.File, renderer, settings.Normalize);
 
         if (settings.InputStrings is not null)
             return SimulateInputStrings(subCircuit, settings.InputStrings, settings.Normalize);
@@ -49,14 +48,13 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
 
         foreach (var inputs in inputStringsArray)
         {
-            var validationErrorMessage = InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput);
-            if (validationErrorMessage is not null)
+            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
             {
-                renderer.DrawError(validationErrorMessage);
+                renderer.DrawError(message);
                 return -1;
             }
 
-            AnsiConsole.WriteLine(simulationSession.Simulate(inputs, normalize));
+            renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
         }
 
         return 0;
@@ -74,14 +72,13 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
             if (string.Equals(inputs, "q", StringComparison.OrdinalIgnoreCase) || string.Equals(inputs, "quit", StringComparison.OrdinalIgnoreCase))
                 break;
 
-            var validationErrorMessage = InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput);
-            if (validationErrorMessage is not null)
+            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
             {
-                renderer.DrawError(validationErrorMessage);
+                renderer.DrawError(message);
                 continue;
             } 
 
-            simulationSession.Simulate(inputs, normalize);
+            renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
         }
 
         return 0;

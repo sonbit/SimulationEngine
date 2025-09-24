@@ -3,8 +3,11 @@ using Spectre.Console;
 
 namespace SimulationEngine.Cli.IO;
 
-public sealed class InputOutput(IAnsiConsole console) : IInputOutput
+public sealed class Prompter(IAnsiConsole console) : IPrompter
 {
+    private const string Cancel = "Cancel";
+    private const string ParentDirectory = "..";
+
     public async Task<int> AskIdAsync(string title)
     {
         var idString = await AnsiConsole
@@ -17,50 +20,52 @@ public sealed class InputOutput(IAnsiConsole console) : IInputOutput
         return int.Parse(idString);
     }
 
-    public async Task<FileInfo?> PickFileAsync(string title, string startDir, string searchPattern = "*.*")
+    public async Task<FileInfo?> PickFileAsync(string title, string startDirectoryName, string searchPattern = "*.*")
     {
-        var dir = new DirectoryInfo(startDir);
-        if (!dir.Exists) dir = new DirectoryInfo(Directory.GetCurrentDirectory());
+        var startDirectory = new DirectoryInfo(startDirectoryName);
+
+        if (!startDirectory.Exists) 
+            startDirectory = new DirectoryInfo(Directory.GetCurrentDirectory());
 
         while (true)
         {
-            var dirs = dir.GetDirectories().OrderBy(d => d.Name, StringComparer.OrdinalIgnoreCase).ToList();
-            var files = dir.GetFiles(searchPattern).OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            var directories = startDirectory.GetDirectories().OrderBy(d => d.Name, StringComparer.OrdinalIgnoreCase).ToList();
+            var files = startDirectory.GetFiles(searchPattern).OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase).ToList();
 
             var items = new List<object>();
-            if (dir.Parent is not null) items.Add("..");
-            items.AddRange(dirs);
+            if (startDirectory.Parent is not null) 
+                items.Add("..");
+
+            items.AddRange(directories);
             items.AddRange(files);
-            items.Add("Cancel");
+            items.Add(Cancel);
 
             var choice = await console.PromptAsync(
                 new SelectionPrompt<object>()
-                    .Title($"{title}\n[grey]{Markup.Escape(dir.FullName)}[/]")
-                    .UseConverter(o => o switch
+                    .Title($"{title}\n[grey]{Markup.Escape(startDirectory.FullName)}[/]")
+                    .PageSize(25)
+                    .UseConverter(obj => obj switch
                     {
-                        string s when s == ".." => "[..] Parent directory",
-                        string s when s == "Cancel" => "Cancel",
-                        DirectoryInfo d => $"[folder] {d.Name}",
-                        FileInfo f => $"[file]   {f.Name}",
-                        _ => o.ToString()!
+                        string str when str == ParentDirectory => "[grey]..[/]",
+                        DirectoryInfo directoryInfo => $"[yellow]{Markup.Escape(directoryInfo.Name)}[/]",
+                        FileInfo fileInfo => $"[grey]{Markup.Escape(fileInfo.Name)}[/]",
+                        string str when str == Cancel => "[red]Cancel[/]",
+                        _ => Markup.Escape(obj?.ToString() ?? string.Empty)
                     })
                     .AddChoices(items));
 
             switch (choice)
             {
-                case string s when s == "Cancel":
+                case string str when str == ParentDirectory:
+                    startDirectory = startDirectory.Parent!;
+                    break;
+                case DirectoryInfo directoryInfo:
+                    startDirectory = directoryInfo;
+                    break;
+                case FileInfo file:
+                    return file;
+                case string str when str == Cancel:
                     return null;
-
-                case string s when s == "..":
-                    dir = dir.Parent!;
-                    break;
-
-                case DirectoryInfo d:
-                    dir = d;
-                    break;
-
-                case FileInfo f:
-                    return f;
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using SimulationEngine.Application.Services.SubCircuits;
-using SimulationEngine.Cli.Interactive;
 using SimulationEngine.Cli.IO;
+using SimulationEngine.Cli.Simulation;
 using SimulationEngine.Cli.UI;
 using SimulationEngine.Domain.Models;
 using Spectre.Console;
@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer, ISubCircuitService service)
+public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service)
 {
     private enum MenuOptions
     {
@@ -39,7 +39,7 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
                 (nameof(SubCircuit.Wires), subCircuit.Wires.Count)
             ]);
 
-            var menuOption = await inputOutput.SelectEnumAsync<MenuOptions>($"[bold]{subCircuit.Title} ({id})[/]");
+            var menuOption = await prompter.SelectEnumAsync<MenuOptions>($"[bold]{subCircuit.Title} ({id})[/]");
 
             switch (menuOption)
             {
@@ -50,8 +50,7 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
 
                 case MenuOptions.SimulateFile:
                 case MenuOptions.SimulateFileNormalized:
-                    var file = await inputOutput.PickFileAsync("Pick a test file", Environment.CurrentDirectory, "*.txt");
-                    SimulationFile.Simulate(subCircuit, file, renderer, menuOption == MenuOptions.SimulateFileNormalized);
+                    await SimulationFile.SimulateFileAsync(subCircuit, prompter, renderer, menuOption == MenuOptions.SimulateFileNormalized);
                     break;
 
                 case MenuOptions.SimulateTest:
@@ -73,7 +72,7 @@ public sealed class SubCircuitFlow(IInputOutput inputOutput, IRenderer renderer,
     {
         if (id == 0 && subCircuit == null)
         {
-            id = await inputOutput.AskIdAsync("Enter an id");
+            id = await prompter.AskIdAsync("Enter an id");
 
             if (id == 0)
             {
