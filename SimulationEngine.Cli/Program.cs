@@ -2,9 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using SimulationEngine.Application.Export;
+using SimulationEngine.Application.Export.Emitters;
 using SimulationEngine.Application.Services.Database;
 using SimulationEngine.Application.Services.Database.SubCircuits;
 using SimulationEngine.Application.Services.Database.TruthTables;
+using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Commands;
 using SimulationEngine.Cli.Commands.Database;
 using SimulationEngine.Cli.Commands.Database.SubCircuits;
@@ -17,6 +20,8 @@ using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
+using SimulationEngine.Infrastructure.Export.Emitters;
+using SimulationEngine.Infrastructure.Exporters.Verilog;
 using SimulationEngine.Infrastructure.Repositories;
 using SimulationEngine.Infrastructure.UnitOfWork;
 using Spectre.Console;
@@ -35,19 +40,28 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IDatabaseService, DatabaseService>();
+        services.AddScoped<IExportService, ExportService>();
         services.AddScoped<ISubCircuitService, SubCircuitService>();
         services.AddScoped<ITruthTableService, TruthTableService>();
+
+        services.AddScoped<ExportOptions>();
+        services.AddScoped<IVerilogEmitter, VerilogEmitter>();
+        services.AddScoped<IVerilogTestbenchEmitter, VerilogTestbenchEmitter>();
+        services.AddScoped<IXdcEmitter, Basys3Emitter>();
 
         services.AddSingleton(sp => AnsiConsole.Console);
         services.AddSingleton<IPrompter, Prompter>();
         services.AddSingleton<IRenderer, Renderer>();
 
         services.AddScoped<DatabaseFlow>();
+        services.AddScoped<ExportFlow>();
+        services.AddScoped<SimulationFlow>();
         services.AddScoped<SubCircuitFlow>();
         services.AddScoped<SubCircuitsFlow>();
         services.AddScoped<TruthTablesFlow>();
-        services.AddScoped<SimulationFlow>();
 
+        services.AddScoped<DatabaseMenuCommand>();
+        services.AddScoped<MainMenuCommand>();
         services.AddScoped<SubCircuitsFindCommand>();
         services.AddScoped<SubCircuitsListCommand>();
         services.AddScoped<SubCircuitsPopulateCommand>();
@@ -55,8 +69,6 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<TruthTablesFindCommand>();
         services.AddScoped<TruthTablesListCommand>();
         services.AddScoped<TruthTablesPopulateCommand>();
-        services.AddScoped<DatabaseMenuCommand>();
-        services.AddScoped<MainMenuCommand>();
     })
     .Build();
 

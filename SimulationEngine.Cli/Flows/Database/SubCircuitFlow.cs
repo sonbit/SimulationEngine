@@ -7,12 +7,18 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service, SimulationFlow flow)
+public sealed class SubCircuitFlow(
+    IPrompter prompter, 
+    IRenderer renderer, 
+    ISubCircuitService service,
+    SimulationFlow simulationFlow, 
+    ExportFlow exportFlow)
 {
     private enum MenuOptions
     {
         Simulate,
-        [Description("Show tree")] ShowTree,
+        [Description("Draw tree")] ShowTree,
+        Export,
         Back
     }
 
@@ -39,11 +45,15 @@ public sealed class SubCircuitFlow(IPrompter prompter, IRenderer renderer, ISubC
             switch (menuOption)
             {
                 case MenuOptions.Simulate:
-                    await flow.RunSimulationMenuAsync(subCircuit);
+                    await simulationFlow.RunSimulationMenuAsync(subCircuit);
                     break;
 
                 case MenuOptions.ShowTree:
                     await SubCircuitBuildTreeAsync(subCircuit: subCircuit);
+                    break;
+
+                case MenuOptions.Export:
+                    await exportFlow.RunMenuAsync(subCircuit);
                     break;
 
                 case MenuOptions.Back:

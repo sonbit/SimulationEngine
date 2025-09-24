@@ -17,4 +17,5 @@ public interface IRenderer
     void DrawTableFromPropertiesWithColumnNames<T>(IEnumerable<T> rows, bool expand = true, params string[] propertyOrder);
     void DrawWarning(string warning);
     void Write(IRenderable renderable);
+    void Write(string text);
 }

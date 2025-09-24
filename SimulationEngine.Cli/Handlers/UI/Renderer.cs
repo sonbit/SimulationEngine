@@ -87,6 +87,9 @@ public sealed class Renderer(IAnsiConsole console) : IRenderer
     public void Write(IRenderable renderable) =>
         console.Write(renderable);
 
+    public void Write(string text) =>
+        console.Write(new Text(text));
+
     private void DrawTableFromProperties<T>(IEnumerable<T> rows, bool expand = true, params (string Property, string? Header)[] columns)
     {
         var properties = GetProperties(typeof(T), columns.Select(column => column.Property));
