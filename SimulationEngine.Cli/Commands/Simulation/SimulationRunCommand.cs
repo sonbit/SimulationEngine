@@ -6,6 +6,7 @@ using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using Spectre.Console.Cli;
+using System.Diagnostics;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
@@ -48,10 +49,13 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         }
 
         if (settings.File is not null)
-            return await SimulationFile.SimulateFileAsync(subCircuit, settings.File, renderer, settings.Normalize);
+            return await SimulationFile.SimulateFileAsync(subCircuit, settings.File, renderer, settings.Normalize, settings.Benchmark);
 
-        if (settings.Inputs.Length >0 && string.Join(' ',  settings.Inputs) is string inputs)
-            return SimulateInputStrings(subCircuit, inputs, settings.Normalize);
+        if (settings.InputString is not null)
+            return SimulateInputStrings(subCircuit, settings.InputString, settings.Normalize, settings.Benchmark);
+
+        if (settings.InputVectors.Length > 0 && string.Join(' ',  settings.InputVectors) is string inputs)
+            return SimulateInputStrings(subCircuit, inputs, settings.Normalize, settings.Benchmark);
 
         if (settings.Stream || Console.IsInputRedirected)
             return await SimulateStreamAsync(subCircuit, settings.Normalize);
@@ -59,15 +63,22 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         return await SimulationRepl.SimulateReplAsync(subCircuit, renderer, settings.Normalize);
     }
 
-    private int SimulateInputStrings(SubCircuit subCircuit, string inputStrings, bool normalize)
+    private int SimulateInputStrings(SubCircuit subCircuit, string inputStrings, bool normalize, bool benchmark)
     {
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
         var inputStringsArray = inputStrings.Split([',', ' ']);
 
         var simulationSession = SimulationSession.Build(subCircuit);
 
+        var stopWatch = Stopwatch.StartNew();
+
         foreach (var inputs in inputStringsArray)
             Simulate(subCircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
+
+        stopWatch.Stop();
+
+        if (benchmark)
+            renderer.DrawLine($"[green]Elapsed time: {stopWatch.Elapsed}[/]");
 
         return 0;
     }

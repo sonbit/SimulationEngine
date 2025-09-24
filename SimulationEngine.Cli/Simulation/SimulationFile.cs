@@ -21,52 +21,16 @@ public static class SimulationFile
             return 1;
         }
 
-        return await SimulateFileAsync(subCircuit, file, renderer, normalize);
-    }
+        var (testResults, elapsed) = await SimulateFileAsync(subCircuit, file, renderer, normalize);
+        if (testResults is null || elapsed is null)
+            return 1;
 
-    public static async Task<int> SimulateFileAsync(SubCircuit subCircuit, FileInfo file, IRenderer renderer, bool normalize)
-    {
-        var testString = await File.ReadAllTextAsync(file.FullName);
-        Simulate(subCircuit, testString, renderer, normalize);
-        return 0;
-    }
-
-    private static void Simulate(SubCircuit subCircuit, string testString, IRenderer renderer, bool normalize = false)
-    {
-        renderer.Clear();
-
-        var simulationSession = SimulationSession.Build(subCircuit);
-        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
-
-        var lineNumber = 1;
-        var evaluationStrings = new List<TestResult>();
-
-        var stopWatch = Stopwatch.StartNew();
-
-        foreach (var inputs in TestStringConverter.GetInputs(testString))
-        {
-            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
+        renderer.DrawTableFromPropertiesWithColumnNames(testResults
+            .Select(evaluationString => new
             {
-                renderer.DrawError(message);
-                return;
-            }
-
-            var outputs = simulationSession.Simulate(inputs);
-            evaluationStrings.Add(TestStringConverter.GetResult(lineNumber, inputs, outputs));
-            lineNumber++;
-        }
-
-        stopWatch.Stop();
-
-        renderer.DrawTableFromPropertiesWithColumnNames(evaluationStrings
-            .Select(evaluationString =>
-            {
-                return new
-                {
-                    No = evaluationString.LineNumber,
-                    evaluationString.Inputs,
-                    evaluationString.Outputs
-                };
+                No = evaluationString.LineNumber,
+                evaluationString.Inputs,
+                evaluationString.Outputs
             }),
             false,
             [
@@ -76,6 +40,54 @@ public static class SimulationFile
             ]
         );
 
-        renderer.DrawLine($"Elapsed time: {stopWatch.Elapsed}");
+        renderer.DrawLine($"[green]Elapsed time: {elapsed}[/]");
+
+        return 0;
+    }
+
+    public static async Task<int> SimulateFileAsync(SubCircuit subCircuit, FileInfo file, IRenderer renderer, bool normalize, bool benchmark)
+    {
+        var (testResults, elapsed) = await SimulateFileAsync(subCircuit, file, renderer, normalize);
+        if (testResults is null || elapsed is null)
+            return 1;
+
+        foreach (var testResult in testResults)
+            renderer.DrawLine(testResult.Outputs);
+
+        if (benchmark)
+            renderer.DrawLine($"[green]Elapsed time: {elapsed}[/]");
+
+        return 0;
+    }
+
+    private async static Task<(List<TestResult>? testResults, TimeSpan? elapsed)> SimulateFileAsync(SubCircuit subCircuit, FileInfo file, IRenderer renderer, bool normalize)
+    {
+        renderer.Clear();
+
+        var simulationSession = SimulationSession.Build(subCircuit);
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
+        var testString = await File.ReadAllTextAsync(file.FullName);
+
+        var lineNumber = 1;
+        var testResults = new List<TestResult>();
+
+        var stopWatch = Stopwatch.StartNew();
+
+        foreach (var inputs in TestStringConverter.GetInputs(testString))
+        {
+            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
+            {
+                renderer.DrawError(message);
+                return (null, null);
+            }
+
+            var outputs = simulationSession.Simulate(inputs);
+            testResults.Add(TestStringConverter.GetResult(lineNumber, inputs, outputs));
+            lineNumber++;
+        }
+
+        stopWatch.Stop();
+
+        return (testResults, stopWatch.Elapsed);
     }
 }
