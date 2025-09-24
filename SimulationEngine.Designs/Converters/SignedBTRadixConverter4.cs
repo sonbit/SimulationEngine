@@ -54,7 +54,7 @@ public class SignedBTRadixConverter4 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         0000 0000
         0001 000+
         0010 00+-

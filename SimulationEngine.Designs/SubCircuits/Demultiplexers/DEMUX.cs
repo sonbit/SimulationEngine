@@ -57,7 +57,7 @@ public class DEMUX : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         --0 000000000
         --1 100000000
         --0 000000000

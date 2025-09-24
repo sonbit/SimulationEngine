@@ -26,7 +26,7 @@ public class BTLatch : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         0- -
         00 -
         10 0

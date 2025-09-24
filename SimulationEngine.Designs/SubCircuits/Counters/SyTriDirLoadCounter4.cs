@@ -69,7 +69,7 @@ public class SyTriDirLoadCounter4 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         00----+ ----
         10----+ ---0
         00----+ ---0

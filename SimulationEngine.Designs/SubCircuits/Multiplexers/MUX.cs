@@ -57,7 +57,7 @@ public class MUX : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ----------- -
         --0-------- 0
         --+-------- +

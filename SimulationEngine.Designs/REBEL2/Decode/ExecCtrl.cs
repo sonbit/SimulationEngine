@@ -70,7 +70,7 @@ public class ExecCtrl : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ---- 00+00+++
         ---0 00+00+++
         ---+ 00+00+++

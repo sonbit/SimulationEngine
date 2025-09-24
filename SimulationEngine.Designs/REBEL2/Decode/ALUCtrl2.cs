@@ -53,7 +53,7 @@ public class ALUCtrl2 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ---- 00+
         ---0 00+
         ---+ 00+

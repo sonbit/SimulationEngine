@@ -64,7 +64,7 @@ public class Register9 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ----0- -
         ----1- -
         ----00 -

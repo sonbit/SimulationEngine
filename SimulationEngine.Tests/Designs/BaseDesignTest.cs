@@ -11,7 +11,7 @@ public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
     {
         var simulationSession = SimulationSession.Build(subCircuit);
 
-        var testString = subCircuit.GetTests();
+        var testString = subCircuit.GetTestString();
         var testRows = testString.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries).ToList();
 
         var lineNumber = 1;

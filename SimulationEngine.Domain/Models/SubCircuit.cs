@@ -25,5 +25,5 @@ public class SubCircuit : BaseEntity
     [NotMapped] public List<Port> Outputs => [.. Ports.Where(p => p.IsOutput()).OrderBy(p => p.Ordinal)];
     [NotMapped] public List<SubCircuit> SubCircuits { get; set; } = [];
 
-    public virtual string GetTests() => throw new NotImplementedException();
+    public virtual string GetTestString() => string.Empty;
 }

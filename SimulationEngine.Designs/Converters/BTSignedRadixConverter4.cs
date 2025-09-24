@@ -56,7 +56,7 @@ public class BTSignedRadixConverter4 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         --- 1111
         --0 1110
         --+ 1111

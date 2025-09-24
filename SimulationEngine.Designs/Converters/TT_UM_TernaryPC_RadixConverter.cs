@@ -58,7 +58,7 @@ public class TT_UM_TernaryPC_RadixConverter : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         00----+ ----00-
         10----+ ---000-
         00----+ ---000-

@@ -31,7 +31,7 @@ public class _2TritComp : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ---- 0
         ---0 +
         -0-0 0

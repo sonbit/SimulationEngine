@@ -54,7 +54,7 @@ public class _2TritMul : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ---- +--+
         -0-- 0++0
         -+-- 0+0-

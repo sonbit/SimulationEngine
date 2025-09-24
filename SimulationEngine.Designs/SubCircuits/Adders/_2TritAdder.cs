@@ -36,7 +36,7 @@ public class _2TritAdder : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ---- -0+
         -0-- -+-
         -+-- -+0

@@ -116,7 +116,7 @@ public class _8RegArray2 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         00000000000 ------------------
         10000000000 00----------------
         01000000000 0000--------------

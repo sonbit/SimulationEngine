@@ -46,7 +46,7 @@ public class ProgCtr2 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         0--- --
         1--- -0
         0--- -0

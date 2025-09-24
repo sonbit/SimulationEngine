@@ -30,7 +30,7 @@ public class TriHalfAdder : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         -- -+
         -0 0-
         -+ 00

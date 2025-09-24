@@ -80,7 +80,7 @@ public class _9MUX2 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         -------------------- --
         -------------------0 -0
         -------------------+ -+

@@ -109,7 +109,7 @@ public class ALU2 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ------- 0--
         000---- -0+
         000---0 -+-

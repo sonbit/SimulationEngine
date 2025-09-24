@@ -57,7 +57,7 @@ public class _9BDEMUX : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         --0 000000000
         --1 000000001
         --0 000000000

@@ -131,7 +131,7 @@ public class _2xFetch : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ---------------00 ------------------------
         ---------------01 ------------------------
         ----0-0-0-0-0-000 ------------------------

@@ -40,7 +40,7 @@ public class RAM3 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         000- ---
         111- ---
         0000 ---

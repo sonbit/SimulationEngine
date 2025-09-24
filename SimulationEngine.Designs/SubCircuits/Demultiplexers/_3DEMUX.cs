@@ -36,7 +36,7 @@ public class _3DEMUX : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         -0 000
         -1 100
         00 000

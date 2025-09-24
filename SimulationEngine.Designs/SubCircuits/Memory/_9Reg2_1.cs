@@ -70,7 +70,7 @@ public class _9Reg2_1 : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ------0 --
         ---0-01 --
         ---0-00 --

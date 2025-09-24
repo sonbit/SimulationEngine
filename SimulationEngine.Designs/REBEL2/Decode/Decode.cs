@@ -101,7 +101,7 @@ public class Decode : SubCircuit
         ]);
     }
 
-    public override string GetTests() => """
+    public override string GetTestString() => """
         ------------------ 00+00+++----------
         ------------+----+ 00+00+++----------
         ------------+-0-0- 00+00+++----------
