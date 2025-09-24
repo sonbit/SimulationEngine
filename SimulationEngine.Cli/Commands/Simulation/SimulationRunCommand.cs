@@ -5,7 +5,6 @@ using SimulationEngine.Cli.Simulation;
 using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
-using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
@@ -39,6 +38,17 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         return await SimulationRepl.SimulateReplAsync(subCircuit, renderer, settings.Normalize);
     }
 
+    private void Simulate(SubCircuit subCircuit, SimulationSession simulationSession, string inputs, bool normalize, HashSet<char>[] allowedValuesPerInput)
+    {
+        if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
+        {
+            renderer.DrawError(message);
+            return;
+        }
+
+        renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
+    }
+
     private int SimulateInputStrings(SubCircuit subCircuit, string inputStrings, bool normalize)
     {
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
@@ -47,15 +57,7 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         var simulationSession = SimulationSession.Build(subCircuit);
 
         foreach (var inputs in inputStringsArray)
-        {
-            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
-            {
-                renderer.DrawError(message);
-                return -1;
-            }
-
-            renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
-        }
+            Simulate(subCircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
 
         return 0;
     }
@@ -69,16 +71,12 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         string? inputs;
         while ((inputs = await Console.In.ReadLineAsync()) is not null)
         {
-            if (string.Equals(inputs, "q", StringComparison.OrdinalIgnoreCase) || string.Equals(inputs, "quit", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(inputs, "q", StringComparison.OrdinalIgnoreCase) || 
+                string.Equals(inputs, "quit", StringComparison.OrdinalIgnoreCase) ||
+                string.IsNullOrWhiteSpace(inputs))
                 break;
 
-            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
-            {
-                renderer.DrawError(message);
-                continue;
-            } 
-
-            renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
+            Simulate(subCircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
         }
 
         return 0;
