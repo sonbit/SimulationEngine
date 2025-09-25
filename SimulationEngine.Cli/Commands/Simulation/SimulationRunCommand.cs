@@ -1,4 +1,5 @@
 ﻿using SimulationEngine.Application.Services.Database.SubCircuits;
+using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings;
 using SimulationEngine.Cli.Simulation;
@@ -10,23 +11,20 @@ using System.Diagnostics;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
-public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer renderer) : AsyncCommand<SimulationRunSettings>
+public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer, ISubCircuitService service) : AsyncCommand<SimulationRunSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, SimulationRunSettings settings)
     {
-        if (settings?.Id > 0)
-        {
-            var subCircuit = await service.GetByIdAsync(settings.Id ?? 0);
-            return await SimulateAsync(subCircuit, settings);
-        }
-        else if (!string.IsNullOrWhiteSpace(settings?.Title))
-        {
-            var subCircuit = await service.GetByTitleAsync(settings.Title);
-            return await SimulateAsync(subCircuit, settings);
-        }
+        SubCircuit? subCircuit = null;
 
-        renderer.DrawError("Provide --id or --title");
-        return 1;
+        if (settings.Id > 0)
+            subCircuit = await service.GetByIdAsync(settings.Id ?? 0);
+        else if (!string.IsNullOrWhiteSpace(settings.Title))
+            subCircuit = await service.GetByTitleAsync(settings.Title);
+        else if (settings.Interactive == true && await prompter.AskIdAsync("Enter SubCircuit id:") is int id)
+            subCircuit = await service.GetByIdAsync(id);
+
+        return await SimulateAsync(subCircuit, settings);
     }
 
     private void Simulate(SubCircuit subCircuit, SimulationSession simulationSession, string inputs, bool normalize, HashSet<char>[] allowedValuesPerInput)
@@ -40,7 +38,7 @@ public sealed class SimulationRunCommand(ISubCircuitService service, IRenderer r
         renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
     }
 
-    private async Task<int> SimulateAsync(SubCircuit subCircuit, SimulationRunSettings settings)
+    private async Task<int> SimulateAsync(SubCircuit? subCircuit, SimulationRunSettings settings)
     {
         if (subCircuit is null)
         {

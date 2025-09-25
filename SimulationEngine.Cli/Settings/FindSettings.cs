@@ -3,13 +3,18 @@ using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Settings;
 
-public class FindSettings : BaseIdSettings
+public class FindSettings : BaseFindSettings
 {
-    [CommandOption("-t|--title")] public string? Title { get; set; }
     [CommandOption("-I|--interactive")] public bool Interactive { get; set; }
 
-    public override ValidationResult Validate() => 
-        Id.HasValue && Id.Value != 0 || !string.IsNullOrWhiteSpace(Title)  || Interactive
-           ? ValidationResult.Success()
-           : ValidationResult.Error("Provide any of -i or --id, -t or --title, -I or --interactive");
+    public override ValidationResult Validate()
+    {
+        var hasId = Id.HasValue && Id.Value != 0;
+        var hasTitle = !string.IsNullOrWhiteSpace(Title);
+
+        if (hasId && !hasTitle || !hasId && hasTitle || Interactive)
+            return ValidationResult.Success();
+
+        return ValidationResult.Error("Provide either -i|--id OR -t|--title OR -I|--interactive");
+    }
 }
