@@ -1,5 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Metadata.Enums;
+using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Simulator;
 
@@ -51,32 +51,7 @@ public partial class SimulationSession
         {
             var port = SubCircuit.Outputs[i];
             var value = GetOutputByte(port);
-
-            chars[i] = port.PortMetadata.Radix switch
-            {
-                Radix.Binary or Radix.BinarySigned => value switch
-                {
-                    2 => '1',
-                    1 => '0',
-                    0 => '0',
-                    _ => throw new InvalidOperationException($"Invalid binary value '{value}' for port {port.Name}"),
-                },
-                Radix.TernaryBalanced => value switch
-                {
-                    2 => '+',
-                    1 => '0',
-                    0 => '-',
-                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{value}' for port {port.Name}"),
-                },
-                Radix.TernaryUnbalanced => value switch
-                {
-                    2 => '2',
-                    1 => '1',
-                    0 => '0',
-                    _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{value}' for port {port.Name}"),
-                },
-                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}"),
-            };
+            chars[i] = port.ToChar(value);
         }
 
         return new string(chars);
@@ -98,33 +73,7 @@ public partial class SimulationSession
         var bytes = new byte[values.Length];
 
         for (int i = 0; i < values.Length; i++)
-        {
-            var port = SubCircuit.Inputs[i];
-            bytes[i] = port.PortMetadata.Radix switch
-            {
-                Radix.Binary or Radix.BinarySigned => values[i] switch
-                {
-                    '1' => 2,
-                    '0' => 0,
-                    _ => throw new InvalidOperationException($"Invalid binary value '{values[i]}' for port {port.Name}"),
-                },
-                Radix.TernaryBalanced => values[i] switch
-                {
-                    '+' => 2,
-                    '0' => 1,
-                    '-' => 0,
-                    _ => throw new InvalidOperationException($"Invalid balanced ternary value '{values[i]}' for port {port.Name}"),
-                },
-                Radix.TernaryUnbalanced => values[i] switch
-                {
-                    '2' => 2,
-                    '1' => 1,
-                    '0' => 0,
-                    _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{values[i]}' for port {port.Name}"),
-                },
-                _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}"),
-            };
-        }
+            bytes[i] = SubCircuit.Inputs[i].ToByte(values[i]);
 
         SetInputBytes(bytes);
     }

@@ -1,5 +1,6 @@
 ﻿using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Domain.Models.Metadata.Enums;
+using System;
 
 namespace SimulationEngine.Domain.Models.Extensions;
 
@@ -16,4 +17,55 @@ public static class PortExtensions
 
     public static bool IsOutput(this Port port) => 
         port.Direction == PortDirection.Output;
+
+    public static char ToChar(this Port port, byte value) => port.PortMetadata.Radix switch
+    {
+        Radix.Binary or Radix.BinarySigned => value switch
+        {
+            2 => '1',
+            1 => '0',
+            0 => '0',
+            _ => throw new InvalidOperationException($"Invalid binary value '{value}' for port {port.Name}"),
+        },
+        Radix.TernaryBalanced => value switch
+        {
+            2 => '+',
+            1 => '0',
+            0 => '-',
+            _ => throw new InvalidOperationException($"Invalid balanced ternary value '{value}' for port {port.Name}"),
+        },
+        Radix.TernaryUnbalanced => value switch
+        {
+            2 => '2',
+            1 => '1',
+            0 => '0',
+            _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{value}' for port {port.Name}"),
+        },
+        _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}"),
+    };
+
+    public static byte ToByte(this Port port, char value) => port.PortMetadata.Radix switch
+    {
+        Radix.Binary or Radix.BinarySigned => value switch
+        {
+            '1' => 2,
+            '0' => 0,
+            _ => throw new InvalidOperationException($"Invalid binary value '{value}' for port {port.Name}"),
+        },
+        Radix.TernaryBalanced => value switch
+        {
+            '+' => 2,
+            '0' => 1,
+            '-' => 0,
+            _ => throw new InvalidOperationException($"Invalid balanced ternary value '{value}' for port {port.Name}"),
+        },
+        Radix.TernaryUnbalanced => value switch
+        {
+            '2' => 2,
+            '1' => 1,
+            '0' => 0,
+            _ => throw new InvalidOperationException($"Invalid unbalanced ternary value '{value}' for port {port.Name}"),
+        },
+        _ => throw new InvalidOperationException($"Unsupported radix {port.PortMetadata.Radix} for port {port.Name}"),
+    };
 }
