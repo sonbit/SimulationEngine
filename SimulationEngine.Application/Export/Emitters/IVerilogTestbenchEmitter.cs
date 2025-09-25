@@ -4,5 +4,5 @@ namespace SimulationEngine.Application.Export.Emitters;
 
 public interface IVerilogTestbenchEmitter
 {
-    string EmitTestbench(SubCircuit subCircuit, IReadOnlyList<(byte[] Inputs, byte[] ExpectedOutputs)> testVectors);
+    string EmitTestbench(SubCircuit subCircuit, string testString);
 }

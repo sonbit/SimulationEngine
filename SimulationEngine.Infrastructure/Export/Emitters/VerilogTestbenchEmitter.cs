@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Application.Export;
 using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Infrastructure.Export.Converters;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,8 +12,10 @@ namespace SimulationEngine.Infrastructure.Export.Emitters;
 
 public class VerilogTestbenchEmitter(ExportOptions options) : IVerilogTestbenchEmitter
 {
-    public string EmitTestbench(SubCircuit subCircuit, IReadOnlyList<(byte[] Inputs, byte[] ExpectedOutputs)> testVectors)
+    public string EmitTestbench(SubCircuit subCircuit, string testString)
     {
+        var testVectors = TestStringConverter.GetInputOutputPairs(testString);
+
         var sb = new StringBuilder();
         sb.AppendLine($"module tb_{subCircuit.GetType().Name};");
 
@@ -46,17 +48,12 @@ public class VerilogTestbenchEmitter(ExportOptions options) : IVerilogTestbenchE
         {
             sb.AppendLine();
 
-            var (testInputs, testExpectedOutputs) = testVectors[i];
+            var (inputs, expectedOutputs) = testVectors[i];
 
             for (int k = 0; k < subCircuit.Inputs.Count; k++)
             {
                 var port = subCircuit.Inputs[k];
-                var v = testInputs[k];
-
-                if (port.IsBinary())
-                    sb.AppendLine($"\t\t{San(port.Title)} = 1'b{(v == 0 ? 0 : 1)};");
-                else
-                    sb.AppendLine($"\t\t{San(port.Title)} = {TritBitConverter.ConvertTritToBits(v)};");
+                sb.AppendLine($"\t\t{San(port.Title ?? port.Name)} = {RadixConverter.Convert(port, inputs[k])}");
             }
 
             sb.AppendLine("\t\t#1;");
@@ -64,10 +61,8 @@ public class VerilogTestbenchEmitter(ExportOptions options) : IVerilogTestbenchE
             for (int k = 0; k < subCircuit.Outputs.Count; k++)
             {
                 var port = subCircuit.Outputs[k];
-                var output = testExpectedOutputs[k];
-
                 var title = $"{San(port.Title)}";
-                var expectedString = port.IsBinary() ? $"1'b{(output == 0 ? "0" : "1")}" : TritBitConverter.ConvertTritToBits(output);
+                var expectedString = RadixConverter.Convert(port, expectedOutputs[k]);
                 sb.AppendLine($"\t\tif ({title} !== {expectedString}) begin $display(\"FAIL vec {i}: {title} (got %b at %0d)\", {title}, $time); $stop; end");
             }
         }

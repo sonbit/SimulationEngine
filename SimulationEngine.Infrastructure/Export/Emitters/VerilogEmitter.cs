@@ -80,32 +80,16 @@ public sealed partial class VerilogEmitter(ExportOptions options) : IVerilogEmit
             if (depth == arity)
             {
                 var q = def[idx++];
-                if (logicGate.IsBinary())
-                {
-                    var on = q != 0 ? "1'b1" : "1'b0";
 
-                    var conds = new List<string>();
-                    for (int d = 0; d < arity; d++)
-                    {
-                        var r = pinOrder[d];
-                        var v = assign[d];
-                        conds.Add($"({r} == 1'b{v})");
-                        //conds.Add(BoolEq($"{r}", v == 0 ? 0 : 1)); // This is handling mapping from ternary to binary
-                    }
-                    clauses.Add($"{string.Join(" & ", conds)}{(arity > 1 ? ")" : "")} ? {on} :");
-                }
-                else
+                var conds = new List<string>();
+                for (int d = 0; d < arity; d++)
                 {
-                    var conds = new List<string>();
-                    for (int d = 0; d < arity; d++)
-                    {
-                        var r = pinOrder[d];
-                        var v = assign[d];
-                        conds.Add($"({r} == {TritBitConverter.ConvertTritToBits(v)})");
-                        //conds.Add(TritEq($"{r}", v));
-                    }
-                    clauses.Add($"{string.Join(" && ", conds)}{(arity > 1 ? ")" : "")} ? {TritBitConverter.ConvertTritToBits(q)} :");
+                    var r = pinOrder[d];
+                    var v = assign[d];
+                    conds.Add($"({r} == {RadixConverter.Convert(logicGate, v)})");
                 }
+                clauses.Add($"{string.Join(" && ", conds)}{(arity > 1 ? ")" : "")} ? {RadixConverter.Convert(logicGate, q)} :");
+
                 return;
             }
 

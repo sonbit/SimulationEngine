@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Domain.Models;
-using SimulationEngine.Infrastructure.Export.Converters;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -77,10 +76,4 @@ public sealed partial class VerilogEmitter
 
     private static string San(string s)
         => Regex.Replace(s, @"[^A-Za-z0-9_]", "_");
-
-    private static string TritEq(string net, byte trit) => 
-        $"{net} == {TritBitConverter.ConvertTritToBits(trit)}";
-
-    private static string BoolEq(string net, int bit) => 
-        bit == 0 ? $"{net} == 1'b0" : $"{net} == 1'b1";
 }
