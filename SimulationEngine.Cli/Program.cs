@@ -12,6 +12,7 @@ using SimulationEngine.Cli.Commands;
 using SimulationEngine.Cli.Commands.Database;
 using SimulationEngine.Cli.Commands.Database.SubCircuits;
 using SimulationEngine.Cli.Commands.Database.TruthTables;
+using SimulationEngine.Cli.Commands.Export;
 using SimulationEngine.Cli.Commands.Simulation;
 using SimulationEngine.Cli.Composition;
 using SimulationEngine.Cli.Flows;
@@ -61,6 +62,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<TruthTablesFlow>();
 
         services.AddScoped<DatabaseMenuCommand>();
+        services.AddScoped<ExportCommand>();
         services.AddScoped<MainMenuCommand>();
         services.AddScoped<SubCircuitsFindCommand>();
         services.AddScoped<SubCircuitsListCommand>();
@@ -97,6 +99,7 @@ app.Configure(cfg =>
             sc.AddCommand<SubCircuitsListCommand>("list");
             sc.AddCommand<SubCircuitsPopulateCommand>("populate");
             sc.AddCommand<SubCircuitsShowTreeCommand>("tree");
+            sc.AddCommand<ExportCommand>("export");
         });
 
         db.AddBranch("tt", tt =>
