@@ -11,12 +11,12 @@ public sealed class ExportCommand(IRenderer renderer, ExportFlow flow) : AsyncCo
     {
         if (settings?.Id > 0)
         {
-            await flow.ExportVerilogSingleFileAsync(settings.Id ?? 0);
+            await flow.WriteVerilogAsync(settings.Id ?? 0, settings.Testbench);
             return 0;
         }
         else if (!string.IsNullOrWhiteSpace(settings?.Title))
         {
-            await flow.ExportVerilogSingleFileAsync(settings.Title);
+            await flow.ExportVerilogSingleFileAsync(settings.Title, settings.Testbench);
             return 0;
         }
 

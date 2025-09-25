@@ -1,5 +1,6 @@
 ﻿
 using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 
 namespace SimulationEngine.Application.Services.Export;
@@ -24,5 +25,14 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
     public string ExportSingleVerilogFileAsText(SubCircuit subCircuit)
     {
         return emitter.EmitSubCircuit(subCircuit);
+    }
+
+    public string? ExportSingleVerilogTestbenchFileAsText(SubCircuit subCircuit)
+    {
+        var testString = DesignUtils.GetTestString(subCircuit.Title);
+        if (testString == null)
+            return null;
+
+        return tbEmitter.EmitTestbench(subCircuit, testString);
     }
 }

@@ -8,4 +8,5 @@ public interface IExportService
     FileInfo ExportAllVerilog(SubCircuit subCircuit, bool includeTestbench = false);
     FileInfo ExportSingleVerilogFile(SubCircuit subCircuit, bool includeTestbench = false);
     string ExportSingleVerilogFileAsText(SubCircuit subCircuit);
+    string? ExportSingleVerilogTestbenchFileAsText(SubCircuit subCircuit);
 }

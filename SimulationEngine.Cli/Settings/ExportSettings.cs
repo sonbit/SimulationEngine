@@ -8,6 +8,7 @@ public sealed class ExportSettings : BaseFindSettings
     [CommandOption("-o|--out <PATH>")] public string? OutPath { get; set; }
     [CommandOption("-z|--zip")] public bool Zip { get; set; }
     [CommandOption("-S|--stdout")] public bool StdOut { get; set; }
+    [CommandOption("--tb")] public bool Testbench { get; set; }
 
     public override ValidationResult Validate()
     {

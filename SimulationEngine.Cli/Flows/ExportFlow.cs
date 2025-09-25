@@ -11,7 +11,8 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
 {
     private enum MenuOptions
     {
-        [Description("Write single Verilog file")] VerilogSingleFile,
+        [Description("Write Verilog")] VerilogOutput,
+        [Description("Write Verilog testbench")] VerilogTestbenchOutput,
         [Description("Export all Verilog files in a zip file")] VerilogAllFiles,
         [Description("Export all Verilog files for Basys3 in a zip file")] VerilogAllFilesForBasys3,
         Back
@@ -25,8 +26,12 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
         {
             switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]Select an export option[/]"))
             {
-                case MenuOptions.VerilogSingleFile:
-                    ExportVerilogSingleFile(subCircuit);
+                case MenuOptions.VerilogOutput:
+                    WriteVerilogOutput(subCircuit);
+                    break;
+
+                case MenuOptions.VerilogTestbenchOutput:
+                    WriteVerilogTestbenchOutput(subCircuit);
                     break;
 
                 case MenuOptions.VerilogAllFiles:
@@ -44,7 +49,7 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
         }
     }
 
-    public async Task ExportVerilogSingleFileAsync(int id)
+    public async Task WriteVerilogAsync(int id, bool testbench = false)
     {
         var subCircuit = await subCircuitService.GetByIdAsync(id);
         if (subCircuit is null)
@@ -53,10 +58,13 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
             return;
         }
 
-        ExportVerilogSingleFile(subCircuit);
+        if (!testbench)
+            WriteVerilogOutput(subCircuit);
+        else
+            WriteVerilogTestbenchOutput(subCircuit);
     }
 
-    public async Task ExportVerilogSingleFileAsync(string title)
+    public async Task ExportVerilogSingleFileAsync(string title, bool testbench = false)
     {
         var subCircuit = await subCircuitService.GetByTitleAsync(title);
         if (subCircuit is null)
@@ -65,13 +73,29 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
             return;
         }
 
-        ExportVerilogSingleFile(subCircuit);
+        if (!testbench)
+            WriteVerilogOutput(subCircuit);
+        else
+            WriteVerilogTestbenchOutput(subCircuit);
     }
 
-    public void ExportVerilogSingleFile(SubCircuit subCircuit)
+    private void WriteVerilogOutput(SubCircuit subCircuit)
     {
         var verilog = service.ExportSingleVerilogFileAsText(subCircuit);
         renderer.Clear();
         renderer.Write(verilog);
+    }
+
+    private void WriteVerilogTestbenchOutput(SubCircuit subCircuit)
+    {
+        var testbench = service.ExportSingleVerilogTestbenchFileAsText(subCircuit);
+        if (testbench == null)
+        {
+            renderer.DrawError($"Unable to get testbench for SubCircuit {subCircuit.Id}");
+            return;
+        }
+
+        renderer.Clear();
+        renderer.Write(testbench);
     }
 }
