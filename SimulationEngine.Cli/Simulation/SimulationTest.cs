@@ -11,17 +11,7 @@ public static class SimulationTest
 {
     public static void Simulate(SubCircuit subCircuit, IRenderer renderer)
     {
-        var type = typeof(StandardCellLibrary).Assembly
-            .GetTypes()
-            .FirstOrDefault(type => typeof(SubCircuit).IsAssignableFrom(type) && type.Name.Contains(subCircuit.Title));
-
-        if (type == null || (SubCircuit?)Activator.CreateInstance(type) is not SubCircuit derivedSubCircuit)
-        {
-            renderer.DrawError($"Could not find type for subcircuit {subCircuit.Title}");
-            return;
-        }
-
-        var testString = derivedSubCircuit.GetTestString();
+        var testString = DesignUtils.GetTestString(subCircuit.Title);
         if (string.IsNullOrWhiteSpace(testString))
         {
             renderer.DrawError($"No tests defined for subcircuit {subCircuit.Title}");
