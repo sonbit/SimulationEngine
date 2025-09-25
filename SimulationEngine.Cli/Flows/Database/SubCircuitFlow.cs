@@ -49,7 +49,8 @@ public sealed class SubCircuitFlow(
                     break;
 
                 case MenuOptions.ShowTree:
-                    await SubCircuitBuildTreeAsync(subCircuit: subCircuit);
+                    renderer.Clear();
+                    BuildTree(subCircuit);
                     break;
 
                 case MenuOptions.Export:
@@ -63,28 +64,14 @@ public sealed class SubCircuitFlow(
         }
     }
 
-    public async Task SubCircuitBuildTreeAsync(int id = 0, SubCircuit? subCircuit = null)
+    public async Task SubCircuitBuildTreeAsync(int id)
     {
-        if (id == 0 && subCircuit == null)
-        {
-            id = await prompter.AskIdAsync("Enter SubCircuit id:");
-
-            if (id == 0)
-            {
-                renderer.DrawError("Invalid id");
-                return;
-            }
-
-            subCircuit = await service.GetByIdAsync(id);
-            if (subCircuit is null)
-            {
-                renderer.DrawError($"SubCircuit with id {id} was not found");
-                return;
-            }
-        }
-
+        var subCircuit = await service.GetByIdAsync(id);
         if (subCircuit is null)
+        {
+            renderer.DrawError($"SubCircuit with id {id} was not found");
             return;
+        }
 
         renderer.Clear();
         BuildTree(subCircuit);
@@ -122,5 +109,5 @@ public sealed class SubCircuitFlow(
         $"[blue]{Markup.Escape(logicGate.TruthTable.HeptaIndex)}[/]";
 
     private static string GetSubCircuitLabel(SubCircuit subCircuit) =>
-        $"[yellow]{Markup.Escape(subCircuit.Title)}[/] [grey](Inputs: {subCircuit.Inputs.Count}, Outputs: {subCircuit.Outputs.Count}, Wires: {subCircuit.Wires.Count})[/]";
+        $"[yellow]{Markup.Escape(subCircuit.Title)}[/]";
 }
