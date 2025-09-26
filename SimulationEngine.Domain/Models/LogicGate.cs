@@ -45,4 +45,5 @@ public class LogicGate : BaseEntity
     [NotMapped] public Pin C => Pins.SingleOrDefault(pin => pin.Role == PinRole.C);
     [NotMapped] public Pin D => Pins.SingleOrDefault(pin => pin.Role == PinRole.D);
     [NotMapped] public Pin Q => Pins.SingleOrDefault(pin => pin.Role == PinRole.Q);
+    [NotMapped] public List<Pin> InputPinsDescending => [.. Pins.Where(pin => pin.Role != PinRole.Q).OrderByDescending(pin => pin.Role)];
 }

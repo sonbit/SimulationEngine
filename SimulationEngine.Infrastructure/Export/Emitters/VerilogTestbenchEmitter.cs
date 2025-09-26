@@ -4,9 +4,7 @@ using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Infrastructure.Export.Converters;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace SimulationEngine.Infrastructure.Export.Emitters;
 
@@ -16,64 +14,59 @@ public class VerilogTestbenchEmitter(ExportOptions options) : IVerilogTestbenchE
     {
         var testVectors = TestStringConverter.GetInputOutputPairs(testString);
 
-        var sb = new StringBuilder();
-        sb.AppendLine($"module tb_{subCircuit.GetType().Name};");
+        var builder = new StringBuilder();
+        builder.AppendLine($"module tb_{subCircuit.Title};");
 
-        foreach (var port in subCircuit.Inputs)
-            sb.AppendLine(port.IsBinary() ? $"\treg {San(port.Title)};" : $"\treg [1:0] {San(port.Title)};");
+        foreach (var inputPort in subCircuit.Inputs)
+            builder.AppendLine($"\treg {(inputPort.IsBinary() ? "" : "[1:0] ")}{inputPort.Title};");
 
-        foreach (var port in subCircuit.Outputs)
-            sb.AppendLine(port.IsBinary() ? $"\twire {San(port.Title)};" : $"\twire [1:0] {San(port.Title)};");
+        foreach (var outputPort in subCircuit.Outputs)
+            builder.AppendLine($"\twire {(outputPort.IsBinary() ? "" : "[1:0] ")}{outputPort.Title};");
 
-        sb.AppendLine();
+        builder.AppendLine();
 
-        sb.AppendLine($"\t{options.SubCircuitPrefix}{subCircuit.GetType().Name} dut (");
+        builder.AppendLine($"\t{options.SubCircuitPrefix}{subCircuit.Title} dut (");
 
         foreach (var port in subCircuit.OrderedPorts)
-        {
-            sb.Append($"\t\t.{San(port.Title)}({San(port.Title)})");
-            if (port != subCircuit.OrderedPorts.Last())
-                sb.AppendLine(",");
-        }
+            builder.AppendLine($"\t\t.{port.Title}({port.Title}),");
+        builder.Remove(builder.Length - 3, 1);
 
-        sb.AppendLine();
-        sb.AppendLine("\t);");
-        sb.AppendLine();
+        builder.AppendLine("\t);");
+        builder.AppendLine();
 
-        sb.AppendLine("integer i;");
-        sb.AppendLine("\tinitial begin");
-        sb.AppendLine($"\t\t$display(\"Running {testVectors.Count} vectors...\");");
+        builder.AppendLine("integer i;");
+        builder.AppendLine("\tinitial begin");
+        builder.AppendLine($"\t\t$display(\"Running {testVectors.Count} vectors...\");");
 
         for (int i = 0; i < testVectors.Count; i++)
         {
-            sb.AppendLine();
+            builder.AppendLine();
 
             var (inputs, expectedOutputs) = testVectors[i];
 
             for (int k = 0; k < subCircuit.Inputs.Count; k++)
             {
                 var port = subCircuit.Inputs[k];
-                sb.AppendLine($"\t\t{San(port.Title ?? port.Name)} = {RadixConverter.Convert(port, inputs[k])}");
+                builder.AppendLine($"\t\t{port.Title} = {RadixConverter.Convert(port, inputs[k])}");
             }
 
-            sb.AppendLine("\t\t#1;");
+            builder.AppendLine("\t\t#1;");
 
             for (int k = 0; k < subCircuit.Outputs.Count; k++)
             {
                 var port = subCircuit.Outputs[k];
-                var title = $"{San(port.Title)}";
+                var title = port.Title;
                 var expectedString = RadixConverter.Convert(port, expectedOutputs[k]);
-                sb.AppendLine($"\t\tif ({title} !== {expectedString}) begin $display(\"FAIL vec {i}: {title} (got %b at %0d)\", {title}, $time); $stop; end");
+                builder.AppendLine($"\t\tif ({title} !== {expectedString}) begin $display(\"FAIL vec {i}: {title} (got %b at %0d)\", {title}, $time); $stop; end");
             }
         }
 
-        sb.AppendLine();
-        sb.AppendLine("\t\t$display(\"PASS\");");
-        sb.AppendLine("\t\t$finish;");
-        sb.AppendLine("\tend");
-        sb.AppendLine("endmodule");
-        return sb.ToString();
+        builder.AppendLine();
+        builder.AppendLine("\t\t$display(\"PASS\");");
+        builder.AppendLine("\t\t$finish;");
+        builder.AppendLine("\tend");
+        builder.AppendLine("endmodule");
 
-        static string San(string s) => Regex.Replace(s ?? "p", @"[^A-Za-z0-9_]", "_");
+        return builder.ToString();
     }
 }

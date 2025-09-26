@@ -1,79 +1,113 @@
-﻿using SimulationEngine.Domain.Models;
+﻿using SimulationEngine.Domain.Hashers;
+using SimulationEngine.Domain.Models;
+using SimulationEngine.Domain.Models.Extensions;
+using SimulationEngine.Domain.Models.Placements;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace SimulationEngine.Infrastructure.Exporters.Verilog;
 
 public sealed partial class VerilogEmitter
 {
-    private static IEnumerable<LogicGate> EnumerateAllLogicGates(SubCircuit rootSubCircuit)
+    private static string BitToTrit(string bit) => $"{{{bit},!{bit}}}";
+
+    private void ClearState()
     {
-        var subCircuitStack = new Stack<SubCircuit>();
-        var handledSubCircuits = new HashSet<int>();
-        subCircuitStack.Push(rootSubCircuit);
+        BNetCounter = 0;
+        TNetCounter = 0;
 
-        while (subCircuitStack.Count > 0)
-        {
-            var subCircuit = subCircuitStack.Pop();
-
-            if (!handledSubCircuits.Add(subCircuit.GetHashCode())) 
-                continue;
-
-            foreach (var logicGate in subCircuit.LogicGates)
-                yield return logicGate;
-
-            foreach (var childSubCircuit in subCircuit.SubCircuits) 
-                subCircuitStack.Push(childSubCircuit);
-        }
+        Builder.Clear();
+        ModuleIndexCounter.Clear();
+        Nets.Clear();
+        TerminalNetMap.Clear();
     }
 
-    private static IEnumerable<SubCircuit> EnumerateAllSubCircuits(SubCircuit rootSubCircuit)
+    private void CreateConnection(List<Wire> wires, Terminal endTerminal, string moduleName, List<string> connections)
     {
+        var name = $"{endTerminal.Title}";
+
+        var wire = wires.FirstOrDefault(wire => wire.EndTerminal == endTerminal) ??
+            throw new NullReferenceException($"Terminal '{name}' of '{moduleName}' is not driven by any wire.");
+
+        var startTerminal = wire.StartTerminal;
+        var value = GetValue(startTerminal);
+
+        if (startTerminal.IsBinary() && !endTerminal.IsBinary())
+            value = BitToTrit(value);
+
+        connections.Add($".{name}({value})");
+    }
+
+    private void CreateBody(string moduleName, StringBuilder body, List<string> connections)
+    {
+        body.AppendLine($"\t{moduleName} {moduleName}_{GetNextIndex(moduleName)} (");
+        body.AppendLine($"\t\t{string.Join($",\n\t\t", connections)}");
+        body.AppendLine("\t);");
+        body.AppendLine();
+    }
+
+    private string CreateNet(bool isBinary)
+    {
+        var name = isBinary ? $"bnet_{BNetCounter++}" : $"tnet_{TNetCounter++}";
+        Nets.Add(isBinary ? $"wire {name};" : $"wire [1:0] {name};");
+        return name;
+    }
+
+    private static IEnumerable<SubCircuit> EnumerateUniqueSubCircuits(SubCircuit rootSubCircuit)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
         var subCircuitStack = new Stack<SubCircuit>();
-        var handledSubCircuits = new HashSet<int>();
         subCircuitStack.Push(rootSubCircuit);
 
         while (subCircuitStack.Count > 0)
         {
             var subCircuit = subCircuitStack.Pop();
-
-            if (!handledSubCircuits.Add(subCircuit.GetHashCode()))
+            if (!seen.Add(SubCircuitHasher.Compute(subCircuit, [])))
                 continue;
-
-            foreach (var childSubCircuit in subCircuit.SubCircuits) 
-                subCircuitStack.Push(childSubCircuit);
 
             yield return subCircuit;
+
+            var subCircuits = subCircuit.SubCircuits;
+            for (int i = subCircuits.Count - 1; i >= 0; i--)
+                subCircuitStack.Push(subCircuits[i]);
         }
     }
 
-    private void EmitLogicGateModuleOnce(LogicGate logicGate, StringBuilder sb, HashSet<string> visited)
+    private string GetLogicGateModuleName(LogicGate logicGate)
+        => $"{options.LogicGatesPrefix}{logicGate.TruthTable.HeptaIndex}";
+
+    private int GetNextIndex(string moduleName)
     {
-        var modName = LogicGateModuleName(logicGate);
-
-        if (!visited.Add(modName)) 
-            return;
-
-        sb.AppendLine(EmitLogicGateModule(logicGate));
+        if (!ModuleIndexCounter.TryGetValue(moduleName, out var index))
+            index = 0;
+        ModuleIndexCounter[moduleName] = index + 1;
+        return index;
     }
 
-    private void EmitSubCircuitModuleOnce(SubCircuit subCircuit, StringBuilder sb, HashSet<string> visited)
+    private string GetSubCircuitModuleName(SubCircuit subCircuit)
+        => $"{options.SubCircuitPrefix}{subCircuit.Title}";
+
+    private string GetValue(Terminal terminal)
     {
-        var modName = CircuitModuleName(subCircuit);
+        if (TerminalNetMap.TryGetValue(terminal, out var terminalValue))
+            return terminalValue;
 
-        if (!visited.Add(modName)) 
-            return;
+        switch (terminal)
+        {
+            case Port port:
+                return port.Title;
 
-        sb.AppendLine(EmitSubCircuitModule(subCircuit));
+            case Pin pin:
+                if (TerminalNetMap.TryGetValue(pin, out var pinValue))
+                    return pinValue;
+                break;
+            case PortPlacement:
+            default:
+                break;
+        }
+
+        throw new NullReferenceException($"Unable to resolve terminal '{terminal.Title}' (ID: {terminal.Id}).");
     }
-
-    private string LogicGateModuleName(LogicGate logicGate)
-        => San($"{options.LogicGatesPrefix}{logicGate.TruthTable?.HeptaIndex ?? "UNK"}");
-
-    private string CircuitModuleName(SubCircuit subCircuit)
-        => San($"{options.SubCircuitPrefix}{(string.IsNullOrWhiteSpace(subCircuit.Title) ? "SubCircuit" : subCircuit.Title)}");
-
-    private static string San(string s)
-        => Regex.Replace(s, @"[^A-Za-z0-9_]", "_");
 }

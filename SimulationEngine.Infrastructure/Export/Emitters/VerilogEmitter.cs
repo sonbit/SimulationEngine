@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Application.Export;
 using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Domain.Models.Extensions;
-using SimulationEngine.Domain.Models.Placements;
 using SimulationEngine.Infrastructure.Export.Converters;
 using System;
 using System.Collections.Generic;
@@ -14,243 +14,174 @@ namespace SimulationEngine.Infrastructure.Exporters.Verilog;
 
 public sealed partial class VerilogEmitter(ExportOptions options) : IVerilogEmitter
 {
-    public string EmitSubCircuit(SubCircuit subCircuit)
+    private const int Capacity = 64 * 1024;
+    private int BNetCounter;
+    private int TNetCounter;
+
+    private readonly StringBuilder Builder = new(Capacity);
+    private readonly Dictionary<string, int> ModuleIndexCounter = new(StringComparer.Ordinal);
+    private readonly HashSet<string> Nets = [];
+    private readonly Dictionary<Terminal, string> TerminalNetMap = [];
+
+    public string EmitSubCircuit(SubCircuit topSubCircuit)
     {
-        var sb = new StringBuilder(64 * 1024);
-        var visitedGates = new HashSet<string>(StringComparer.Ordinal);
-        var visitedCircuits = new HashSet<string>(StringComparer.Ordinal);
+        ClearState();
 
-        foreach (var circuit in EnumerateAllSubCircuits(subCircuit))
-            EmitSubCircuitModuleOnce(circuit, sb, visitedCircuits);
+        var builder = new StringBuilder(Capacity);
 
-        foreach (var logicGate in EnumerateAllLogicGates(subCircuit))
-            EmitLogicGateModuleOnce(logicGate, sb, visitedGates);
+        var subCircuits = EnumerateUniqueSubCircuits(topSubCircuit);
 
-        EmitSubCircuitModuleOnce(subCircuit, sb, visitedCircuits);
+        var emittedSubCircuitModules = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var subCircuit in subCircuits)
+        {
+            if (emittedSubCircuitModules.Add(GetSubCircuitModuleName(subCircuit)))
+                builder.AppendLine(EmitSubCircuitModule(subCircuit));
+        }
 
-        return sb.ToString().Trim();
+        var emittedLogicGateModules = new HashSet<string>(StringComparer.Ordinal);
+        var uniqueLogicGates = subCircuits
+            .SelectMany(subCircuit => subCircuit.LogicGates)
+            .DistinctBy(logicGate => logicGate.TruthTable.HeptaIndex);
+
+        foreach (var logicGate in uniqueLogicGates)
+        {
+            if (emittedLogicGateModules.Add(GetLogicGateModuleName(logicGate)))
+                builder.AppendLine(EmitLogicGateModule(logicGate));
+        }
+
+        return builder.ToString().TrimEnd();
     }
 
     private string EmitLogicGateModule(LogicGate logicGate)
     {
-        var inputPins = logicGate.Pins
-            .Where(p => p.Role != PinRole.Q)
-            .OrderByDescending(p => p.Role)
-            .Select(p => p.Role)
-            .ToList();
+        ClearState();
 
-        var def = logicGate.TruthTable?.Definition ?? [];
-        int arity = def.Length switch
-        {
-            3 => 1,
-            9 => 2,
-            27 => 3,
-            81 => 4,
-            _ => throw new InvalidOperationException($"Unsupported TT length: {def.Length}")
-        };
+        var inputRoles = logicGate.InputPinsDescending.Select(pin => pin.Role).ToList();
+        var isBinary = logicGate.IsBinary();
 
-        var mod = LogicGateModuleName(logicGate);
-        var ins = new List<string>();
-        var portsSb = new StringBuilder();
-        var body = new StringBuilder();
+        var inputs = new List<string>();
+        foreach (var role in inputRoles)
+            inputs.Add($"input wire {(isBinary ? "" : "[1:0] ")}{role}");
 
-        foreach (var role in inputPins)
-            ins.Add(logicGate.IsBinary() ? $"input wire {role}" : $"input wire[1:0] {role}");
+        Builder.AppendLine($"module {GetLogicGateModuleName(logicGate)} (");
+        for (int i = 0; i < inputs.Count; i++)
+            Builder.AppendLine($"\t{inputs[i]},");
+        Builder.AppendLine($"\toutput wire {(isBinary ? "" : "[1:0] ")}{PinRole.Q}");
+        Builder.AppendLine(");");
 
-        var outDecl = logicGate.IsBinary() ? "output wire Q" : "output wire[1:0] Q";
+        var arity = HeptaIndexConverter.GetArity(logicGate.TruthTable.HeptaIndex);
+        int[] pinOrder = arity > 1
+            ? [.. Enumerable.Range(0, Math.Max(0, arity - 2)), ..new[] { arity - 1, arity - 2 }] 
+            : [0];
 
-        portsSb.AppendLine($"module {mod} (");
-        for (int i = 0; i < ins.Count; i++)
-            portsSb.AppendLine($"\t{ins[i]},");
-        portsSb.AppendLine($"\t{outDecl}");
-        portsSb.AppendLine(");");
+        int index = 0;
+        var outputConditions = new List<string>(logicGate.TruthTable.Definition.Length);
 
-        var clauses = new List<string>(def.Length);
-        int idx = 0;
-
-        var pinOrder = inputPins;
-        if (pinOrder.Count > 1)
-        {
-            pinOrder.RemoveRange(inputPins.Count - 2, 2);
-            pinOrder.AddRange([PinRole.A, PinRole.B]);
-        }
-
-        void Recurse(int depth, byte[] assign)
+        void AddOutputConditions(int depth, byte[] definition)
         {
             if (depth == arity)
             {
-                var q = def[idx++];
+                var conditions = new List<string>(arity);
+                for (var i = 0; i < arity; i++)
+                    conditions.Add($"({inputRoles[i]} == {RadixConverter.Convert(logicGate, definition[i])})");
 
-                var conds = new List<string>();
-                for (int d = 0; d < arity; d++)
-                {
-                    var r = pinOrder[d];
-                    var v = assign[d];
-                    conds.Add($"({r} == {RadixConverter.Convert(logicGate, v)})");
-                }
-                clauses.Add($"{string.Join(" && ", conds)}{(arity > 1 ? ")" : "")} ? {RadixConverter.Convert(logicGate, q)} :");
+                var outputValue = logicGate.TruthTable.Definition[index++];
+                if (isBinary)
+                    outputValue = (byte)(outputValue == 2 ? 1 : 0);
 
+                outputConditions.Add($"{string.Join(" && ", conditions)} ? {RadixConverter.Convert(logicGate, outputValue)} :");
                 return;
             }
 
-            for (byte v = 0; v < 3; v++)
+            for (byte value = 0; value < (isBinary ? 2 : 3); value++)
             {
-                assign[depth] = v;
-                Recurse(depth + 1, assign);
+                definition[pinOrder[depth]] = value;
+                AddOutputConditions(depth + 1, definition);
             }
         }
 
-        Recurse(0, new byte[arity]);
+        AddOutputConditions(0, new byte[arity]);
 
-        body.AppendLine($"\tassign Q = ");
-        foreach (var clause in clauses)
-            body.AppendLine($"\t\t{(arity > 1 ? "(" : "")}{clause}");
-        body.AppendLine($"\t\t{(logicGate.IsBinary() ? "1'b0" : "2'b01")};");
+        Builder.AppendLine($"\tassign Q = ");
+        foreach (var outputCondition in outputConditions)
+            Builder.AppendLine($"\t\t{(arity > 1 ? "(" : "")}{outputCondition}");
+        Builder.AppendLine($"\t\t{(isBinary ? "1'b0" : "2'b11")};");
 
-        body.AppendLine("endmodule");
-
-        return portsSb.ToString() + body.ToString();
+        Builder.AppendLine("endmodule");
+        return Builder.ToString();
     }
 
     private string EmitSubCircuitModule(SubCircuit subCircuit)
     {
-        var mod = CircuitModuleName(subCircuit);
-        var sb = new StringBuilder();
+        ClearState();
 
-        sb.AppendLine($"module {mod} (");
+        Builder.AppendLine($"module {GetSubCircuitModuleName(subCircuit)} (");
 
         for (int i = 0; i < subCircuit.Inputs.Count; i++)
-        {
-            var port = subCircuit.Inputs[i];
-            var decl = port.IsBinary() ? $"input {San(port.Title)}" : $"input [1:0] {San(port.Title)}";
-            sb.AppendLine($"\t{decl},");
-        }
+            Builder.AppendLine($"\tinput {(subCircuit.Inputs[i].IsBinary() ? "" : "[1:0] ")}{subCircuit.Inputs[i].Title},");
 
         for (int i = 0; i < subCircuit.Outputs.Count; i++)
-        {
-            var port = subCircuit.Outputs[i];
-            var decl = port.IsBinary() ? $"output {San(port.Title)}" : $"output [1:0] {San(port.Title)}";
-            sb.AppendLine(i == subCircuit.Outputs.Count - 1 ? $"\t{decl}" : $"\t{decl},");
-        }
+            Builder.AppendLine($"\toutput {(subCircuit.Outputs[i].IsBinary() ? "" : "[1:0] ")}{subCircuit.Outputs[i].Title},");
 
-        sb.AppendLine(");");
+        Builder.Remove(Builder.Length - 3, 1);
+        Builder.AppendLine(");");
 
-        int tnet = 0, bnet = 0;
-        var netOf = new Dictionary<Terminal, string>();
-
-        string NewNet(bool binary) => binary ? $"bnet_{bnet++}" : $"tnet_{tnet++}";
+        var moduleBodyBuilder = new StringBuilder();
 
         for (var index = 0; index < subCircuit.LogicGates.Count; index++)
         {
             var logicGate = subCircuit.LogicGates[index];
-            var instName = San($"{options.LogicGatesPrefix}{logicGate.TruthTable.HeptaIndex}_{index}");
-            var modName = LogicGateModuleName(logicGate);
+            var moduleName = GetLogicGateModuleName(logicGate);
+            var connections = new List<string>();
 
-            var conns = new List<string>();
-            foreach (var role in new[] { PinRole.D, PinRole.C, PinRole.A, PinRole.B })
-            {
-                var pin = logicGate.Pins.FirstOrDefault(p => p.Role == role);
-                if (pin is null) continue;
+            var pinQ = logicGate.Pins.FirstOrDefault(p => p.Role == PinRole.Q);
+            var net = CreateNet(pinQ.LogicGate.IsBinary());
+            TerminalNetMap[pinQ] = net;
 
-                var incoming = subCircuit.Wires.FirstOrDefault(w => w.EndTerminal == pin);
-                if (incoming == null)
-                {
-                    var tied = logicGate.IsBinary() ? "1'b0" : "2'b01";
-                    conns.Add($".{role}({tied})");
-                }
-                else
-                {
-                    var src = incoming.StartTerminal;
-                    var expr = TerminalExpr(src, ref netOf, NewNet);
-                    conns.Add($".{role}({expr})");
-                }
-            }
+            foreach (var pin in logicGate.InputPinsDescending)
+                CreateConnection(subCircuit.Wires, pin, moduleName, connections);
 
-            var qPin = logicGate.Pins.FirstOrDefault(p => p.Role == PinRole.Q);
-            var qNet = NewNet(logicGate.IsBinary());
-            netOf[qPin] = qNet;
-            conns.Add($".Q({qNet})");
+            connections.Add($".Q({net})");
 
-            sb.AppendLine($"\t{modName} {instName} (");
-            sb.AppendLine($"\t\t{string.Join($",\n\t\t", conns)}");
-            sb.AppendLine($"\t);");
-            sb.AppendLine();
+            CreateBody(moduleName, moduleBodyBuilder, connections);
         }
 
-        for (int index = 0; index < subCircuit.SubCircuits.Count; index++)
+        for (int i = 0; i < subCircuit.SubCircuits.Count; i++)
         {
-            var child = subCircuit.SubCircuits[index];
-            var childMod = CircuitModuleName(child);
-            var instName = San($"{childMod}_{index}");
+            var childSubCircuit = subCircuit.SubCircuits[i];
+            var moduleName = GetSubCircuitModuleName(childSubCircuit);
+            var connections = new List<string>();
 
-            var childConns = new List<string>();
+            foreach (var inputPort in childSubCircuit.Inputs)
+                CreateConnection(subCircuit.Wires, inputPort, moduleName, connections);
 
-            foreach (var port in child.Inputs)
+            foreach (var outputPort in childSubCircuit.Outputs)
             {
-                var w = subCircuit.Wires.FirstOrDefault(wr => wr.EndTerminal == port);
-                var expr = w != null ? TerminalExpr(w.StartTerminal, ref netOf, NewNet) : (port.IsBinary() ? "1'b0" : "2'b01");
-                childConns.Add($".{San(port.Title)}({expr})");
+                var net = CreateNet(outputPort.IsBinary());
+                TerminalNetMap[outputPort] = net;
+                connections.Add($".{outputPort.Title}({net})");
             }
 
-            foreach (var port in child.Outputs)
-            {
-                var net = NewNet(port.IsBinary());
-                netOf[port] = net;
-                childConns.Add($".{San(port.Title)}({net})");
-            }
-
-            sb.AppendLine($"\t{childMod} {instName} (");
-            sb.AppendLine($"\t\t{string.Join($",\n\t\t", childConns)}");
-            sb.AppendLine($"\t);");
-            sb.AppendLine();
+            CreateBody(moduleName, moduleBodyBuilder, connections);
         }
 
-        foreach (var pout in subCircuit.Outputs)
+        foreach (var net in Nets)
+            Builder.AppendLine($"\t{net}");
+
+        if (Nets.Count > 0)
+            Builder.AppendLine();
+
+        Builder.Append(moduleBodyBuilder);
+
+        foreach (var outputPort in subCircuit.Outputs)
         {
-            var w = subCircuit.Wires.FirstOrDefault(wr => wr.EndTerminal == pout);
-            if (w == null)
-            {
-                sb.AppendLine($"\t  assign {San(pout.Title)} = {(pout.IsBinary() ? "1'b0" : "2'b01")};");
-                continue;
-            }
-            var expr = TerminalExpr(w.StartTerminal, ref netOf, NewNet);
-            sb.AppendLine($"\tassign {San(pout.Title)} = {expr};");
+            var wire = subCircuit.Wires.FirstOrDefault(wire => wire.EndTerminal == outputPort) ?? 
+                throw new NullReferenceException($"Output port '{outputPort.Title}' is not driven by any wire.");
+
+            Builder.AppendLine($"\tassign {outputPort.Title} = {GetValue(wire.StartTerminal)};");
         }
 
-        sb.AppendLine("endmodule");
-        return sb.ToString();
-
-        string TerminalExpr(Terminal terminal, ref Dictionary<Terminal, string> map, Func<bool, string> newNet)
-        {
-            if (map.TryGetValue(terminal, out var existing)) return existing;
-
-            switch (terminal)
-            {
-                case Port port:
-                    return San(port.Title);
-
-                case Pin pin:
-                    //if (map.TryGetValue(pin, out var qn)) 
-                    //    return qn;
-                    //var qb = pin.IsBinary ? "1'b0" : "2'b01";
-                    //var qnet = newNet(pin.IsBinary);
-                    //map[pin] = qnet;
-                    //sb.AppendLine($"{indent}// WARN: Unmapped gate pin; tying: {qnet} = {qb}");
-                    //sb.AppendLine($"{indent}assign {qnet} = {qb};");
-                    //return qnet;
-
-                case PortPlacement portPlacement:
-                    var tnet = newNet(false);
-                    sb.AppendLine($"\t// WARN: PlacementPort leaked; tying: {tnet} = 2'b01");
-                    sb.AppendLine($"\tassign {tnet} = 2'b01;");
-                    return tnet;
-
-                default:
-                    var nn = newNet(false);
-                    sb.AppendLine($"\t// WARN: Unknown terminal; tying {nn} = 2'b01");
-                    sb.AppendLine($"\tassign {nn} = 2'b01;");
-                    return nn;
-            }
-        }
+        Builder.AppendLine("endmodule");
+        return Builder.ToString();
     }
 }
