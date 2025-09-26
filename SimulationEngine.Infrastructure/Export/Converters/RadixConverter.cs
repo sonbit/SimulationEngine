@@ -23,7 +23,7 @@ public static class RadixConverter
             '2' => "2'b10",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         },
-        _ => throw new ArgumentOutOfRangeException(port.Name, port.PortMetadata.Radix, null)
+        _ => throw new ArgumentOutOfRangeException(port.Title, port.PortMetadata.Radix, null)
     };
 
     public static string Convert(LogicGate logicGate, byte value) => logicGate.TruthTable.Metadata.Radix switch

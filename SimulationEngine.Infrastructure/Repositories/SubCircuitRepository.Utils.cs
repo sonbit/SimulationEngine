@@ -181,10 +181,10 @@ public partial class SubCircuitRepository
             await dbContext.SaveChangesAsync();
 
             for (int i = 0; i < childSubCircuit.Inputs.Count; i++)
-                dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Name });
+                dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Title });
 
             for (int i = 0; i < childSubCircuit.Outputs.Count; i++)
-                dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Name });
+                dbContext.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Title });
 
             await dbContext.SaveChangesAsync();
 

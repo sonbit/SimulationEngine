@@ -22,7 +22,7 @@ public static class SubCircuitHasher
 
         var ports = subCircuit.OrderedPorts;
         foreach (var port in ports)
-            BuildString(sb, [nameof(Port), port.Name, port.Title]);
+            BuildString(sb, [nameof(Port), port.Title]);
 
         var logicGates = subCircuit.LogicGates.OrderBy(logicGate => logicGate, LogicGateOrderComparer.Instance).ToList();
         foreach (var logicGate in logicGates)

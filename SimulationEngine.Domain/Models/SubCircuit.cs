@@ -1,17 +1,16 @@
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Domain.Models.Metadata;
-using System;
+using SimulationEngine.Domain.Utils;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace SimulationEngine.Domain.Models;
 
-public class SubCircuit : BaseEntity
+public class SubCircuit : BaseTitleEntity
 {
     public SubCircuit() => Title ??= GetType().Name.Trim('_');
 
-    public string Title { get; set; }
     public string Hash { get; set; }
 
     public List<LogicGate> LogicGates { get; set; } = [];

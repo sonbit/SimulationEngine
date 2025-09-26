@@ -60,7 +60,7 @@ public partial class SimulationSession
     private void SetInputByte(Port port, byte value)
     {
         if (value > 2)
-            throw new ArgumentOutOfRangeException(nameof(value), $"Invalid input value {value} for port {port.Name} in {SubCircuit.Title}");
+            throw new ArgumentOutOfRangeException(nameof(value), $"Invalid input value {value} for port {port.Title} in {SubCircuit.Title}");
 
         _deltaKernel.Set(_netOfTerminals[port], value);
     }

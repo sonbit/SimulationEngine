@@ -38,7 +38,7 @@ public partial class SimulationSession
     {
         var net = _netOfTerminals[port];
 
-        Console.WriteLine($"[explain] {port.Name}: {net}");
+        Console.WriteLine($"[explain] {port.Title}: {net}");
 
         if (net.Driver is null)
         {
@@ -50,7 +50,7 @@ public partial class SimulationSession
 
         if (net.Driver is TruthTableProcess gateProcess)
         {
-            Console.WriteLine($"[diag] {port.Name}: driven by {gateProcess.Name}");
+            Console.WriteLine($"[diag] {port.Title}: driven by {gateProcess.Name}");
 
             var a = gateProcess._a?.CurrentValue ?? 0;
             var b = gateProcess._b?.CurrentValue ?? 0;

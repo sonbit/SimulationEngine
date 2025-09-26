@@ -12,7 +12,7 @@ public static class TerminalEncoder
 
     public static string Encode(Terminal terminal) => terminal switch
     {
-        Port port => $"{TopPort}{Separator}{port.Name}",
+        Port port => $"{TopPort}{Separator}{port.Title}",
         Pin pin => $"{LogicGatePin}{Separator}{pin.Role}",
         PortPlacement portPlacement => $"{nameof(PortPlacement)}{Separator}{portPlacement.IsInput}{Separator}{portPlacement.IndexWithinChild}",
         _ => throw new NotSupportedException("Unknwon terminal type")

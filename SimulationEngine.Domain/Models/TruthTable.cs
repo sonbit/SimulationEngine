@@ -6,14 +6,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SimulationEngine.Domain.Models;
 
-public class TruthTable : BaseEntity
+public class TruthTable : BaseTitleEntity
 {
     public TruthTable () { }
 
     public TruthTable (Radix radix) => Metadata = new TruthTableMetadata(radix);
 
     public string HeptaIndex { get; set; }
-    public string Title { get; set; }
 
     public List<LogicGate> LogicGates { get; set; } = [];
     public TruthTableMetadata Metadata { get; set; } = new TruthTableMetadata();
