@@ -2,87 +2,88 @@
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SimulationEngine.Infrastructure.Export.Emitters;
 
-public class Basys3Emitter : IXdcEmitter
+public partial class Basys3Emitter : IBasys3Emitter
 {
-    private static readonly string[] LedPins = ["U16", "E19", "U19", "V19", "W18", "U15", "U14", "V14", "V13", "V3", "W3", "U3", "P3", "N3", "P1", "L1"];
-    private static readonly string[] SwitchPins = ["V17", "V16", "W16", "W17", "W15", "V15", "W14", "W13", "V2", "T3", "T2", "R3", "W2", "U1", "T1", "R2"];
-    
-    private static readonly string[] AnPins = ["U2", "U4", "V4", "W4"];
-    private const string DpPin = "V7";
-    private static readonly string[] SegPins = ["W7", "W6", "U8", "V8", "U5", "V5", "U7"];
-    
-    public string EmitSubCircuit(SubCircuit subCircuit)
+    private readonly StringBuilder Builder = new(64 * 1024);
+
+    public string EmitTopModule(SubCircuit subCircuit, bool include7SegmentDisplay = false)
     {
-        int switchIndex = 0;
+        (var inputBits, var outputBits) = ValidateAndReturnBits(subCircuit);
+
+        Builder.Clear();
+
+        Builder.AppendLine("`timescale 1ns/1ps");
+        Builder.AppendLine();
+
+        Builder.AppendLine($"module top_{VerilogUtils.GetSubCircuitModuleName(subCircuit)} (");
+        if (include7SegmentDisplay)
+            Builder.AppendLine("\tinput clk,");
+        Builder.AppendLine($"\tinput [{inputBits - 1}:0] sw,");
+        Builder.AppendLine($"\toutput [{outputBits - 1}:0] led,");
+
+        if (include7SegmentDisplay)
+        {
+            Builder.AppendLine("\toutput [6:0] seg,");
+            Builder.AppendLine("\toutput dp,");
+            Builder.AppendLine("\toutput [3:0] an,");
+        }
+
+        Builder.Remove(Builder.Length - 3, 1);
+        Builder.AppendLine(");");
+
+        foreach (var output in subCircuit.Outputs)
+            Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndTitle(output)};");
+        Builder.AppendLine();
+
+        var moduleName = VerilogUtils.GetSubCircuitModuleName(subCircuit);
+        Builder.AppendLine($"\t{moduleName} {moduleName} (");
+
+        var connections = new List<string>();
+        var switchIndex = 0;
+
+        foreach (var inputPort in subCircuit.Inputs)
+        {
+            connections.Add($"\t\t.{inputPort.Title}(sw[{(inputPort.IsBinary() ? "" : $"{switchIndex + 1}:")}{switchIndex}])");
+            switchIndex += inputPort.IsBinary() ? 1 : 2;
+        }
+
+        foreach (var outputPort in subCircuit.Outputs)
+            connections.Add($"\t\t.{outputPort.Title}({outputPort.Title})");
+
+        Builder.AppendLine(string.Join(",\n", connections));
+        Builder.AppendLine("\t);");
+        Builder.AppendLine();
+
+        if (include7SegmentDisplay)
+            Add7SegmentDisplayModule(subCircuit.Outputs);
+
         var ledIndex = 0;
-
-        var builder = new StringBuilder();
-
-        builder.AppendLine("## 100 MHz clock (Basys3)");
-        builder.AppendLine("set_property -dict { PACKAGE_PIN W5 IOSTANDARD LVCMOS33 } [get_ports clk100]");
-        builder.AppendLine("create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk100]");
-
-        builder.AppendLine("## Switches");
-        foreach (var port in subCircuit.Inputs)
+        foreach (var output in subCircuit.Outputs)
         {
-            if (port.IsBinary())
-            {
-                EnsureRemainingBoardPins(switchIndex < SwitchPins.Length);
-                builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {SwitchPins[switchIndex]} IOSTANDARD LVCMOS33 }} [get_ports {{{port.Title}}}]");
-                switchIndex += 1;
-            }
-            else
-            {
-                EnsureRemainingBoardPins(switchIndex + 1 < SwitchPins.Length);
-                builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {SwitchPins[switchIndex]} IOSTANDARD LVCMOS33 }} [get_ports {{{port.Title}[0]}}]");
-                builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {SwitchPins[switchIndex + 1]} IOSTANDARD LVCMOS33 }} [get_ports {{{port.Title}[1]}}]");
-                switchIndex += 2;
-            }
+            Builder.AppendLine($"\tassign led[{(output.IsBinary() ? "" : $"{ledIndex + 1}:")}{ledIndex}] = {output.Title};");
+            ledIndex += output.IsBinary() ? 1 : 2;
         }
 
-        builder.AppendLine();
-        builder.AppendLine("## LEDs");
-        foreach (var port in subCircuit.Outputs)
-        {
-            if (port.IsBinary())
-            {
-                EnsureRemainingBoardPins(ledIndex < LedPins.Length);
-                builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {LedPins[ledIndex]} IOSTANDARD LVCMOS33 }} [get_ports {{{port.Title}}}]");
-                ledIndex += 1;
-            }
-            else
-            {
-                EnsureRemainingBoardPins(ledIndex + 1 < LedPins.Length);
-                builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {LedPins[ledIndex]} IOSTANDARD LVCMOS33 }} [get_ports {{{port.Title}[0]}}]");
-                builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {LedPins[ledIndex + 1]} IOSTANDARD LVCMOS33 }} [get_ports {{{port.Title}[1]}}]");
-                ledIndex += 2;
-            }
-        }
-
-        builder.AppendLine();
-        builder.AppendLine("## Configuration options, can be used for all designs");
-        builder.AppendLine("set_property CONFIG_VOLTAGE 3.3 [current_design]");
-        builder.AppendLine("set_property CFGBVS VCCO [current_design]");
-
-        builder.AppendLine();
-        builder.AppendLine("## SPI configuration mode options for QSPI boot, can be used for all designs");
-        builder.AppendLine("set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]");
-        builder.AppendLine("set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]");
-        builder.AppendLine("set_property CONFIG_MODE SPIx4 [current_design]");
-        
-        builder.AppendLine();
-        builder.Append("## Reference https://github.com/Digilent/digilent-xdc/blob/master/Basys-3-Master.xdc");
-
-        return builder.ToString();
+        Builder.AppendLine("endmodule");
+        return Builder.ToString();
     }
 
-    private static void EnsureRemainingBoardPins(bool condition)
+    private static (int inputBits, int outputBits) ValidateAndReturnBits(SubCircuit subCircuit)
     {
-        if (!condition) 
-            throw new InvalidOperationException("Not enough board pins for this mapping.");
+        var inputBits = subCircuit.Inputs.Sum(port => port.IsBinary() ? 1 : 2);
+        var outputBits = subCircuit.Outputs.Sum(port => port.IsBinary() ? 1 : 2);
+
+        if (inputBits > 16)
+            throw new InvalidOperationException($"This design needs {inputBits} switch bits (Basys3 has 16)");
+        if (outputBits > 16)
+            throw new InvalidOperationException($"This design drives {outputBits} LED bits (Basys3 has 16)");
+
+        return (inputBits, outputBits);
     }
 }

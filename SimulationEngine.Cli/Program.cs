@@ -45,10 +45,9 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<ISubCircuitService, SubCircuitService>();
         services.AddScoped<ITruthTableService, TruthTableService>();
 
-        services.AddScoped<ExportOptions>();
         services.AddScoped<IVerilogEmitter, VerilogEmitter>();
         services.AddScoped<IVerilogTestbenchEmitter, VerilogTestbenchEmitter>();
-        services.AddScoped<IXdcEmitter, Basys3Emitter>();
+        services.AddScoped<IBasys3Emitter, Basys3Emitter>();
 
         services.AddSingleton(sp => AnsiConsole.Console);
         services.AddSingleton<IPrompter, Prompter>();

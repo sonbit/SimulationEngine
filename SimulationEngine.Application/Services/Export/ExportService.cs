@@ -5,7 +5,7 @@ using SimulationEngine.Domain.Models;
 
 namespace SimulationEngine.Application.Services.Export;
 
-public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbEmitter, IXdcEmitter xdcEmitter) : IExportService
+public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbEmitter, IBasys3Emitter xdcEmitter) : IExportService
 {
     public FileInfo ExportAllVerilog(SubCircuit subCircuit, bool includeTestbench = false)
     {
