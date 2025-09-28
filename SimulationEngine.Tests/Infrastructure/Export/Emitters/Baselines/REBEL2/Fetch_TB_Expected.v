@@ -1,0 +1,3171 @@
+module tb_c_Fetch;
+	reg [1:0] LdEn;
+	reg [1:0] LdAddr1;
+	reg [1:0] LdAddr0;
+	reg [1:0] WrAddr1;
+	reg [1:0] WrAddr0;
+	reg [1:0] WrData9;
+	reg [1:0] WrData8;
+	reg [1:0] WrData7;
+	reg [1:0] WrData6;
+	reg [1:0] WrData5;
+	reg [1:0] WrData4;
+	reg [1:0] WrData3;
+	reg [1:0] WrData2;
+	reg [1:0] WrData1;
+	reg [1:0] WrData0;
+	reg Clk;
+	reg WrClk;
+	wire [1:0] Pc1;
+	wire [1:0] Pc0;
+	wire [1:0] Op1;
+	wire [1:0] Op0;
+	wire [1:0] Rs11;
+	wire [1:0] Rs10;
+	wire [1:0] Rs01;
+	wire [1:0] Rs00;
+	wire [1:0] Rd11;
+	wire [1:0] Rd10;
+	wire [1:0] Rd01;
+	wire [1:0] Rd00;
+
+	c_Fetch dut (
+		.LdEn(LdEn),
+		.LdAddr1(LdAddr1),
+		.LdAddr0(LdAddr0),
+		.WrAddr1(WrAddr1),
+		.WrAddr0(WrAddr0),
+		.WrData9(WrData9),
+		.WrData8(WrData8),
+		.WrData7(WrData7),
+		.WrData6(WrData6),
+		.WrData5(WrData5),
+		.WrData4(WrData4),
+		.WrData3(WrData3),
+		.WrData2(WrData2),
+		.WrData1(WrData1),
+		.WrData0(WrData0),
+		.Clk(Clk),
+		.WrClk(WrClk),
+		.Pc1(Pc1),
+		.Pc0(Pc0),
+		.Op1(Op1),
+		.Op0(Op0),
+		.Rs11(Rs11),
+		.Rs10(Rs10),
+		.Rs01(Rs01),
+		.Rs00(Rs00),
+		.Rd11(Rd11),
+		.Rd10(Rd10),
+		.Rd01(Rd01),
+		.Rd00(Rd00)
+	);
+
+integer i;
+	initial begin
+		$display("Running 100 vectors...");
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 0: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 0: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 0: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 0: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 0: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 0: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 0: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 0: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 0: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 0: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 0: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 0: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 1: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 1: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 1: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 1: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 1: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 1: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 1: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 1: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 1: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 1: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 1: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 1: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b01;
+		WrData8 = 2'b11;
+		WrData7 = 2'b01;
+		WrData6 = 2'b11;
+		WrData5 = 2'b01;
+		WrData4 = 2'b11;
+		WrData3 = 2'b01;
+		WrData2 = 2'b11;
+		WrData1 = 2'b01;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 2: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 2: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 2: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 2: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 2: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 2: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 2: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 2: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 2: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 2: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 2: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 2: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b01;
+		WrData8 = 2'b11;
+		WrData7 = 2'b01;
+		WrData6 = 2'b11;
+		WrData5 = 2'b01;
+		WrData4 = 2'b11;
+		WrData3 = 2'b01;
+		WrData2 = 2'b11;
+		WrData1 = 2'b01;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 3: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 3: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 3: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 3: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 3: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 3: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 3: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 3: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 3: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 3: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 3: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 3: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b01;
+		WrData8 = 2'b10;
+		WrData7 = 2'b01;
+		WrData6 = 2'b10;
+		WrData5 = 2'b01;
+		WrData4 = 2'b10;
+		WrData3 = 2'b01;
+		WrData2 = 2'b10;
+		WrData1 = 2'b01;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 4: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 4: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 4: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 4: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 4: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 4: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 4: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 4: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 4: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 4: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 4: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 4: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b01;
+		WrData8 = 2'b10;
+		WrData7 = 2'b01;
+		WrData6 = 2'b10;
+		WrData5 = 2'b01;
+		WrData4 = 2'b10;
+		WrData3 = 2'b01;
+		WrData2 = 2'b10;
+		WrData1 = 2'b01;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 5: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 5: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 5: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 5: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 5: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 5: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 5: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 5: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 5: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 5: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 5: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 5: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b11;
+		WrData8 = 2'b01;
+		WrData7 = 2'b11;
+		WrData6 = 2'b01;
+		WrData5 = 2'b11;
+		WrData4 = 2'b01;
+		WrData3 = 2'b11;
+		WrData2 = 2'b01;
+		WrData1 = 2'b11;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 6: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 6: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 6: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 6: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 6: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 6: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 6: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 6: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 6: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 6: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 6: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 6: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b11;
+		WrData8 = 2'b01;
+		WrData7 = 2'b11;
+		WrData6 = 2'b01;
+		WrData5 = 2'b11;
+		WrData4 = 2'b01;
+		WrData3 = 2'b11;
+		WrData2 = 2'b01;
+		WrData1 = 2'b11;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 7: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 7: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 7: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 7: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 7: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 7: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 7: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 7: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 7: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 7: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 7: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 7: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b11;
+		WrData8 = 2'b11;
+		WrData7 = 2'b11;
+		WrData6 = 2'b11;
+		WrData5 = 2'b11;
+		WrData4 = 2'b11;
+		WrData3 = 2'b11;
+		WrData2 = 2'b11;
+		WrData1 = 2'b11;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 8: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 8: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 8: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 8: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 8: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 8: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 8: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 8: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 8: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 8: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 8: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 8: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b11;
+		WrData8 = 2'b11;
+		WrData7 = 2'b11;
+		WrData6 = 2'b11;
+		WrData5 = 2'b11;
+		WrData4 = 2'b11;
+		WrData3 = 2'b11;
+		WrData2 = 2'b11;
+		WrData1 = 2'b11;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 9: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 9: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 9: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 9: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 9: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 9: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 9: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 9: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 9: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 9: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 9: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 9: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b11;
+		WrData8 = 2'b10;
+		WrData7 = 2'b11;
+		WrData6 = 2'b10;
+		WrData5 = 2'b11;
+		WrData4 = 2'b10;
+		WrData3 = 2'b11;
+		WrData2 = 2'b10;
+		WrData1 = 2'b11;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 10: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 10: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 10: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 10: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 10: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 10: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 10: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 10: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 10: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 10: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 10: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 10: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b11;
+		WrData8 = 2'b10;
+		WrData7 = 2'b11;
+		WrData6 = 2'b10;
+		WrData5 = 2'b11;
+		WrData4 = 2'b10;
+		WrData3 = 2'b11;
+		WrData2 = 2'b10;
+		WrData1 = 2'b11;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 11: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 11: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 11: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 11: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 11: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 11: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 11: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 11: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 11: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 11: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 11: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 11: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b10;
+		WrData8 = 2'b01;
+		WrData7 = 2'b10;
+		WrData6 = 2'b01;
+		WrData5 = 2'b10;
+		WrData4 = 2'b01;
+		WrData3 = 2'b10;
+		WrData2 = 2'b01;
+		WrData1 = 2'b10;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 12: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 12: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 12: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 12: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 12: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 12: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 12: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 12: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 12: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 12: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 12: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 12: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b10;
+		WrData8 = 2'b01;
+		WrData7 = 2'b10;
+		WrData6 = 2'b01;
+		WrData5 = 2'b10;
+		WrData4 = 2'b01;
+		WrData3 = 2'b10;
+		WrData2 = 2'b01;
+		WrData1 = 2'b10;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 13: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 13: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 13: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 13: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 13: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 13: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 13: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 13: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 13: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 13: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 13: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 13: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b10;
+		WrData8 = 2'b11;
+		WrData7 = 2'b10;
+		WrData6 = 2'b11;
+		WrData5 = 2'b10;
+		WrData4 = 2'b11;
+		WrData3 = 2'b10;
+		WrData2 = 2'b11;
+		WrData1 = 2'b10;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 14: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 14: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 14: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 14: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 14: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 14: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 14: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 14: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 14: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 14: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 14: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 14: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b10;
+		WrData8 = 2'b11;
+		WrData7 = 2'b10;
+		WrData6 = 2'b11;
+		WrData5 = 2'b10;
+		WrData4 = 2'b11;
+		WrData3 = 2'b10;
+		WrData2 = 2'b11;
+		WrData1 = 2'b10;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 15: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 15: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 15: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 15: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 15: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 15: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 15: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 15: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 15: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 15: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 15: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 15: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b10;
+		WrData8 = 2'b10;
+		WrData7 = 2'b10;
+		WrData6 = 2'b10;
+		WrData5 = 2'b10;
+		WrData4 = 2'b10;
+		WrData3 = 2'b10;
+		WrData2 = 2'b10;
+		WrData1 = 2'b10;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 16: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 16: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 16: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 16: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 16: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 16: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 16: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 16: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 16: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 16: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 16: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 16: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b10;
+		WrData8 = 2'b10;
+		WrData7 = 2'b10;
+		WrData6 = 2'b10;
+		WrData5 = 2'b10;
+		WrData4 = 2'b10;
+		WrData3 = 2'b10;
+		WrData2 = 2'b10;
+		WrData1 = 2'b10;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 17: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 17: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 17: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 17: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 17: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 17: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 17: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 17: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 17: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 17: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 17: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 17: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 18: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 18: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 18: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 18: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 18: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 18: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 18: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 18: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 18: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 18: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 18: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 18: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 19: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 19: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 19: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 19: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 19: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 19: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 19: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 19: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 19: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 19: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 19: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 19: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 20: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 20: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 20: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 20: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 20: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 20: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 20: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 20: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 20: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 20: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 20: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 20: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 21: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 21: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 21: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 21: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 21: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 21: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 21: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 21: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 21: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 21: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 21: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 21: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 22: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 22: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 22: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 22: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 22: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 22: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 22: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 22: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 22: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 22: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 22: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 22: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 23: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 23: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 23: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 23: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 23: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 23: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 23: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 23: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 23: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 23: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 23: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 23: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 24: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 24: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 24: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 24: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 24: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 24: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 24: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 24: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 24: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 24: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 24: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 24: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 25: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 25: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 25: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 25: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 25: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 25: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 25: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 25: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 25: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 25: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 25: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 25: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 26: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 26: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 26: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 26: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 26: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 26: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 26: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 26: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 26: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 26: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 26: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 26: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 27: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 27: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 27: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 27: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 27: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 27: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 27: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 27: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 27: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 27: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 27: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 27: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 28: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 28: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 28: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 28: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 28: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 28: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 28: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 28: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 28: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 28: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 28: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 28: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 29: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 29: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 29: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 29: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 29: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 29: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 29: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 29: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 29: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 29: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 29: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 29: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 30: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 30: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 30: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 30: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 30: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 30: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 30: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 30: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 30: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 30: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 30: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 30: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 31: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 31: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 31: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 31: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 31: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 31: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 31: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 31: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 31: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 31: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 31: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 31: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 32: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 32: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 32: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 32: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 32: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 32: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 32: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 32: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 32: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 32: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 32: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 32: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 33: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 33: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 33: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 33: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 33: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 33: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 33: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 33: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 33: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 33: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 33: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 33: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 34: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 34: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 34: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 34: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 34: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 34: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 34: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 34: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 34: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 34: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 34: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 34: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 35: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 35: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 35: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 35: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 35: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 35: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 35: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 35: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 35: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 35: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 35: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 35: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 36: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 36: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 36: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 36: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 36: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 36: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 36: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 36: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 36: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 36: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 36: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 36: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 37: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 37: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 37: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 37: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 37: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 37: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 37: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 37: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 37: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 37: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 37: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 37: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 38: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 38: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 38: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 38: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 38: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 38: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 38: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 38: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 38: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 38: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 38: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 38: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b01;
+		WrData8 = 2'b11;
+		WrData7 = 2'b01;
+		WrData6 = 2'b11;
+		WrData5 = 2'b01;
+		WrData4 = 2'b11;
+		WrData3 = 2'b01;
+		WrData2 = 2'b11;
+		WrData1 = 2'b01;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 39: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 39: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 39: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 39: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 39: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 39: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 39: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 39: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 39: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 39: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 39: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 39: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b01;
+		WrData8 = 2'b11;
+		WrData7 = 2'b01;
+		WrData6 = 2'b11;
+		WrData5 = 2'b01;
+		WrData4 = 2'b11;
+		WrData3 = 2'b01;
+		WrData2 = 2'b11;
+		WrData1 = 2'b01;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 40: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 40: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 40: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 40: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 40: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 40: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 40: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 40: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 40: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 40: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 40: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 40: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b01;
+		WrData8 = 2'b10;
+		WrData7 = 2'b01;
+		WrData6 = 2'b10;
+		WrData5 = 2'b01;
+		WrData4 = 2'b10;
+		WrData3 = 2'b01;
+		WrData2 = 2'b10;
+		WrData1 = 2'b01;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 41: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 41: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 41: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 41: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 41: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 41: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 41: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 41: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 41: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 41: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 41: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 41: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b01;
+		WrData8 = 2'b10;
+		WrData7 = 2'b01;
+		WrData6 = 2'b10;
+		WrData5 = 2'b01;
+		WrData4 = 2'b10;
+		WrData3 = 2'b01;
+		WrData2 = 2'b10;
+		WrData1 = 2'b01;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 42: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 42: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 42: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 42: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 42: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 42: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 42: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 42: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 42: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 42: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 42: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 42: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b11;
+		WrData8 = 2'b01;
+		WrData7 = 2'b11;
+		WrData6 = 2'b01;
+		WrData5 = 2'b11;
+		WrData4 = 2'b01;
+		WrData3 = 2'b11;
+		WrData2 = 2'b01;
+		WrData1 = 2'b11;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 43: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 43: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 43: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 43: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 43: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 43: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 43: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 43: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 43: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 43: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 43: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 43: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b11;
+		WrData8 = 2'b01;
+		WrData7 = 2'b11;
+		WrData6 = 2'b01;
+		WrData5 = 2'b11;
+		WrData4 = 2'b01;
+		WrData3 = 2'b11;
+		WrData2 = 2'b01;
+		WrData1 = 2'b11;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 44: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 44: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 44: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 44: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 44: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 44: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 44: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 44: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 44: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 44: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 44: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 44: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b11;
+		WrData8 = 2'b11;
+		WrData7 = 2'b11;
+		WrData6 = 2'b11;
+		WrData5 = 2'b11;
+		WrData4 = 2'b11;
+		WrData3 = 2'b11;
+		WrData2 = 2'b11;
+		WrData1 = 2'b11;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 45: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 45: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 45: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 45: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 45: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 45: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 45: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 45: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 45: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 45: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 45: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 45: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b11;
+		WrData8 = 2'b11;
+		WrData7 = 2'b11;
+		WrData6 = 2'b11;
+		WrData5 = 2'b11;
+		WrData4 = 2'b11;
+		WrData3 = 2'b11;
+		WrData2 = 2'b11;
+		WrData1 = 2'b11;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 46: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 46: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 46: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 46: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 46: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 46: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 46: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 46: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 46: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 46: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 46: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 46: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b11;
+		WrData8 = 2'b10;
+		WrData7 = 2'b11;
+		WrData6 = 2'b10;
+		WrData5 = 2'b11;
+		WrData4 = 2'b10;
+		WrData3 = 2'b11;
+		WrData2 = 2'b10;
+		WrData1 = 2'b11;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 47: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 47: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 47: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 47: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 47: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 47: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 47: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 47: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 47: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 47: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 47: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 47: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b11;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b11;
+		WrData8 = 2'b10;
+		WrData7 = 2'b11;
+		WrData6 = 2'b10;
+		WrData5 = 2'b11;
+		WrData4 = 2'b10;
+		WrData3 = 2'b11;
+		WrData2 = 2'b10;
+		WrData1 = 2'b11;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 48: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 48: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 48: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 48: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 48: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 48: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 48: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 48: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 48: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 48: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 48: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 48: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b10;
+		WrData8 = 2'b01;
+		WrData7 = 2'b10;
+		WrData6 = 2'b01;
+		WrData5 = 2'b10;
+		WrData4 = 2'b01;
+		WrData3 = 2'b10;
+		WrData2 = 2'b01;
+		WrData1 = 2'b10;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 49: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 49: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 49: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 49: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 49: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 49: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 49: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 49: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 49: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 49: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 49: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 49: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b10;
+		WrData8 = 2'b01;
+		WrData7 = 2'b10;
+		WrData6 = 2'b01;
+		WrData5 = 2'b10;
+		WrData4 = 2'b01;
+		WrData3 = 2'b10;
+		WrData2 = 2'b01;
+		WrData1 = 2'b10;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 50: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 50: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 50: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 50: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 50: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 50: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 50: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 50: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 50: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 50: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 50: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 50: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b10;
+		WrData8 = 2'b11;
+		WrData7 = 2'b10;
+		WrData6 = 2'b11;
+		WrData5 = 2'b10;
+		WrData4 = 2'b11;
+		WrData3 = 2'b10;
+		WrData2 = 2'b11;
+		WrData1 = 2'b10;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 51: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 51: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 51: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 51: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 51: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 51: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 51: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 51: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 51: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 51: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 51: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 51: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b11;
+		WrData9 = 2'b10;
+		WrData8 = 2'b11;
+		WrData7 = 2'b10;
+		WrData6 = 2'b11;
+		WrData5 = 2'b10;
+		WrData4 = 2'b11;
+		WrData3 = 2'b10;
+		WrData2 = 2'b11;
+		WrData1 = 2'b10;
+		WrData0 = 2'b11;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 52: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 52: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 52: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 52: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 52: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 52: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 52: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 52: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 52: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 52: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 52: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 52: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b10;
+		WrData8 = 2'b10;
+		WrData7 = 2'b10;
+		WrData6 = 2'b10;
+		WrData5 = 2'b10;
+		WrData4 = 2'b10;
+		WrData3 = 2'b10;
+		WrData2 = 2'b10;
+		WrData1 = 2'b10;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 53: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 53: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 53: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 53: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 53: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 53: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 53: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 53: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 53: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 53: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 53: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 53: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b10;
+		WrAddr0 = 2'b10;
+		WrData9 = 2'b10;
+		WrData8 = 2'b10;
+		WrData7 = 2'b10;
+		WrData6 = 2'b10;
+		WrData5 = 2'b10;
+		WrData4 = 2'b10;
+		WrData3 = 2'b10;
+		WrData2 = 2'b10;
+		WrData1 = 2'b10;
+		WrData0 = 2'b10;
+		Clk = 1'b0;
+		WrClk = 1'b1;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 54: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 54: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 54: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 54: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 54: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 54: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 54: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 54: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 54: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 54: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 54: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 54: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 55: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 55: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 55: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 55: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 55: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 55: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 55: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 55: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 55: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 55: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 55: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 55: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 56: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 56: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 56: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 56: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 56: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 56: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 56: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 56: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 56: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 56: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 56: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 56: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 57: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 57: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 57: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 57: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 57: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 57: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 57: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 57: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 57: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 57: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 57: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 57: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 58: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 58: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 58: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 58: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 58: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 58: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 58: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 58: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 58: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 58: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 58: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 58: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 59: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 59: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 59: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 59: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 59: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 59: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 59: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 59: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 59: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 59: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 59: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 59: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 60: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 60: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 60: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 60: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 60: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 60: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 60: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 60: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 60: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 60: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 60: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 60: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 61: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 61: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 61: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 61: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 61: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 61: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 61: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 61: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 61: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 61: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 61: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 61: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 62: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 62: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 62: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 62: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 62: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 62: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 62: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 62: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 62: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 62: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 62: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 62: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 63: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 63: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 63: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 63: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 63: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 63: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 63: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 63: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 63: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 63: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 63: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 63: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 64: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 64: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 64: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 64: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 64: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 64: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 64: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 64: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 64: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 64: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 64: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 64: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 65: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 65: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 65: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 65: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 65: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 65: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 65: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 65: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 65: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 65: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 65: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 65: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 66: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 66: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 66: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 66: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 66: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 66: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 66: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 66: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 66: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 66: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 66: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 66: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 67: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 67: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 67: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 67: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 67: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 67: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 67: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 67: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 67: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 67: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 67: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 67: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 68: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 68: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 68: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 68: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 68: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 68: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 68: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 68: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 68: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 68: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 68: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 68: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 69: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 69: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 69: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 69: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 69: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 69: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 69: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 69: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 69: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 69: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 69: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 69: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 70: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 70: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 70: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 70: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 70: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 70: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 70: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 70: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 70: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 70: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 70: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 70: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 71: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 71: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 71: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 71: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 71: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 71: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 71: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 71: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 71: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 71: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 71: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 71: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 72: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 72: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 72: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 72: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 72: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 72: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 72: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 72: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 72: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 72: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 72: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 72: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 73: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 73: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 73: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 73: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 73: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 73: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 73: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 73: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 73: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 73: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 73: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 73: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 74: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 74: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 74: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 74: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 74: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 74: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 74: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 74: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 74: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 74: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 74: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 74: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 75: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 75: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 75: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 75: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 75: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 75: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 75: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 75: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 75: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 75: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 75: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 75: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 76: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 76: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 76: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 76: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 76: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 76: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 76: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 76: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 76: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 76: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 76: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 76: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 77: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 77: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 77: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 77: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 77: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 77: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 77: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 77: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 77: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 77: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 77: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 77: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 78: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 78: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 78: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 78: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 78: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 78: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 78: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 78: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 78: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 78: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 78: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 78: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 79: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 79: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 79: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 79: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 79: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 79: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 79: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 79: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 79: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 79: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 79: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 79: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 80: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 80: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 80: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 80: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 80: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 80: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 80: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 80: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 80: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 80: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 80: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 80: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 81: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 81: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 81: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 81: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 81: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 81: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 81: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 81: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 81: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 81: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 81: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 81: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 82: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 82: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 82: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 82: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 82: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 82: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 82: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 82: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 82: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 82: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 82: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 82: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 83: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 83: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 83: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 83: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 83: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 83: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 83: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 83: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 83: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 83: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 83: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 83: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 84: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 84: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 84: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 84: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 84: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 84: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 84: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 84: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 84: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 84: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 84: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 84: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 85: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 85: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 85: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 85: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 85: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 85: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 85: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 85: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 85: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 85: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 85: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 85: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b11) begin $display("FAIL vec 86: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 86: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b11) begin $display("FAIL vec 86: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 86: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b11) begin $display("FAIL vec 86: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 86: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b11) begin $display("FAIL vec 86: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 86: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b11) begin $display("FAIL vec 86: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 86: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b11) begin $display("FAIL vec 86: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 86: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 87: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 87: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 87: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 87: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 87: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 87: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 87: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 87: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 87: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 87: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 87: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 87: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 88: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 88: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 88: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 88: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 88: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 88: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 88: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 88: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 88: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 88: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 88: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 88: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 89: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 89: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 89: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 89: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 89: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 89: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 89: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 89: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 89: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 89: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 89: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 89: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 90: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 90: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 90: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 90: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 90: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 90: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 90: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 90: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 90: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 90: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 90: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 90: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 91: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 91: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 91: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 91: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 91: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 91: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 91: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 91: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 91: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 91: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 91: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 91: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b10;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 92: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 92: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 92: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 92: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 92: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 92: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 92: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 92: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 92: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 92: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 92: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 92: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b01;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b10) begin $display("FAIL vec 93: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 93: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 93: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 93: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 93: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 93: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 93: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 93: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 93: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 93: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 93: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 93: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 94: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 94: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 94: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 94: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 94: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 94: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 94: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 94: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 94: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 94: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 94: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 94: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 95: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b01) begin $display("FAIL vec 95: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 95: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b01) begin $display("FAIL vec 95: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 95: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b01) begin $display("FAIL vec 95: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 95: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b01) begin $display("FAIL vec 95: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 95: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b01) begin $display("FAIL vec 95: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 95: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b01) begin $display("FAIL vec 95: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b11;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 96: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 96: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 96: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 96: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 96: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 96: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 96: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 96: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 96: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 96: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 96: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 96: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 97: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b11) begin $display("FAIL vec 97: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b01) begin $display("FAIL vec 97: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b11) begin $display("FAIL vec 97: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b01) begin $display("FAIL vec 97: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b11) begin $display("FAIL vec 97: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b01) begin $display("FAIL vec 97: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b11) begin $display("FAIL vec 97: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b01) begin $display("FAIL vec 97: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b11) begin $display("FAIL vec 97: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b01) begin $display("FAIL vec 97: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b11) begin $display("FAIL vec 97: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b01;
+		LdAddr0 = 2'b10;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b1;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 98: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 98: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 98: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 98: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 98: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 98: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 98: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 98: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 98: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 98: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 98: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 98: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		LdEn = 2'b10;
+		LdAddr1 = 2'b11;
+		LdAddr0 = 2'b01;
+		WrAddr1 = 2'b01;
+		WrAddr0 = 2'b01;
+		WrData9 = 2'b01;
+		WrData8 = 2'b01;
+		WrData7 = 2'b01;
+		WrData6 = 2'b01;
+		WrData5 = 2'b01;
+		WrData4 = 2'b01;
+		WrData3 = 2'b01;
+		WrData2 = 2'b01;
+		WrData1 = 2'b01;
+		WrData0 = 2'b01;
+		Clk = 1'b0;
+		WrClk = 1'b0;
+		#1;
+		if (Pc1 !== 2'b01) begin $display("FAIL vec 99: Pc1 (got %b at %0d)", Pc1, $time); $stop; end
+		if (Pc0 !== 2'b10) begin $display("FAIL vec 99: Pc0 (got %b at %0d)", Pc0, $time); $stop; end
+		if (Op1 !== 2'b10) begin $display("FAIL vec 99: Op1 (got %b at %0d)", Op1, $time); $stop; end
+		if (Op0 !== 2'b10) begin $display("FAIL vec 99: Op0 (got %b at %0d)", Op0, $time); $stop; end
+		if (Rs11 !== 2'b10) begin $display("FAIL vec 99: Rs11 (got %b at %0d)", Rs11, $time); $stop; end
+		if (Rs10 !== 2'b10) begin $display("FAIL vec 99: Rs10 (got %b at %0d)", Rs10, $time); $stop; end
+		if (Rs01 !== 2'b10) begin $display("FAIL vec 99: Rs01 (got %b at %0d)", Rs01, $time); $stop; end
+		if (Rs00 !== 2'b10) begin $display("FAIL vec 99: Rs00 (got %b at %0d)", Rs00, $time); $stop; end
+		if (Rd11 !== 2'b10) begin $display("FAIL vec 99: Rd11 (got %b at %0d)", Rd11, $time); $stop; end
+		if (Rd10 !== 2'b10) begin $display("FAIL vec 99: Rd10 (got %b at %0d)", Rd10, $time); $stop; end
+		if (Rd01 !== 2'b10) begin $display("FAIL vec 99: Rd01 (got %b at %0d)", Rd01, $time); $stop; end
+		if (Rd00 !== 2'b10) begin $display("FAIL vec 99: Rd00 (got %b at %0d)", Rd00, $time); $stop; end
+
+		$display("PASS");
+		$finish;
+	end
+endmodule

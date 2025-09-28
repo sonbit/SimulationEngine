@@ -1,0 +1,51 @@
+`timescale 1ns/1ps
+
+module top_c_ALU2 (
+	input clk,
+	input [13:0] sw,
+	output [5:0] led,
+	output [6:0] seg,
+	output dp,
+	output [3:0] an
+);
+	wire [1:0] Cout;
+	wire [1:0] Q1;
+	wire [1:0] Q0;
+
+	c_ALU2 c_ALU2 (
+		.Func2(sw[1:0]),
+		.Func1(sw[3:2]),
+		.Func0(sw[5:4]),
+		.B1(sw[7:6]),
+		.B0(sw[9:8]),
+		.A1(sw[11:10]),
+		.A0(sw[13:12]),
+		.Cout(Cout),
+		.Q1(Q1),
+		.Q0(Q0)
+	);
+
+	basys3_7segment_display #(
+		.CLK_HZ(100_000_000),
+		.SCAN_HZ(1000)
+	) basys3_7segment_display (
+		.clk(clk),
+		.rst_n(1'b1),
+		.digit3_mst(2'b01),
+		.digit3_lst(Cout),
+		.digit2_mst(2'b01),
+		.digit2_lst(Q1),
+		.digit1_mst(2'b01),
+		.digit1_lst(Q0),
+		.digit0_mst(2'b01),
+		.digit0_lst(2'b01),
+		.enable_mask(4'b1110),
+		.seg(seg),
+		.dp(dp),
+		.an(an)
+	);
+
+	assign led[1:0] = Cout;
+	assign led[3:2] = Q1;
+	assign led[5:4] = Q0;
+endmodule

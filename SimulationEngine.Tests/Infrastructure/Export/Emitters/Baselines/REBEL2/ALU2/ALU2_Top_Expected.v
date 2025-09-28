@@ -1,0 +1,27 @@
+`timescale 1ns/1ps
+
+module top_c_ALU2 (
+	input [13:0] sw,
+	output [5:0] led
+);
+	wire [1:0] Cout;
+	wire [1:0] Q1;
+	wire [1:0] Q0;
+
+	c_ALU2 c_ALU2 (
+		.Func2(sw[1:0]),
+		.Func1(sw[3:2]),
+		.Func0(sw[5:4]),
+		.B1(sw[7:6]),
+		.B0(sw[9:8]),
+		.A1(sw[11:10]),
+		.A0(sw[13:12]),
+		.Cout(Cout),
+		.Q1(Q1),
+		.Q0(Q0)
+	);
+
+	assign led[1:0] = Cout;
+	assign led[3:2] = Q1;
+	assign led[5:4] = Q0;
+endmodule

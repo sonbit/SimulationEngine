@@ -28,4 +28,58 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Expected.xdc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_7Seg_Expected.xdc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_TB_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Top_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Top_7Seg_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Decode_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Decode_TB_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Fetch_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Fetch_TB_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Expected.xdc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_7Seg_Expected.xdc">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_TB_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Top_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Top_7Seg_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Infrastructure\Export\Emitters\Baselines\SevenSegment_Expected.v">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

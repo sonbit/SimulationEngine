@@ -1,0 +1,20 @@
+`timescale 1ns/1ps
+
+module top_c_Register9 (
+	input [10:0] sw,
+	output [1:0] led
+);
+	wire [1:0] Q;
+
+	c_Register9 c_Register9 (
+		.RdAddr1(sw[1:0]),
+		.RdAddr0(sw[3:2]),
+		.WrAddr1(sw[5:4]),
+		.WrAddr0(sw[7:6]),
+		.Clk(sw[8]),
+		.WrData(sw[10:9]),
+		.Q(Q)
+	);
+
+	assign led[1:0] = Q;
+endmodule

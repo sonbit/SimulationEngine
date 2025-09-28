@@ -1,58 +1,30 @@
-﻿
-using SimulationEngine.Application.Export;
-using SimulationEngine.Designs.REBEL2.ALU;
+﻿using SimulationEngine.Designs.REBEL2.ALU;
 using SimulationEngine.Designs.REBEL2.Decode;
 using SimulationEngine.Designs.REBEL2.Fetch;
 using SimulationEngine.Designs.SubCircuits.Memory;
+using SimulationEngine.Domain.Models;
 using SimulationEngine.Infrastructure.Export.Emitters;
 using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.Infrastructure.Export.Emitters;
 
-public class VerilogTestbenchEmitterTests(ITestOutputHelper testOutputHelper)
+public class VerilogTestbenchEmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitterTest(testOutputHelper)
 {
     [Fact]
-    public void Test1()
-    {
-        var subCircuit = new RAM3();
-        var emitter = new VerilogTestbenchEmitter(new ExportOptions());
-        var output = emitter.EmitTestbench(subCircuit, subCircuit.GetTestString());
-        testOutputHelper.WriteLine(output);
-    }
+    public void ALU2_Validate() => BaseTestbenchValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_TB_Expected.v");
 
     [Fact]
-    public void Test2()
-    {
-        var subCircuit = new Register9();
-        var emitter = new VerilogTestbenchEmitter(new ExportOptions());
-        var output = emitter.EmitTestbench(subCircuit, subCircuit.GetTestString());
-        testOutputHelper.WriteLine(output);
-    }
+    public void Decode_Validate() => BaseTestbenchValidate(new Decode(), "Baselines/REBEL2/Decode_TB_Expected.v");
 
     [Fact]
-    public void Test3()
-    {
-        var subCircuit = new ALU2();
-        var emitter = new VerilogTestbenchEmitter(new ExportOptions());
-        var output = emitter.EmitTestbench(subCircuit, subCircuit.GetTestString());
-        testOutputHelper.WriteLine(output);
-    }
+    public void Fetch_Validate() => BaseTestbenchValidate(new Fetch(), "Baselines/REBEL2/Fetch_TB_Expected.v");
 
     [Fact]
-    public void Test4()
-    {
-        var subCircuit = new Decode();
-        var emitter = new VerilogTestbenchEmitter(new ExportOptions());
-        var output = emitter.EmitTestbench(subCircuit, subCircuit.GetTestString());
-        testOutputHelper.WriteLine(output);
-    }
+    public void Register9_Validate() => BaseTestbenchValidate(new Register9(), "Baselines/Register9/Register9_TB_Expected.v");
 
-    [Fact]
-    public void Test5()
+    private void BaseTestbenchValidate(SubCircuit subCircuit, string filePath, bool skipEvaluation = false)
     {
-        var subCircuit = new Fetch();
-        var emitter = new VerilogTestbenchEmitter(new ExportOptions());
-        var output = emitter.EmitTestbench(subCircuit, subCircuit.GetTestString());
-        testOutputHelper.WriteLine(output);
+        var output = new VerilogTestbenchEmitter().EmitTestbench(subCircuit, subCircuit.GetTestString()).Trim();
+        Validate(filePath, output, skipEvaluation);
     }
 }

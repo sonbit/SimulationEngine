@@ -1,57 +1,30 @@
-﻿using SimulationEngine.Application.Export;
-using SimulationEngine.Designs.REBEL2.ALU;
+﻿using SimulationEngine.Designs.REBEL2.ALU;
 using SimulationEngine.Designs.REBEL2.Decode;
 using SimulationEngine.Designs.REBEL2.Fetch;
 using SimulationEngine.Designs.SubCircuits.Memory;
+using SimulationEngine.Domain.Models;
 using SimulationEngine.Infrastructure.Exporters.Verilog;
 using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.Infrastructure.Export.Emitters;
 
-public class VerilogEmitterTests(ITestOutputHelper testOutputHelper)
+public class VerilogEmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitterTest(testOutputHelper)
 {
     [Fact]
-    public void Test1()
-    {
-        var subCircuit = new RAM3();
-        var emitter = new VerilogEmitter(new ExportOptions());
-        var output = emitter.EmitSubCircuit(subCircuit);
-        testOutputHelper.WriteLine(output);
-    }
+    public void ALU2_Validate() => BaseVerilogValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Expected.v");
 
     [Fact]
-    public void Test2()
-    {
-        var subCircuit = new Register9();
-        var emitter = new VerilogEmitter(new ExportOptions());
-        var output = emitter.EmitSubCircuit(subCircuit);
-        testOutputHelper.WriteLine(output);
-    }
+    public void Decode_Validate() => BaseVerilogValidate(new Decode(), "Baselines/REBEL2/Decode_Expected.v");
 
     [Fact]
-    public void Test3()
-    {
-        var subCircuit = new ALU2();
-        var emitter = new VerilogEmitter(new ExportOptions());
-        var output = emitter.EmitSubCircuit(subCircuit);
-        testOutputHelper.WriteLine(output);
-    }
+    public void Fetch_Validate() => BaseVerilogValidate(new Fetch(), "Baselines/REBEL2/Fetch_Expected.v");
 
     [Fact]
-    public void Test4()
-    {
-        var subCircuit = new Decode();
-        var emitter = new VerilogEmitter(new ExportOptions());
-        var output = emitter.EmitSubCircuit(subCircuit);
-        testOutputHelper.WriteLine(output);
-    }
+    public void Register9_Validate() => BaseVerilogValidate(new Register9(), "Baselines/Register9/Register9_Expected.v");
 
-    [Fact]
-    public void Test5()
+    private void BaseVerilogValidate(SubCircuit subCircuit, string filePath, bool skipEvaluation = false)
     {
-        var subCircuit = new Fetch();
-        var emitter = new VerilogEmitter(new ExportOptions());
-        var output = emitter.EmitSubCircuit(subCircuit);
-        testOutputHelper.WriteLine(output);
+        var output = new VerilogEmitter().EmitSubCircuit(subCircuit).Trim();
+        Validate(filePath, output, skipEvaluation);
     }
 }

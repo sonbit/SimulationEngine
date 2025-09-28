@@ -1,0 +1,1233 @@
+﻿module tb_c_ALU2;
+	reg [1:0] Func2;
+	reg [1:0] Func1;
+	reg [1:0] Func0;
+	reg [1:0] B1;
+	reg [1:0] B0;
+	reg [1:0] A1;
+	reg [1:0] A0;
+	wire [1:0] Cout;
+	wire [1:0] Q1;
+	wire [1:0] Q0;
+
+	c_ALU2 dut (
+		.Func2(Func2),
+		.Func1(Func1),
+		.Func0(Func0),
+		.B1(B1),
+		.B0(B0),
+		.A1(A1),
+		.A0(A0),
+		.Cout(Cout),
+		.Q1(Q1),
+		.Q0(Q0)
+	);
+
+integer i;
+	initial begin
+		$display("Running 100 vectors...");
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 0: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 0: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 0: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b01) begin $display("FAIL vec 1: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 1: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 1: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b01) begin $display("FAIL vec 2: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 2: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 2: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b01) begin $display("FAIL vec 3: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 3: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 3: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b01) begin $display("FAIL vec 4: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 4: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 4: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 5: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 5: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 5: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 6: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 6: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 6: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 7: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 7: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 7: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 8: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 8: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 8: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 9: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 9: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 9: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b01) begin $display("FAIL vec 10: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 10: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 10: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 11: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 11: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 11: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 12: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 12: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 12: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 13: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 13: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 13: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 14: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 14: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 14: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 15: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 15: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 15: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 16: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 16: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 16: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b10) begin $display("FAIL vec 17: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 17: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 17: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b10) begin $display("FAIL vec 18: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 18: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 18: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 19: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 19: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 19: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b11;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 20: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 20: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 20: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 21: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 21: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 21: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 22: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 22: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 22: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 23: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 23: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 23: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 24: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 24: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 24: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 25: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 25: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 25: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 26: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 26: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 26: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 27: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 27: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 27: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 28: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 28: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 28: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 29: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 29: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 29: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 30: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 30: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 30: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 31: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 31: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 31: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 32: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 32: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 32: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 33: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 33: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 33: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 34: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 34: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 34: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 35: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 35: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 35: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 36: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 36: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 36: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 37: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 37: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 37: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 38: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 38: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 38: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 39: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 39: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 39: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b11;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 40: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 40: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 40: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 41: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 41: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 41: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 42: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 42: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 42: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 43: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 43: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 43: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 44: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 44: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 44: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b10;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 45: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 45: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 45: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 46: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 46: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 46: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 47: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 47: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 47: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 48: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 48: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 48: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 49: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 49: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 49: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 50: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 50: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 50: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 51: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 51: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 51: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 52: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 52: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 52: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 53: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 53: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 53: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 54: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 54: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 54: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 55: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 55: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 55: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 56: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 56: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 56: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 57: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 57: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 57: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 58: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 58: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 58: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 59: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 59: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 59: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b01;
+		Func0 = 2'b01;
+		B1 = 2'b01;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 60: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 60: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 60: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 61: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 61: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 61: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 62: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 62: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 62: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 63: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 63: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 63: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 64: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 64: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 64: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 65: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 65: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 65: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 66: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 66: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 66: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 67: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 67: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 67: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 68: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 68: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 68: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 69: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 69: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 69: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b10;
+		B1 = 2'b11;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 70: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 70: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 70: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 71: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 71: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 71: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b11;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 72: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 72: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 72: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 73: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 73: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 73: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 74: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 74: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 74: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 75: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 75: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 75: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 76: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 76: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 76: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 77: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 77: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 77: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 78: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 78: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 78: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 79: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 79: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 79: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b10;
+		B0 = 2'b01;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 80: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 80: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 80: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 81: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 81: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 81: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 82: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 82: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 82: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 83: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 83: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 83: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 84: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b01) begin $display("FAIL vec 84: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 84: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 85: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 85: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 85: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 86: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 86: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 86: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 87: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 87: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 87: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 88: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 88: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b01) begin $display("FAIL vec 88: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 89: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 89: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 89: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b01;
+		Func1 = 2'b10;
+		Func0 = 2'b01;
+		B1 = 2'b10;
+		B0 = 2'b10;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 90: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b10) begin $display("FAIL vec 90: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b10) begin $display("FAIL vec 90: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 91: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 91: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 91: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 92: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 92: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 92: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b01;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 93: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 93: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 93: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 94: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 94: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 94: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 95: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 95: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 95: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b11;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 96: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 96: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 96: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b01;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 97: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 97: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 97: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b11;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 98: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 98: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 98: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		Func2 = 2'b10;
+		Func1 = 2'b10;
+		Func0 = 2'b11;
+		B1 = 2'b01;
+		B0 = 2'b11;
+		A1 = 2'b10;
+		A0 = 2'b10;
+		#1;
+		if (Cout !== 2'b11) begin $display("FAIL vec 99: Cout (got %b at %0d)", Cout, $time); $stop; end
+		if (Q1 !== 2'b11) begin $display("FAIL vec 99: Q1 (got %b at %0d)", Q1, $time); $stop; end
+		if (Q0 !== 2'b11) begin $display("FAIL vec 99: Q0 (got %b at %0d)", Q0, $time); $stop; end
+
+		$display("PASS");
+		$finish;
+	end
+endmodule

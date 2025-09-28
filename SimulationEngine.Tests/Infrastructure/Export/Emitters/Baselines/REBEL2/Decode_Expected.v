@@ -1,0 +1,1199 @@
+﻿module c_Decode (
+	input [1:0] Pc1,
+	input [1:0] Pc0,
+	input [1:0] Op1,
+	input [1:0] Op0,
+	input [1:0] Rs11,
+	input [1:0] Rs10,
+	input [1:0] Rs01,
+	input [1:0] Rs00,
+	input [1:0] Rd11,
+	input [1:0] Rd10,
+	input [1:0] Rd01,
+	input [1:0] Rd00,
+	input [1:0] WbReg,
+	input [1:0] WrAddr1,
+	input [1:0] WrAddr0,
+	input [1:0] WrData1,
+	input [1:0] WrData0,
+	input [1:0] Clk,
+	output [1:0] AluCtrl2,
+	output [1:0] AluCtrl1,
+	output [1:0] AluCtrl0,
+	output [1:0] AluASel,
+	output [1:0] AluBSel,
+	output [1:0] AluAddSel1,
+	output [1:0] AluAddSel0,
+	output [1:0] AluTarSel,
+	output [1:0] Reg11,
+	output [1:0] Reg10,
+	output [1:0] Reg01,
+	output [1:0] Reg00,
+	output [1:0] Imm11,
+	output [1:0] Imm10,
+	output [1:0] TarAddr1,
+	output [1:0] TarAddr0,
+	output [1:0] Imm01,
+	output [1:0] Imm00
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+	wire [1:0] tnet_3;
+	wire [1:0] tnet_4;
+	wire [1:0] tnet_5;
+	wire [1:0] tnet_6;
+	wire [1:0] tnet_7;
+	wire [1:0] tnet_8;
+	wire [1:0] tnet_9;
+	wire [1:0] tnet_10;
+	wire [1:0] tnet_11;
+	wire [1:0] tnet_12;
+
+	f_K00 f_K00_0 (
+		.B(WbReg),
+		.A(Clk),
+		.Q(tnet_0)
+	);
+
+	c_ExecCtrl c_ExecCtrl_0 (
+		.Op1(Op1),
+		.Op0(Op0),
+		.Rd1(Rd01),
+		.Rd0(Rd00),
+		.AluCtrl2(tnet_1),
+		.AluCtrl1(tnet_2),
+		.AluCtrl0(tnet_3),
+		.AluASel(tnet_4),
+		.AluBSel(tnet_5),
+		.AluAddSel1(tnet_6),
+		.AluAddSel0(tnet_7),
+		.AluTarSel(tnet_8)
+	);
+
+	c_9Reg2 c_9Reg2_0 (
+		.RdAddr11(Rs11),
+		.RdAddr10(Rs10),
+		.RdAddr01(Rs01),
+		.RdAddr00(Rs00),
+		.WrAddr1(WrAddr1),
+		.WrAddr0(WrAddr0),
+		.WrData1(WrData1),
+		.WrData0(WrData0),
+		.WrReg(tnet_0),
+		.RdData11(tnet_9),
+		.RdData10(tnet_10),
+		.RdData01(tnet_11),
+		.RdData00(tnet_12)
+	);
+
+	assign AluCtrl2 = tnet_1;
+	assign AluCtrl1 = tnet_2;
+	assign AluCtrl0 = tnet_3;
+	assign AluASel = tnet_4;
+	assign AluBSel = tnet_5;
+	assign AluAddSel1 = tnet_6;
+	assign AluAddSel0 = tnet_7;
+	assign AluTarSel = tnet_8;
+	assign Reg11 = tnet_9;
+	assign Reg10 = tnet_10;
+	assign Reg01 = tnet_11;
+	assign Reg00 = tnet_12;
+	assign Imm11 = tnet_13;
+	assign Imm10 = tnet_14;
+	assign TarAddr1 = tnet_15;
+	assign TarAddr0 = tnet_16;
+	assign Imm01 = tnet_17;
+	assign Imm00 = tnet_18;
+endmodule
+
+module c_ExecCtrl (
+	input [1:0] Op1,
+	input [1:0] Op0,
+	input [1:0] Rd1,
+	input [1:0] Rd0,
+	output [1:0] AluCtrl2,
+	output [1:0] AluCtrl1,
+	output [1:0] AluCtrl0,
+	output [1:0] AluASel,
+	output [1:0] AluBSel,
+	output [1:0] AluAddSel1,
+	output [1:0] AluAddSel0,
+	output [1:0] AluTarSel
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+	wire [1:0] tnet_3;
+	wire [1:0] tnet_4;
+	wire [1:0] tnet_5;
+	wire [1:0] tnet_6;
+	wire [1:0] tnet_7;
+	wire [1:0] tnet_8;
+
+	f_RDD f_RDD_0 (
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_0)
+	);
+
+	f_MCD f_MCD_0 (
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_1)
+	);
+
+	f_HHH f_HHH_0 (
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_2)
+	);
+
+	f_ZTZ f_ZTZ_0 (
+		.B(Rd1),
+		.A(Rd0),
+		.Q(tnet_3)
+	);
+
+	f_HHH088088 f_HHH088088_0 (
+		.C(tnet_3),
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_4)
+	);
+
+	f_ZXZ f_ZXZ_0 (
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_5)
+	);
+
+	c_ALUCtrl2 c_ALUCtrl2_0 (
+		.Op1(Op1),
+		.Op0(Op0),
+		.Rd1(Rd1),
+		.Rd0(Rd0),
+		.AluCtrl2(tnet_6),
+		.AluCtrl1(tnet_7),
+		.AluCtrl0(tnet_8)
+	);
+
+	assign AluCtrl2 = tnet_6;
+	assign AluCtrl1 = tnet_7;
+	assign AluCtrl0 = tnet_8;
+	assign AluASel = tnet_0;
+	assign AluBSel = tnet_1;
+	assign AluAddSel1 = tnet_2;
+	assign AluAddSel0 = tnet_4;
+	assign AluTarSel = tnet_5;
+endmodule
+
+module c_ALUCtrl2 (
+	input [1:0] Op1,
+	input [1:0] Op0,
+	input [1:0] Rd1,
+	input [1:0] Rd0,
+	output [1:0] AluCtrl2,
+	output [1:0] AluCtrl1,
+	output [1:0] AluCtrl0
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+	wire [1:0] tnet_3;
+	wire [1:0] tnet_4;
+	wire [1:0] tnet_5;
+
+	f_GDD f_GDD_0 (
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_0)
+	);
+
+	f_D17 f_D17_0 (
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_1)
+	);
+
+	f_ZTZ f_ZTZ_0 (
+		.B(Rd1),
+		.A(Rd0),
+		.Q(tnet_2)
+	);
+
+	f_D48G74DDD f_D48G74DDD_0 (
+		.C(tnet_2),
+		.B(Op1),
+		.A(Op0),
+		.Q(tnet_3)
+	);
+
+	f_PPPZD0ZD0 f_PPPZD0ZD0_0 (
+		.C(tnet_0),
+		.B(Rd1),
+		.A(tnet_1),
+		.Q(tnet_4)
+	);
+
+	f_PPPZD0ZD0 f_PPPZD0ZD0_1 (
+		.C(tnet_0),
+		.B(Rd0),
+		.A(tnet_3),
+		.Q(tnet_5)
+	);
+
+	assign AluCtrl2 = tnet_0;
+	assign AluCtrl1 = tnet_4;
+	assign AluCtrl0 = tnet_5;
+endmodule
+
+module c_9Reg2 (
+	input [1:0] RdAddr11,
+	input [1:0] RdAddr10,
+	input [1:0] RdAddr01,
+	input [1:0] RdAddr00,
+	input [1:0] WrAddr1,
+	input [1:0] WrAddr0,
+	input [1:0] WrData1,
+	input [1:0] WrData0,
+	input WrReg,
+	output [1:0] RdData11,
+	output [1:0] RdData10,
+	output [1:0] RdData01,
+	output [1:0] RdData00
+);
+	wire bnet_0;
+	wire bnet_1;
+	wire bnet_2;
+	wire bnet_3;
+	wire bnet_4;
+	wire bnet_5;
+	wire bnet_6;
+	wire bnet_7;
+	wire bnet_8;
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+	wire [1:0] tnet_3;
+	wire [1:0] tnet_4;
+	wire [1:0] tnet_5;
+	wire [1:0] tnet_6;
+	wire [1:0] tnet_7;
+	wire [1:0] tnet_8;
+	wire [1:0] tnet_9;
+	wire [1:0] tnet_10;
+	wire [1:0] tnet_11;
+	wire [1:0] tnet_12;
+	wire [1:0] tnet_13;
+	wire [1:0] tnet_14;
+	wire [1:0] tnet_15;
+	wire [1:0] tnet_16;
+	wire [1:0] tnet_17;
+	wire [1:0] tnet_18;
+	wire [1:0] tnet_19;
+	wire [1:0] tnet_20;
+	wire [1:0] tnet_21;
+
+	c_9BDEMUX c_9BDEMUX_0 (
+		.Sel1(WrAddr1),
+		.Sel0(WrAddr0),
+		.Clk(WrReg),
+		.ClkQ8(bnet_0),
+		.ClkQ7(bnet_1),
+		.ClkQ6(bnet_2),
+		.ClkQ5(bnet_3),
+		.ClkQ4(bnet_4),
+		.ClkQ3(bnet_5),
+		.ClkQ2(bnet_6),
+		.ClkQ1(bnet_7),
+		.ClkQ0(bnet_8)
+	);
+
+	c_8RegArray2 c_8RegArray2_0 (
+		.Clk8(bnet_0),
+		.Clk7(bnet_1),
+		.Clk6(bnet_2),
+		.Clk5(bnet_3),
+		.Clk4(bnet_4),
+		.Clk3(bnet_5),
+		.Clk2(bnet_6),
+		.Clk1(bnet_7),
+		.Clk0(bnet_8),
+		.Din1(WrData1),
+		.Din0(WrData0),
+		.Q81(tnet_0),
+		.Q80(tnet_1),
+		.Q71(tnet_2),
+		.Q70(tnet_3),
+		.Q61(tnet_4),
+		.Q60(tnet_5),
+		.Q51(tnet_6),
+		.Q50(tnet_7),
+		.Q41(tnet_8),
+		.Q40(tnet_9),
+		.Q31(tnet_10),
+		.Q30(tnet_11),
+		.Q21(tnet_12),
+		.Q20(tnet_13),
+		.Q11(tnet_14),
+		.Q10(tnet_15),
+		.Q01(tnet_16),
+		.Q00(tnet_17)
+	);
+
+	c_9MUX2 c_9MUX2_0 (
+		.Sel1(RdAddr11),
+		.Sel0(RdAddr10),
+		.D81(tnet_0),
+		.D80(tnet_1),
+		.D71(tnet_2),
+		.D70(tnet_3),
+		.D61(tnet_4),
+		.D60(tnet_5),
+		.D51(tnet_6),
+		.D50(tnet_7),
+		.D41(tnet_8),
+		.D40(tnet_9),
+		.D31(tnet_10),
+		.D30(tnet_11),
+		.D21(tnet_12),
+		.D20(tnet_13),
+		.D11(tnet_14),
+		.D10(tnet_15),
+		.D01(tnet_16),
+		.D00(tnet_17),
+		.Q1(tnet_18),
+		.Q0(tnet_19)
+	);
+
+	c_9MUX2 c_9MUX2_1 (
+		.Sel1(RdAddr01),
+		.Sel0(RdAddr00),
+		.D81(tnet_0),
+		.D80(tnet_1),
+		.D71(tnet_2),
+		.D70(tnet_3),
+		.D61(tnet_4),
+		.D60(tnet_5),
+		.D51(tnet_6),
+		.D50(tnet_7),
+		.D41(tnet_8),
+		.D40(tnet_9),
+		.D31(tnet_10),
+		.D30(tnet_11),
+		.D21(tnet_12),
+		.D20(tnet_13),
+		.D11(tnet_14),
+		.D10(tnet_15),
+		.D01(tnet_16),
+		.D00(tnet_17),
+		.Q1(tnet_20),
+		.Q0(tnet_21)
+	);
+
+	assign RdData11 = tnet_18;
+	assign RdData10 = tnet_19;
+	assign RdData01 = tnet_20;
+	assign RdData00 = tnet_21;
+endmodule
+
+module c_9BDEMUX (
+	input [1:0] Sel1,
+	input [1:0] Sel0,
+	input Clk,
+	output ClkQ8,
+	output ClkQ7,
+	output ClkQ6,
+	output ClkQ5,
+	output ClkQ4,
+	output ClkQ3,
+	output ClkQ2,
+	output ClkQ1,
+	output ClkQ0
+);
+	wire bnet_0;
+	wire bnet_1;
+	wire bnet_2;
+	wire bnet_3;
+	wire bnet_4;
+	wire bnet_5;
+	wire bnet_6;
+	wire bnet_7;
+	wire bnet_8;
+	wire bnet_9;
+	wire bnet_10;
+	wire bnet_11;
+
+	c_3BDEMUX c_3BDEMUX_0 (
+		.Din(Sel1),
+		.Clk(Clk),
+		.Q2(bnet_0),
+		.Q1(bnet_1),
+		.Q0(bnet_2)
+	);
+
+	c_3BDEMUX c_3BDEMUX_1 (
+		.Din(Sel0),
+		.Clk(bnet_0),
+		.Q2(bnet_3),
+		.Q1(bnet_4),
+		.Q0(bnet_5)
+	);
+
+	c_3BDEMUX c_3BDEMUX_2 (
+		.Din(Sel0),
+		.Clk(bnet_1),
+		.Q2(bnet_6),
+		.Q1(bnet_7),
+		.Q0(bnet_8)
+	);
+
+	c_3BDEMUX c_3BDEMUX_3 (
+		.Din(Sel0),
+		.Clk(bnet_2),
+		.Q2(bnet_9),
+		.Q1(bnet_10),
+		.Q0(bnet_11)
+	);
+
+	assign ClkQ8 = bnet_3;
+	assign ClkQ7 = bnet_4;
+	assign ClkQ6 = bnet_5;
+	assign ClkQ5 = bnet_6;
+	assign ClkQ4 = bnet_7;
+	assign ClkQ3 = bnet_8;
+	assign ClkQ2 = bnet_9;
+	assign ClkQ1 = bnet_10;
+	assign ClkQ0 = bnet_11;
+endmodule
+
+module c_3BDEMUX (
+	input [1:0] Din,
+	input Clk,
+	output Q2,
+	output Q1,
+	output Q0
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+
+	f_K00 f_K00_0 (
+		.B(Din),
+		.A(Clk,!Clk),
+		.Q(tnet_0)
+	);
+
+	f_600 f_600_0 (
+		.B(Din),
+		.A(Clk,!Clk),
+		.Q(tnet_1)
+	);
+
+	f_200 f_200_0 (
+		.B(Din),
+		.A(Clk,!Clk),
+		.Q(tnet_2)
+	);
+
+	assign Q2 = tnet_0;
+	assign Q1 = tnet_1;
+	assign Q0 = tnet_2;
+endmodule
+
+module c_8RegArray2 (
+	input Clk8,
+	input Clk7,
+	input Clk6,
+	input Clk5,
+	input Clk4,
+	input Clk3,
+	input Clk2,
+	input Clk1,
+	input Clk0,
+	input [1:0] Din1,
+	input [1:0] Din0,
+	output [1:0] Q81,
+	output [1:0] Q80,
+	output [1:0] Q71,
+	output [1:0] Q70,
+	output [1:0] Q61,
+	output [1:0] Q60,
+	output [1:0] Q51,
+	output [1:0] Q50,
+	output [1:0] Q41,
+	output [1:0] Q40,
+	output [1:0] Q31,
+	output [1:0] Q30,
+	output [1:0] Q21,
+	output [1:0] Q20,
+	output [1:0] Q11,
+	output [1:0] Q10,
+	output [1:0] Q01,
+	output [1:0] Q00
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+	wire [1:0] tnet_3;
+	wire [1:0] tnet_4;
+	wire [1:0] tnet_5;
+	wire [1:0] tnet_6;
+	wire [1:0] tnet_7;
+	wire [1:0] tnet_8;
+	wire [1:0] tnet_9;
+	wire [1:0] tnet_10;
+	wire [1:0] tnet_11;
+	wire [1:0] tnet_12;
+	wire [1:0] tnet_13;
+	wire [1:0] tnet_14;
+	wire [1:0] tnet_15;
+	wire [1:0] tnet_16;
+	wire [1:0] tnet_17;
+
+	c_2Latch2 c_2Latch2_0 (
+		.Clk(Clk8),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_0),
+		.Q0(tnet_1)
+	);
+
+	c_2Latch2 c_2Latch2_1 (
+		.Clk(Clk7),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_2),
+		.Q0(tnet_3)
+	);
+
+	c_2Latch2 c_2Latch2_2 (
+		.Clk(Clk6),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_4),
+		.Q0(tnet_5)
+	);
+
+	c_2Latch2 c_2Latch2_3 (
+		.Clk(Clk5),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_6),
+		.Q0(tnet_7)
+	);
+
+	c_2Latch2 c_2Latch2_4 (
+		.Clk(Clk4),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_8),
+		.Q0(tnet_9)
+	);
+
+	c_2Latch2 c_2Latch2_5 (
+		.Clk(Clk3),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_10),
+		.Q0(tnet_11)
+	);
+
+	c_2Latch2 c_2Latch2_6 (
+		.Clk(Clk2),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_12),
+		.Q0(tnet_13)
+	);
+
+	c_2Latch2 c_2Latch2_7 (
+		.Clk(Clk1),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_14),
+		.Q0(tnet_15)
+	);
+
+	c_2Latch2 c_2Latch2_8 (
+		.Clk(Clk0),
+		.A1(Din1),
+		.A0(Din0),
+		.Q1(tnet_16),
+		.Q0(tnet_17)
+	);
+
+	assign Q81 = tnet_0;
+	assign Q80 = tnet_1;
+	assign Q71 = tnet_2;
+	assign Q70 = tnet_3;
+	assign Q61 = tnet_4;
+	assign Q60 = tnet_5;
+	assign Q51 = tnet_6;
+	assign Q50 = tnet_7;
+	assign Q41 = tnet_8;
+	assign Q40 = tnet_9;
+	assign Q31 = tnet_10;
+	assign Q30 = tnet_11;
+	assign Q21 = tnet_12;
+	assign Q20 = tnet_13;
+	assign Q11 = tnet_14;
+	assign Q10 = tnet_15;
+	assign Q01 = tnet_16;
+	assign Q00 = tnet_17;
+endmodule
+
+module c_2Latch2 (
+	input Clk,
+	input [1:0] A1,
+	input [1:0] A0,
+	output [1:0] Q1,
+	output [1:0] Q0
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+
+	c_BTLatch c_BTLatch_0 (
+		.Clk(Clk),
+		.Din(A1),
+		.Dout(tnet_0)
+	);
+
+	c_BTLatch c_BTLatch_1 (
+		.Clk(Clk),
+		.Din(A0),
+		.Dout(tnet_1)
+	);
+
+	assign Q1 = tnet_0;
+	assign Q0 = tnet_1;
+endmodule
+
+module c_BTLatch (
+	input Clk,
+	input [1:0] Din,
+	output [1:0] Dout
+);
+	wire [1:0] tnet_0;
+
+	f_ZD0PPPPPP f_ZD0PPPPPP_0 (
+		.C(Clk,!Clk),
+		.B(tnet_0),
+		.A(Din),
+		.Q(tnet_0)
+	);
+
+	assign Dout = tnet_0;
+endmodule
+
+module c_9MUX2 (
+	input [1:0] Sel1,
+	input [1:0] Sel0,
+	input [1:0] D81,
+	input [1:0] D80,
+	input [1:0] D71,
+	input [1:0] D70,
+	input [1:0] D61,
+	input [1:0] D60,
+	input [1:0] D51,
+	input [1:0] D50,
+	input [1:0] D41,
+	input [1:0] D40,
+	input [1:0] D31,
+	input [1:0] D30,
+	input [1:0] D21,
+	input [1:0] D20,
+	input [1:0] D11,
+	input [1:0] D10,
+	input [1:0] D01,
+	input [1:0] D00,
+	output [1:0] Q1,
+	output [1:0] Q0
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+	wire [1:0] tnet_2;
+	wire [1:0] tnet_3;
+	wire [1:0] tnet_4;
+	wire [1:0] tnet_5;
+	wire [1:0] tnet_6;
+	wire [1:0] tnet_7;
+
+	c_3MUX2 c_3MUX2_0 (
+		.Sel(Sel0),
+		.C1(D81),
+		.C0(D80),
+		.B1(D71),
+		.B0(D70),
+		.A1(D61),
+		.A0(D60),
+		.Q1(tnet_0),
+		.Q0(tnet_1)
+	);
+
+	c_3MUX2 c_3MUX2_1 (
+		.Sel(Sel0),
+		.C1(D51),
+		.C0(D50),
+		.B1(D41),
+		.B0(D40),
+		.A1(D31),
+		.A0(D30),
+		.Q1(tnet_2),
+		.Q0(tnet_3)
+	);
+
+	c_3MUX2 c_3MUX2_2 (
+		.Sel(Sel0),
+		.C1(D21),
+		.C0(D20),
+		.B1(D11),
+		.B0(D10),
+		.A1(D01),
+		.A0(D00),
+		.Q1(tnet_4),
+		.Q0(tnet_5)
+	);
+
+	c_3MUX2 c_3MUX2_3 (
+		.Sel(Sel1),
+		.C1(tnet_0),
+		.C0(tnet_1),
+		.B1(tnet_2),
+		.B0(tnet_3),
+		.A1(tnet_4),
+		.A0(tnet_5),
+		.Q1(tnet_6),
+		.Q0(tnet_7)
+	);
+
+	assign Q1 = tnet_6;
+	assign Q0 = tnet_7;
+endmodule
+
+module c_3MUX2 (
+	input [1:0] Sel,
+	input [1:0] C1,
+	input [1:0] C0,
+	input [1:0] B1,
+	input [1:0] B0,
+	input [1:0] A1,
+	input [1:0] A0,
+	output [1:0] Q1,
+	output [1:0] Q0
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+
+	c_3MUX1 c_3MUX1_0 (
+		.Sel(Sel),
+		.C(C1),
+		.B(B1),
+		.A(A1),
+		.Q(tnet_0)
+	);
+
+	c_3MUX1 c_3MUX1_1 (
+		.Sel(Sel),
+		.C(C0),
+		.B(B0),
+		.A(A0),
+		.Q(tnet_1)
+	);
+
+	assign Q1 = tnet_0;
+	assign Q0 = tnet_1;
+endmodule
+
+module c_3MUX1 (
+	input [1:0] Sel,
+	input [1:0] C,
+	input [1:0] B,
+	input [1:0] A,
+	output [1:0] Q
+);
+	wire [1:0] tnet_0;
+	wire [1:0] tnet_1;
+
+	f_PPPPPPZD0 f_PPPPPPZD0_0 (
+		.C(Sel),
+		.B(B),
+		.A(A),
+		.Q(tnet_0)
+	);
+
+	f_PPPZD0ZD0 f_PPPZD0ZD0_0 (
+		.C(Sel),
+		.B(C),
+		.A(tnet_0),
+		.Q(tnet_1)
+	);
+
+	assign Q = tnet_1;
+endmodule
+
+module f_K00 (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_RDD (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_MCD (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_HHH (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		2'b11;
+endmodule
+
+module f_ZTZ (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_HHH088088 (
+	input wire [1:0] C,
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		2'b11;
+endmodule
+
+module f_ZXZ (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_GDD (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		2'b11;
+endmodule
+
+module f_D17 (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		2'b11;
+endmodule
+
+module f_D48G74DDD (
+	input wire [1:0] C,
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b10) ? 2'b11 :
+		2'b11;
+endmodule
+
+module f_PPPZD0ZD0 (
+	input wire [1:0] C,
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_600 (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b01 :
+		2'b11;
+endmodule
+
+module f_200 (
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b11) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b11) ? 2'b01 :
+		(B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(B == 2'b11) & (A == 2'b10) ? 2'b01 :
+		(B == 2'b10) & (A == 2'b10) ? 2'b01 :
+		2'b11;
+endmodule
+
+module f_ZD0PPPPPP (
+	input wire [1:0] C,
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
+
+module f_PPPPPPZD0 (
+	input wire [1:0] C,
+	input wire [1:0] B,
+	input wire [1:0] A,
+	output wire [1:0] Q
+);
+	assign Q = 
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b01) & (B == 2'b01) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b11) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b01) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b11) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b11) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b11) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b01) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b01) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b01) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b11) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b11) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b11) ? 2'b10 :
+		(C == 2'b10) & (B == 2'b01) & (A == 2'b10) ? 2'b01 :
+		(C == 2'b10) & (B == 2'b11) & (A == 2'b10) ? 2'b11 :
+		(C == 2'b10) & (B == 2'b10) & (A == 2'b10) ? 2'b10 :
+		2'b11;
+endmodule
