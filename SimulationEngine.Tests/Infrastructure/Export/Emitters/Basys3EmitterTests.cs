@@ -11,16 +11,16 @@ namespace SimulationEngine.Tests.Infrastructure.Export.Emitters;
 public class Basys3EmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitterTest(testOutputHelper)
 {
     [Fact]
-    public void ALU2_Top_7Seg_Validate() => BaseTopValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Top_7Seg_Expected.v", true);
+    public void ALU2_Top_7Seg_Validate() => BaseTopValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Top_7Seg_Expected.txt", true);
 
     [Fact]
-    public void ALU2_Top_Validate() => BaseTopValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Top_Expected.v", false);
+    public void ALU2_Top_Validate() => BaseTopValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Top_Expected.txt", false);
 
     [Fact]
-    public void ALU2_Xdc_7Seg_Validate() => BaseXdcValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_7Seg_Expected.xdc", true);
+    public void ALU2_Xdc_7Seg_Validate() => BaseXdcValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Xdc_7Seg_Expected.txt", true);
 
     [Fact]
-    public void ALU2_Xdc_Validate() => BaseXdcValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Expected.xdc", false);
+    public void ALU2_Xdc_Validate() => BaseXdcValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Xdc_Expected.txt", false);
 
     [Fact]
     public void Decode_Validate_ThrowsError() => 
@@ -31,8 +31,7 @@ public class Basys3EmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitte
         Assert.Throws<InvalidOperationException>(() => new Basys3Emitter().EmitXdc(new Decode(), false));
 
     [Fact]
-    public void Emit_7Seg_Display_Module() => 
-        Validate("Baselines/SevenSegment_Expected.v", new Basys3Emitter().Emit7SegmentDisplayModule().Trim());
+    public void Emit_7Seg_Display_Module() => Validate("Baselines/SevenSegment_Expected.txt", new Basys3Emitter().Emit7SegmentDisplayModule().Trim());
 
     [Fact]
     public void Fetch_Validate_ThrowsError() =>
@@ -43,16 +42,16 @@ public class Basys3EmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitte
         Assert.Throws<InvalidOperationException>(() => new Basys3Emitter().EmitXdc(new Fetch(), false));
 
     [Fact]
-    public void Register9_Top_7Seg_Validate() => BaseTopValidate(new Register9(), "Baselines/Register9/Register9_Top_7Seg_Expected.v", true);
+    public void Register9_Top_7Seg_Validate() => BaseTopValidate(new Register9(), "Baselines/Register9/Register9_Top_7Seg_Expected.txt", true);
 
     [Fact]
-    public void Register9_Top_Validate() => BaseTopValidate(new Register9(), "Baselines/Register9/Register9_Top_Expected.v", false);
+    public void Register9_Top_Validate() => BaseTopValidate(new Register9(), "Baselines/Register9/Register9_Top_Expected.txt", false);
 
     [Fact]
-    public void Register9_Xdc_7Seg_Validate() => BaseXdcValidate(new Register9(), "Baselines/Register9/Register9_7Seg_Expected.xdc", true);
+    public void Register9_Xdc_7Seg_Validate() => BaseXdcValidate(new Register9(), "Baselines/Register9/Register9_Xdc_7Seg_Expected.txt", true);
 
     [Fact]
-    public void Register9_Xdc_Validate() => BaseXdcValidate(new Register9(), "Baselines/Register9/Register9_Expected.xdc", false);
+    public void Register9_Xdc_Validate() => BaseXdcValidate(new Register9(), "Baselines/Register9/Register9_Xdc_Expected.txt", false);
 
     private void BaseTopValidate(SubCircuit subCircuit, string filePath, bool include7SegmentDisplay, bool skipEvaluation = false)
     {

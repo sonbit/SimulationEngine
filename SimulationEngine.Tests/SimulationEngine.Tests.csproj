@@ -29,55 +29,55 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Expected.xdc">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Xdc_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_7Seg_Expected.xdc">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Xdc_7Seg_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_TB_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_TB_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Top_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Top_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Top_7Seg_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\ALU2\ALU2_Top_7Seg_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Decode_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Decode_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Decode_TB_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Decode_TB_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Fetch_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Fetch_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Fetch_TB_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\REBEL2\Fetch_TB_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Expected.xdc">
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Xdc_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_7Seg_Expected.xdc">
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Xdc_7Seg_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_TB_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_TB_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Top_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Top_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Top_7Seg_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\Register9\Register9_Top_7Seg_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Infrastructure\Export\Emitters\Baselines\SevenSegment_Expected.v">
+    <None Update="Infrastructure\Export\Emitters\Baselines\SevenSegment_Expected.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

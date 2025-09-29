@@ -11,16 +11,16 @@ namespace SimulationEngine.Tests.Infrastructure.Export.Emitters;
 public class VerilogEmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitterTest(testOutputHelper)
 {
     [Fact]
-    public void ALU2_Validate() => BaseVerilogValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Expected.v");
+    public void ALU2_Validate() => BaseVerilogValidate(new ALU2(), "Baselines/REBEL2/ALU2/ALU2_Expected.txt");
 
     [Fact]
-    public void Decode_Validate() => BaseVerilogValidate(new Decode(), "Baselines/REBEL2/Decode_Expected.v");
+    public void Decode_Validate() => BaseVerilogValidate(new Decode(), "Baselines/REBEL2/Decode_Expected.txt");
 
     [Fact]
-    public void Fetch_Validate() => BaseVerilogValidate(new Fetch(), "Baselines/REBEL2/Fetch_Expected.v");
+    public void Fetch_Validate() => BaseVerilogValidate(new Fetch(), "Baselines/REBEL2/Fetch_Expected.txt");
 
     [Fact]
-    public void Register9_Validate() => BaseVerilogValidate(new Register9(), "Baselines/Register9/Register9_Expected.v");
+    public void Register9_Validate() => BaseVerilogValidate(new Register9(), "Baselines/Register9/Register9_Expected.txt");
 
     private void BaseVerilogValidate(SubCircuit subCircuit, string filePath, bool skipEvaluation = false)
     {
