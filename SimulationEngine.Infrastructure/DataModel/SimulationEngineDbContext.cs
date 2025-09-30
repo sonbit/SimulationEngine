@@ -18,6 +18,7 @@ public class SimulationEngineDbContext : DbContext
     public DbSet<LogicGate> LogicGates { get; set; }
     public DbSet<LogicGateMetadata> LogicGateMetadata { get; set; }
     public DbSet<Pin> Pins { get; set; }
+    public DbSet<PinMetadata> PinMetadata { get; set; }
     public DbSet<Port> Ports { get; set; }
     public DbSet<PortMetadata> PortMetadata { get; set; }
     public DbSet<PortPlacement> PortPlacements { get; set; }
@@ -33,6 +34,7 @@ public class SimulationEngineDbContext : DbContext
     {
         modelBuilder.Entity<LogicGate>(LogicGateConfiguration.Configure);
         modelBuilder.Entity<Pin>(PinConfiguration.Configure);
+        modelBuilder.Entity<PinMetadata>(PinMetadataConfiguration.Configure);
         modelBuilder.Entity<Port>(PortConfiguration.Configure);
         modelBuilder.Entity<PortMetadata>(PortMetadataConfiguration.Configure);
         modelBuilder.Entity<PortPlacement>(PortPlacementConfiguration.Configure);

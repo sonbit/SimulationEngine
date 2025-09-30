@@ -2,11 +2,7 @@
 
 namespace SimulationEngine.Domain.Models.Metadata;
 
-public class PortMetadata : BaseEntity
+public class PortMetadata(Radix radix) : BaseRadixMetadata(radix)
 {
-    public PortMetadata() { }
-
-    public PortMetadata(Radix radix) => Radix = radix;
-
-    public Radix Radix { get; set; } = Radix.TernaryBalanced;
+    public PortMetadata() : this(Radix.TernaryBalanced) { }
 }

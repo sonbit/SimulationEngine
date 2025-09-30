@@ -45,6 +45,8 @@ public sealed partial class VerilogEmitter
 
         if (startTerminal.IsBinary() && !endTerminal.IsBinary())
             net = $"{net},!{net}";
+        else if (!startTerminal.IsBinary() && endTerminal.IsBinary())
+            net = $"{net}[1]";
 
         connections.Add($".{name}({net})");
     }

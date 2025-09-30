@@ -8,9 +8,9 @@ public class Port : Terminal
 {
     public Port() => Title ??= $"{Direction}_{Ordinal}";
 
-    public Port(Radix radix) : this() => PortMetadata = new PortMetadata(radix);
+    public Port(Radix radix) : this() => Metadata = new PortMetadata(radix);
 
-    public Port(Port port) : this(port.PortMetadata.Radix)
+    public Port(Port port) : this(port.Metadata.Radix)
     {
         Title = port.Title;
         Direction = port.Direction;
@@ -20,7 +20,7 @@ public class Port : Terminal
     public PortDirection Direction { get; set; }
     public int Ordinal { get; set; }
 
-    public PortMetadata PortMetadata { get; set; } = new PortMetadata();
+    public PortMetadata Metadata { get; set; } = new PortMetadata();
     public int PortMetadataId { get; set; }
     public SubCircuit SubCircuit { get; set; }
     public int SubCircuitId { get; set; }

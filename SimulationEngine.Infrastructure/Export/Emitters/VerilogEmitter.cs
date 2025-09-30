@@ -81,13 +81,16 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         {
             if (depth == arity)
             {
-                var conditions = new List<string>(arity);
-                for (var i = 0; i < arity; i++)
-                    conditions.Add($"({inputRoles[i]} == {RadixConverter.Convert(logicGate, definition[i])})");
-
                 var outputValue = logicGate.TruthTable.Definition[index++];
                 if (isBinary)
                     outputValue = (byte)(outputValue == 2 ? 1 : 0);
+
+                if (isBinary && outputValue == 0 || !isBinary && outputValue == 1)
+                    return;
+
+                var conditions = new List<string>(arity);
+                for (var i = 0; i < arity; i++)
+                    conditions.Add($"({inputRoles[i]} == {RadixConverter.Convert(logicGate, definition[i])})");
 
                 outputConditions.Add($"{string.Join(" & ", conditions)} ? {RadixConverter.Convert(logicGate, outputValue)} :");
                 return;

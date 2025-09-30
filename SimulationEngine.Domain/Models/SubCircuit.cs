@@ -15,7 +15,7 @@ public class SubCircuit : BaseTitleEntity
 
     public List<LogicGate> LogicGates { get; set; } = [];
     public List<Port> Ports { get; set; } = [];
-    public SubCircuitMetadata SubCircuitMetadata { get; set; }
+    public SubCircuitMetadata Metadata { get; set; }
     public int? SubCircuitMetadataId { get; set; }
     public List<Wire> Wires { get; set; } = [];
 

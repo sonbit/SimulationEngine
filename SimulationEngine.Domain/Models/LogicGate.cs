@@ -20,7 +20,7 @@ public class LogicGate : BaseEntity
 
     public LogicGate(string heptaIndex, Radix radix)
     {
-        this.AddPins(heptaIndex);
+        this.AddPins(heptaIndex, radix);
         TruthTable = new TruthTable(radix) { HeptaIndex = heptaIndex };
     }
 
@@ -32,7 +32,7 @@ public class LogicGate : BaseEntity
 
     public string Hash { get; set; }
 
-    public LogicGateMetadata LogicGateMetadata { get; set; } = new LogicGateMetadata();
+    public LogicGateMetadata Metadata { get; set; } = new LogicGateMetadata();
     public int LogicGateMetadataId { get; set; }
     public List<Pin> Pins { get; set; } = [];
     public SubCircuit SubCircuit { get; set; }

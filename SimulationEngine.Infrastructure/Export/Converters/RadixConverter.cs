@@ -6,7 +6,7 @@ namespace SimulationEngine.Infrastructure.Export.Converters;
 
 public static class RadixConverter
 {
-    public static string Convert(Port port, char value) => port.PortMetadata.Radix switch
+    public static string Convert(Port port, char value) => port.Metadata.Radix switch
     {
         Radix.Binary or Radix.BinarySigned => $"1'b{value}",
         Radix.TernaryBalanced => value switch 
@@ -23,7 +23,7 @@ public static class RadixConverter
             '2' => "2'b10",
             _ => throw new ArgumentOutOfRangeException(nameof(value), value, null)
         },
-        _ => throw new ArgumentOutOfRangeException(port.Title, port.PortMetadata.Radix, null)
+        _ => throw new ArgumentOutOfRangeException(port.Title, port.Metadata.Radix, null)
     };
 
     public static string Convert(LogicGate logicGate, byte value) => logicGate.TruthTable.Metadata.Radix switch

@@ -2,11 +2,7 @@
 
 namespace SimulationEngine.Domain.Models.Metadata;
 
-public class TruthTableMetadata : BaseEntity
+public class TruthTableMetadata(Radix radix) : BaseRadixMetadata(radix)
 {
-    public TruthTableMetadata() { }
-
-    public TruthTableMetadata(Radix radix) => Radix = radix;
-
-    public Radix Radix { get; set; } = Radix.TernaryBalanced;
+    public TruthTableMetadata() : this(Radix.TernaryBalanced) { }
 }
