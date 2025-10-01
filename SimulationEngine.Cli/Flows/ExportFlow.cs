@@ -2,6 +2,7 @@
 using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
+using SimulationEngine.Cli.Settings.Enums;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
@@ -11,17 +12,12 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
 {
     private enum MenuOptions
     {
-        [Description("Emit Verilog")] EmitVerilog,
-        [Description("Emit Verilog testbench")] EmitVerilogTestbnech,
-        [Description("Emit Verilog top")] EmitVerilogTop,
-        [Description("Emit Verilog top with 7 segment display")] EmitVerilogTop7Seg,
-        [Description("Emit Verilog 7 segment display")] Emit7Seg,
-        [Description("Emit XDC")] EmitXdc,
-        [Description("Emit XDC with 7 segment display")] EmitXdc7Seg,
         [Description("Export Verilog files to desktop")] ExportVerilogFiles,
         [Description("Export Verilog files to desktop (zipped)")] ExportVerilogFilesZipped,
-        [Description("Export Verilog files with top and xdc to desktop")] ExportVerilogFilesWithTopAndXdc,
-        [Description("Export Verilog files with top and xdc to desktop (zipped)")] ExportVerilogFilesWithTopAndXdcZipped,
+        [Description("Export Verilog files with top and xdc to desktop")] ExportVerilogFilesWithTopXdc,
+        [Description("Export Verilog files with top and xdc to desktop (zipped)")] ExportVerilogFilesWithTopXdcZipped,
+        [Description("Export Verilog files with top, xdc and 7 segment display to desktop")] ExportVerilogFilesWithTopXdc7Seg,
+        [Description("Export Verilog files with top, xdc and 7 segment display desktop (zipped)")] ExportVerilogFilesWithTopXdc7SegZipped,
         Back
     }
 
@@ -35,36 +31,19 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
 
             switch (menuOption)
             {
-                case MenuOptions.EmitVerilog:
-                    EmitVerilog(subCircuit);
-                    break;
-
-                case MenuOptions.EmitVerilogTestbnech:
-                    EmitVerilogTestbench(subCircuit);
-                    break;
-
-                case MenuOptions.EmitVerilogTop:
-                case MenuOptions.EmitVerilogTop7Seg:
-                    EmitVerilogTop(subCircuit, menuOption == MenuOptions.EmitVerilogTop7Seg);
-                    break;
-
-                case MenuOptions.Emit7Seg:
-                    EmitVerilog7SegmentDisplay();
-                    break;
-
-                case MenuOptions.EmitXdc:
-                case MenuOptions.EmitXdc7Seg:
-                    EmitXdc(subCircuit, menuOption == MenuOptions.EmitXdc7Seg);
-                    break;
-
                 case MenuOptions.ExportVerilogFiles:
                 case MenuOptions.ExportVerilogFilesZipped:
-                    ExportVerilogToDesktop(subCircuit, menuOption == MenuOptions.ExportVerilogFilesZipped);
+                    ExportVerilog(subCircuit, menuOption == MenuOptions.ExportVerilogFilesZipped);
                     break;
 
-                case MenuOptions.ExportVerilogFilesWithTopAndXdc:
-                case MenuOptions.ExportVerilogFilesWithTopAndXdcZipped:
-                    ExportVerilogWithTopAndXdcToDesktop(subCircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopAndXdcZipped);
+                case MenuOptions.ExportVerilogFilesWithTopXdc:
+                case MenuOptions.ExportVerilogFilesWithTopXdc7Seg:
+                    ExportVerilogWithTopAndXdc(subCircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopXdc7Seg);
+                    break;
+
+                case MenuOptions.ExportVerilogFilesWithTopXdcZipped:
+                case MenuOptions.ExportVerilogFilesWithTopXdc7SegZipped:
+                    ExportVerilogWithTopAndXdc(subCircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopXdc7SegZipped, true);
                     break;
 
                 case MenuOptions.Back:
@@ -74,7 +53,7 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
         }
     }
 
-    public async Task EmitVerilog(int id, bool testbench = false)
+    public async Task ExportVerilog(int id, bool includeTop, bool zip, string outputPath = "")
     {
         var subCircuit = await subCircuitService.GetByIdAsync(id);
         if (subCircuit is null)
@@ -83,14 +62,17 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
             return;
         }
 
-        if (!testbench)
-            EmitVerilog(subCircuit);
-        else
-            EmitVerilogTestbench(subCircuit);
+        ExportVerilog(subCircuit, includeTop, zip, outputPath);
     }
 
-    public async Task ExportVerilogSingleFileAsync(string title, bool testbench = false)
+    public async Task ExportVerilog(string? title, bool includeTop, bool zip, string outputPath = "")
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            renderer.DrawError($"Provide a title");
+            return;
+        }
+
         var subCircuit = await subCircuitService.GetByTitleAsync(title);
         if (subCircuit is null)
         {
@@ -98,89 +80,32 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
             return;
         }
 
-        if (!testbench)
-            EmitVerilog(subCircuit);
+        ExportVerilog(subCircuit, includeTop, zip, outputPath);
+    }
+
+    private void ExportVerilog(SubCircuit subCircuit, bool includeTop, bool zip, string outputPath = "")
+    {
+        if (includeTop)
+            ExportVerilogWithTopAndXdc(subCircuit, true, zip, outputPath);
         else
-            EmitVerilogTestbench(subCircuit);
+            ExportVerilog(subCircuit, zip, outputPath);
     }
 
-    private void EmitVerilog7SegmentDisplay()
+    private void ExportVerilog(SubCircuit subCircuit, bool zip = false, string outputPath = "")
     {
-        var verilog7SegmentDisplay = service.EmitVerilog7SegmentDisplay();
-        renderer.Clear();
-        renderer.Write(verilog7SegmentDisplay);
-        renderer.DrawLine(Environment.NewLine);
-    }
-
-    private void EmitVerilog(SubCircuit subCircuit)
-    {
-        var verilog = service.EmitVerilog(subCircuit);
-        renderer.Clear();
-        renderer.Write(verilog);
-        renderer.DrawLine(Environment.NewLine);
-    }
-
-    private void EmitVerilogTestbench(SubCircuit subCircuit)
-    {
-        var testbench = service.EmitVerilogTestbench(subCircuit);
-        if (testbench == null)
-        {
-            renderer.DrawError($"Unable to get testbench for SubCircuit {subCircuit.Id}");
-            return;
-        }
-
-        renderer.Clear();
-        renderer.Write(testbench);
-        renderer.DrawLine(Environment.NewLine);
-    }
-
-    private void EmitVerilogTop(SubCircuit subCircuit, bool include7SegmentDisplay)
-    {
-        renderer.Clear();
-
-        try
-        {
-            var verilogTop = service.EmitVerilogTop(subCircuit, include7SegmentDisplay);
-            renderer.Write(verilogTop);
-            renderer.DrawLine(Environment.NewLine);
-        }
-        catch (InvalidOperationException ioe)
-        {
-            renderer.DrawError(ioe.Message);
-        }
-    }
-
-    private void EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay)
-    {
-        renderer.Clear();
-
-        try
-        {
-            var xdc = service.EmitXdc(subCircuit, include7SegmentDisplay);
-            renderer.Write(xdc);
-            renderer.DrawLine(Environment.NewLine);
-        }
-        catch (InvalidOperationException ioe)
-        {
-            renderer.DrawError(ioe.Message);
-        }
-    }
-
-    private void ExportVerilogToDesktop(SubCircuit subCircuit, bool zip)
-    {
-        var path = service.ExportVerilog(subCircuit, true, zip);
+        var path = service.ExportVerilog(subCircuit, zip, outputPath);
         renderer.Clear();
         renderer.Write(path);
         renderer.DrawLine(Environment.NewLine);
     }
 
-    private void ExportVerilogWithTopAndXdcToDesktop(SubCircuit subCircuit, bool zip)
+    private void ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
     {
         renderer.Clear();
 
         try
         {
-            var path = service.ExportVerilogWithTopAndXdc(subCircuit, true, true, zip);
+            var path = service.ExportVerilogWithTopAndXdc(subCircuit, include7SegmentDisplay, zip, outputPath);
             renderer.Write(path);
             renderer.DrawLine(Environment.NewLine);
         }

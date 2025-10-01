@@ -12,12 +12,14 @@ public sealed class SubCircuitFlow(
     IRenderer renderer, 
     ISubCircuitService service,
     SimulationFlow simulationFlow, 
+    EmitFlow emitFlow,
     ExportFlow exportFlow)
 {
     private enum MenuOptions
     {
         Simulate,
         [Description("Draw tree")] ShowTree,
+        Emit,
         Export,
         Back
     }
@@ -51,6 +53,10 @@ public sealed class SubCircuitFlow(
                 case MenuOptions.ShowTree:
                     renderer.Clear();
                     BuildTree(subCircuit);
+                    break;
+
+                case MenuOptions.Emit:
+                    await emitFlow.RunMenuAsync(subCircuit);
                     break;
 
                 case MenuOptions.Export:

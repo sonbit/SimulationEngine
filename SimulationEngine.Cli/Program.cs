@@ -53,6 +53,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IRenderer, Renderer>();
 
         services.AddScoped<DatabaseFlow>();
+        services.AddScoped<EmitFlow>();
         services.AddScoped<ExportFlow>();
         services.AddScoped<SimulationFlow>();
         services.AddScoped<SubCircuitFlow>();
@@ -60,6 +61,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<TruthTablesFlow>();
 
         services.AddScoped<DatabaseMenuCommand>();
+        services.AddScoped<EmitCommand>();
         services.AddScoped<ExportCommand>();
         services.AddScoped<MainMenuCommand>();
         services.AddScoped<SubCircuitsFindCommand>();
@@ -97,6 +99,7 @@ app.Configure(cfg =>
             sc.AddCommand<SubCircuitsListCommand>("list");
             sc.AddCommand<SubCircuitsPopulateCommand>("populate");
             sc.AddCommand<SubCircuitsShowTreeCommand>("tree");
+            sc.AddCommand<EmitCommand>("emit");
             sc.AddCommand<ExportCommand>("export");
         });
 

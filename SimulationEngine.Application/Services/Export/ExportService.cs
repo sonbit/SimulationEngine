@@ -23,15 +23,15 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
     public string EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay) =>
         basys3Emitter.EmitXdc(subCircuit, include7SegmentDisplay);
 
-    public string ExportVerilog(SubCircuit subCircuit, bool includeTestbench = false, bool zip = false, string outputPath = "")
+    public string ExportVerilog(SubCircuit subCircuit, bool zip = false, string outputPath = "")
     {
-        var builder = CreteaBuilderAddVerilog(subCircuit, includeTestbench);
+        var builder = CreteaBuilderAddVerilog(subCircuit);
         return Write(builder, subCircuit.Title, outputPath, zip);
     }
 
-    public string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool includeTestbench = false, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
+    public string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
     {
-        var builder = CreteaBuilderAddVerilog(subCircuit, includeTestbench);
+        var builder = CreteaBuilderAddVerilog(subCircuit);
 
         if (include7SegmentDisplay && basys3Emitter.Emit7SegmentDisplayModule() is VerilogModule displayModule)
             builder.AddFile($"{displayModule.Name}.v", displayModule.Content);
@@ -45,13 +45,13 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
         return Write(builder, subCircuit.Title, outputPath, zip);
     }
 
-    private ExportBuilder CreteaBuilderAddVerilog(SubCircuit subCircuit, bool includeTestbench)
+    private ExportBuilder CreteaBuilderAddVerilog(SubCircuit subCircuit)
     {
         var verilog = emitter.EmitSubCircuit(subCircuit);
 
         var builder = ExportBuilder.Create().AddVerilogFiles(verilog);
 
-        if (includeTestbench && EmitVerilogTestbenchWithPredefinedTests(subCircuit) is VerilogModule module)
+        if (EmitVerilogTestbenchWithPredefinedTests(subCircuit) is VerilogModule module)
             builder.AddFile($"{module.Name}.v", module.Content);
 
         return builder;
@@ -69,7 +69,7 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
     private static string Write(ExportBuilder builder, string title, string outputPath = "", bool zip = false)
     {
         if (string.IsNullOrEmpty(outputPath))
-            outputPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}/{nameof(SimulationEngine)}";
+            outputPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\{nameof(SimulationEngine)}";
 
         var path = zip
             ? builder.WriteZip(outputPath, title)

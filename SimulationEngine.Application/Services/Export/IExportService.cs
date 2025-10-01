@@ -9,6 +9,6 @@ public interface IExportService
     string? EmitVerilogTestbench(SubCircuit subCircuit);
     string EmitVerilogTop(SubCircuit subCircuit, bool include7SegmentDisplay);
     string EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay);
-    string ExportVerilog(SubCircuit subCircuit, bool includeTestbench = false, bool zip = false, string outputPath = "");
-    string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool includeTestbench = false, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "");
+    string ExportVerilog(SubCircuit subCircuit, bool zip = false, string outputPath = "");
+    string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "");
 }

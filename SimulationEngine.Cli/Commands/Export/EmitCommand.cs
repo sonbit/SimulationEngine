@@ -1,22 +1,23 @@
 ﻿using SimulationEngine.Cli.Flows;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings;
+using SimulationEngine.Cli.Settings.Enums;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Export;
 
-public sealed class ExportCommand(IRenderer renderer, ExportFlow flow) : AsyncCommand<ExportSettings>
+public sealed class EmitCommand(IRenderer renderer, EmitFlow flow) : AsyncCommand<EmitSettings>
 {
-    public override async Task<int> ExecuteAsync(CommandContext context, ExportSettings settings)
+    public override async Task<int> ExecuteAsync(CommandContext context, EmitSettings settings)
     {
         if (settings?.Id > 0)
         {
-            await flow.ExportVerilog(settings.Id ?? 0, settings.IncludeTop, settings.Zip, settings.OutputPath ?? "");
+            await flow.EmitVerilog(settings.Id ?? 0, settings.EmitKind);
             return 0;
         }
         else if (!string.IsNullOrWhiteSpace(settings?.Title))
         {
-            await flow.ExportVerilog(settings.Title, settings.IncludeTop, settings.Zip, settings.OutputPath ?? "");
+            await flow.EmitVerilog(settings.Title, settings.EmitKind);
             return 0;
         }
 
