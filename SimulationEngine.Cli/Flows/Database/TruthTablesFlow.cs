@@ -72,7 +72,6 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
             truthTable.Id,
             truthTable.Title,
             truthTable.HeptaIndex,
-            truthTable.Metadata.Radix,
             LogicGates = truthTable.LogicGates.Count
         }),
         true,
@@ -80,7 +79,6 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
             nameof(TruthTable.Id),
             nameof(TruthTable.Title),
             nameof(TruthTable.HeptaIndex),
-            nameof(TruthTableMetadata.Radix),
             nameof(TruthTable.LogicGates)
         ]);
     }
@@ -105,7 +103,6 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
             (nameof(TruthTable.Title), truthTable.Title),
             (nameof(TruthTable.HeptaIndex), truthTable.HeptaIndex),
             (nameof(TruthTable.Definition), truthTable.Definition),
-            (nameof(TruthTableMetadata.Radix), truthTable.Metadata.Radix),
             (nameof(TruthTable.LogicGates), truthTable.LogicGates.Count),
         ]);
     }
