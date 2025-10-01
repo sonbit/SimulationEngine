@@ -1,5 +1,4 @@
-﻿using SimulationEngine.Domain.Models.Metadata.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,7 +17,7 @@ public static class HeptaIndexConverter
         _ => throw new ArgumentOutOfRangeException(nameof(heptaIndex), "HeptaIndex must be 1, 3, 9 or 27 chars")
     };
 
-    public static byte[] GetByteArray(string heptaIndex, Radix radix)
+    public static byte[] GetByteArray(string heptaIndex)
     {
         ArgumentNullException.ThrowIfNull(heptaIndex, "HeptaIndex cannot be null");
 
@@ -31,40 +30,20 @@ public static class HeptaIndexConverter
             heptaIndexMap[character] = i;
         }
 
-        //if (radix == Radix.Binary || radix == Radix.BinarySigned)
-        //{
-        //    var bits = new int[heptaIndex.Length * 2];
-        //    int position = 0;
+        var trits = new int[heptaIndex.Length * 3];
+        int position = 0;
 
-        //    for (int i = heptaIndex.Length - 1; i >= 0; i--)
-        //    {
-        //        var character = char.ToUpperInvariant(heptaIndex[i]);
-        //        if (!heptaIndexMap.TryGetValue(character, out int index))
-        //            throw new ArgumentException($"Character '{heptaIndex[i]}' not found in alphabet.", nameof(heptaIndex));
+        for (int i = heptaIndex.Length - 1; i >= 0; i--)
+        {
+            var character = char.ToUpperInvariant(heptaIndex[i]);
+            if (!heptaIndexMap.TryGetValue(character, out int index))
+                throw new ArgumentException($"Character '{heptaIndex[i]}' not found in alphabet.", nameof(heptaIndex));
 
-        //        bits[position++] = index / 2 % 2;
-        //        bits[position++] = index % 2;
-        //    }
+            trits[position++] = index % 3;
+            trits[position++] = index / 3 % 3;
+            trits[position++] = index / 9;
+        }
 
-        //    return [.. bits.Select(bit => (byte)bit)];
-        //}
-        //else
-        //{
-            var trits = new int[heptaIndex.Length * 3];
-            int position = 0;
-
-            for (int i = heptaIndex.Length - 1; i >= 0; i--)
-            {
-                var character = char.ToUpperInvariant(heptaIndex[i]);
-                if (!heptaIndexMap.TryGetValue(character, out int index))
-                    throw new ArgumentException($"Character '{heptaIndex[i]}' not found in alphabet.", nameof(heptaIndex));
-
-                trits[position++] = index % 3;
-                trits[position++] = index / 3 % 3;
-                trits[position++] = index / 9;
-            }
-
-            return [.. trits.Select(trit => (byte)trit)];
-        //}
+        return [.. trits.Select(trit => (byte)trit)];
     }
 }

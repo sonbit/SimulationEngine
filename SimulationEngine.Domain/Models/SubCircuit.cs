@@ -1,6 +1,5 @@
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Domain.Models.Metadata;
-using SimulationEngine.Domain.Utils;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;

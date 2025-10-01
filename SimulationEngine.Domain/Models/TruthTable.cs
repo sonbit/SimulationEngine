@@ -18,5 +18,5 @@ public class TruthTable : BaseTitleEntity
     public TruthTableMetadata Metadata { get; set; } = new TruthTableMetadata();
     public int PortMetadataId { get; set; }
 
-    [NotMapped] public byte[] Definition => HeptaIndexConverter.GetByteArray(HeptaIndex, Metadata.Radix);
+    [NotMapped] public byte[] Definition => HeptaIndexConverter.GetByteArray(HeptaIndex);
 }
