@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SimulationEngine.Application.Export;
 using SimulationEngine.Application.Export.Emitters;
 using SimulationEngine.Application.Services.Database;
 using SimulationEngine.Application.Services.Database.SubCircuits;

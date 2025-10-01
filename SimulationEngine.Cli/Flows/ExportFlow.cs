@@ -2,7 +2,6 @@
 using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
-using SimulationEngine.Cli.Settings.Enums;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 

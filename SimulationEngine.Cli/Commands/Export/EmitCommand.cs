@@ -1,7 +1,6 @@
 ﻿using SimulationEngine.Cli.Flows;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings;
-using SimulationEngine.Cli.Settings.Enums;
 using Spectre.Console.Cli;
 
 namespace SimulationEngine.Cli.Commands.Export;
