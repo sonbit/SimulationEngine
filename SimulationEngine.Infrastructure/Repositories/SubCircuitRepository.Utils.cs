@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SimulationEngine.Domain.Comparers;
 using SimulationEngine.Domain.Compilers.Models;
-using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Placements;
 using System;
@@ -13,86 +12,127 @@ namespace SimulationEngine.Infrastructure.Repositories;
 
 public partial class SubCircuitRepository
 {
-    private async Task<SubCircuit> BuildInstanceFromTemplateAsync(SubCircuit template, List<SubCircuitPlacement> placements)
+    private async Task<SubCircuit> BuildInstanceFromTemplateAsync(SubCircuit template, List<SubCircuitPlacement> subCircuitPlacements)
     {
-        var subCircuit = CloneShallow(template, out var portMap, out var pinMap);
+        var parentSubCircuitClone = CloneShallow(template, out var portMapByRef, out var pinMapByRef);
 
-        var childSubCircuits = new List<SubCircuit>(placements.Count);
-        var ordinalToChild = new Dictionary<int, (SubCircuit child, List<Port> ins, List<Port> outs)>();
+        var parentPortIds = template.Ports.Select(port => port.Id).ToHashSet();
+        var parentLogicGateIds = template.LogicGates.Select(logicGate => logicGate.Id).ToHashSet();
 
-        foreach (var subCircuitPlacement in placements.OrderBy(p => p.Ordinal))
+        var topPortMapById = portMapByRef.ToDictionary(kv => kv.Key.Id, kv => kv.Value);
+        var topPinMapById = pinMapByRef.ToDictionary(kv => kv.Key.Id, kv => kv.Value);
+
+        var childSubCircuitClonesByOrdinal = new Dictionary<int, (SubCircuit childSubCircuit, List<Port> inputs, List<Port> outputs)>();
+        foreach (var subCircuitPlacement in subCircuitPlacements.OrderBy(subCircuitPlacement => subCircuitPlacement.Ordinal))
         {
-            var (childSubCircuitTemplate, childSubCircuitTemplatePlacements) = await GetSubCircuitWithChildren(subCircuitPlacement.ChildSubCircuitId);
-            var childSubCircuit = await BuildInstanceFromTemplateAsync(childSubCircuitTemplate, childSubCircuitTemplatePlacements);
-            childSubCircuits.Add(childSubCircuit);
-
-            ordinalToChild[subCircuitPlacement.Ordinal] = (childSubCircuit, childSubCircuit.Inputs, childSubCircuit.Outputs);
+            var (childTemplate, childSubCircuitPlacements) = await GetSubCircuitWithChildren(subCircuitPlacement.ChildSubCircuitId);
+            var childSubCircuitClone = await BuildInstanceFromTemplateAsync(childTemplate, childSubCircuitPlacements);
+            childSubCircuitClonesByOrdinal[subCircuitPlacement.Ordinal] = (childSubCircuitClone, childSubCircuitClone.Inputs, childSubCircuitClone.Outputs);
         }
+        parentSubCircuitClone.SubCircuits = [.. childSubCircuitClonesByOrdinal.OrderBy(kv => kv.Key).Select(kv => kv.Value.childSubCircuit)];
 
-        subCircuit.SubCircuits = childSubCircuits;
-
-        var ppIndex = placements
+        var portPlacementIndex = subCircuitPlacements
             .SelectMany(subCircuitPlacement => subCircuitPlacement.PortPlacements
                 .Select(portPlacement => new { portPlacement.Id, subCircuitPlacement.Ordinal, portPlacement.IsInput, portPlacement.IndexWithinChild }))
-            .ToDictionary(k => k.Id, k => (k.Ordinal, k.IsInput, k.IndexWithinChild));
+            .ToDictionary(x => x.Id, x => (x.Ordinal, x.IsInput, x.IndexWithinChild));
 
-        Port MapPlacementPort(PortPlacement pp)
+        Port MapPortPlacement(PortPlacement portPlacement)
         {
-            var (ordinal, isInput, index) = ppIndex[pp.Id];
-            var (child, inputs, outputs) = ordinalToChild[ordinal];
+            var (ordinal, isInput, index) = portPlacementIndex[portPlacement.Id];
+            var (_, inputs, outputs) = childSubCircuitClonesByOrdinal[ordinal];
             return isInput ? inputs[index] : outputs[index];
         }
 
-        Terminal Translate(Terminal t) => t switch
+        var childPortIdToClone = new Dictionary<int, Port>();
+        foreach (var subCircuitPlacement in subCircuitPlacements)
         {
-            Port port => portMap[port],
-            Pin pin => pinMap[pin],
-            PortPlacement pp => MapPlacementPort(pp),
-            _ => throw new InvalidOperationException()
+            var childTemplate = subCircuitPlacement.ChildSubCircuit;
+            if (childTemplate is null) 
+                continue;
+
+            var childInputsByOrdinal = childTemplate.Inputs.OrderBy(port => port.Ordinal).ToList();
+            var childOutputsByOrdinal = childTemplate.Outputs.OrderBy(port => port.Ordinal).ToList();
+
+            foreach (var portPlacement in subCircuitPlacement.PortPlacements)
+            {
+                var (childSubCircuit, inputs, outputs) = childSubCircuitClonesByOrdinal[subCircuitPlacement.Ordinal];
+
+                var templateChildPort = portPlacement.IsInput
+                    ? childInputsByOrdinal[portPlacement.IndexWithinChild]
+                    : childOutputsByOrdinal[portPlacement.IndexWithinChild];
+
+                var clonedChildPort = portPlacement.IsInput
+                    ? inputs[portPlacement.IndexWithinChild]
+                    : outputs[portPlacement.IndexWithinChild];
+
+                childPortIdToClone[templateChildPort.Id] = clonedChildPort;
+            }
+        }
+
+        Terminal Translate(Terminal terminal) => terminal switch
+        {
+            Port port when parentPortIds.Contains(port.Id) => topPortMapById[port.Id],
+            Pin pin when parentLogicGateIds.Contains(pin.LogicGateId) => topPinMapById[pin.Id],
+            PortPlacement portPlacement => MapPortPlacement(portPlacement),
+            Port childPort when childPortIdToClone.TryGetValue(childPort.Id, out var mappedChildPort) => mappedChildPort,
+            _ => throw new InvalidOperationException($"Failed to translate terminal {terminal.Title}"),
         };
 
         var newWires = new List<Wire>(template.Wires.Count);
         foreach (var wire in template.Wires)
         {
-            var startTerminal = Translate(wire.StartTerminal);
-            var endTerminal = Translate(wire.EndTerminal);
-            if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
-                (startTerminal, endTerminal) = (endTerminal, startTerminal);
-
-            newWires.Add(new Wire { SubCircuit = subCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
+            newWires.Add(new Wire
+            {
+                SubCircuit = parentSubCircuitClone,
+                StartTerminal = Translate(wire.StartTerminal),
+                EndTerminal = Translate(wire.EndTerminal)
+            });
         }
-        subCircuit.Wires = newWires;
+        parentSubCircuitClone.Wires = newWires;
 
-        return subCircuit;
+        return parentSubCircuitClone;
     }
 
     private static SubCircuit CloneShallow(SubCircuit subCircuit, out Dictionary<Port, Port> portMap, out Dictionary<Pin, Pin> pinMap)
     {
-        var ports = subCircuit.OrderedPorts;
-
-        var parent = new SubCircuit
+        var parentSubCircuit = new SubCircuit
         {
             Title = subCircuit.Title,
-            Ports = [.. ports.Select(port => new Port(port))],
-            LogicGates = [.. subCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
+            Ports = [],
+            LogicGates = [],
             Wires = [],
             SubCircuits = []
         };
 
-        portMap = ports
-            .Zip(parent.OrderedPorts)
-            .ToDictionary(z => z.First, z => z.Second);
+        var clonedPorts = subCircuit.OrderedPorts.Select(port => new Port(port)).ToList();
+        foreach (var clonedPort in clonedPorts)
+            clonedPort.SubCircuit = parentSubCircuit;
+        parentSubCircuit.Ports = clonedPorts;
 
-        var gateMap = subCircuit.LogicGates
-            .Zip(parent.LogicGates)
-            .ToDictionary(z => z.First, z => z.Second);
+        var clonedLogicGates = subCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate)).ToList();
+        foreach (var clonedLogicGate in clonedLogicGates)
+        {
+            foreach (var clonedPin in clonedLogicGate.Pins)
+                clonedPin.LogicGate = clonedLogicGate;
+        }
+        parentSubCircuit.LogicGates = clonedLogicGates;
+
+        portMap = subCircuit.OrderedPorts
+            .Zip(parentSubCircuit.OrderedPorts)
+            .ToDictionary(zipped => zipped.First, zipped => zipped.Second);
+
+        var logicGateMap = subCircuit.LogicGates
+            .Zip(parentSubCircuit.LogicGates)
+            .ToDictionary(zipped => zipped.First, zipped => zipped.Second);
 
         pinMap = subCircuit.LogicGates
-            .SelectMany(g => g.Pins)
-            .ToDictionary(src => src, src => gateMap[src.LogicGate].Pins
-            .Single(p => p.Role == src.Role));
+            .SelectMany(logicGate => logicGate.Pins)
+            .ToDictionary(
+                pin => pin,
+                pin => logicGateMap[pin.LogicGate].Pins.Single(innerPin => innerPin.Role == pin.Role)
+            );
 
-        return parent;
+        return parentSubCircuit;
     }
 
     private async Task<(SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements)> GetSubCircuitWithChildren(int id)
@@ -124,6 +164,9 @@ public partial class SubCircuitRepository
             .Include(subCircuitPlacement => subCircuitPlacement.PortPlacements)
             .Include(subCircuitPlacement => subCircuitPlacement.ChildSubCircuit)
                 .ThenInclude(subCircuit => subCircuit.Ports)
+            .Include(subCircuitPlacement => subCircuitPlacement.ChildSubCircuit)
+                .ThenInclude(childSubCircuit => childSubCircuit.LogicGates)
+                    .ThenInclude(logicGate => logicGate.Pins)
             .ToListAsync();
 
         return (subCircuit, subCircuitPlacements);
@@ -191,36 +234,38 @@ public partial class SubCircuitRepository
             subCircuitPlacements.Add(subCircuitPlacement);
         }
 
-        var ppIndex = subCircuitPlacements
+        var portPlacementIndex = subCircuitPlacements
             .SelectMany(subCircuitPlacement => subCircuitPlacement.PortPlacements
                 .Select(portPlacement => (subCircuitPlacement.Ordinal, portPlacement.IsInput, portPlacement.IndexWithinChild, portPlacement)))
-            .ToDictionary(k => (k.Ordinal, k.IsInput, k.IndexWithinChild));
+            .ToDictionary(tuple => (tuple.Ordinal, tuple.IsInput, tuple.IndexWithinChild), tuple => tuple.portPlacement);
 
-        PortPlacement ResolvePlacementPort(PortPlacement src) =>
-            ppIndex[(src.SubCircuitPlacement.Ordinal, src.IsInput, src.IndexWithinChild)].portPlacement;
+        PortPlacement ResolvePortPlacement(PortPlacement portPlacement) =>
+            portPlacementIndex[(portPlacement.SubCircuitPlacement.Ordinal, portPlacement.IsInput, portPlacement.IndexWithinChild)];
 
         Terminal MapTerminal(Terminal terminal) => terminal switch
         {
             Port port => portMap[port],
             Pin pin => logicGateMap[placed.SubCircuit.LogicGates
                 .Single(logicGate => logicGate.Pins.Contains(pin))].Pins
-                .Single(mapPin => mapPin.Role == pin.Role),
-            PortPlacement portPlacement => ResolvePlacementPort(portPlacement),
+                .Single(innerPin => innerPin.Role == pin.Role),
+            PortPlacement portPlacement => ResolvePortPlacement(portPlacement),
             _ => throw new InvalidOperationException()
         };
 
         foreach (var wire in placed.SubCircuit.Wires)
         {
-            var startTerminal = MapTerminal(wire.StartTerminal);
-            var endTerminal = MapTerminal(wire.EndTerminal);
+            var start = MapTerminal(wire.StartTerminal);
+            var end = MapTerminal(wire.EndTerminal);
 
-            if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
-                (startTerminal, endTerminal) = (endTerminal, startTerminal);
-
-            dbContext.Wires.Add(new Wire { SubCircuit = newSubCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
+            dbContext.Wires.Add(new Wire
+            {
+                SubCircuit = newSubCircuit,
+                StartTerminal = start,
+                EndTerminal = end
+            });
         }
-        await dbContext.SaveChangesAsync();
 
+        await dbContext.SaveChangesAsync();
         return newSubCircuit;
     }
 }

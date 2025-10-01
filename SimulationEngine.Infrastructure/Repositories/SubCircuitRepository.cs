@@ -59,7 +59,8 @@ public partial class SubCircuitRepository(SimulationEngineDbContext dbContext, I
 
     private IIncludableQueryable<SubCircuit, Terminal> GetSubCircuitQuery()
     {
-        return dbContext.SubCircuits.AsNoTrackingWithIdentityResolution()
+        return dbContext.SubCircuits
+            .AsNoTrackingWithIdentityResolution()
             .AsSplitQuery()
             .Include(subCircuit => subCircuit.Ports)
                 .ThenInclude(port => port.Metadata)

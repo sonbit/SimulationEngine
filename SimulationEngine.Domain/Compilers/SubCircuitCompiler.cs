@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Domain.Compilers.Models;
-using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Hashers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
@@ -14,13 +13,13 @@ public static class SubCircuitCompiler
 {
     public static SubCircuitClosure Compile(SubCircuit subCircuit)
     {
-        var byAuthor = new Dictionary<SubCircuit, SubCircuitPlaced>(ReferenceEqualityComparer.Instance);
-        var byHash = new Dictionary<string, SubCircuitPlaced>(StringComparer.Ordinal);
+        var subCircuitPlacedBySubCircuit = new Dictionary<SubCircuit, SubCircuitPlaced>(ReferenceEqualityComparer.Instance);
+        var subCircuitPlacedByHash = new Dictionary<string, SubCircuitPlaced>(StringComparer.Ordinal);
 
         return new SubCircuitClosure 
         { 
-            SubCircuitPlaced = CompileRecursive(byAuthor, subCircuit, byHash), 
-            MapByHash = byHash 
+            SubCircuitPlaced = CompileRecursive(subCircuitPlacedBySubCircuit, subCircuit, subCircuitPlacedByHash), 
+            MapByHash = subCircuitPlacedByHash 
         };
     }
 
@@ -33,6 +32,15 @@ public static class SubCircuitCompiler
             LogicGates = [.. authorSubCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
             Wires = []
         };
+
+        foreach (var port in subCircuit.Ports)
+            port.SubCircuit = subCircuit;
+
+        foreach (var logicGate in subCircuit.LogicGates)
+        {
+            foreach (var pin in logicGate.Pins)
+                pin.LogicGate = logicGate;
+        }
 
         var topPortMap = authorSubCircuit.Ports
             .Zip(subCircuit.Ports)
@@ -96,9 +104,6 @@ public static class SubCircuitCompiler
                 _ => throw new InvalidOperationException("Unsupported wire end")
             };
 
-            if (string.CompareOrdinal(TerminalEncoder.Encode(startTerminal), TerminalEncoder.Encode(endTerminal)) > 0) 
-                (startTerminal, endTerminal) = (endTerminal, startTerminal);
-
             subCircuit.Wires.Add(new Wire { SubCircuit = subCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
         }
 
@@ -106,37 +111,40 @@ public static class SubCircuitCompiler
     }
 
     private static SubCircuitPlaced CompileRecursive(
-        Dictionary<SubCircuit, SubCircuitPlaced> byAuthor,
-        SubCircuit author,
-        Dictionary<string, SubCircuitPlaced> byHash)
+        Dictionary<SubCircuit, SubCircuitPlaced> subCircuitPlacedBySubCircuit,
+        SubCircuit authorSubCircuit,
+        Dictionary<string, SubCircuitPlaced> subCircuitPlacedByHash)
     {
-        if (byAuthor.TryGetValue(author, out var cached)) return cached;
+        if (subCircuitPlacedBySubCircuit.TryGetValue(authorSubCircuit, out var cachedSubCircuitPlaced)) 
+            return cachedSubCircuitPlaced;
 
-        var (def, placements) = BuildPlaced(author);
+        var (subCircuit, subCircuitPlacements) = BuildPlaced(authorSubCircuit);
 
-        var infos = new List<SubCircuitPlacementInfo>(placements.Count);
-        for (int i = 0; i < placements.Count; i++)
+        var subCircuitPlacementInfos = new List<SubCircuitPlacementInfo>(subCircuitPlacements.Count);
+        for (int i = 0; i < subCircuitPlacements.Count; i++)
         {
-            var childAuthor = author.SubCircuits[i];
-            var childPlaced = CompileRecursive(byAuthor, childAuthor, byHash);
-            var childHash = SubCircuitHasher.Compute(childPlaced.SubCircuit, [.. childPlaced.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
-            childPlaced.SubCircuit.Hash = childHash;
+            var childAuthorSubCircuit = authorSubCircuit.SubCircuits[i];
+            var childSubCircuitPlaced = CompileRecursive(subCircuitPlacedBySubCircuit, childAuthorSubCircuit, subCircuitPlacedByHash);
+            var childSubCircuitHash = SubCircuitHasher.Compute(childSubCircuitPlaced.SubCircuit, 
+                [.. childSubCircuitPlaced.SubCircuitPlacementInfos.Select(subCircuitPlacementInfo => subCircuitPlacementInfo.SubCircuitPlacement)]);
+            childSubCircuitPlaced.SubCircuit.Hash = childSubCircuitHash;
 
-            var pi = placements[i];
-            infos.Add(new SubCircuitPlacementInfo
+            subCircuitPlacementInfos.Add(new SubCircuitPlacementInfo
             {
-                SubCircuitPlacement = pi,
-                ChildSubCircuit = childAuthor,
-                ChildSubCircuitHash = childHash
+                SubCircuitPlacement = subCircuitPlacements[i],
+                ChildSubCircuit = childAuthorSubCircuit,
+                ChildSubCircuitHash = childSubCircuitHash
             });
         }
 
-        var myHash = SubCircuitHasher.Compute(def, [.. infos.Select(p => p.SubCircuitPlacement)]);
-        def.Hash = myHash;
+        var hash = SubCircuitHasher.Compute(subCircuit, 
+            [.. subCircuitPlacementInfos.Select(subCircuitPlacementInfo => subCircuitPlacementInfo.SubCircuitPlacement)]);
+        subCircuit.Hash = hash;
 
-        var placed = new SubCircuitPlaced { SubCircuit = def, SubCircuitPlacementInfos = infos };
-        byAuthor[author] = placed;
-        byHash[myHash] = placed;
-        return placed;
+        var subCircuitPlaced = new SubCircuitPlaced { SubCircuit = subCircuit, SubCircuitPlacementInfos = subCircuitPlacementInfos };
+        subCircuitPlacedBySubCircuit[authorSubCircuit] = subCircuitPlaced;
+        subCircuitPlacedByHash[hash] = subCircuitPlaced;
+
+        return subCircuitPlaced;
     }
 }
