@@ -13,7 +13,7 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
 
     public VerilogModule EmitTestbench(SubCircuit subCircuit, string testString)
     {
-        var moduleName = $"tb_{VerilogUtils.GetSubCircuitModuleName(subCircuit)}";
+        var moduleName = $"{VerilogUtils.GetSubCircuitModuleName(subCircuit)}_tb";
 
         Builder.Clear();
 

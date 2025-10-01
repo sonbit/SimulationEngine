@@ -31,7 +31,8 @@ public class Basys3EmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitte
         Assert.Throws<InvalidOperationException>(() => new Basys3Emitter().EmitXdc(new Decode(), false));
 
     [Fact]
-    public void Emit_7Seg_Display_Module() => Validate("Baselines/SevenSegment_Expected.txt", new Basys3Emitter().Emit7SegmentDisplayModule().Trim());
+    public void Emit_7Seg_Display_Module() => Validate("Baselines/SevenSegment_Expected.txt", 
+        new Basys3Emitter().Emit7SegmentDisplayModule().Content.Trim());
 
     [Fact]
     public void Fetch_Validate_ThrowsError() =>
@@ -55,7 +56,7 @@ public class Basys3EmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitte
 
     private void BaseTopValidate(SubCircuit subCircuit, string filePath, bool include7SegmentDisplay, bool skipEvaluation = false)
     {
-        var output = new Basys3Emitter().EmitTopModule(subCircuit, include7SegmentDisplay).Trim();
+        var output = new Basys3Emitter().EmitTopModule(subCircuit, include7SegmentDisplay).Content.Trim();
         Validate(filePath, output, skipEvaluation);
     }
 

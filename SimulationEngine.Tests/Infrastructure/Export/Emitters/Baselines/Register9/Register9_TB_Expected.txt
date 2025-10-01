@@ -1,4 +1,4 @@
-module tb_c_Register9;
+module c_Register9_tb;
 	reg [1:0] RdAddr1;
 	reg [1:0] RdAddr0;
 	reg [1:0] WrAddr1;

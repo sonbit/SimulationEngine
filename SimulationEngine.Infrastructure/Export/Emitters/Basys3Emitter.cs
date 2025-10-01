@@ -17,7 +17,7 @@ public partial class Basys3Emitter : IBasys3Emitter
     {
         (var inputBits, var outputBits) = ValidateAndReturnBits(subCircuit);
 
-        var topModuleName = $"top_{VerilogUtils.GetSubCircuitModuleName(subCircuit)}";
+        var topModuleName = $"{VerilogUtils.GetSubCircuitModuleName(subCircuit)}_top";
 
         Builder.Clear();
 
@@ -87,10 +87,15 @@ public partial class Basys3Emitter : IBasys3Emitter
         var inputBits = subCircuit.Inputs.Sum(port => port.IsBinary() ? 1 : 2);
         var outputBits = subCircuit.Outputs.Sum(port => port.IsBinary() ? 1 : 2);
 
+        var errors = new List<string>();
+
         if (inputBits > 16)
-            throw new InvalidOperationException($"This design needs {inputBits} switch bits (Basys3 has 16)");
+            errors.Add($"{inputBits} switch pins for its inputs");
         if (outputBits > 16)
-            throw new InvalidOperationException($"This design drives {outputBits} LED bits (Basys3 has 16)");
+            errors.Add($"{outputBits} LED pins for its outputs");
+
+        if (errors.Count > 0)
+            throw new InvalidOperationException($"{subCircuit.Title} requires {string.Join(" and ", errors)} (Basys 3 has 16{(errors.Count == 2 ? " of each" : "")})");
 
         return (inputBits, outputBits);
     }

@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module top_c_ALU2 (
+module c_ALU2_top (
 	input [13:0] sw,
 	output [5:0] led
 );

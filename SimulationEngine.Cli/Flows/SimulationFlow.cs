@@ -111,6 +111,9 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
             subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]",
             "No SubCircuits found")!;
 
+        if (selectedSubCircuit is null)
+            return null;
+
         return await service.GetByIdAsync(selectedSubCircuit!.Id);
     }
 

@@ -22,7 +22,6 @@ using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
 using SimulationEngine.Infrastructure.Export.Emitters;
-using SimulationEngine.Infrastructure.Exporters.Verilog;
 using SimulationEngine.Infrastructure.Repositories;
 using SimulationEngine.Infrastructure.UnitOfWork;
 using Spectre.Console;

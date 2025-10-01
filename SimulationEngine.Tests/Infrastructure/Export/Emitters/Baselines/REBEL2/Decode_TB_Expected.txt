@@ -1,4 +1,4 @@
-module tb_c_Decode;
+module c_Decode_tb;
 	reg [1:0] Pc1;
 	reg [1:0] Pc0;
 	reg [1:0] Op1;

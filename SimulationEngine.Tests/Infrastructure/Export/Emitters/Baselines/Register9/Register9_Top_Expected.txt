@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module top_c_Register9 (
+module c_Register9_top (
 	input [10:0] sw,
 	output [1:0] led
 );

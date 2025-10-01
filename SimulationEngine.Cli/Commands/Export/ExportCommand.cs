@@ -11,7 +11,7 @@ public sealed class ExportCommand(IRenderer renderer, ExportFlow flow) : AsyncCo
     {
         if (settings?.Id > 0)
         {
-            await flow.WriteVerilogAsync(settings.Id ?? 0, settings.Testbench);
+            await flow.EmitVerilog(settings.Id ?? 0, settings.Testbench);
             return 0;
         }
         else if (!string.IsNullOrWhiteSpace(settings?.Title))

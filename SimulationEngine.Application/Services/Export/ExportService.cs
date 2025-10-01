@@ -1,38 +1,80 @@
-﻿
+﻿using SimulationEngine.Application.Builders;
 using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Application.Export.Emitters.Models;
 using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 
 namespace SimulationEngine.Application.Services.Export;
 
-public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbEmitter, IBasys3Emitter xdcEmitter) : IExportService
+public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbEmitter, IBasys3Emitter basys3Emitter) : IExportService
 {
-    public FileInfo ExportAllVerilog(SubCircuit subCircuit, bool includeTestbench = false)
+    public string EmitVerilog7SegmentDisplay() =>
+        basys3Emitter.Emit7SegmentDisplayModule().Content;
+
+    public string EmitVerilog(SubCircuit subCircuit) => 
+        emitter.EmitSubCircuit(subCircuit).GetAllModules();
+
+    public string? EmitVerilogTestbench(SubCircuit subCircuit) =>
+        EmitVerilogTestbenchWithPredefinedTests(subCircuit)?.Content;
+
+    public string EmitVerilogTop(SubCircuit subCircuit, bool include7SegmentDisplay) =>
+        basys3Emitter.EmitTopModule(subCircuit, include7SegmentDisplay).Content;
+
+    public string EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay) =>
+        basys3Emitter.EmitXdc(subCircuit, include7SegmentDisplay);
+
+    public string ExportVerilog(SubCircuit subCircuit, bool includeTestbench = false, bool zip = false, string outputPath = "")
     {
-        throw new NotImplementedException();
+        var builder = CreteaBuilderAddVerilog(subCircuit, includeTestbench);
+        return Write(builder, subCircuit.Title, outputPath, zip);
     }
 
-    public FileInfo ExportAllVerilogForBasys3(SubCircuit subCircuit, bool includeTestbench = false)
+    public string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool includeTestbench = false, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
     {
-        throw new NotImplementedException();
+        var builder = CreteaBuilderAddVerilog(subCircuit, includeTestbench);
+
+        if (include7SegmentDisplay && basys3Emitter.Emit7SegmentDisplayModule() is VerilogModule displayModule)
+            builder.AddFile($"{displayModule.Name}.v", displayModule.Content);
+
+        var topModule = basys3Emitter.EmitTopModule(subCircuit, include7SegmentDisplay);
+        builder.AddFile($"{topModule.Name}.v", topModule.Content);
+
+        var xdc = basys3Emitter.EmitXdc(subCircuit, include7SegmentDisplay);
+        builder.AddFile($"{builder.TopModuleName}.xdc", xdc);
+
+        return Write(builder, subCircuit.Title, outputPath, zip);
     }
 
-    public FileInfo ExportSingleVerilogFile(SubCircuit subCircuit, bool includeTestbench = false)
+    private ExportBuilder CreteaBuilderAddVerilog(SubCircuit subCircuit, bool includeTestbench)
     {
-        throw new NotImplementedException();
+        var verilog = emitter.EmitSubCircuit(subCircuit);
+
+        var builder = ExportBuilder.Create().AddVerilogFiles(verilog);
+
+        if (includeTestbench && EmitVerilogTestbenchWithPredefinedTests(subCircuit) is VerilogModule module)
+            builder.AddFile($"{module.Name}.v", module.Content);
+
+        return builder;
     }
 
-    public string ExportSingleVerilogFileAsText(SubCircuit subCircuit)
-    {
-        return emitter.EmitSubCircuit(subCircuit);
-    }
-
-    public string? ExportSingleVerilogTestbenchFileAsText(SubCircuit subCircuit)
+    private VerilogModule? EmitVerilogTestbenchWithPredefinedTests(SubCircuit subCircuit)
     {
         var testString = DesignUtils.GetTestString(subCircuit.Title);
         if (testString == null)
             return null;
 
         return tbEmitter.EmitTestbench(subCircuit, testString);
+    }
+
+    private static string Write(ExportBuilder builder, string title, string outputPath = "", bool zip = false)
+    {
+        if (string.IsNullOrEmpty(outputPath))
+            outputPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}/{nameof(SimulationEngine)}";
+
+        var path = zip
+            ? builder.WriteZip(outputPath, title)
+            : builder.WriteFolder(outputPath, title);
+
+        return path;
     }
 }
