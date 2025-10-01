@@ -24,7 +24,7 @@ public class VerilogTestbenchEmitterTests(ITestOutputHelper testOutputHelper) : 
 
     private void BaseTestbenchValidate(SubCircuit subCircuit, string filePath, bool skipEvaluation = false)
     {
-        var output = new VerilogTestbenchEmitter().EmitTestbench(subCircuit, subCircuit.GetTestString()).Trim();
+        var output = new VerilogTestbenchEmitter().EmitTestbench(subCircuit, subCircuit.GetTestString()).Content.Trim();
         Validate(filePath, output, skipEvaluation);
     }
 }

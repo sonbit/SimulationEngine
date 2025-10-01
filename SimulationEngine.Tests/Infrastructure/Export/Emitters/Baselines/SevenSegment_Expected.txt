@@ -1,4 +1,5 @@
 `timescale 1ns/1ps
+
 module basys3_7segment_display #(
     parameter integer CLK_HZ = 100_000_000,
     parameter integer SCAN_HZ = 1000

@@ -1,16 +1,16 @@
 ﻿using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Application.Export.Emitters.Models;
 using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Domain.Models.Extensions;
 using SimulationEngine.Infrastructure.Export.Converters;
-using SimulationEngine.Infrastructure.Export.Emitters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SimulationEngine.Infrastructure.Exporters.Verilog;
+namespace SimulationEngine.Infrastructure.Export.Emitters;
 
 public sealed partial class VerilogEmitter : IVerilogEmitter
 {
@@ -23,11 +23,11 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
     private readonly HashSet<string> NetDeclarations = [];
     private readonly Dictionary<Terminal, string> TerminalNetMap = [];
 
-    public string EmitSubCircuit(SubCircuit topSubCircuit)
+    public Verilog EmitSubCircuit(SubCircuit topSubCircuit)
     {
         ClearState();
 
-        var builder = new StringBuilder(Capacity);
+        var verilog = new Verilog();
 
         var subCircuits = EnumerateUniqueSubCircuits(topSubCircuit);
 
@@ -35,7 +35,13 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         foreach (var subCircuit in subCircuits)
         {
             if (emittedSubCircuitModules.Add(VerilogUtils.GetSubCircuitModuleName(subCircuit)))
-                builder.AppendLine(EmitSubCircuitModule(subCircuit));
+            {
+                verilog.SubCircuitModules.Add(new VerilogModule
+                {
+                    Name = VerilogUtils.GetSubCircuitModuleName(subCircuit),
+                    Content = EmitSubCircuitModule(subCircuit)
+                });
+            }
         }
 
         var emittedLogicGateModules = new HashSet<string>(StringComparer.Ordinal);
@@ -46,15 +52,23 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         foreach (var logicGate in uniqueLogicGates)
         {
             if (emittedLogicGateModules.Add(VerilogUtils.GetLogicGateModuleName(logicGate)))
-                builder.AppendLine(EmitLogicGateModule(logicGate));
+            {
+                verilog.LogicGateModules.Add(new VerilogModule
+                {
+                    Name = VerilogUtils.GetLogicGateModuleName(logicGate),
+                    Content = EmitLogicGateModule(logicGate)
+                });
+            }
         }
 
-        return builder.ToString().TrimEnd();
+        return verilog;
     }
 
     private string EmitLogicGateModule(LogicGate logicGate)
     {
         ClearState();
+
+        Builder.AppendLine($"module {VerilogUtils.GetLogicGateModuleName(logicGate)} (");
 
         var inputRoles = logicGate.InputPinsDescending.Select(pin => pin.Role).ToList();
         var isBinary = logicGate.IsBinary();
@@ -63,7 +77,6 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         foreach (var role in inputRoles)
             inputs.Add($"input wire {VerilogUtils.GetWidth(isBinary)}{role}");
 
-        Builder.AppendLine($"module {VerilogUtils.GetLogicGateModuleName(logicGate)} (");
         for (int i = 0; i < inputs.Count; i++)
             Builder.AppendLine($"\t{inputs[i]},");
         Builder.AppendLine($"\toutput wire {VerilogUtils.GetWidth(isBinary)}{PinRole.Q}");
@@ -110,7 +123,7 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
             Builder.AppendLine($"\t\t{outputCondition}");
         Builder.AppendLine($"\t\t{(isBinary ? "1'b0" : "2'b11")};");
 
-        Builder.AppendLine("endmodule");
+        Builder.Append("endmodule");
         return Builder.ToString();
     }
 
@@ -182,7 +195,7 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
             Builder.AppendLine($"\tassign {output.Title} = {GetOrCreateTerminalNet(wire.StartTerminal)};");
         }
 
-        Builder.AppendLine("endmodule");
+        Builder.Append("endmodule");
         return Builder.ToString();
     }
 }

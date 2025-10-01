@@ -3,7 +3,7 @@ using SimulationEngine.Designs.REBEL2.Decode;
 using SimulationEngine.Designs.REBEL2.Fetch;
 using SimulationEngine.Designs.SubCircuits.Memory;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Infrastructure.Exporters.Verilog;
+using SimulationEngine.Infrastructure.Export.Emitters;
 using Xunit.Abstractions;
 
 namespace SimulationEngine.Tests.Infrastructure.Export.Emitters;
@@ -24,7 +24,7 @@ public class VerilogEmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitt
 
     private void BaseVerilogValidate(SubCircuit subCircuit, string filePath, bool skipEvaluation = false)
     {
-        var output = new VerilogEmitter().EmitSubCircuit(subCircuit).Trim();
+        var output = new VerilogEmitter().EmitSubCircuit(subCircuit).GetAllModules().Trim();
         Validate(filePath, output, skipEvaluation);
     }
 }

@@ -1,3 +1,6 @@
+## Pins have been reversed, and leds and switches are pairwise flipped due to 2 bits to 1 trit mapping and ordering
+
+
 ## Clock signal
 set_property -dict { PACKAGE_PIN W5 IOSTANDARD LVCMOS33 } [get_ports clk]
 create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
@@ -54,5 +57,6 @@ set_property CFGBVS VCCO [current_design]
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]
 set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]
 set_property CONFIG_MODE SPIx4 [current_design]
+
 
 ## Reference https://github.com/Digilent/digilent-xdc/blob/master/Basys-3-Master.xdc

@@ -16,20 +16,21 @@ public partial class Basys3Emitter
 
         Builder.Clear();
 
+        Builder.AppendLine("## Pins have been reversed, and leds and switches are pairwise flipped due to 2 bits to 1 trit mapping and ordering");
+        Builder.AppendLine().AppendLine();
+
         if (include7SegmentDisplay)
             AddClock();
 
         Builder.AppendLine("## Switches");
         for (var i = 0; i < inputBits; i++)
             Builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {SwitchPinsReversedAndPairwiseFlipped[i]} IOSTANDARD LVCMOS33 }} [get_ports {{sw[{i}]}}]");
-        Builder.AppendLine();
-        Builder.AppendLine();
+        Builder.AppendLine().AppendLine();
 
         Builder.AppendLine("## LEDs");
         for (var i = 0; i < outputBits; i++)
             Builder.AppendLine($"set_property -dict {{ PACKAGE_PIN {LedPinsReversedAndPairwiseFlipped[i]} IOSTANDARD LVCMOS33 }} [get_ports {{led[{i}]}}]");
-        Builder.AppendLine();
-        Builder.AppendLine();
+        Builder.AppendLine().AppendLine();
 
         if (include7SegmentDisplay)
             Add7SegmentDisplayPins();
@@ -43,7 +44,7 @@ public partial class Basys3Emitter
         Builder.AppendLine("set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]");
         Builder.AppendLine("set_property BITSTREAM.CONFIG.CONFIGRATE 33 [current_design]");
         Builder.AppendLine("set_property CONFIG_MODE SPIx4 [current_design]");
-        Builder.AppendLine();
+        Builder.AppendLine().AppendLine();
 
         Builder.Append("## Reference https://github.com/Digilent/digilent-xdc/blob/master/Basys-3-Master.xdc");
 
@@ -65,8 +66,7 @@ public partial class Basys3Emitter
         Builder.AppendLine("set_property -dict { PACKAGE_PIN U4   IOSTANDARD LVCMOS33 } [get_ports {an[1]}]");
         Builder.AppendLine("set_property -dict { PACKAGE_PIN V4   IOSTANDARD LVCMOS33 } [get_ports {an[2]}]");
         Builder.AppendLine("set_property -dict { PACKAGE_PIN W4   IOSTANDARD LVCMOS33 } [get_ports {an[3]}]");
-        Builder.AppendLine();
-        Builder.AppendLine();
+        Builder.AppendLine().AppendLine();
     }
 
     private void AddClock()
@@ -74,7 +74,6 @@ public partial class Basys3Emitter
         Builder.AppendLine("## Clock signal");
         Builder.AppendLine("set_property -dict { PACKAGE_PIN W5 IOSTANDARD LVCMOS33 } [get_ports clk]");
         Builder.AppendLine("create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]");
-        Builder.AppendLine();
-        Builder.AppendLine();
+        Builder.AppendLine().AppendLine();
     }
 }

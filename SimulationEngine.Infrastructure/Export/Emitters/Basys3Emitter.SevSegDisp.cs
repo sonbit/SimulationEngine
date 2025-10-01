@@ -1,4 +1,5 @@
-﻿using SimulationEngine.Domain.Models;
+﻿using SimulationEngine.Application.Export.Emitters.Models;
+using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 using System;
 using System.Collections.Generic;
@@ -10,42 +11,11 @@ public partial class Basys3Emitter
     private const string TritLow = "2'b01";
     private const string ModuleName = "basys3_7segment_display";
 
-    private void Add7SegmentDisplayModule(List<Port> outputs)
+    public VerilogModule Emit7SegmentDisplayModule()
     {
-        var digits = GetDigits(outputs);
-
-        var digitEnabledMask =
-            (digits[3].mst != TritLow || digits[3].lst != TritLow ? 1 : 0) << 3 |
-            (digits[2].mst != TritLow || digits[2].lst != TritLow ? 1 : 0) << 2 |
-            (digits[1].mst != TritLow || digits[1].lst != TritLow ? 1 : 0) << 1 |
-            (digits[0].mst != TritLow || digits[0].lst != TritLow ? 1 : 0) << 0;
-
-        Builder.AppendLine($"\t{ModuleName} #(");
-        Builder.AppendLine("\t\t.CLK_HZ(100_000_000),");
-        Builder.AppendLine("\t\t.SCAN_HZ(1000)");
-        Builder.AppendLine($"\t) {ModuleName} (");
-        Builder.AppendLine("\t\t.clk(clk),");
-        Builder.AppendLine("\t\t.rst_n(1'b1),");
-        Builder.AppendLine($"\t\t.digit3_mst({digits[3].mst}),");
-        Builder.AppendLine($"\t\t.digit3_lst({digits[3].lst}),");
-        Builder.AppendLine($"\t\t.digit2_mst({digits[2].mst}),");
-        Builder.AppendLine($"\t\t.digit2_lst({digits[2].lst}),");
-        Builder.AppendLine($"\t\t.digit1_mst({digits[1].mst}),");
-        Builder.AppendLine($"\t\t.digit1_lst({digits[1].lst}),");
-        Builder.AppendLine($"\t\t.digit0_mst({digits[0].mst}),");
-        Builder.AppendLine($"\t\t.digit0_lst({digits[0].lst}),");
-        Builder.AppendLine($"\t\t.enable_mask(4'b{Convert.ToString(digitEnabledMask, 2).PadLeft(4, '0')}),");
-        Builder.AppendLine("\t\t.seg(seg),");
-        Builder.AppendLine("\t\t.dp(dp),");
-        Builder.AppendLine("\t\t.an(an)");
-        Builder.AppendLine("\t);");
-        Builder.AppendLine();
-    }
-
-    public string Emit7SegmentDisplayModule()
-    {
-        return $"""
+        var content = $"""
             `timescale 1ns/1ps
+
             module {ModuleName} #(
                 parameter integer CLK_HZ = 100_000_000,
                 parameter integer SCAN_HZ = 1000
@@ -161,6 +131,44 @@ public partial class Basys3Emitter
                 assign an = ~an_ah;
             endmodule
             """;
+
+        return new VerilogModule
+        {
+            Name = ModuleName,
+            Content = content
+        };
+    }
+
+    private void Add7SegmentDisplayModule(List<Port> outputs)
+    {
+        var digits = GetDigits(outputs);
+
+        var digitEnabledMask =
+            (digits[3].mst != TritLow || digits[3].lst != TritLow ? 1 : 0) << 3 |
+            (digits[2].mst != TritLow || digits[2].lst != TritLow ? 1 : 0) << 2 |
+            (digits[1].mst != TritLow || digits[1].lst != TritLow ? 1 : 0) << 1 |
+            (digits[0].mst != TritLow || digits[0].lst != TritLow ? 1 : 0) << 0;
+
+        Builder.AppendLine($"\t{ModuleName} #(");
+        Builder.AppendLine("\t\t.CLK_HZ(100_000_000),");
+        Builder.AppendLine("\t\t.SCAN_HZ(1000)");
+        Builder.AppendLine($"\t) {ModuleName} (");
+        Builder.AppendLine("\t\t.clk(clk),");
+        Builder.AppendLine("\t\t.rst_n(1'b1),");
+        Builder.AppendLine($"\t\t.digit3_mst({digits[3].mst}),");
+        Builder.AppendLine($"\t\t.digit3_lst({digits[3].lst}),");
+        Builder.AppendLine($"\t\t.digit2_mst({digits[2].mst}),");
+        Builder.AppendLine($"\t\t.digit2_lst({digits[2].lst}),");
+        Builder.AppendLine($"\t\t.digit1_mst({digits[1].mst}),");
+        Builder.AppendLine($"\t\t.digit1_lst({digits[1].lst}),");
+        Builder.AppendLine($"\t\t.digit0_mst({digits[0].mst}),");
+        Builder.AppendLine($"\t\t.digit0_lst({digits[0].lst}),");
+        Builder.AppendLine($"\t\t.enable_mask(4'b{Convert.ToString(digitEnabledMask, 2).PadLeft(4, '0')}),");
+        Builder.AppendLine("\t\t.seg(seg),");
+        Builder.AppendLine("\t\t.dp(dp),");
+        Builder.AppendLine("\t\t.an(an)");
+        Builder.AppendLine("\t);");
+        Builder.AppendLine();
     }
 
     private static (string mst, string lst)[] GetDigits(List<Port> outputs)

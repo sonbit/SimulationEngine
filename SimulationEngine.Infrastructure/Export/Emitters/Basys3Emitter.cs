@@ -1,4 +1,5 @@
 ﻿using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Application.Export.Emitters.Models;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 using System;
@@ -12,16 +13,18 @@ public partial class Basys3Emitter : IBasys3Emitter
 {
     private readonly StringBuilder Builder = new(64 * 1024);
 
-    public string EmitTopModule(SubCircuit subCircuit, bool include7SegmentDisplay = false)
+    public VerilogModule EmitTopModule(SubCircuit subCircuit, bool include7SegmentDisplay = false)
     {
         (var inputBits, var outputBits) = ValidateAndReturnBits(subCircuit);
+
+        var topModuleName = $"top_{VerilogUtils.GetSubCircuitModuleName(subCircuit)}";
 
         Builder.Clear();
 
         Builder.AppendLine("`timescale 1ns/1ps");
         Builder.AppendLine();
 
-        Builder.AppendLine($"module top_{VerilogUtils.GetSubCircuitModuleName(subCircuit)} (");
+        Builder.AppendLine($"module {topModuleName} (");
         if (include7SegmentDisplay)
             Builder.AppendLine("\tinput clk,");
         Builder.AppendLine($"\tinput [{inputBits - 1}:0] sw,");
@@ -70,8 +73,13 @@ public partial class Basys3Emitter : IBasys3Emitter
             ledIndex += output.IsBinary() ? 1 : 2;
         }
 
-        Builder.AppendLine("endmodule");
-        return Builder.ToString();
+        Builder.Append("endmodule");
+
+        return new VerilogModule
+        {
+            Name = topModuleName,
+            Content = Builder.ToString()
+        };
     }
 
     private static (int inputBits, int outputBits) ValidateAndReturnBits(SubCircuit subCircuit)

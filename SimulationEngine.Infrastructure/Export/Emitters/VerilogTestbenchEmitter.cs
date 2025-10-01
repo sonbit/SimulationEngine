@@ -1,5 +1,5 @@
-﻿using SimulationEngine.Application.Export;
-using SimulationEngine.Application.Export.Emitters;
+﻿using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Application.Export.Emitters.Models;
 using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Infrastructure.Export.Converters;
@@ -11,11 +11,13 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
 {
     private readonly StringBuilder Builder = new(64 * 1024);
 
-    public string EmitTestbench(SubCircuit subCircuit, string testString)
+    public VerilogModule EmitTestbench(SubCircuit subCircuit, string testString)
     {
+        var moduleName = $"tb_{VerilogUtils.GetSubCircuitModuleName(subCircuit)}";
+
         Builder.Clear();
 
-        Builder.AppendLine($"module tb_{VerilogUtils.GetSubCircuitModuleName(subCircuit)};");
+        Builder.AppendLine($"module {moduleName};");
         foreach (var input in subCircuit.Inputs)
             Builder.AppendLine($"\treg {VerilogUtils.GetPortWidthAndTitle(input)};");
 
@@ -26,8 +28,13 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
         AddDut(subCircuit);
         AddTests(subCircuit, testString);
 
-        Builder.AppendLine("endmodule");
-        return Builder.ToString();
+        Builder.Append("endmodule");
+
+        return new VerilogModule
+        {
+            Name = moduleName,
+            Content = Builder.ToString()
+        };
     }
 
     private void AddDut(SubCircuit subCircuit)
