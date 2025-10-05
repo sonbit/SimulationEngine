@@ -11,6 +11,7 @@
       <ProjectReference Include="..\SimulationEngine.Application\SimulationEngine.Application.csproj" />
       <ProjectReference Include="..\SimulationEngine.Designs\SimulationEngine.Designs.csproj" />
       <ProjectReference Include="..\SimulationEngine.Infrastructure\SimulationEngine.Infrastructure.csproj" />
+      <ProjectReference Include="..\SimulationEngine.Simulator\SimulationEngine.Simulator.csproj" />
     </ItemGroup>
 
     <ItemGroup>
