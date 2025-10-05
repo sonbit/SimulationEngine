@@ -1,7 +1,6 @@
 ﻿using SimulationEngine.Domain.Hashers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
-using SimulationEngine.Infrastructure.Export.Emitters;
 using System;
 using System.Collections.Generic;
 using System.Linq;

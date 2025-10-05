@@ -1,6 +1,5 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
-using SimulationEngine.Domain.Models.Metadata.Enums;
 
 namespace SimulationEngine.Designs.SubCircuits.Memory;
 

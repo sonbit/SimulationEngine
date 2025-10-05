@@ -2,7 +2,6 @@
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Models;
-using SimulationEngine.Domain.Models.Metadata;
 using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
