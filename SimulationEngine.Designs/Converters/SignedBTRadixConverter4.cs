@@ -152,5 +152,8 @@ public class SignedBTRadixConverter4 : SubCircuit
         1110 00-+
         1111 000-
         0000 0000
+        0001 000+
+        0010 00+-
+        0011 00+0
     """;
 }
