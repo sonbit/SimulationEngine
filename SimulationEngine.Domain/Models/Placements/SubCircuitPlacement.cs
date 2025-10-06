@@ -2,10 +2,9 @@
 
 namespace SimulationEngine.Domain.Models.Placements;
 
-public class SubCircuitPlacement : BaseEntity
+public class SubCircuitPlacement : BaseTitleEntity
 {
     public int Ordinal { get; set; }
-    public string Title { get; set; }
     public int ParentSubCircuitId { get; set; }
     public SubCircuit ParentSubCircuit { get; set; }
     public int ChildSubCircuitId { get; set; }
