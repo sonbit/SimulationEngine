@@ -30,8 +30,6 @@ public class LogicGate : BaseEntity
         Pins = [.. logicGate.Pins.Select(pin => new Pin { Role = pin.Role })];
     }
 
-    public string Hash { get; set; }
-
     public LogicGateMetadata Metadata { get; set; } = new LogicGateMetadata();
     public int LogicGateMetadataId { get; set; }
     public List<Pin> Pins { get; set; } = [];
