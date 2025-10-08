@@ -1,6 +1,7 @@
 ﻿using SimulationEngine.Application.Services.Database.SubCircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
@@ -120,8 +121,23 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
         ]);
     }
 
-    public async Task SubCircuitsPopulateAsync() =>
-        await service.Populate();
+    public async Task SubCircuitsPopulateAsync()
+    {
+        var designsAssembly = typeof(StandardCellLibrary).Assembly;
+
+        var designs = designsAssembly
+            .GetTypes()
+            .Where(type => type.IsClass && !type.IsAbstract && typeof(SubCircuit).IsAssignableFrom(type))
+            .ToList();
+
+        foreach (var design in designs)
+        {
+            var subCircuit = (SubCircuit?)Activator.CreateInstance(design, nonPublic: true);
+            if (subCircuit == null)
+                continue;
+            await service.CreateOrGetAsync(subCircuit);
+        }
+    }
 
     private async Task SubCircuitsSelectAsync()
     {

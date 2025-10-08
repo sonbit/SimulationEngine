@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Application.Services.Database.Base;
-using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 
@@ -7,16 +6,9 @@ namespace SimulationEngine.Application.Services.Database.TruthTables;
 
 public class TruthTableService(ITruthTableRepository repository) : BaseService<TruthTable>(repository), ITruthTableService
 {
-    public async Task<TruthTable> GetByHeptaIndex(string heptaIndex) => await repository.GetByHeptaIndexAsync(heptaIndex);
-
-    public async override Task Populate()
-    {
-        var truthTables = new List<TruthTable>()
-            .Concat(StandardCellLibrary.GetArity1().Select(kvp => new TruthTable { HeptaIndex = kvp.Key, Title = kvp.Value }))
-            .Concat(StandardCellLibrary.GetArity2().Select(kvp => new TruthTable { HeptaIndex = kvp.Key, Title = kvp.Value }))
-            .Concat(StandardCellLibrary.GetArity3().Select(kvp => new TruthTable { HeptaIndex = kvp.Key, Title = kvp.Value }))
-            .ToList();
-
+    public async Task<List<TruthTable>> CreateOrGetRangeAsync(List<TruthTable> truthTables) => 
         await repository.CreateOrGetRangeAsync(truthTables);
-    }
+
+    public async Task<TruthTable> GetByHeptaIndex(string heptaIndex) => 
+        await repository.GetByHeptaIndexAsync(heptaIndex);
 }

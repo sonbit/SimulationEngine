@@ -5,5 +5,6 @@ namespace SimulationEngine.Application.Services.Database.TruthTables;
 
 public interface ITruthTableService : IBaseService<TruthTable>
 {
+    Task<List<TruthTable>> CreateOrGetRangeAsync(List<TruthTable> truthTables);
     Task<TruthTable> GetByHeptaIndex(string heptaIndex);
 }

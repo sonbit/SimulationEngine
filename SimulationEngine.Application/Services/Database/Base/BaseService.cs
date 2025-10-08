@@ -13,7 +13,4 @@ public class BaseService<TEntity>(IBaseRepository<TEntity> repository) : IBaseSe
 
     public async Task<TEntity> GetByIdAsync(int id) => 
         await repository.GetByIdAsync(id);
-
-    public virtual Task Populate() => 
-        throw new NotImplementedException();
 }

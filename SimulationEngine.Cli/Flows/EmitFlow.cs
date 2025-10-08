@@ -3,6 +3,7 @@ using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings.Enums;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
@@ -139,7 +140,14 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
 
     private void EmitVerilogTestbench(SubCircuit subCircuit)
     {
-        var testbench = service.EmitVerilogTestbench(subCircuit);
+        var testString = DesignUtils.GetTestString(subCircuit.Title);
+        if (string.IsNullOrWhiteSpace(testString))
+        {
+            renderer.DrawError($"No test string found for SubCircuit {subCircuit.Id}");
+            return;
+        }
+
+        var testbench = service.EmitVerilogTestbench(subCircuit, testString);
         if (testbench == null)
         {
             renderer.DrawError($"Unable to get testbench for SubCircuit {subCircuit.Id}");

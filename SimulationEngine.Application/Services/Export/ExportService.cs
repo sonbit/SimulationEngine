@@ -1,7 +1,6 @@
 ﻿using SimulationEngine.Application.Builders;
 using SimulationEngine.Application.Export.Emitters;
 using SimulationEngine.Application.Export.Emitters.Models;
-using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 
 namespace SimulationEngine.Application.Services.Export;
@@ -14,8 +13,8 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
     public string EmitVerilog(SubCircuit subCircuit) => 
         emitter.EmitSubCircuit(subCircuit).GetAllModules();
 
-    public string? EmitVerilogTestbench(SubCircuit subCircuit) =>
-        EmitVerilogTestbenchWithPredefinedTests(subCircuit)?.Content;
+    public string? EmitVerilogTestbench(SubCircuit subCircuit, string testString) =>
+        EmitVerilogTestbenchWithTests(subCircuit, testString)?.Content;
 
     public string EmitVerilogTop(SubCircuit subCircuit, bool include7SegmentDisplay) =>
         basys3Emitter.EmitTopModule(subCircuit, include7SegmentDisplay).Content;
@@ -23,15 +22,15 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
     public string EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay) =>
         basys3Emitter.EmitXdc(subCircuit, include7SegmentDisplay);
 
-    public string ExportVerilog(SubCircuit subCircuit, bool zip = false, string outputPath = "")
+    public string ExportVerilog(SubCircuit subCircuit, string? testString, bool zip = false, string outputPath = "")
     {
-        var builder = CreteaBuilderAddVerilog(subCircuit);
+        var builder = CreteaBuilderAddVerilog(subCircuit, testString);
         return Write(builder, subCircuit.Title, outputPath, zip);
     }
 
-    public string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
+    public string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, string? testString, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
     {
-        var builder = CreteaBuilderAddVerilog(subCircuit);
+        var builder = CreteaBuilderAddVerilog(subCircuit, testString);
 
         if (include7SegmentDisplay && basys3Emitter.Emit7SegmentDisplayModule() is VerilogModule displayModule)
             builder.AddFile($"{displayModule.Name}.v", displayModule.Content);
@@ -45,22 +44,21 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
         return Write(builder, subCircuit.Title, outputPath, zip);
     }
 
-    private ExportBuilder CreteaBuilderAddVerilog(SubCircuit subCircuit)
+    private ExportBuilder CreteaBuilderAddVerilog(SubCircuit subCircuit, string? testString)
     {
         var verilog = emitter.EmitSubCircuit(subCircuit);
 
         var builder = ExportBuilder.Create().AddVerilogFiles(verilog);
 
-        if (EmitVerilogTestbenchWithPredefinedTests(subCircuit) is VerilogModule module)
+        if (EmitVerilogTestbenchWithTests(subCircuit, testString) is VerilogModule module)
             builder.AddFile($"{module.Name}.v", module.Content);
 
         return builder;
     }
 
-    private VerilogModule? EmitVerilogTestbenchWithPredefinedTests(SubCircuit subCircuit)
+    private VerilogModule? EmitVerilogTestbenchWithTests(SubCircuit subCircuit, string? testString)
     {
-        var testString = DesignUtils.GetTestString(subCircuit.Title);
-        if (testString == null)
+        if (string.IsNullOrWhiteSpace(testString))
             return null;
 
         return tbEmitter.EmitTestbench(subCircuit, testString);

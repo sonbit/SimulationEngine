@@ -1,6 +1,7 @@
 ﻿using SimulationEngine.Application.Services.Database.TruthTables;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
@@ -82,8 +83,16 @@ public sealed class TruthTablesFlow(IPrompter prompter, IRenderer renderer, ITru
         ]);
     }
 
-    public async Task TruthTablesPopulateAsync() => 
-        await service.Populate();
+    public async Task TruthTablesPopulateAsync()
+    {
+        var truthTables = new List<TruthTable>()
+            .Concat(StandardCellLibrary.GetArity1().Select(kvp => new TruthTable { HeptaIndex = kvp.Key, Title = kvp.Value }))
+            .Concat(StandardCellLibrary.GetArity2().Select(kvp => new TruthTable { HeptaIndex = kvp.Key, Title = kvp.Value }))
+            .Concat(StandardCellLibrary.GetArity3().Select(kvp => new TruthTable { HeptaIndex = kvp.Key, Title = kvp.Value }))
+            .ToList();
+
+        await service.CreateOrGetRangeAsync(truthTables);
+    }
 
     private async Task DrawTruthTable(int id)
     {

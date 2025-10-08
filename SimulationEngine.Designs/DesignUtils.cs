@@ -7,6 +7,9 @@ public static class DesignUtils
 {
     public static string? GetTestString(string subCircuitTitle)
     {
+        if (string.IsNullOrWhiteSpace(subCircuitTitle))
+            return null;
+
         var type = Assembly
             .GetExecutingAssembly()
             .GetTypes()

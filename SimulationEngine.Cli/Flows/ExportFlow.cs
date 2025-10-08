@@ -2,6 +2,7 @@
 using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
+using SimulationEngine.Designs;
 using SimulationEngine.Domain.Models;
 using System.ComponentModel;
 
@@ -92,7 +93,8 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
 
     private void ExportVerilog(SubCircuit subCircuit, bool zip = false, string outputPath = "")
     {
-        var path = service.ExportVerilog(subCircuit, zip, outputPath);
+        var testString = DesignUtils.GetTestString(subCircuit.Title);
+        var path = service.ExportVerilog(subCircuit, testString, zip, outputPath);
         renderer.Clear();
         renderer.Write(path);
         renderer.DrawLine(Environment.NewLine);
@@ -104,7 +106,8 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
 
         try
         {
-            var path = service.ExportVerilogWithTopAndXdc(subCircuit, include7SegmentDisplay, zip, outputPath);
+            var testString = DesignUtils.GetTestString(subCircuit.Title);
+            var path = service.ExportVerilogWithTopAndXdc(subCircuit, testString, include7SegmentDisplay, zip, outputPath);
             renderer.Write(path);
             renderer.DrawLine(Environment.NewLine);
         }
