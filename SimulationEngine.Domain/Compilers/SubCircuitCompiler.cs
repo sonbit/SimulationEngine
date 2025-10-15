@@ -23,7 +23,7 @@ public static class SubCircuitCompiler
         };
     }
 
-    public static (SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements) BuildPlaced(SubCircuit authorSubCircuit)
+    private static (SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements) BuildPlaced(SubCircuit authorSubCircuit)
     {
         var subCircuit = new SubCircuit
         {
@@ -84,8 +84,8 @@ public static class SubCircuitCompiler
             var ports = isInput ? childSubCircuit.Inputs : childSubCircuit.Outputs;
 
             int childPortIndex = ports.IndexOf(childPort);
-                return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
-            }
+            return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
+        }
 
         foreach (var wire in authorSubCircuit.Wires)
         {
