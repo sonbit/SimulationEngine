@@ -1,5 +1,4 @@
 ﻿using SimulationEngine.Domain.Comparers;
-using SimulationEngine.Domain.Encoders;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Placements;
 using System;
@@ -12,7 +11,9 @@ namespace SimulationEngine.Domain.Hashers;
 
 public static class SubCircuitHasher
 {
+    private const string LogicGatePin = $"{nameof(LogicGate)}{nameof(Port)}";
     private const char Separator = '|';
+    private const string TopPort = $"Top{nameof(Port)}";
 
     public static string Compute(SubCircuit subCircuit, IReadOnlyList<SubCircuitPlacement> placements)
     {
@@ -37,7 +38,7 @@ public static class SubCircuitHasher
         }
 
         var encodedWires = subCircuit.Wires
-            .Select(wire => $"{TerminalEncoder.Encode(wire.StartTerminal)}->{TerminalEncoder.Encode(wire.EndTerminal)}")
+            .Select(wire => $"{Encode(wire.StartTerminal)}->{Encode(wire.EndTerminal)}")
             .OrderBy(encodedWire => encodedWire, StringComparer.Ordinal)
             .ToList();
 
@@ -60,4 +61,12 @@ public static class SubCircuitHasher
         for (var i = 0; i < strings.Count; i++)
             sb.Append(strings[i]).Append(newLineEnd && i == (strings.Count - 1) ? Environment.NewLine : separator);
     }
+
+    private static string Encode(Terminal terminal) => terminal switch
+    {
+        Port port => $"{TopPort}{Separator}{port.Direction}{Separator}{port.Ordinal}",
+        Pin pin => $"{LogicGatePin}{Separator}{pin.Role}",
+        PortPlacement portPlacement => $"{nameof(PortPlacement)}{Separator}{portPlacement.IsInput}{Separator}{portPlacement.IndexWithinChild}",
+        _ => throw new NotSupportedException("Unknwon terminal type")
+    };
 }

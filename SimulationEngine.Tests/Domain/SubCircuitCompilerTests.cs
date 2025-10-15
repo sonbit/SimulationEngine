@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
 using SimulationEngine.Domain.Compilers;
 
-namespace SimulationEngine.Tests.Domain.Compilers;
+namespace SimulationEngine.Tests.Domain;
 
 public sealed class SubCircuitCompilerTests
 {

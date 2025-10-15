@@ -2,7 +2,7 @@
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
 
-namespace SimulationEngine.Tests.Domain.Comparers;
+namespace SimulationEngine.Tests.Domain;
 
 public sealed class LogicGateOrderComparerTests
 {

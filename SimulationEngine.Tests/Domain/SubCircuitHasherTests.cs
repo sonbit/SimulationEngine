@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Domain.Compilers;
 using SimulationEngine.Domain.Hashers;
 
-namespace SimulationEngine.Tests.Domain.Hashers;
+namespace SimulationEngine.Tests.Domain;
 
 public class SubCircuitHasherTests
 {
