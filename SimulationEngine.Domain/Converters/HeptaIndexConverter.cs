@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SimulationEngine.Domain.Converters;
@@ -23,20 +22,13 @@ public static class HeptaIndexConverter
 
         GetArity(heptaIndex);
 
-        var heptaIndexMap = new Dictionary<char, int>(27);
-        for (int i = 0; i < HeptavintimalNotation.Length; i++)
-        {
-            var character = char.ToUpperInvariant(HeptavintimalNotation[i]);
-            heptaIndexMap[character] = i;
-        }
-
         var trits = new int[heptaIndex.Length * 3];
         int position = 0;
 
         for (int i = heptaIndex.Length - 1; i >= 0; i--)
         {
             var character = char.ToUpperInvariant(heptaIndex[i]);
-            if (!heptaIndexMap.TryGetValue(character, out int index))
+            if (!(HeptavintimalNotation.AsSpan().IndexOf(character) is var index))
                 throw new ArgumentException($"Character '{heptaIndex[i]}' not found in alphabet.", nameof(heptaIndex));
 
             trits[position++] = index % 3;
