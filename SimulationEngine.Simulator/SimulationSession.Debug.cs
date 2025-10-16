@@ -48,14 +48,14 @@ public partial class SimulationSession
 
         Console.WriteLine($"\tDriver: {net.Driver.Name}");
 
-        if (net.Driver is TruthTableProcess gateProcess)
+        if (net.Driver is LogicGateProcess logicGateProcess)
         {
-            Console.WriteLine($"[diag] {port.Title}: driven by {gateProcess.Name}");
+            Console.WriteLine($"[diag] {port.Title}: driven by {logicGateProcess.Name}");
 
-            var a = gateProcess._a?.CurrentValue ?? 0;
-            var b = gateProcess._b?.CurrentValue ?? 0;
-            var c = gateProcess._c?.CurrentValue ?? 0;
-            var d = gateProcess._d?.CurrentValue ?? 0;
+            var a = logicGateProcess._a?.CurrentValue ?? 0;
+            var b = logicGateProcess._b?.CurrentValue ?? 0;
+            var c = logicGateProcess._c?.CurrentValue ?? 0;
+            var d = logicGateProcess._d?.CurrentValue ?? 0;
 
             Console.WriteLine($"\t\tinputs: A={a} B={b} C={c} D={d}");
         }

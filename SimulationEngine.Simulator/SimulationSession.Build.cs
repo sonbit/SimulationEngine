@@ -85,7 +85,7 @@ public partial class SimulationSession
                     $"Multiple drivers detected on {path}:{q.Name}.");
 
             processes.Add(
-                new TruthTableProcess(
+                new LogicGateProcess(
                     $"{path}/gate[{logicGate.TruthTable.HeptaIndex ?? logicGate.TruthTable.Definition.Length.ToString()}]",
                     a, b, c, d, q, logicGate.TruthTable.Definition));
         }

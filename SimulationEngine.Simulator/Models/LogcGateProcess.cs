@@ -1,6 +1,6 @@
 ﻿namespace SimulationEngine.Simulator.Models;
 
-internal sealed class TruthTableProcess : IProcess
+internal sealed class LogicGateProcess : IProcess
 {
     public readonly Net? _a;
     public readonly Net? _b;
@@ -11,7 +11,7 @@ internal sealed class TruthTableProcess : IProcess
     private readonly byte[] _truthTable;
     private readonly byte _arity;
 
-    public TruthTableProcess(string name, Net? a, Net? b, Net? c, Net? d, Net q, byte[] truthTable)
+    public LogicGateProcess(string name, Net? a, Net? b, Net? c, Net? d, Net q, byte[] truthTable)
     {
         Name = name;
         _a = a; 
