@@ -28,7 +28,7 @@ public partial class SimulationSession
         BuildProcesses(subCircuit, simSession._netOfTerminals, simSession._processes, path: subCircuit.Title);
 
         if (trace)
-            ReportNetIssues(simSession._netOfTerminals.Values);
+            simSession.ReportNetIssues();
 
         simSession._deltaKernel.Prime(simSession._processes);
         return simSession;

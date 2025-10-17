@@ -15,11 +15,13 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : ITruthT
 {
     public async Task<TruthTable> CreateOrGetAsync(TruthTable truthTable)
     {
-        var local = dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+        var heptaIndex = truthTable.HeptaIndex;
+
+        var local = dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == heptaIndex);
         if (local is not null) 
             return local;
 
-        var existing = await GetTruthTableQuery().FirstOrDefaultAsync(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+        var existing = await GetTruthTableQuery().FirstOrDefaultAsync(tt => tt.HeptaIndex == heptaIndex);
         if (existing is not null)
             return existing;
 
@@ -32,8 +34,8 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : ITruthT
         }
         catch (DbUpdateException ex) when (ex.InnerException is SqliteException se && se.SqliteErrorCode == 19)
         {
-            return dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == truthTable.HeptaIndex) ?? 
-                await GetTruthTableQuery().FirstAsync(tt => tt.HeptaIndex == truthTable.HeptaIndex);
+            return dbContext.TruthTables.Local.FirstOrDefault(tt => tt.HeptaIndex == heptaIndex) ?? 
+                await GetTruthTableQuery().FirstAsync(tt => tt.HeptaIndex == heptaIndex);
         }
     }
 
@@ -75,10 +77,6 @@ public class TruthTableRepository(SimulationEngineDbContext dbContext) : ITruthT
     private static HashSet<string> GetHeptaIndexes(List<TruthTable> truthTables) =>
         truthTables.Select(truthTable => truthTable.HeptaIndex).ToHashSet(StringComparer.Ordinal);
 
-    private IIncludableQueryable<TruthTable, List<LogicGate>> GetTruthTableQuery()
-    {
-        return dbContext.TruthTables
-            .AsNoTracking()
-            .Include(truthTable => truthTable.LogicGates);
-    }
+    private IIncludableQueryable<TruthTable, List<LogicGate>> GetTruthTableQuery() =>
+        dbContext.TruthTables.AsNoTracking().Include(truthTable => truthTable.LogicGates);
 }

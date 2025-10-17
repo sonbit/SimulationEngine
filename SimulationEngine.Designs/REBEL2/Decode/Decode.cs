@@ -46,13 +46,17 @@ public class Decode : SubCircuit
     public Decode()
     {
         this.AddInputs(
-            nameof(Pc1), nameof(Pc0), nameof(Op1), nameof(Op0),nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00),
-            nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00), nameof(WbReg), nameof(WrAddr1), nameof(WrAddr0), 
+            nameof(Pc1), nameof(Pc0), nameof(Op1), nameof(Op0), 
+            nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00),
+            nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00),
+            nameof(WbReg), nameof(WrAddr1), nameof(WrAddr0), 
             nameof(WrData1), nameof(WrData0), nameof(Clk));
         this.AddOutputs(
-            nameof(AluCtrl2), nameof(AluCtrl1), nameof(AluCtrl0), nameof(AluASel), nameof(AluBSel), nameof(AluAddSel1), nameof(AluAddSel0), 
+            nameof(AluCtrl2), nameof(AluCtrl1), nameof(AluCtrl0), 
+            nameof(AluASel), nameof(AluBSel), nameof(AluAddSel1), nameof(AluAddSel0), 
             nameof(AluTarSel), nameof(Reg11), nameof(Reg10), nameof(Reg01), nameof(Reg00), 
-            nameof(Imm11), nameof(Imm10), nameof(TarAddr1), nameof(TarAddr0), nameof(Imm01), nameof(Imm00));
+            nameof(Imm11), nameof(Imm10), nameof(TarAddr1), nameof(TarAddr0),
+            nameof(Imm01), nameof(Imm00));
 
         var K00 = this.AddLogicGate("K00");
 

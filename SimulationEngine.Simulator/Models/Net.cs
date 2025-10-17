@@ -19,7 +19,7 @@ internal sealed class Net(string name)
         Driver ??= process;
     }
 
-    public void Propose(byte value, DeltaKernel simKernel, IProcess? process = null)
+    public void Propose(byte value, DeltaKernel deltaKernel, IProcess? process = null)
     {
         if (Dirty && NextValue == value) 
             return;
@@ -28,10 +28,10 @@ internal sealed class Net(string name)
         Dirty = true;
         LastDriver = process;
 
-        simKernel.MarkNetDirty(this);
+        deltaKernel.MarkNetDirty(this);
     }
 
-    internal bool CommitAndWake(DeltaKernel simKernel)
+    internal bool CommitAndWake(DeltaKernel deltaKernel)
     {
         if (!Dirty) 
             return false;
@@ -41,11 +41,11 @@ internal sealed class Net(string name)
             return false;
         CurrentValue = NextValue;
 
-        if (simKernel.Trace) 
+        if (deltaKernel.Trace) 
             Console.WriteLine($"  commit {Name} := {CurrentValue} (by {LastDriver?.Name ?? "stimulus"})");
 
         foreach (var process in Fanout) 
-            simKernel.ScheduleDelta(process);
+            deltaKernel.ScheduleDelta(process);
 
         return true;
     }

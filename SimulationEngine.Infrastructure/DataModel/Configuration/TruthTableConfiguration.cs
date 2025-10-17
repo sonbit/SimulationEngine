@@ -28,6 +28,6 @@ internal static class TruthTableConfiguration
             .IsUnique();
 
         entity
-            .ToTable(table => table.HasCheckConstraint("CK_TruthTable_HeptaIndexLength", "length([HeptaIndex]) IN (1,3,9,27,81)"));
+            .ToTable(table => table.HasCheckConstraint("CK_TruthTable_HeptaIndexLength", "length([HeptaIndex]) IN (1,3,9,27)"));
     }
 }

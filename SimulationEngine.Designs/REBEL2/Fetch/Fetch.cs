@@ -44,7 +44,8 @@ public class Fetch : SubCircuit
             nameof(WrData4), nameof(WrData3), nameof(WrData2), nameof(WrData1), nameof(WrData0));
         this.AddBinaryInputs(nameof(Clk), nameof(WrClk));
         this.AddOutputs(
-            nameof(Pc1), nameof(Pc0), nameof(Op1), nameof(Op0), nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00), 
+            nameof(Pc1), nameof(Pc0), nameof(Op1), nameof(Op0), 
+            nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00), 
             nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00));
 
         var progCtr2 = this.AddSubCircuit(new ProgCtr2());

@@ -15,7 +15,7 @@ public static class SubCircuitHasher
     private const char Separator = '|';
     private const string TopPort = $"Top{nameof(Port)}";
 
-    public static string Compute(SubCircuit subCircuit, IReadOnlyList<SubCircuitPlacement> placements)
+    public static string Compute(SubCircuit subCircuit, IReadOnlyList<SubCircuitPlacement> subCircuitPlacements)
     {
         var sb = new StringBuilder();
 
@@ -45,12 +45,12 @@ public static class SubCircuitHasher
         foreach (var wire in encodedWires)
             BuildString(sb, [nameof(Wire), wire], true);
 
-        placements = [.. placements
+        subCircuitPlacements = [.. subCircuitPlacements
             .OrderBy(x => x.ChildSubCircuit.Hash, StringComparer.Ordinal)
             .ThenBy(x => x.Ordinal)];
 
-        foreach (var placement in placements)
-            BuildString(sb, ["Placement", placement.ChildSubCircuit.Hash, $"{placement.Ordinal}"], true);
+        foreach (var subCircuitPlacement in subCircuitPlacements)
+            BuildString(sb, ["Placement", subCircuitPlacement.ChildSubCircuit.Hash, $"{subCircuitPlacement.Ordinal}"], true);
 
         var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(sb.ToString()));
         return Convert.ToHexString(bytes);

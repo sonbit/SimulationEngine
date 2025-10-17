@@ -9,29 +9,37 @@ public partial class SimulationSession
     {
         var nets = _netOfTerminals.Values.Distinct().ToList();
 
-        Console.WriteLine($"[elab] gates:   {_processes.Count}");
-        Console.WriteLine($"[elab] nets:    {nets.Count}");
-        Console.WriteLine($"[elab] inputs:  {SubCircuit.Inputs.Count}, outputs: {SubCircuit.Outputs.Count}");
+        Console.WriteLine($"[elab] inputs:      {SubCircuit.Inputs.Count}");
+        Console.WriteLine($"[elab] outputs:     {SubCircuit.Outputs.Count}");
+        Console.WriteLine($"[elab] logic gates: {_processes.Count}");
+        Console.WriteLine($"[elab] nets:        {nets.Count}");
 
-        var noDriver = nets.Where(n => n.DriverCount == 0).ToList();
-        var noFanout = nets.Where(n => n.Fanout.Count == 0).ToList();
+        var nonTopNets = GetNonTopNets();
+        var noDriverNets = nonTopNets.Where(net => net.DriverCount == 0).ToList();
+        var noFanoutNets = nonTopNets.Where(net => net.Fanout.Count == 0).ToList();
 
-        Console.WriteLine($"[elab] nets NO driver: {noDriver.Count}");
-        Console.WriteLine($"[elab] nets NO fanouts : {noFanout.Count}");
+        Console.WriteLine($"[elab] nets NO driver: {noDriverNets.Count}");
+        Console.WriteLine($"[elab] nets NO fanouts : {noFanoutNets.Count}");
 
-        static void Show(Net net, Dictionary<Terminal, Net> portNetMap, string tag)
-        {
-            var ports = portNetMap.Where(kv => kv.Value == net).Select(kv => kv.Key);
-            var portTitles = ports.Select(port => port.Title);
-
-            Console.WriteLine($"  [{tag}] {net.Name} members=({string.Join(", ", portTitles)})");
-        }
-
-        foreach (var net in noFanout.Take(5))
-            Show(net, _netOfTerminals, "no-fanout");
-
-        foreach (var net in noDriver.Where(n => !SubCircuit.Inputs.Any(p => _netOfTerminals[p] == n)).Take(5))
+        foreach (var net in noDriverNets)
             Show(net, _netOfTerminals, "no-driver");
+
+        foreach (var net in noFanoutNets)
+            Show(net, _netOfTerminals, "no-fanout");
+    }
+
+    private static void Show(Net net, Dictionary<Terminal, Net> portNetMap, string tag)
+    {
+        var ports = portNetMap.Where(kv => kv.Value == net).Select(kv => kv.Key);
+        var portTitles = ports.Select(port => port.Title);
+
+        Console.WriteLine($"  [{tag}] {net.Name} members=({string.Join(", ", portTitles)})");
+    }
+
+    public void PrintOutputDetails()
+    {
+        foreach (var output in SubCircuit.Outputs)
+            PrintOutputDetails(output);
     }
 
     public void PrintOutputDetails(Port port)
@@ -63,12 +71,24 @@ public partial class SimulationSession
         Console.WriteLine($"\tLastWriter: {net.LastDriver?.Name ?? "stimulus"}");
     }
 
-    private static void ReportNetIssues(IEnumerable<Net> nets)
+    private void ReportNetIssues()
     {
-        foreach (var net in nets)
+        foreach (var net in GetNonTopNets())
         {
             if (net.Driver == null)
                 Console.WriteLine($"[diag] Net {net.Name} has NO drivers.");
+            if (net.Fanout == null)
+                Console.WriteLine($"[diag] Net {net.Name} has NO fanouts.");
         }
+    }
+
+    private List<Net> GetNonTopNets()
+    {
+        var topPorts = SubCircuit.Inputs.Concat(SubCircuit.Outputs).ToHashSet();
+
+        return [.. _netOfTerminals
+            .Where(kv => !topPorts.Contains(kv.Key))
+            .Select(kv => kv.Value)
+            .Distinct()];
     }
 }

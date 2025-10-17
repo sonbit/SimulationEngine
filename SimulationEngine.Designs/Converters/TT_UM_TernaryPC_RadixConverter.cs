@@ -3,6 +3,7 @@ using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters;
+
 public class TT_UM_TernaryPC_RadixConverter : SubCircuit
 {
     public Port Clk => Inputs[0];
