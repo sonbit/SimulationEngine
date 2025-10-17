@@ -15,5 +15,8 @@ public class LatchTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(tes
     public void DLatchEdge_Validate() => TestSimulatation(new DLatchEdge());
 
     [Fact]
+    public void SRLatch_Validate() => TestSimulatation(new SRLatch());
+
+    [Fact]
     public void TFlipFlop_Validate() => TestSimulatation(new TFlipFlop());
 }
