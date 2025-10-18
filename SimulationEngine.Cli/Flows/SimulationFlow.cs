@@ -36,15 +36,15 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
             switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]Pick a SubCircuit to simulate[/]"))
             {
                 case MenuOptions.SelectFromList:
-                    subCircuit = await SimulationSelectAsync();
+                    subCircuit = await PromptSelectSubCircuitAsync();
                     break;
 
                 case MenuOptions.FindById:
-                    subCircuit = await SimulationFindAsync();
+                    subCircuit = await PromptFindSubCircuitByIdAsync();
                     break;
 
                 case MenuOptions.FindByTitle:
-                    subCircuit = await SimulationFindByTitleAsync();
+                    subCircuit = await PromptFindSubCircuitByTitleAsync();
                     break;
 
                 case MenuOptions.Back:
@@ -103,7 +103,29 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
         }
     }
 
-    private async Task<SubCircuit?> SimulationSelectAsync()
+    private async Task<SubCircuit?> PromptFindSubCircuitByIdAsync()
+    {
+        var id = await prompter.AskIdAsync("Enter SubCircuit id:");
+        var subCircuit = await service.GetByIdAsync(id);
+
+        if (subCircuit is null)
+            renderer.DrawError($"SubCircuit with id {id} was not found");
+
+        return subCircuit;
+    }
+
+    private async Task<SubCircuit?> PromptFindSubCircuitByTitleAsync()
+    {
+        var title = await prompter.AskAsync("Enter SubCircuit title:");
+        var subCircuit = await service.GetByTitleAsync(title);
+
+        if (subCircuit is null)
+            renderer.DrawError($"SubCircuit with title {title} was not found");
+
+        return subCircuit;
+    }
+
+    private async Task<SubCircuit?> PromptSelectSubCircuitAsync()
     {
         var selectedSubCircuit = await prompter.SelectOrBackAsync(
             "Select SubCircuit",
@@ -115,27 +137,5 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
             return null;
 
         return await service.GetByIdAsync(selectedSubCircuit!.Id);
-    }
-
-    private async Task<SubCircuit?> SimulationFindAsync()
-    {
-        var id = await prompter.AskIdAsync("Enter SubCircuit id:");
-        var subCircuit = await service.GetByIdAsync(id);
-
-        if (subCircuit is null)
-            renderer.DrawError($"SubCircuit with id {id} was not found");
-
-        return subCircuit;
-    }
-
-    private async Task<SubCircuit?> SimulationFindByTitleAsync()
-    {
-        var title = await prompter.AskAsync("Enter SubCircuit title:");
-        var subCircuit = await service.GetByTitleAsync(title);
-
-        if (subCircuit is null)
-            renderer.DrawError($"SubCircuit with title {title} was not found");
-
-        return subCircuit;
     }
 }

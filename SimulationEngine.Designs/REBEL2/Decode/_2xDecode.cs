@@ -77,9 +77,8 @@ public class _2xDecode : SubCircuit
             nameof(AluAddSel0_1), nameof(AluTarSel_1), nameof(Reg11_1), nameof(Reg10_1), nameof(Reg01_1), nameof(Reg00_1), 
             nameof(Imm11_1), nameof(Imm10_1), nameof(TarAddr1_1), nameof(TarAddr0_1), nameof(Imm01_1), nameof(Imm00_1));
 
-        var decode_0 = new Decode();
-        var decode_1 = new Decode();
-        SubCircuits = [decode_0, decode_1];
+        var decode_0 = this.AddSubCircuit(new Decode());
+        var decode_1 = this.AddSubCircuit(new Decode());
 
         this.AddWires([
             (Pc1, decode_0.Pc1),
