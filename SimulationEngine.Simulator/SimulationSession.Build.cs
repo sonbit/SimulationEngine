@@ -36,18 +36,18 @@ public partial class SimulationSession
 
     private static List<Net> BuildNets(Subcircuit subcircuit, Dictionary<Terminal, Net> map)
     {
-        var unionFind = new UnionFinder<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
+        var unionFinder = new UnionFinder<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
 
         foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
-            unionFind.Add(terminal);
+            unionFinder.Add(terminal);
 
-        UnionAllWiresRecursive(subcircuit, unionFind);
+        UnionAllWiresRecursive(subcircuit, unionFinder);
 
         var netByRootTerminal = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
 
         foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
         {
-            var rootTerminal = unionFind.Find(terminal);
+            var rootTerminal = unionFinder.Find(terminal);
             if (!netByRootTerminal.TryGetValue(rootTerminal, out var net))
             {
                 net = new Net($"net({rootTerminal.Title})");
@@ -140,19 +140,19 @@ public partial class SimulationSession
         }
     }
 
-    private static void UnionAllWiresRecursive(Subcircuit subcircuit, UnionFinder<Terminal> unionFind)
+    private static void UnionAllWiresRecursive(Subcircuit subcircuit, UnionFinder<Terminal> unionFinder)
     {
         foreach (var wire in subcircuit.Wires ?? Enumerable.Empty<Wire>())
         {
-            unionFind.Add(wire.StartTerminal);
-            unionFind.Add(wire.EndTerminal);
-            unionFind.Union(wire.StartTerminal, wire.EndTerminal);
+            unionFinder.Add(wire.StartTerminal);
+            unionFinder.Add(wire.EndTerminal);
+            unionFinder.Union(wire.StartTerminal, wire.EndTerminal);
         }
 
         if (subcircuit.Subcircuits == null)
             return;
 
         foreach (var child in subcircuit.Subcircuits)
-            UnionAllWiresRecursive(child, unionFind);
+            UnionAllWiresRecursive(child, unionFinder);
     }
 }

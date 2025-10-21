@@ -10,7 +10,8 @@ internal sealed class UnionFinder<T>(IEqualityComparer<T> equalityComparer) wher
         if (_parent.ContainsKey(x)) 
             return;
 
-        _parent[x] = x; _rank[x] = 0;
+        _parent[x] = x; 
+        _rank[x] = 0;
     }
 
     public T Find(T x)
@@ -18,36 +19,36 @@ internal sealed class UnionFinder<T>(IEqualityComparer<T> equalityComparer) wher
         if (!_parent.ContainsKey(x))
             Add(x);
 
-        var p = _parent[x];
+        var parent = _parent[x];
 
-        if (!EqualityComparer<T>.Default.Equals(p, x))
-            _parent[x] = Find(p);
+        if (!EqualityComparer<T>.Default.Equals(parent, x))
+            _parent[x] = Find(parent);
 
         return _parent[x];
     }
 
-    public void Union(T a, T b)
+    public void Union(T x, T y)
     {
-        Add(a); 
-        Add(b);
+        Add(x); 
+        Add(y);
 
-        var ra = Find(a); 
-        var rb = Find(b);
+        var foundX = Find(x); 
+        var foundY = Find(y);
 
-        if (EqualityComparer<T>.Default.Equals(ra, rb)) 
+        if (EqualityComparer<T>.Default.Equals(foundX, foundY)) 
             return;
 
-        var rra = _rank[ra];
-        var rrb = _rank[rb];
+        var rankX = _rank[foundX];
+        var rankY = _rank[foundY];
 
-        if (rra < rrb) 
-            _parent[ra] = rb;
-        else if (rra > rrb) 
-            _parent[rb] = ra;
+        if (rankX < rankY) 
+            _parent[foundX] = foundY;
+        else if (rankX > rankY) 
+            _parent[foundY] = foundX;
         else 
         { 
-            _parent[rb] = ra; 
-            _rank[ra] = rra + 1; 
+            _parent[foundY] = foundX; 
+            _rank[foundX] = rankX + 1; 
         }
     }
 }
