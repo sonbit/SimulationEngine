@@ -64,7 +64,7 @@ internal sealed partial class DeltaKernel
             if (++iterations <= MaxDelta)
                 continue;
 
-            throw new InvalidOperationException("Reached delta limit after not converging");
+            throw new InvalidOperationException("Reached delta limit before converging");
         }
     }
 }

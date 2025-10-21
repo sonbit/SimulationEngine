@@ -63,7 +63,7 @@ public partial class SimulationSession
     {
         var driverCount = new Dictionary<Net, int>();
 
-        foreach (var logicGate in subcircuit.LogicGates ?? Enumerable.Empty<LogicGate>())
+        foreach (var logicGate in subcircuit.LogicGates ?? [])
         {
             if (logicGate.TruthTable?.Definition == null)
                 throw new InvalidOperationException($"Gate missing TruthTable.Definition in {path}.");
@@ -76,35 +76,35 @@ public partial class SimulationSession
             if (logicGate.Q == null)
                 throw new InvalidOperationException($"Gate in {path} has null PortQ.");
 
-            var q = netOf[logicGate.Q];
+            var netQ = netOf[logicGate.Q];
 
-            driverCount.TryGetValue(q, out var count);
-            driverCount[q] = count + 1;
-            if (driverCount[q] > 1)
+            driverCount.TryGetValue(netQ, out var count);
+            driverCount[netQ] = count + 1;
+            if (driverCount[netQ] > 1)
                 throw new InvalidOperationException(
-                    $"Multiple drivers detected on {path}:{q.Name}.");
+                    $"Multiple drivers detected on {path}:{netQ.Name}.");
 
             processes.Add(
                 new LogicGateProcess(
                     $"{path}/gate[{logicGate.TruthTable.HeptaIndex ?? logicGate.TruthTable.Definition.Length.ToString()}]",
-                    a, b, c, d, q, logicGate.TruthTable.Definition));
+                    a, b, c, d, netQ, logicGate.TruthTable.Definition));
         }
 
-        if (subcircuit.Subcircuits != null)
-        {
-            var duplicatedSubcircuits = subcircuit.Subcircuits?
-                .GroupBy(x => x, ReferenceEqualityComparer<Subcircuit>.Instance)
-                .Where(g => g.Count() > 1);
+        if (subcircuit.Subcircuits == null)
+            return;
 
-            foreach (var duplicatedSubcircuit in duplicatedSubcircuits ?? [])
-                throw new InvalidOperationException(
-                    $"Subcircuit '{path}/{subcircuit.Title}' reuses the same child instance '{duplicatedSubcircuit.Key.Title}'. " +
-                    "Instantiate distinct copies for each use.");
+        var duplicatedSubcircuits = subcircuit.Subcircuits
+            .GroupBy(x => x, ReferenceEqualityComparer<Subcircuit>.Instance)
+            .Where(g => g.Count() > 1);
 
-            var index = 0;
-            foreach (var child in subcircuit.Subcircuits!)
-                BuildProcesses(child, netOf, processes, $"{path}#{index++}/{child.Title}");
-        }
+        foreach (var duplicatedSubcircuit in duplicatedSubcircuits ?? [])
+            throw new InvalidOperationException(
+                $"Subcircuit '{path}/{subcircuit.Title}' reuses the same child instance '{duplicatedSubcircuit.Key.Title}'. " +
+                "Instantiate distinct copies for each use.");
+
+        var index = 0;
+        foreach (var child in subcircuit.Subcircuits)
+            BuildProcesses(child, netOf, processes, $"{path}#{index++}/{child.Title}");
     }
 
     private static IEnumerable<Terminal> EnumerateAllTerminalsRecursive(Subcircuit subcircuit)

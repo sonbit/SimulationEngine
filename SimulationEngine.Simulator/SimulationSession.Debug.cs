@@ -8,32 +8,23 @@ public partial class SimulationSession
     public void PrintSimulationSetup()
     {
         var nets = _netOfTerminals.Values.Distinct().ToList();
-
         Console.WriteLine($"[elab] inputs:      {Subcircuit.Inputs.Count}");
         Console.WriteLine($"[elab] outputs:     {Subcircuit.Outputs.Count}");
         Console.WriteLine($"[elab] logic gates: {_processes.Count}");
         Console.WriteLine($"[elab] nets:        {nets.Count}");
 
-        var nonTopNets = GetNonTopNets();
-        var noDriverNets = nonTopNets.Where(net => net.DriverCount == 0).ToList();
-        var noFanoutNets = nonTopNets.Where(net => net.Fanout.Count == 0).ToList();
+        var internalNets = InternalNets().ToList();
+        var noDriver = internalNets.Where(n => n.DriverCount == 0).ToList();
+        var noFanout = internalNets.Where(n => n.Fanout.Count == 0).ToList();
 
-        Console.WriteLine($"[elab] nets NO driver: {noDriverNets.Count}");
-        Console.WriteLine($"[elab] nets NO fanouts : {noFanoutNets.Count}");
+        Console.WriteLine($"[elab] nets NO driver: {noDriver.Count}");
+        Console.WriteLine($"[elab] nets NO fanouts: {noFanout.Count}");
 
-        foreach (var net in noDriverNets)
+        foreach (var net in noDriver) 
             Show(net, _netOfTerminals, "no-driver");
 
-        foreach (var net in noFanoutNets)
+        foreach (var net in noFanout) 
             Show(net, _netOfTerminals, "no-fanout");
-    }
-
-    private static void Show(Net net, Dictionary<Terminal, Net> portNetMap, string tag)
-    {
-        var ports = portNetMap.Where(kv => kv.Value == net).Select(kv => kv.Key);
-        var portTitles = ports.Select(port => port.Title);
-
-        Console.WriteLine($"  [{tag}] {net.Name} members=({string.Join(", ", portTitles)})");
     }
 
     public void PrintOutputDetails()
@@ -48,32 +39,41 @@ public partial class SimulationSession
 
         Console.WriteLine($"[explain] {port.Title}: {net}");
 
-        if (net.Driver is null)
+        switch (net.Driver)
         {
-            Console.WriteLine("\tNo driver registered.");
-            return;
-        }
+            case null:
+                Console.WriteLine("\tNo driver registered.");
+                break;
+            case LogicGateProcess logicGateProcess:
+                var a = logicGateProcess._a?.CurrentValue ?? 0;
+                var b = logicGateProcess._b?.CurrentValue ?? 0;
+                var c = logicGateProcess._c?.CurrentValue ?? 0;
+                var d = logicGateProcess._d?.CurrentValue ?? 0;
 
-        Console.WriteLine($"\tDriver: {net.Driver.Name}");
-
-        if (net.Driver is LogicGateProcess logicGateProcess)
-        {
-            Console.WriteLine($"[diag] {port.Title}: driven by {logicGateProcess.Name}");
-
-            var a = logicGateProcess._a?.CurrentValue ?? 0;
-            var b = logicGateProcess._b?.CurrentValue ?? 0;
-            var c = logicGateProcess._c?.CurrentValue ?? 0;
-            var d = logicGateProcess._d?.CurrentValue ?? 0;
-
-            Console.WriteLine($"\t\tinputs: A={a} B={b} C={c} D={d}");
+                Console.WriteLine($"[diag] {port.Title}: driven by {logicGateProcess.Name}");
+                Console.WriteLine($"\t\tinputs: A={a} B={b} C={c} D={d}");
+                break;
+            default:
+                Console.WriteLine($"\tDriven by: {net.Driver.Name}");
+                break;
         }
 
         Console.WriteLine($"\tLastWriter: {net.LastDriver?.Name ?? "stimulus"}");
     }
 
+    private IEnumerable<Net> InternalNets()
+    {
+        var tops = Subcircuit.Inputs.Concat(Subcircuit.Outputs).ToHashSet();
+
+        return _netOfTerminals
+            .Where(kv => !tops.Contains(kv.Key))
+            .Select(kv => kv.Value)
+            .Distinct();
+    }
+
     private void ReportNetIssues()
     {
-        foreach (var net in GetNonTopNets())
+        foreach (var net in InternalNets())
         {
             if (net.Driver == null)
                 Console.WriteLine($"[diag] Net {net.Name} has NO drivers.");
@@ -82,13 +82,11 @@ public partial class SimulationSession
         }
     }
 
-    private List<Net> GetNonTopNets()
+    private static void Show(Net net, Dictionary<Terminal, Net> portNetMap, string tag)
     {
-        var topPorts = Subcircuit.Inputs.Concat(Subcircuit.Outputs).ToHashSet();
+        var ports = portNetMap.Where(kv => kv.Value == net).Select(kv => kv.Key);
+        var portTitles = ports.Select(port => port.Title);
 
-        return [.. _netOfTerminals
-            .Where(kv => !topPorts.Contains(kv.Key))
-            .Select(kv => kv.Value)
-            .Distinct()];
+        Console.WriteLine($"\t[{tag}] {net.Name} members=({string.Join(", ", portTitles)})");
     }
 }

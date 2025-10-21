@@ -62,7 +62,7 @@ internal sealed partial class DeltaKernel
                 continue;
             }
 
-            throw new InvalidOperationException("Init did not converge and no loop could be resolved");
+            throw new InvalidOperationException("Initialization did not converge and no loop could be resolved");
         }
     }
 
