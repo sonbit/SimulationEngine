@@ -15,18 +15,37 @@ public class SRLatch : Subcircuit
         this.AddBinaryInputs(nameof(Reset), nameof(Set));
         this.AddBinaryOutputs(nameof(Q), nameof(NotQ));
 
-        var nand_0 = this.AddLogicGate("002");
-        var nand_1 = this.AddLogicGate("002");
+        var nor_0 = this.AddLogicGate("002");
+        var nor_1 = this.AddLogicGate("002");
 
         this.AddWires([
-            (Reset, nand_0.B),
-            (Set, nand_1.A),
+            (Reset, nor_0.B),
+            (Set, nor_1.A),
 
-            (nand_0.Q, nand_1.B),
-            (nand_1.Q, nand_0.A),
+            (nor_0.Q, nor_1.B),
+            (nor_1.Q, nor_0.A),
 
-            (nand_0.Q, Q),
-            (nand_1.Q, NotQ)
+            (nor_0.Q, Q),
+            (nor_1.Q, NotQ)
         ]);
     }
+
+    public override string GetTestString() => """
+        00 01
+        01 10
+        10 01
+        00 01
+        01 10
+        00 10
+        01 10
+        00 10
+        10 01
+        00 01
+        11 00
+        00 10
+        11 00
+        00 10
+        10 01
+        00 01
+    """;
 }
