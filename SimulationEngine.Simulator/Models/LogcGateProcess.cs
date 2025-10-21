@@ -45,6 +45,16 @@ internal sealed class LogicGateProcess : IProcess
         _q.Propose(tri, deltaKernel, this);
     }
 
+    public List<Net> GetInputs()
+    {
+        var inputs = new List<Net>();
+        if (_a is not null) inputs.Add(_a);
+        if (_b is not null) inputs.Add(_b);
+        if (_c is not null) inputs.Add(_c);
+        if (_d is not null) inputs.Add(_d);
+        return inputs;
+    }
+
     private byte GetOutput()
     {
         var index = ComputeIndex(

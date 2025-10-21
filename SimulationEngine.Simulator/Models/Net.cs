@@ -3,8 +3,8 @@
 internal sealed class Net(string name)
 {
     public string Name { get; } = name;
-    public byte CurrentValue { get; private set; }
-    public byte NextValue { get; private set; }
+    public byte CurrentValue { get; set; }
+    public byte NextValue { get; set; }
     public bool Dirty { get; private set; }
 
     public IProcess? Driver { get; private set; }

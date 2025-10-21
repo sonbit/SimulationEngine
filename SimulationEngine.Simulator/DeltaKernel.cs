@@ -2,7 +2,7 @@
 
 namespace SimulationEngine.Simulator;
 
-internal sealed class DeltaKernel
+internal sealed partial class DeltaKernel
 {
     private const int MaxDelta = 100000;
 
@@ -12,20 +12,12 @@ internal sealed class DeltaKernel
 
     public bool Trace { get; set; } = false;
 
-    public void ScheduleDelta(IProcess process)
-    {
-        if (_scheduled.Add(process)) 
-            _deltaQueue.Enqueue(process);
-    }
-
     public void MarkNetDirty(Net net) => _dirtyNets.Add(net);
 
-    public void Prime(IEnumerable<IProcess> processes)
+    public void ScheduleDelta(IProcess process)
     {
-        foreach (var process in processes) 
-            ScheduleDelta(process);
-
-        IterateProcesses();
+        if (_scheduled.Add(process))
+            _deltaQueue.Enqueue(process);
     }
 
     public void Set(Net net, byte value)
@@ -37,6 +29,17 @@ internal sealed class DeltaKernel
         IterateProcesses();
     }
 
+    private void DequeueAndEvaluate()
+    {
+        var process = _deltaQueue.Dequeue();
+        _scheduled.Remove(process);
+
+        if (Trace)
+            Console.WriteLine($" eval {process.Name}");
+
+        process.Evaluate(this);
+    }
+
     private void IterateProcesses()
     {
         int iterations = 0;
@@ -44,20 +47,12 @@ internal sealed class DeltaKernel
         while (true)
         {
             while (_deltaQueue.Count > 0)
-            {
-                var process = _deltaQueue.Dequeue();
-                _scheduled.Remove(process);
-
-                if (Trace) 
-                    Console.WriteLine($" eval {process.Name}");
-
-                process.Evaluate(this);
-            }
+                DequeueAndEvaluate();
 
             bool anyDirtyNets = false;
             foreach (var dirtyNet in _dirtyNets.ToArray())
             {
-                if (dirtyNet.CommitAndWake(this)) 
+                if (dirtyNet.CommitAndWake(this))
                     anyDirtyNets = true;
 
                 _dirtyNets.Remove(dirtyNet);
@@ -66,8 +61,10 @@ internal sealed class DeltaKernel
             if (!anyDirtyNets) 
                 break;
 
-            if (++iterations > MaxDelta)
-                throw new InvalidOperationException("Reached delta limit after not converging");
+            if (++iterations <= MaxDelta)
+                continue;
+
+            throw new InvalidOperationException("Reached delta limit after not converging");
         }
     }
 }

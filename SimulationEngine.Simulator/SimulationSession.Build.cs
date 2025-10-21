@@ -30,7 +30,7 @@ public partial class SimulationSession
         if (trace)
             simSession.ReportNetIssues();
 
-        simSession._deltaKernel.Prime(simSession._processes);
+        simSession._deltaKernel.Prime(simSession._processes, [.. simSession._netOfTerminals.Values]);
         return simSession;
     }
 
@@ -96,13 +96,10 @@ public partial class SimulationSession
                 .GroupBy(x => x, ReferenceEqualityComparer<Subcircuit>.Instance)
                 .Where(g => g.Count() > 1);
 
-            if (duplicatedSubcircuits != null)
-            {
-                foreach (var dup in duplicatedSubcircuits)
-                    throw new InvalidOperationException(
-                        $"Subcircuit '{path}/{subcircuit.Title}' reuses the same child instance '{dup.Key.Title}'. " +
-                        "Instantiate distinct copies for each use.");
-            }
+            foreach (var duplicatedSubcircuit in duplicatedSubcircuits ?? [])
+                throw new InvalidOperationException(
+                    $"Subcircuit '{path}/{subcircuit.Title}' reuses the same child instance '{duplicatedSubcircuit.Key.Title}'. " +
+                    "Instantiate distinct copies for each use.");
 
             var index = 0;
             foreach (var child in subcircuit.Subcircuits!)
