@@ -1,7 +1,7 @@
-﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.Designs.SubCircuits;
+namespace SimulationEngine.Tests.Designs.Subcircuits;
 
 public class MultiplexerTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {

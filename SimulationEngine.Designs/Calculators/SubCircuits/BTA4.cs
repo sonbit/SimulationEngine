@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.Calculators.SubCircuits;
+namespace SimulationEngine.Designs.Calculators.Subcircuits;
 
-public class BTA4 : SubCircuit
+public class BTA4 : Subcircuit
 {
     public Port X1 => Inputs[0];
     public Port X0 => Inputs[1];
@@ -19,10 +19,10 @@ public class BTA4 : SubCircuit
         this.AddInputs(nameof(X1), nameof(X0), nameof(Y1), nameof(Y0));
         this.AddOutputs(nameof(S3), nameof(S2), nameof(S1), nameof(S0));
 
-        var bta0 = this.AddSubCircuit(new BTA());
-        var bta1 = this.AddSubCircuit(new BTA());
-        var bta2 = this.AddSubCircuit(new BTA());
-        var bta3 = this.AddSubCircuit(new BTA());
+        var bta0 = this.AddSubcircuit(new BTA());
+        var bta1 = this.AddSubcircuit(new BTA());
+        var bta2 = this.AddSubcircuit(new BTA());
+        var bta3 = this.AddSubcircuit(new BTA());
 
         this.AddWires([
             (X1, bta0.X),

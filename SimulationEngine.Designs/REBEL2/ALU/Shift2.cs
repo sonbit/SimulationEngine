@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class Shift2 : SubCircuit
+public class Shift2 : Subcircuit
 {
     public Port A1 => Inputs[0];
     public Port A0 => Inputs[1];
@@ -23,8 +23,8 @@ public class Shift2 : SubCircuit
         var _063TGT360 = this.AddLogicGate("063TGT360");
         var _630GTG036 = this.AddLogicGate("630GTG036");
 
-        var _3MUX1_0 = this.AddSubCircuit(new _3MUX1());
-        var _3MUX1_1 = this.AddSubCircuit(new _3MUX1());
+        var _3MUX1_0 = this.AddSubcircuit(new _3MUX1());
+        var _3MUX1_1 = this.AddSubcircuit(new _3MUX1());
 
         this.AddWires([
             (Dir, _063TGT360.C),

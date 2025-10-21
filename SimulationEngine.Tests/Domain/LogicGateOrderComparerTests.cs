@@ -18,20 +18,20 @@ public sealed class LogicGateOrderComparerTests
     }
 
     [Fact]
-    public void Compare_EmptyNonEmptyHeptaIndex()
+    public void Compare_EmptyHeptaIndexFirst()
     {
-        var empty = CreateLogicGate(null, PinRole.A);
-        var nonEmpty = CreateLogicGate("5", PinRole.A);
+        var logicGateX = CreateLogicGate(null, PinRole.A, PinRole.Q);
+        var logicGateY = CreateLogicGate("5", PinRole.A, PinRole.Q);
 
-        Assert.True(LogicGateOrderComparer.Instance.Compare(empty, nonEmpty) < 0);
-        Assert.True(LogicGateOrderComparer.Instance.Compare(nonEmpty, empty) > 0);
+        Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateX, logicGateY) < 0);
+        Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateY, logicGateX) > 0);
     }
 
     [Fact]
-    public void Compare_HeptaIndex()
+    public void Compare_HeptaIndexOrdering()
     {
-        var logicGateX = CreateLogicGate("2", PinRole.A);
-        var logicGateY = CreateLogicGate("5", PinRole.A);
+        var logicGateX = CreateLogicGate("2", PinRole.A, PinRole.Q);
+        var logicGateY = CreateLogicGate("5", PinRole.A, PinRole.Q);
 
         Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateX, logicGateY) < 0);
         Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateY, logicGateX) > 0);
@@ -40,7 +40,7 @@ public sealed class LogicGateOrderComparerTests
     [Fact]
     public void Compare_NullOrdering()
     {
-        var logicGate = CreateLogicGate("5", PinRole.A);
+        var logicGate = CreateLogicGate("5", PinRole.A, PinRole.Q);
 
         Assert.True(LogicGateOrderComparer.Instance.Compare(null, logicGate) < 0);
         Assert.True(LogicGateOrderComparer.Instance.Compare(logicGate, null) > 0);
@@ -48,31 +48,31 @@ public sealed class LogicGateOrderComparerTests
     }
 
     [Fact]
-    public void Compare_PinCount()
+    public void Compare_PinCountOrdering()
     {
         var heptaIndex = "20K";
 
-        var oneA = CreateLogicGate(heptaIndex, PinRole.A);
-        var twoA = CreateLogicGate(heptaIndex, PinRole.A, PinRole.Q);
+        var logicGateX = CreateLogicGate(heptaIndex, PinRole.A, PinRole.Q);
+        var logicGateY = CreateLogicGate(heptaIndex, PinRole.A, PinRole.B, PinRole.Q);
 
-        Assert.True(LogicGateOrderComparer.Instance.Compare(oneA, twoA) < 0);
-        Assert.True(LogicGateOrderComparer.Instance.Compare(twoA, oneA) > 0);
+        Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateX, logicGateY) < 0);
+        Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateY, logicGateX) > 0);
     }
 
     [Fact]
-    public void Compare_PinMask()
+    public void Compare_PinMaskOrdering()
     {
         var heptaIndex = "20K";
 
-        var withAQ = CreateLogicGate(heptaIndex, PinRole.A, PinRole.Q);
-        var withBQ = CreateLogicGate(heptaIndex, PinRole.B, PinRole.Q);
+        var logicGateX = CreateLogicGate(heptaIndex, PinRole.A, PinRole.Q);
+        var logicGateY = CreateLogicGate(heptaIndex, PinRole.B, PinRole.Q);
 
-        Assert.True(LogicGateOrderComparer.Instance.Compare(withAQ, withBQ) < 0);
-        Assert.True(LogicGateOrderComparer.Instance.Compare(withBQ, withAQ) > 0);
+        Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateX, logicGateY) < 0);
+        Assert.True(LogicGateOrderComparer.Instance.Compare(logicGateY, logicGateX) > 0);
     }
 
     [Fact]
-    public void Compare_SameReference()
+    public void Compare_SameReference_Equal()
     {
         var logicGate = CreateLogicGate("5", PinRole.A);
         Assert.Equal(0, LogicGateOrderComparer.Instance.Compare(logicGate, logicGate));

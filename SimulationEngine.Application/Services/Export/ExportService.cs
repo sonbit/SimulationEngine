@@ -10,58 +10,58 @@ public class ExportService(IVerilogEmitter emitter, IVerilogTestbenchEmitter tbE
     public string EmitVerilog7SegmentDisplay() =>
         basys3Emitter.Emit7SegmentDisplayModule().Content;
 
-    public string EmitVerilog(SubCircuit subCircuit) => 
-        emitter.EmitSubCircuit(subCircuit).GetAllModules();
+    public string EmitVerilog(Subcircuit subcircuit) => 
+        emitter.EmitSubcircuit(subcircuit).GetAllModules();
 
-    public string? EmitVerilogTestbench(SubCircuit subCircuit, string testString) =>
-        EmitVerilogTestbenchWithTests(subCircuit, testString)?.Content;
+    public string? EmitVerilogTestbench(Subcircuit subcircuit, string testString) =>
+        EmitVerilogTestbenchWithTests(subcircuit, testString)?.Content;
 
-    public string EmitVerilogTop(SubCircuit subCircuit, bool include7SegmentDisplay) =>
-        basys3Emitter.EmitTopModule(subCircuit, include7SegmentDisplay).Content;
+    public string EmitVerilogTop(Subcircuit subcircuit, bool include7SegmentDisplay) =>
+        basys3Emitter.EmitTopModule(subcircuit, include7SegmentDisplay).Content;
 
-    public string EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay) =>
-        basys3Emitter.EmitXdc(subCircuit, include7SegmentDisplay);
+    public string EmitXdc(Subcircuit subcircuit, bool include7SegmentDisplay) =>
+        basys3Emitter.EmitXdc(subcircuit, include7SegmentDisplay);
 
-    public string ExportVerilog(SubCircuit subCircuit, string? testString, bool zip = false, string outputPath = "")
+    public string ExportVerilog(Subcircuit subcircuit, string? testString, bool zip = false, string outputPath = "")
     {
-        var builder = CreteaBuilderAddVerilog(subCircuit, testString);
-        return Write(builder, subCircuit.Title, outputPath, zip);
+        var builder = CreteaBuilderAddVerilog(subcircuit, testString);
+        return Write(builder, subcircuit.Title, outputPath, zip);
     }
 
-    public string ExportVerilogWithTopAndXdc(SubCircuit subCircuit, string? testString, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
+    public string ExportVerilogWithTopAndXdc(Subcircuit subcircuit, string? testString, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
     {
-        var builder = CreteaBuilderAddVerilog(subCircuit, testString);
+        var builder = CreteaBuilderAddVerilog(subcircuit, testString);
 
         if (include7SegmentDisplay && basys3Emitter.Emit7SegmentDisplayModule() is VerilogModule displayModule)
             builder.AddFile($"{displayModule.Name}.v", displayModule.Content);
 
-        var topModule = basys3Emitter.EmitTopModule(subCircuit, include7SegmentDisplay);
+        var topModule = basys3Emitter.EmitTopModule(subcircuit, include7SegmentDisplay);
         builder.AddFile($"{topModule.Name}.v", topModule.Content);
 
-        var xdc = basys3Emitter.EmitXdc(subCircuit, include7SegmentDisplay);
+        var xdc = basys3Emitter.EmitXdc(subcircuit, include7SegmentDisplay);
         builder.AddFile($"{builder.TopModuleName}.xdc", xdc);
 
-        return Write(builder, subCircuit.Title, outputPath, zip);
+        return Write(builder, subcircuit.Title, outputPath, zip);
     }
 
-    private ExportBuilder CreteaBuilderAddVerilog(SubCircuit subCircuit, string? testString)
+    private ExportBuilder CreteaBuilderAddVerilog(Subcircuit subcircuit, string? testString)
     {
-        var verilog = emitter.EmitSubCircuit(subCircuit);
+        var verilog = emitter.EmitSubcircuit(subcircuit);
 
         var builder = ExportBuilder.Create().AddVerilogFiles(verilog);
 
-        if (EmitVerilogTestbenchWithTests(subCircuit, testString) is VerilogModule module)
+        if (EmitVerilogTestbenchWithTests(subcircuit, testString) is VerilogModule module)
             builder.AddFile($"{module.Name}.v", module.Content);
 
         return builder;
     }
 
-    private VerilogModule? EmitVerilogTestbenchWithTests(SubCircuit subCircuit, string? testString)
+    private VerilogModule? EmitVerilogTestbenchWithTests(Subcircuit subcircuit, string? testString)
     {
         if (string.IsNullOrWhiteSpace(testString))
             return null;
 
-        return tbEmitter.EmitTestbench(subCircuit, testString);
+        return tbEmitter.EmitTestbench(subcircuit, testString);
     }
 
     private static string Write(ExportBuilder builder, string title, string outputPath = "", bool zip = false)

@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Memory;
+﻿using SimulationEngine.Designs.Subcircuits.Memory;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Fetch;
 
-public class Fetch : SubCircuit
+public class Fetch : Subcircuit
 {
     public Port LdEn => Inputs[0];
     public Port LdAddr1 => Inputs[1];
@@ -48,8 +48,8 @@ public class Fetch : SubCircuit
             nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00), 
             nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00));
 
-        var progCtr2 = this.AddSubCircuit(new ProgCtr2());
-        var _9Reg10_1 = this.AddSubCircuit(new _9Reg10_1());
+        var progCtr2 = this.AddSubcircuit(new ProgCtr2());
+        var _9Reg10_1 = this.AddSubcircuit(new _9Reg10_1());
 
         this.AddWires([
             (LdEn, progCtr2.LdEn),

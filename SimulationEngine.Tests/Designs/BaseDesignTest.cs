@@ -8,11 +8,11 @@ namespace SimulationEngine.Tests.Designs;
 
 public abstract class BaseDesignTest(ITestOutputHelper testOutputHelper)
 {
-    protected void TestSimulatation(SubCircuit subCircuit, bool skipEvaluation = false)
+    protected void TestSimulatation(Subcircuit subcircuit, bool skipEvaluation = false)
     {
-        var simulationSession = SimulationSession.Build(subCircuit);
+        var simulationSession = SimulationSession.Build(subcircuit);
 
-        var testString = subCircuit.GetTestString();
+        var testString = subcircuit.GetTestString();
 
         var tests = TestStringConverter.GetInputOutputPairs(testString);
 

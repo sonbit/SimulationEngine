@@ -2,12 +2,15 @@
 
 namespace SimulationEngine.Domain.Models.Placements;
 
-public class SubCircuitPlacement : BaseTitleEntity
+public sealed class SubcircuitPlacement : BaseTitleEntity
 {
-    public int Ordinal { get; set; }
-    public int ParentSubCircuitId { get; set; }
-    public SubCircuit ParentSubCircuit { get; set; }
-    public int ChildSubCircuitId { get; set; }
-    public SubCircuit ChildSubCircuit { get; set; }
-    public List<PortPlacement> PortPlacements { get; set; } = [];
+    public int Ordinal { get; init; }
+
+    public int ParentTemplateId { get; init; }
+    public required Subcircuit ParentTemplate { get; init; }
+
+    public int ChildTemplateId { get; init; }
+    public required Subcircuit ChildTemplate { get; init; }
+
+    public ICollection<PortPlacement> PortPlacements { get; init; } = [];
 }

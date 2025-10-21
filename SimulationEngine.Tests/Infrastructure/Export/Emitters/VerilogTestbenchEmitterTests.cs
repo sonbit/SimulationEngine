@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Designs.REBEL2.ALU;
 using SimulationEngine.Designs.REBEL2.Decode;
 using SimulationEngine.Designs.REBEL2.Fetch;
-using SimulationEngine.Designs.SubCircuits.Memory;
+using SimulationEngine.Designs.Subcircuits.Memory;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Infrastructure.Export.Emitters;
 using Xunit.Abstractions;
@@ -22,9 +22,9 @@ public class VerilogTestbenchEmitterTests(ITestOutputHelper testOutputHelper) : 
     [Fact]
     public void Register9_Validate() => BaseTestbenchValidate(new Register9(), "Baselines/Register9/Register9_TB_Expected.txt");
 
-    private void BaseTestbenchValidate(SubCircuit subCircuit, string filePath, bool skipEvaluation = false)
+    private void BaseTestbenchValidate(Subcircuit subcircuit, string filePath, bool skipEvaluation = false)
     {
-        var output = new VerilogTestbenchEmitter().EmitTestbench(subCircuit, subCircuit.GetTestString()).Content.Trim();
+        var output = new VerilogTestbenchEmitter().EmitTestbench(subcircuit, subcircuit.GetTestString()).Content.Trim();
         Validate(filePath, output, skipEvaluation);
     }
 }

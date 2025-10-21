@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace SimulationEngine.Domain.Compilers.Models;
 
-public record SubCircuitPlaced
+public record SubcircuitPlaced
 {
-    public SubCircuit SubCircuit { get; init; } = default!;
-    public List<SubCircuitPlacementInfo> SubCircuitPlacementInfos { get; init; } = [];
+    public Subcircuit Template { get; init; }
+    public List<SubcircuitPlacementInfo> PlacementInfos { get; init; } = [];
 }

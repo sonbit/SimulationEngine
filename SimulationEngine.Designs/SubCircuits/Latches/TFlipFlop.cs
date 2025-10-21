@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Latches;
+namespace SimulationEngine.Designs.Subcircuits.Latches;
 
-public class TFlipFlop : SubCircuit
+public class TFlipFlop : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port A => Inputs[1];
@@ -17,8 +17,8 @@ public class TFlipFlop : SubCircuit
 
         var _2 = this.AddBinaryLogicGate("2");
 
-        var btl0 = this.AddSubCircuit(new BTLatch());
-        var btl1 = this.AddSubCircuit(new BTLatch());
+        var btl0 = this.AddSubcircuit(new BTLatch());
+        var btl1 = this.AddSubcircuit(new BTLatch());
 
         this.AddWires([
             (Clk, _2.A),

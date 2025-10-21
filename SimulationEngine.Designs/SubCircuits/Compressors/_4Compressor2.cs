@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Compressors;
+namespace SimulationEngine.Designs.Subcircuits.Compressors;
 
-public class _4Compressor2 : SubCircuit
+public class _4Compressor2 : Subcircuit
 {
     public Port D => Inputs[0];
     public Port C => Inputs[1];

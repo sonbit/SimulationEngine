@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Application.Services.Database.Base;
 using SimulationEngine.Domain.Models;
 
-namespace SimulationEngine.Application.Services.Database.SubCircuits;
+namespace SimulationEngine.Application.Services.Database.Subcircuits;
 
-public interface ISubCircuitService : IBaseService<SubCircuit> 
+public interface ISubcircuitService : IBaseService<Subcircuit> 
 {
-    Task<SubCircuit> GetByTitleAsync(string title);
+    Task<Subcircuit> GetByTitleAsync(string title);
 }

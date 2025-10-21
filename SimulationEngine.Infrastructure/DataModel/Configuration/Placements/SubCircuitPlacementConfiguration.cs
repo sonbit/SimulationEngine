@@ -3,22 +3,22 @@ using SimulationEngine.Domain.Models.Placements;
 
 namespace SimulationEngine.Infrastructure.DataModel.Configuration.Placements;
 
-internal static class SubCircuitPlacementConfiguration
+internal static class SubcircuitPlacementConfiguration
 {
-    internal static void Configure(EntityTypeBuilder<SubCircuitPlacement> entity)
+    internal static void Configure(EntityTypeBuilder<SubcircuitPlacement> entity)
     {
         entity
-            .HasOne(subCircuit => subCircuit.ParentSubCircuit)
+            .HasOne(subcircuit => subcircuit.ParentTemplate)
             .WithMany()
-            .HasForeignKey(subCircuit => subCircuit.ParentSubCircuitId);
+            .HasForeignKey(subcircuit => subcircuit.ParentTemplateId);
 
         entity
-            .HasOne(subCircuit => subCircuit.ChildSubCircuit)
+            .HasOne(subcircuit => subcircuit.ChildTemplate)
             .WithMany()
-            .HasForeignKey(subCircuit => subCircuit.ChildSubCircuitId);
+            .HasForeignKey(subcircuit => subcircuit.ChildTemplateId);
 
         entity
-            .HasIndex(subCircuit => new { subCircuit.ParentSubCircuitId, subCircuit.Ordinal })
+            .HasIndex(subcircuit => new { subcircuit.ParentTemplateId, subcircuit.Ordinal })
             .IsUnique();
     }
 }

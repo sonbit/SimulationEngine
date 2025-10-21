@@ -3,19 +3,19 @@ using SimulationEngine.Domain.Hashers;
 
 namespace SimulationEngine.Tests.Domain;
 
-public class SubCircuitHasherTests
+public class SubcircuitHasherTests
 {
     [Fact]
     public void Compare_DifferentReference_SameStructure_EqualHash()
     {
-        var subCircuitX = ModelBuilders.CreateSubCircuit();
-        var subCircuitY = ModelBuilders.CreateSubCircuit();
+        var subcircuitX = ModelBuilders.CreateSubcircuit();
+        var subcircuitY = ModelBuilders.CreateSubcircuit();
 
-        var subCircuitPlacedX = SubCircuitCompiler.Compile(subCircuitX).SubCircuitPlaced;
-        var subCircuitPlacedY = SubCircuitCompiler.Compile(subCircuitY).SubCircuitPlaced;
+        var placedX = SubcircuitCompiler.Compile(subcircuitX).Placed;
+        var placedY = SubcircuitCompiler.Compile(subcircuitY).Placed;
 
-        var hashX = SubCircuitHasher.Compute(subCircuitPlacedX.SubCircuit, [.. subCircuitPlacedX.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
-        var hashY = SubCircuitHasher.Compute(subCircuitPlacedY.SubCircuit, [.. subCircuitPlacedY.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
+        var hashX = SubcircuitHasher.Compute(placedX.Template, [.. placedX.PlacementInfos.Select(p => p.Placement)]);
+        var hashY = SubcircuitHasher.Compute(placedY.Template, [.. placedY.PlacementInfos.Select(p => p.Placement)]);
 
         Assert.Equal(hashX, hashY);
     }
@@ -23,14 +23,14 @@ public class SubCircuitHasherTests
     [Fact]
     public void Compare_DifferentWireOrder_EqualHash()
     {
-        var subCircuitX = ModelBuilders.CreateSubCircuit();
-        var subCircuitY = ModelBuilders.CreateSubCircuit(flipWireOrder: true);
+        var subcircuitX = ModelBuilders.CreateSubcircuit();
+        var subcircuitY = ModelBuilders.CreateSubcircuit(flipWireOrder: true);
 
-        var subCircuitPlacedX = SubCircuitCompiler.Compile(subCircuitX).SubCircuitPlaced;
-        var subCircuitPlacedY = SubCircuitCompiler.Compile(subCircuitY).SubCircuitPlaced;
+        var placedX = SubcircuitCompiler.Compile(subcircuitX).Placed;
+        var placedY = SubcircuitCompiler.Compile(subcircuitY).Placed;
 
-        var hashX = SubCircuitHasher.Compute(subCircuitPlacedX.SubCircuit, [.. subCircuitPlacedX.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
-        var hashY = SubCircuitHasher.Compute(subCircuitPlacedY.SubCircuit, [.. subCircuitPlacedY.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
+        var hashX = SubcircuitHasher.Compute(placedX.Template, [.. placedX.PlacementInfos.Select(p => p.Placement)]);
+        var hashY = SubcircuitHasher.Compute(placedY.Template, [.. placedY.PlacementInfos.Select(p => p.Placement)]);
 
         Assert.Equal(hashX, hashY);
     }
@@ -38,16 +38,16 @@ public class SubCircuitHasherTests
     [Fact]
     public void Compare_HeptaIndexChange_NotEqualHash()
     {
-        var subCircuitX = ModelBuilders.CreateSubCircuit();
-        var subCircuitY = ModelBuilders.CreateSubCircuit();
+        var subcircuitX = ModelBuilders.CreateSubcircuit();
+        var subcircuitY = ModelBuilders.CreateSubcircuit();
 
-        subCircuitY.LogicGates[0].TruthTable.HeptaIndex = "000";
+        subcircuitY.LogicGates[0].TruthTable.HeptaIndex = "000";
 
-        var subCircuitPlacedX = SubCircuitCompiler.Compile(subCircuitX).SubCircuitPlaced;
-        var subCircuitPlacedY = SubCircuitCompiler.Compile(subCircuitY).SubCircuitPlaced;
+        var placedX = SubcircuitCompiler.Compile(subcircuitX).Placed;
+        var placedY = SubcircuitCompiler.Compile(subcircuitY).Placed;
 
-        var hashX = SubCircuitHasher.Compute(subCircuitPlacedX.SubCircuit, [.. subCircuitPlacedX.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
-        var hashY = SubCircuitHasher.Compute(subCircuitPlacedY.SubCircuit, [.. subCircuitPlacedY.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
+        var hashX = SubcircuitHasher.Compute(placedX.Template, [.. placedX.PlacementInfos.Select(p => p.Placement)]);
+        var hashY = SubcircuitHasher.Compute(placedY.Template, [.. placedY.PlacementInfos.Select(p => p.Placement)]);
 
         Assert.NotEqual(hashX, hashY);
     }
@@ -55,16 +55,16 @@ public class SubCircuitHasherTests
     [Fact]
     public void Compare_PortTitleChange_NotEqualHash()
     {
-        var subCircuitX = ModelBuilders.CreateSubCircuit();
-        var subCircuitY = ModelBuilders.CreateSubCircuit();
+        var subcircuitX = ModelBuilders.CreateSubcircuit();
+        var subcircuitY = ModelBuilders.CreateSubcircuit();
 
-        subCircuitY.Ports[0].Title = "renamed_input";
+        subcircuitY.Ports[0].Title = "renamed_input";
 
-        var subCircuitPlacedX = SubCircuitCompiler.Compile(subCircuitX).SubCircuitPlaced;
-        var subCircuitPlacedY = SubCircuitCompiler.Compile(subCircuitY).SubCircuitPlaced;
+        var placedX = SubcircuitCompiler.Compile(subcircuitX).Placed;
+        var placedY = SubcircuitCompiler.Compile(subcircuitY).Placed;
 
-        var hashX = SubCircuitHasher.Compute(subCircuitPlacedX.SubCircuit, [.. subCircuitPlacedX.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
-        var hashY = SubCircuitHasher.Compute(subCircuitPlacedY.SubCircuit, [.. subCircuitPlacedY.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
+        var hashX = SubcircuitHasher.Compute(placedX.Template, [.. placedX.PlacementInfos.Select(p => p.Placement)]);
+        var hashY = SubcircuitHasher.Compute(placedY.Template, [.. placedY.PlacementInfos.Select(p => p.Placement)]);
 
         Assert.NotEqual(hashX, hashY);
     }
@@ -72,16 +72,16 @@ public class SubCircuitHasherTests
     [Fact]
     public void Compare_WireChange_NotEqualHash()
     {
-        var subCircuitX = ModelBuilders.CreateSubCircuit();
-        var subCircuitY = ModelBuilders.CreateSubCircuit();
+        var subcircuitX = ModelBuilders.CreateSubcircuit();
+        var subcircuitY = ModelBuilders.CreateSubcircuit();
 
-        subCircuitY.Wires.RemoveAt(1);
+        subcircuitY.Wires.RemoveAt(1);
 
-        var subCircuitPlacedX = SubCircuitCompiler.Compile(subCircuitX).SubCircuitPlaced;
-        var subCircuitPlacedY = SubCircuitCompiler.Compile(subCircuitY).SubCircuitPlaced;
+        var placedX = SubcircuitCompiler.Compile(subcircuitX).Placed;
+        var placedY = SubcircuitCompiler.Compile(subcircuitY).Placed;
 
-        var hashX = SubCircuitHasher.Compute(subCircuitPlacedX.SubCircuit, [.. subCircuitPlacedX.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
-        var hashY = SubCircuitHasher.Compute(subCircuitPlacedY.SubCircuit, [.. subCircuitPlacedY.SubCircuitPlacementInfos.Select(p => p.SubCircuitPlacement)]);
+        var hashX = SubcircuitHasher.Compute(placedX.Template, [.. placedX.PlacementInfos.Select(p => p.Placement)]);
+        var hashY = SubcircuitHasher.Compute(placedY.Template, [.. placedY.PlacementInfos.Select(p => p.Placement)]);
 
         Assert.NotEqual(hashX, hashY);
     }

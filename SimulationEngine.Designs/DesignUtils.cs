@@ -5,21 +5,21 @@ namespace SimulationEngine.Designs;
 
 public static class DesignUtils
 {
-    public static string? GetTestString(string subCircuitTitle)
+    public static string? GetTestString(string subcircuitTitle)
     {
-        if (string.IsNullOrWhiteSpace(subCircuitTitle))
+        if (string.IsNullOrWhiteSpace(subcircuitTitle))
             return null;
 
         var type = Assembly
             .GetExecutingAssembly()
             .GetTypes()
             .FirstOrDefault(type => 
-                typeof(SubCircuit).IsAssignableFrom(type) && 
-                type.Name.Contains(subCircuitTitle));
+                typeof(Subcircuit).IsAssignableFrom(type) && 
+                type.Name.Contains(subcircuitTitle));
 
-        if (type == null || (SubCircuit?)Activator.CreateInstance(type) is not SubCircuit subCircuit)
+        if (type == null || (Subcircuit?)Activator.CreateInstance(type) is not Subcircuit subcircuit)
             return null;
 
-        return subCircuit.GetTestString();
+        return subcircuit.GetTestString();
     }
 }

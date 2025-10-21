@@ -8,9 +8,9 @@ internal static class LogicGateConfiguration
     internal static void Configure(EntityTypeBuilder<LogicGate> entity)
     {
         entity
-            .HasOne(logicGate => logicGate.SubCircuit)
-            .WithMany(subCircuit => subCircuit.LogicGates)
-            .HasForeignKey(logicGate => logicGate.SubCircuitId);
+            .HasOne(logicGate => logicGate.Subcircuit)
+            .WithMany(subcircuit => subcircuit.LogicGates)
+            .HasForeignKey(logicGate => logicGate.SubcircuitId);
 
         entity
             .HasOne(logicGate => logicGate.TruthTable)

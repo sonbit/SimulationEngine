@@ -1,7 +1,7 @@
-﻿using SimulationEngine.Designs.SubCircuits.Compressors;
+﻿using SimulationEngine.Designs.Subcircuits.Compressors;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.Designs.SubCircuits;
+namespace SimulationEngine.Tests.Designs.Subcircuits;
 
 public class CompressorTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {

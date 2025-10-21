@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Adders;
+namespace SimulationEngine.Designs.Subcircuits.Adders;
 
-public class TriFullAdder : SubCircuit
+public class TriFullAdder : Subcircuit
 {
     public Port C => Inputs[0];
     public Port B => Inputs[1];

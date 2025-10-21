@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Database.SubCircuits;
+﻿using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings;
@@ -11,25 +11,25 @@ using System.Diagnostics;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
-public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer, ISubCircuitService service) : AsyncCommand<SimulationRunSettings>
+public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer, ISubcircuitService service) : AsyncCommand<SimulationRunSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, SimulationRunSettings settings)
     {
-        SubCircuit? subCircuit = null;
+        Subcircuit? subcircuit = null;
 
         if (settings.Id > 0)
-            subCircuit = await service.GetByIdAsync(settings.Id ?? 0);
+            subcircuit = await service.GetByIdAsync(settings.Id ?? 0);
         else if (!string.IsNullOrWhiteSpace(settings.Title))
-            subCircuit = await service.GetByTitleAsync(settings.Title);
-        else if (settings.Interactive == true && await prompter.AskIdAsync("Enter SubCircuit id:") is int id)
-            subCircuit = await service.GetByIdAsync(id);
+            subcircuit = await service.GetByTitleAsync(settings.Title);
+        else if (settings.Interactive == true && await prompter.AskIdAsync("Enter Subcircuit id:") is int id)
+            subcircuit = await service.GetByIdAsync(id);
 
-        return await SimulateAsync(subCircuit, settings);
+        return await SimulateAsync(subcircuit, settings);
     }
 
-    private void Simulate(SubCircuit subCircuit, SimulationSession simulationSession, string inputs, bool normalize, HashSet<char>[] allowedValuesPerInput)
+    private void Simulate(Subcircuit subcircuit, SimulationSession simulationSession, string inputs, bool normalize, HashSet<char>[] allowedValuesPerInput)
     {
-        if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
+        if (InputValidator.Validate(subcircuit, inputs, normalize, allowedValuesPerInput) is string message)
         {
             renderer.DrawError(message);
             return;
@@ -38,40 +38,40 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
         renderer.DrawLine(simulationSession.Simulate(inputs, normalize));
     }
 
-    private async Task<int> SimulateAsync(SubCircuit? subCircuit, SimulationRunSettings settings)
+    private async Task<int> SimulateAsync(Subcircuit? subcircuit, SimulationRunSettings settings)
     {
-        if (subCircuit is null)
+        if (subcircuit is null)
         {
             renderer.DrawError($"Subcircuit{(settings.Id > 0 ? $" with id {settings.Id} " : "")}was not found.");
             return 1;
         }
 
         if (settings.File is not null)
-            return await SimulationFile.SimulateFileAsync(subCircuit, settings.File, renderer, settings.Normalize, settings.Benchmark);
+            return await SimulationFile.SimulateFileAsync(subcircuit, settings.File, renderer, settings.Normalize, settings.Benchmark);
 
         if (settings.InputString is not null)
-            return SimulateInputStrings(subCircuit, settings.InputString, settings.Normalize, settings.Benchmark);
+            return SimulateInputStrings(subcircuit, settings.InputString, settings.Normalize, settings.Benchmark);
 
         if (settings.InputVectors.Length > 0 && string.Join(' ',  settings.InputVectors) is string inputs)
-            return SimulateInputStrings(subCircuit, inputs, settings.Normalize, settings.Benchmark);
+            return SimulateInputStrings(subcircuit, inputs, settings.Normalize, settings.Benchmark);
 
         if (settings.Stream || Console.IsInputRedirected)
-            return await SimulateStreamAsync(subCircuit, settings.Normalize);
+            return await SimulateStreamAsync(subcircuit, settings.Normalize);
 
-        return await SimulationRepl.SimulateReplAsync(subCircuit, renderer, settings.Normalize);
+        return await SimulationRepl.SimulateReplAsync(subcircuit, renderer, settings.Normalize);
     }
 
-    private int SimulateInputStrings(SubCircuit subCircuit, string inputStrings, bool normalize, bool benchmark)
+    private int SimulateInputStrings(Subcircuit subcircuit, string inputStrings, bool normalize, bool benchmark)
     {
-        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
         var inputStringsArray = inputStrings.Split([',', ' ']);
 
-        var simulationSession = SimulationSession.Build(subCircuit);
+        var simulationSession = SimulationSession.Build(subcircuit);
 
         var stopWatch = Stopwatch.StartNew();
 
         foreach (var inputs in inputStringsArray)
-            Simulate(subCircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
+            Simulate(subcircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
 
         stopWatch.Stop();
 
@@ -81,11 +81,11 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
         return 0;
     }
 
-    private async Task<int> SimulateStreamAsync(SubCircuit subCircuit, bool normalize)
+    private async Task<int> SimulateStreamAsync(Subcircuit subcircuit, bool normalize)
     {
-        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
 
-        var simulationSession = SimulationSession.Build(subCircuit);
+        var simulationSession = SimulationSession.Build(subcircuit);
 
         string? inputs;
         while ((inputs = await Console.In.ReadLineAsync()) is not null)
@@ -95,7 +95,7 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
                 string.IsNullOrWhiteSpace(inputs))
                 break;
 
-            Simulate(subCircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
+            Simulate(subcircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
         }
 
         return 0;

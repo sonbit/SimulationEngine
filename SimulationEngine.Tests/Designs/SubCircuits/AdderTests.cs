@@ -1,7 +1,7 @@
-﻿using SimulationEngine.Designs.SubCircuits.Adders;
+﻿using SimulationEngine.Designs.Subcircuits.Adders;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.Designs.SubCircuits;
+namespace SimulationEngine.Tests.Designs.Subcircuits;
 
 public class AdderTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {

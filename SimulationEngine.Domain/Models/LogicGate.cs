@@ -33,8 +33,8 @@ public class LogicGate : BaseEntity
     public LogicGateMetadata Metadata { get; set; } = new LogicGateMetadata();
     public int LogicGateMetadataId { get; set; }
     public List<Pin> Pins { get; set; } = [];
-    public SubCircuit SubCircuit { get; set; }
-    public int SubCircuitId { get; set; }
+    public Subcircuit Subcircuit { get; set; }
+    public int SubcircuitId { get; set; }
     public TruthTable TruthTable { get; set; }
     public int TruthTableId { get; set; }
 

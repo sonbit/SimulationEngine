@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Demultiplexers;
+namespace SimulationEngine.Designs.Subcircuits.Demultiplexers;
 
-public class DEMUX : SubCircuit
+public class DEMUX : Subcircuit
 {
     public Port Sel1 => Inputs[0];
     public Port Sel0 => Inputs[1];
@@ -27,10 +27,10 @@ public class DEMUX : SubCircuit
             nameof(ClkQ5), nameof(ClkQ4), nameof(ClkQ3),
             nameof(ClkQ2), nameof(ClkQ1), nameof(ClkQ0));
 
-        var _3DEMUX_0 = this.AddSubCircuit(new _3DEMUX());
-        var _3DEMUX_1 = this.AddSubCircuit(new _3DEMUX());
-        var _3DEMUX_2 = this.AddSubCircuit(new _3DEMUX());
-        var _3DEMUX_3 = this.AddSubCircuit(new _3DEMUX());
+        var _3DEMUX_0 = this.AddSubcircuit(new _3DEMUX());
+        var _3DEMUX_1 = this.AddSubcircuit(new _3DEMUX());
+        var _3DEMUX_2 = this.AddSubcircuit(new _3DEMUX());
+        var _3DEMUX_3 = this.AddSubcircuit(new _3DEMUX());
 
         this.AddWires([
             (Sel1, _3DEMUX_0.Din),

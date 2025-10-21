@@ -18,12 +18,12 @@ public sealed class ExportBuilder
 
     public ExportBuilder AddVerilogFiles(Verilog verilog)
     {
-        TopModuleName = verilog.SubCircuitModules.First().Name;
+        TopModuleName = verilog.SubcircuitModules.First().Name;
 
         AddFile($"{TopModuleName}_all.v", verilog.GetAllModules());
 
-        foreach (var subCircuitModule in verilog.SubCircuitModules)
-            AddFile($"Circuits/{subCircuitModule.Name}.v", subCircuitModule.Content);
+        foreach (var subcircuitModule in verilog.SubcircuitModules)
+            AddFile($"Circuits/{subcircuitModule.Name}.v", subcircuitModule.Content);
 
         foreach (var logicGate in verilog.LogicGateModules)
             AddFile($"LogicGates/{logicGate.Name}.v", logicGate.Content);

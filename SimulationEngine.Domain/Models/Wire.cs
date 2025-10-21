@@ -6,6 +6,6 @@ public class Wire : BaseEntity
     public int StartTerminalId { get; set; }
     public Terminal EndTerminal { get; set; }
     public int EndTerminalId { get; set; }
-    public SubCircuit SubCircuit { get; set; }
-    public int SubCircuitId { get; set; }
+    public Subcircuit Subcircuit { get; set; }
+    public int SubcircuitId { get; set; }
 }

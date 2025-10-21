@@ -5,11 +5,11 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class DatabaseFlow(IPrompter prompter, IRenderer renderer, IDatabaseService service, SubCircuitsFlow subCircuitFlow, TruthTablesFlow truthTableFlow)
+public sealed class DatabaseFlow(IPrompter prompter, IRenderer renderer, IDatabaseService service, SubcircuitsFlow subcircuitFlow, TruthTablesFlow truthTableFlow)
 {
     private enum MenuOptions
     {
-        SubCircuits,
+        Subcircuits,
         TruthTables,
         [Description("Recreate the database")] RecreateDatabase,
         Back
@@ -23,8 +23,8 @@ public sealed class DatabaseFlow(IPrompter prompter, IRenderer renderer, IDataba
 
             switch (selected)
             {
-                case MenuOptions.SubCircuits:
-                    await subCircuitFlow.RunMenuAsync();
+                case MenuOptions.Subcircuits:
+                    await subcircuitFlow.RunMenuAsync();
                     break;
 
                 case MenuOptions.TruthTables:

@@ -4,12 +4,12 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimulationEngine.Application.Export.Emitters;
 using SimulationEngine.Application.Services.Database;
-using SimulationEngine.Application.Services.Database.SubCircuits;
+using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Application.Services.Database.TruthTables;
 using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Commands;
 using SimulationEngine.Cli.Commands.Database;
-using SimulationEngine.Cli.Commands.Database.SubCircuits;
+using SimulationEngine.Cli.Commands.Database.Subcircuits;
 using SimulationEngine.Cli.Commands.Database.TruthTables;
 using SimulationEngine.Cli.Commands.Export;
 using SimulationEngine.Cli.Commands.Simulation;
@@ -34,13 +34,13 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddDbContext<SimulationEngineDbContext>(opts => opts.UseSqlite("Data Source=SimulationEngine.db"));
-        services.AddScoped<ISubCircuitRepository, SubCircuitRepository>();
+        services.AddScoped<ISubcircuitRepository, SubcircuitRepository>();
         services.AddScoped<ITruthTableRepository, TruthTableRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IExportService, ExportService>();
-        services.AddScoped<ISubCircuitService, SubCircuitService>();
+        services.AddScoped<ISubcircuitService, SubcircuitService>();
         services.AddScoped<ITruthTableService, TruthTableService>();
 
         services.AddScoped<IVerilogEmitter, VerilogEmitter>();
@@ -55,18 +55,18 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<EmitFlow>();
         services.AddScoped<ExportFlow>();
         services.AddScoped<SimulationFlow>();
-        services.AddScoped<SubCircuitFlow>();
-        services.AddScoped<SubCircuitsFlow>();
+        services.AddScoped<SubcircuitFlow>();
+        services.AddScoped<SubcircuitsFlow>();
         services.AddScoped<TruthTablesFlow>();
 
         services.AddScoped<DatabaseMenuCommand>();
         services.AddScoped<EmitCommand>();
         services.AddScoped<ExportCommand>();
         services.AddScoped<MainMenuCommand>();
-        services.AddScoped<SubCircuitsFindCommand>();
-        services.AddScoped<SubCircuitsListCommand>();
-        services.AddScoped<SubCircuitsPopulateCommand>();
-        services.AddScoped<SubCircuitsShowTreeCommand>();
+        services.AddScoped<SubcircuitsFindCommand>();
+        services.AddScoped<SubcircuitsListCommand>();
+        services.AddScoped<SubcircuitsPopulateCommand>();
+        services.AddScoped<SubcircuitsShowTreeCommand>();
         services.AddScoped<TruthTablesFindCommand>();
         services.AddScoped<TruthTablesListCommand>();
         services.AddScoped<TruthTablesPopulateCommand>();
@@ -94,10 +94,10 @@ app.Configure(cfg =>
 
         db.AddBranch("sc", sc =>
         {
-            sc.AddCommand<SubCircuitsFindCommand>("find");
-            sc.AddCommand<SubCircuitsListCommand>("list");
-            sc.AddCommand<SubCircuitsPopulateCommand>("populate");
-            sc.AddCommand<SubCircuitsShowTreeCommand>("tree");
+            sc.AddCommand<SubcircuitsFindCommand>("find");
+            sc.AddCommand<SubcircuitsListCommand>("list");
+            sc.AddCommand<SubcircuitsPopulateCommand>("populate");
+            sc.AddCommand<SubcircuitsShowTreeCommand>("tree");
             sc.AddCommand<EmitCommand>("emit");
             sc.AddCommand<ExportCommand>("export");
         });

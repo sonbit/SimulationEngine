@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Database.SubCircuits;
+﻿using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Models;
@@ -7,10 +7,10 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class SubCircuitFlow(
+public sealed class SubcircuitFlow(
     IPrompter prompter, 
     IRenderer renderer, 
-    ISubCircuitService service,
+    ISubcircuitService service,
     SimulationFlow simulationFlow, 
     EmitFlow emitFlow,
     ExportFlow exportFlow)
@@ -24,7 +24,7 @@ public sealed class SubCircuitFlow(
         Back
     }
 
-    public async Task RunMenuAsync(SubCircuit subCircuit)
+    public async Task RunMenuAsync(Subcircuit subcircuit)
     {
         renderer.Clear();
 
@@ -32,35 +32,35 @@ public sealed class SubCircuitFlow(
         {
             renderer.DrawTableWithNameValuePairs(
             [
-                (nameof(SubCircuit.Id), subCircuit.Id),
-                (nameof(SubCircuit.Title), subCircuit.Title),
-                (nameof(SubCircuit.Hash), subCircuit.Hash),
-                (nameof(SubCircuit.Inputs), subCircuit.Inputs.Count),
-                (nameof(SubCircuit.LogicGates), subCircuit.LogicGates.Count),
-                (nameof(SubCircuit.Outputs), subCircuit.Outputs.Count),
-                (nameof(SubCircuit.SubCircuits), subCircuit.SubCircuits.Count),
-                (nameof(SubCircuit.Wires), subCircuit.Wires.Count)
+                (nameof(Subcircuit.Id), subcircuit.Id),
+                (nameof(Subcircuit.Title), subcircuit.Title),
+                (nameof(Subcircuit.Hash), subcircuit.Hash),
+                (nameof(Subcircuit.Inputs), subcircuit.Inputs.Count),
+                (nameof(Subcircuit.LogicGates), subcircuit.LogicGates.Count),
+                (nameof(Subcircuit.Outputs), subcircuit.Outputs.Count),
+                (nameof(Subcircuit.Subcircuits), subcircuit.Subcircuits.Count),
+                (nameof(Subcircuit.Wires), subcircuit.Wires.Count)
             ]);
 
-            var menuOption = await prompter.SelectEnumAsync<MenuOptions>($"[bold]{subCircuit.Title} ({subCircuit.Id})[/]");
+            var menuOption = await prompter.SelectEnumAsync<MenuOptions>($"[bold]{subcircuit.Title} ({subcircuit.Id})[/]");
 
             switch (menuOption)
             {
                 case MenuOptions.Simulate:
-                    await simulationFlow.RunSimulationMenuAsync(subCircuit);
+                    await simulationFlow.RunSimulationMenuAsync(subcircuit);
                     break;
 
                 case MenuOptions.ShowTree:
                     renderer.Clear();
-                    BuildTree(subCircuit);
+                    BuildTree(subcircuit);
                     break;
 
                 case MenuOptions.Emit:
-                    await emitFlow.RunMenuAsync(subCircuit);
+                    await emitFlow.RunMenuAsync(subcircuit);
                     break;
 
                 case MenuOptions.Export:
-                    await exportFlow.RunMenuAsync(subCircuit);
+                    await exportFlow.RunMenuAsync(subcircuit);
                     break;
 
                 case MenuOptions.Back:
@@ -70,29 +70,29 @@ public sealed class SubCircuitFlow(
         }
     }
 
-    public async Task SubCircuitBuildTreeAsync(int id)
+    public async Task SubcircuitBuildTreeAsync(int id)
     {
-        var subCircuit = await service.GetByIdAsync(id);
-        if (subCircuit is null)
+        var subcircuit = await service.GetByIdAsync(id);
+        if (subcircuit is null)
         {
-            renderer.DrawError($"SubCircuit with id {id} was not found");
+            renderer.DrawError($"Subcircuit with id {id} was not found");
             return;
         }
 
         renderer.Clear();
-        BuildTree(subCircuit);
+        BuildTree(subcircuit);
     }
 
-    private void BuildTree(SubCircuit parentSubCircuit, int maxDepth = 32)
+    private void BuildTree(Subcircuit parentSubcircuit, int maxDepth = 32)
     {
-        var tree = new Tree(GetSubCircuitLabel(parentSubCircuit));
+        var tree = new Tree(GetSubcircuitLabel(parentSubcircuit));
         int depth = 0;
 
-        Build(parentSubCircuit, text => tree.AddNode(text), depth);
+        Build(parentSubcircuit, text => tree.AddNode(text), depth);
 
         renderer.Write(tree);
 
-        void Build(SubCircuit subCircuit, Func<string, TreeNode> addChild, int depth)
+        void Build(Subcircuit subcircuit, Func<string, TreeNode> addChild, int depth)
         {
             if (depth >= maxDepth)
             {
@@ -100,13 +100,13 @@ public sealed class SubCircuitFlow(
                 return;
             }
 
-            foreach (var logicGate in subCircuit.LogicGates)
+            foreach (var logicGate in subcircuit.LogicGates)
                 addChild(GetLogicGateLabel(logicGate));
 
-            foreach (var childSubCircuit in subCircuit.SubCircuits)
+            foreach (var childSubcircuit in subcircuit.Subcircuits)
             {
-                var childNode = addChild(GetSubCircuitLabel(childSubCircuit));
-                Build(childSubCircuit, label => childNode.AddNode(label), depth + 1);
+                var childNode = addChild(GetSubcircuitLabel(childSubcircuit));
+                Build(childSubcircuit, label => childNode.AddNode(label), depth + 1);
             }
         }
     }
@@ -114,6 +114,6 @@ public sealed class SubCircuitFlow(
     private static string GetLogicGateLabel(LogicGate logicGate) =>
         $"[blue]{Markup.Escape(logicGate.TruthTable.HeptaIndex)}[/]";
 
-    private static string GetSubCircuitLabel(SubCircuit subCircuit) =>
-        $"[yellow]{Markup.Escape(subCircuit.Title)}[/]";
+    private static string GetSubcircuitLabel(Subcircuit subcircuit) =>
+        $"[yellow]{Markup.Escape(subcircuit.Title)}[/]";
 }

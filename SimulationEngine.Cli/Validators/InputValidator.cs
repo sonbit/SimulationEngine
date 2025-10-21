@@ -6,9 +6,9 @@ namespace SimulationEngine.Cli.Validators;
 
 public static class InputValidator
 {
-    public static HashSet<char>[] GetAllowedValuesPerInput(SubCircuit subCircuit)
+    public static HashSet<char>[] GetAllowedValuesPerInput(Subcircuit subcircuit)
     {
-        return [.. subCircuit.Inputs.Select(port =>
+        return [.. subcircuit.Inputs.Select(port =>
         {
             var radix = port.GetRadix();
 
@@ -21,25 +21,25 @@ public static class InputValidator
         })];
     }
 
-    public static string? Validate(SubCircuit subCircuit, char inputChar, int index, bool normalize, HashSet<char>[] allowedValuesPerInput)
+    public static string? Validate(Subcircuit subcircuit, char inputChar, int index, bool normalize, HashSet<char>[] allowedValuesPerInput)
     {
         if (normalize && !"012".Contains(inputChar))
             return $"Input {index + 1} expects unbalanced ternary values (0, 1, 2)";
 
         if (!normalize && !allowedValuesPerInput[index].Contains(inputChar))
-            return $"Input {index + 1} expects {GetInputRadix(subCircuit, index)} values ({GetAllowedRadixValues(allowedValuesPerInput[index])})";
+            return $"Input {index + 1} expects {GetInputRadix(subcircuit, index)} values ({GetAllowedRadixValues(allowedValuesPerInput[index])})";
 
         return null;
     }
 
-    public static string? Validate(SubCircuit subCircuit, string inputString, bool normalize, HashSet<char>[] allowedValuesPerInput)
+    public static string? Validate(Subcircuit subcircuit, string inputString, bool normalize, HashSet<char>[] allowedValuesPerInput)
     {
-        if (inputString.Length != subCircuit.Inputs.Count)
-            return $"Inputs length mismatch (Got {inputString.Length}, expected {subCircuit.Inputs.Count})";
+        if (inputString.Length != subcircuit.Inputs.Count)
+            return $"Inputs length mismatch (Got {inputString.Length}, expected {subcircuit.Inputs.Count})";
 
         foreach (var (inputChar, index) in inputString.Select((inputChar, index) => (inputChar, index)))
         {
-            var validationErrorMessage = Validate(subCircuit, inputChar, index, normalize, allowedValuesPerInput);
+            var validationErrorMessage = Validate(subcircuit, inputChar, index, normalize, allowedValuesPerInput);
             if (validationErrorMessage != null)
                 return validationErrorMessage;
         }
@@ -47,8 +47,8 @@ public static class InputValidator
         return null;
     }
 
-    private static string GetInputRadix(SubCircuit subCircuit, int index) =>
-        $"{subCircuit.Inputs[index].GetRadix().GetDescription()}";
+    private static string GetInputRadix(Subcircuit subcircuit, int index) =>
+        $"{subcircuit.Inputs[index].GetRadix().GetDescription()}";
 
     private static string GetAllowedRadixValues(HashSet<char> allowedValuesForInput) =>
         $"{string.Join(", ", allowedValuesForInput.Select(ch => ch.ToString()))}";

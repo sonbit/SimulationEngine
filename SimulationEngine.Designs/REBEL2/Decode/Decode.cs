@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Memory;
+﻿using SimulationEngine.Designs.Subcircuits.Memory;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Decode;
 
-public class Decode : SubCircuit
+public class Decode : Subcircuit
 {
     public Port Pc1 => Inputs[0];
     public Port Pc0 => Inputs[1];
@@ -60,8 +60,8 @@ public class Decode : SubCircuit
 
         var K00 = this.AddLogicGate("K00");
 
-        var execCtrl = this.AddSubCircuit(new ExecCtrl());
-        var _9Reg2 = this.AddSubCircuit(new _9Reg2());
+        var execCtrl = this.AddSubcircuit(new ExecCtrl());
+        var _9Reg2 = this.AddSubcircuit(new _9Reg2());
 
         this.AddWires([
             (WbReg, K00.B),

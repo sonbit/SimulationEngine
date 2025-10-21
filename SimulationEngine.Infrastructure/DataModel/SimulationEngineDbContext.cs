@@ -22,9 +22,9 @@ public class SimulationEngineDbContext : DbContext
     public DbSet<Port> Ports { get; set; }
     public DbSet<PortMetadata> PortMetadata { get; set; }
     public DbSet<PortPlacement> PortPlacements { get; set; }
-    public DbSet<SubCircuit> SubCircuits { get; set; }
-    public DbSet<SubCircuitMetadata> SubCircuitMetadata { get; set; }
-    public DbSet<SubCircuitPlacement> SubCircuitPlacements { get; set; }
+    public DbSet<Subcircuit> Subcircuits { get; set; }
+    public DbSet<SubcircuitMetadata> SubcircuitMetadata { get; set; }
+    public DbSet<SubcircuitPlacement> SubcircuitPlacements { get; set; }
     public DbSet<Terminal> Terminals { get; set; }
     public DbSet<TruthTable> TruthTables { get; set; }
     public DbSet<TruthTableMetadata> TruthTableMetadata { get; set; }
@@ -38,8 +38,8 @@ public class SimulationEngineDbContext : DbContext
         modelBuilder.Entity<Port>(PortConfiguration.Configure);
         modelBuilder.Entity<PortMetadata>(PortMetadataConfiguration.Configure);
         modelBuilder.Entity<PortPlacement>(PortPlacementConfiguration.Configure);
-        modelBuilder.Entity<SubCircuit>(SubCircuitConfiguration.Configure);
-        modelBuilder.Entity<SubCircuitPlacement>(SubCircuitPlacementConfiguration.Configure);
+        modelBuilder.Entity<Subcircuit>(SubcircuitConfiguration.Configure);
+        modelBuilder.Entity<SubcircuitPlacement>(SubcircuitPlacementConfiguration.Configure);
         modelBuilder.Entity<Terminal>(TerminalConfiguration.Configure);
         modelBuilder.Entity<TruthTable>(TruthTableConfiguration.Configure);
         modelBuilder.Entity<TruthTableMetadata>(TruthTableMetadataConfiguration.Configure);

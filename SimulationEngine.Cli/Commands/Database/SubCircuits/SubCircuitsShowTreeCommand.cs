@@ -4,9 +4,9 @@ using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Cli.Settings;
 using Spectre.Console.Cli;
 
-namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
+namespace SimulationEngine.Cli.Commands.Database.Subcircuits;
 
-public sealed class SubCircuitsShowTreeCommand(SubCircuitFlow flow, IPrompter prompter, IRenderer renderer) : AsyncCommand<FindSettings>
+public sealed class SubcircuitsShowTreeCommand(SubcircuitFlow flow, IPrompter prompter, IRenderer renderer) : AsyncCommand<FindSettings>
 {
     public override async Task<int> ExecuteAsync(CommandContext context, FindSettings settings)
     {
@@ -19,7 +19,7 @@ public sealed class SubCircuitsShowTreeCommand(SubCircuitFlow flow, IPrompter pr
             return 1;
         }
 
-        await flow.SubCircuitBuildTreeAsync(id ?? 0);
+        await flow.SubcircuitBuildTreeAsync(id ?? 0);
         return 0;
     }
 }

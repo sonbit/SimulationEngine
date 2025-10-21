@@ -1,6 +1,6 @@
 ﻿namespace SimulationEngine.Domain.Models.Metadata;
 
-public class SubCircuitMetadata : BaseMetadata
+public class SubcircuitMetadata : BaseMetadata
 {
     public float? InputPositionX { get; set; }
     public float? InputPositionY { get; set; }

@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Multiplexers;
+namespace SimulationEngine.Designs.Subcircuits.Multiplexers;
 
-public class MUX : SubCircuit
+public class MUX : Subcircuit
 {
     public Port Addr1 => Inputs[0];
     public Port Addr0 => Inputs[1];
@@ -27,10 +27,10 @@ public class MUX : SubCircuit
             nameof(A2), nameof(A1), nameof(A0));
         this.AddOutputs(nameof(Q));
 
-        var _3MUX_0 = this.AddSubCircuit(new _3MUX());
-        var _3MUX_1 = this.AddSubCircuit(new _3MUX());
-        var _3MUX_2 = this.AddSubCircuit(new _3MUX());
-        var _3MUX_3 = this.AddSubCircuit(new _3MUX());
+        var _3MUX_0 = this.AddSubcircuit(new _3MUX());
+        var _3MUX_1 = this.AddSubcircuit(new _3MUX());
+        var _3MUX_2 = this.AddSubcircuit(new _3MUX());
+        var _3MUX_3 = this.AddSubcircuit(new _3MUX());
 
         this.AddWires([
             (Addr0, _3MUX_0.Sel),

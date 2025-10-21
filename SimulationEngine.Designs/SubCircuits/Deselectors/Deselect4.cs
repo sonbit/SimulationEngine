@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Deselectors;
+namespace SimulationEngine.Designs.Subcircuits.Deselectors;
 
-public class Deselect4 : SubCircuit
+public class Deselect4 : Subcircuit
 {
     public Port Sel => Inputs[0];
     public Port A3 => Inputs[1];

@@ -23,30 +23,30 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
     private readonly HashSet<string> NetDeclarations = [];
     private readonly Dictionary<Terminal, string> TerminalNetMap = [];
 
-    public Verilog EmitSubCircuit(SubCircuit topSubCircuit)
+    public Verilog EmitSubcircuit(Subcircuit topSubcircuit)
     {
         ClearState();
 
         var verilog = new Verilog();
 
-        var subCircuits = EnumerateUniqueSubCircuits(topSubCircuit);
+        var subcircuits = EnumerateUniqueSubcircuits(topSubcircuit);
 
-        var emittedSubCircuitModules = new HashSet<string>(StringComparer.Ordinal);
-        foreach (var subCircuit in subCircuits)
+        var emittedSubcircuitModules = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var subcircuit in subcircuits)
         {
-            if (emittedSubCircuitModules.Add(VerilogUtils.GetSubCircuitModuleName(subCircuit)))
+            if (emittedSubcircuitModules.Add(VerilogUtils.GetSubcircuitModuleName(subcircuit)))
             {
-                verilog.SubCircuitModules.Add(new VerilogModule
+                verilog.SubcircuitModules.Add(new VerilogModule
                 {
-                    Name = VerilogUtils.GetSubCircuitModuleName(subCircuit),
-                    Content = EmitSubCircuitModule(subCircuit)
+                    Name = VerilogUtils.GetSubcircuitModuleName(subcircuit),
+                    Content = EmitSubcircuitModule(subcircuit)
                 });
             }
         }
 
         var emittedLogicGateModules = new HashSet<string>(StringComparer.Ordinal);
-        var uniqueLogicGates = subCircuits
-            .SelectMany(subCircuit => subCircuit.LogicGates)
+        var uniqueLogicGates = subcircuits
+            .SelectMany(subcircuit => subcircuit.LogicGates)
             .DistinctBy(logicGate => logicGate.TruthTable.HeptaIndex);
 
         foreach (var logicGate in uniqueLogicGates)
@@ -127,26 +127,26 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         return Builder.ToString();
     }
 
-    private string EmitSubCircuitModule(SubCircuit subCircuit)
+    private string EmitSubcircuitModule(Subcircuit subcircuit)
     {
         ClearState();
 
-        Builder.AppendLine($"module {VerilogUtils.GetSubCircuitModuleName(subCircuit)} (");
+        Builder.AppendLine($"module {VerilogUtils.GetSubcircuitModuleName(subcircuit)} (");
 
-        for (int i = 0; i < subCircuit.Inputs.Count; i++)
-            Builder.AppendLine($"\tinput {VerilogUtils.GetPortWidthAndTitle(subCircuit.Inputs[i])},");
+        for (int i = 0; i < subcircuit.Inputs.Count; i++)
+            Builder.AppendLine($"\tinput {VerilogUtils.GetPortWidthAndTitle(subcircuit.Inputs[i])},");
 
-        for (int i = 0; i < subCircuit.Outputs.Count; i++)
-            Builder.AppendLine($"\toutput {VerilogUtils.GetPortWidthAndTitle(subCircuit.Outputs[i])},");
+        for (int i = 0; i < subcircuit.Outputs.Count; i++)
+            Builder.AppendLine($"\toutput {VerilogUtils.GetPortWidthAndTitle(subcircuit.Outputs[i])},");
 
         Builder.Remove(Builder.Length - 3, 1);
         Builder.AppendLine(");");
 
         var moduleBodyBuilder = new StringBuilder();
 
-        for (var index = 0; index < subCircuit.LogicGates.Count; index++)
+        for (var index = 0; index < subcircuit.LogicGates.Count; index++)
         {
-            var logicGate = subCircuit.LogicGates[index];
+            var logicGate = subcircuit.LogicGates[index];
             var moduleName = VerilogUtils.GetLogicGateModuleName(logicGate);
             var connections = new List<string>();
 
@@ -154,23 +154,23 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
             var net = GetOrCreateTerminalNet(pinQ);
 
             foreach (var pin in logicGate.InputPinsDescending)
-                CreateConnection(subCircuit.Wires, pin, moduleName, connections);
+                CreateConnection(subcircuit.Wires, pin, moduleName, connections);
 
             connections.Add($".Q({net})");
 
             CreateBody(moduleName, moduleBodyBuilder, connections);
         }
 
-        for (int i = 0; i < subCircuit.SubCircuits.Count; i++)
+        for (int i = 0; i < subcircuit.Subcircuits.Count; i++)
         {
-            var childSubCircuit = subCircuit.SubCircuits[i];
-            var moduleName = VerilogUtils.GetSubCircuitModuleName(childSubCircuit);
+            var childSubcircuit = subcircuit.Subcircuits[i];
+            var moduleName = VerilogUtils.GetSubcircuitModuleName(childSubcircuit);
             var connections = new List<string>();
 
-            foreach (var input in childSubCircuit.Inputs)
-                CreateConnection(subCircuit.Wires, input, moduleName, connections);
+            foreach (var input in childSubcircuit.Inputs)
+                CreateConnection(subcircuit.Wires, input, moduleName, connections);
 
-            foreach (var output in childSubCircuit.Outputs)
+            foreach (var output in childSubcircuit.Outputs)
             {
                 var net = GetOrCreateTerminalNet(output);
                 connections.Add($".{output.Title}({net})");
@@ -187,9 +187,9 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
 
         Builder.Append(moduleBodyBuilder);
 
-        foreach (var output in subCircuit.Outputs)
+        foreach (var output in subcircuit.Outputs)
         {
-            var wire = subCircuit.Wires.FirstOrDefault(wire => wire.EndTerminal == output) ?? 
+            var wire = subcircuit.Wires.FirstOrDefault(wire => wire.EndTerminal == output) ?? 
                 throw new NullReferenceException($"Output port '{output.Title}' is not driven by any wire.");
 
             Builder.AppendLine($"\tassign {output.Title} = {GetOrCreateTerminalNet(wire.StartTerminal)};");

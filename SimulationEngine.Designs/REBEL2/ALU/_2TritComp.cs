@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class _2TritComp : SubCircuit
+public class _2TritComp : Subcircuit
 {
     public Port B1 => Inputs[0];
     public Port B0 => Inputs[1];

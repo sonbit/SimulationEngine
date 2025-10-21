@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Database.SubCircuits;
+﻿using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
@@ -9,7 +9,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows;
 
-public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService service, ISubCircuitService subCircuitService)
+public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService service, ISubcircuitService subcircuitService)
 {
     private enum MenuOptions
     {
@@ -23,7 +23,7 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
         Back
     }
 
-    public async Task RunMenuAsync(SubCircuit subCircuit)
+    public async Task RunMenuAsync(Subcircuit subcircuit)
     {
         renderer.Clear();
 
@@ -34,16 +34,16 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
             switch (menuOption)
             {
                 case MenuOptions.EmitVerilog:
-                    EmitVerilog(subCircuit);
+                    EmitVerilog(subcircuit);
                     break;
 
                 case MenuOptions.EmitVerilogTestbnech:
-                    EmitVerilogTestbench(subCircuit);
+                    EmitVerilogTestbench(subcircuit);
                     break;
 
                 case MenuOptions.EmitVerilogTop:
                 case MenuOptions.EmitVerilogTop7Seg:
-                    EmitVerilogTop(subCircuit, menuOption == MenuOptions.EmitVerilogTop7Seg);
+                    EmitVerilogTop(subcircuit, menuOption == MenuOptions.EmitVerilogTop7Seg);
                     break;
 
                 case MenuOptions.Emit7Seg:
@@ -52,7 +52,7 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
 
                 case MenuOptions.EmitXdc:
                 case MenuOptions.EmitXdc7Seg:
-                    EmitXdc(subCircuit, menuOption == MenuOptions.EmitXdc7Seg);
+                    EmitXdc(subcircuit, menuOption == MenuOptions.EmitXdc7Seg);
                     break;
 
                 case MenuOptions.Back:
@@ -64,14 +64,14 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
 
     public async Task EmitVerilog(int id, EmitKind emitKind)
     {
-        var subCircuit = await subCircuitService.GetByIdAsync(id);
-        if (subCircuit is null)
+        var subcircuit = await subcircuitService.GetByIdAsync(id);
+        if (subcircuit is null)
         {
             renderer.DrawError($"Subcircuit with id {id} was not found.");
             return;
         }
 
-        EmitVerilog(subCircuit, emitKind);
+        EmitVerilog(subcircuit, emitKind);
     }
 
     public async Task EmitVerilog(string? title, EmitKind emitKind)
@@ -82,33 +82,33 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
             return;
         }
 
-        var subCircuit = await subCircuitService.GetByTitleAsync(title);
-        if (subCircuit is null)
+        var subcircuit = await subcircuitService.GetByTitleAsync(title);
+        if (subcircuit is null)
         {
             renderer.DrawError($"Subcircuit with title {title} was not found.");
             return;
         }
 
-        EmitVerilog(subCircuit, emitKind);
+        EmitVerilog(subcircuit, emitKind);
     }
 
-    private void EmitVerilog(SubCircuit subCircuit, EmitKind emitKind)
+    private void EmitVerilog(Subcircuit subcircuit, EmitKind emitKind)
     {
         renderer.Clear();
 
         switch (emitKind)
         {
             case EmitKind.Verilog:
-                EmitVerilog(subCircuit);
+                EmitVerilog(subcircuit);
                 break;
 
             case EmitKind.Testbench:
-                EmitVerilogTestbench(subCircuit);
+                EmitVerilogTestbench(subcircuit);
                 break;
 
             case EmitKind.Top:
             case EmitKind.Top7Seg:
-                EmitVerilogTop(subCircuit, emitKind == EmitKind.Top7Seg);
+                EmitVerilogTop(subcircuit, emitKind == EmitKind.Top7Seg);
                 break;
 
             case EmitKind.SevenSeg:
@@ -117,7 +117,7 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
 
             case EmitKind.Xdc:
             case EmitKind.Xdc7Seg:
-                EmitXdc(subCircuit, emitKind == EmitKind.Xdc7Seg);
+                EmitXdc(subcircuit, emitKind == EmitKind.Xdc7Seg);
                 break;
         }
     }
@@ -130,27 +130,27 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
         renderer.DrawLine(Environment.NewLine);
     }
 
-    private void EmitVerilog(SubCircuit subCircuit)
+    private void EmitVerilog(Subcircuit subcircuit)
     {
-        var verilog = service.EmitVerilog(subCircuit);
+        var verilog = service.EmitVerilog(subcircuit);
         renderer.Clear();
         renderer.Write(verilog);
         renderer.DrawLine(Environment.NewLine);
     }
 
-    private void EmitVerilogTestbench(SubCircuit subCircuit)
+    private void EmitVerilogTestbench(Subcircuit subcircuit)
     {
-        var testString = DesignUtils.GetTestString(subCircuit.Title);
+        var testString = DesignUtils.GetTestString(subcircuit.Title);
         if (string.IsNullOrWhiteSpace(testString))
         {
-            renderer.DrawError($"No test string found for SubCircuit {subCircuit.Id}");
+            renderer.DrawError($"No test string found for Subcircuit {subcircuit.Id}");
             return;
         }
 
-        var testbench = service.EmitVerilogTestbench(subCircuit, testString);
+        var testbench = service.EmitVerilogTestbench(subcircuit, testString);
         if (testbench == null)
         {
-            renderer.DrawError($"Unable to get testbench for SubCircuit {subCircuit.Id}");
+            renderer.DrawError($"Unable to get testbench for Subcircuit {subcircuit.Id}");
             return;
         }
 
@@ -159,13 +159,13 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
         renderer.DrawLine(Environment.NewLine);
     }
 
-    private void EmitVerilogTop(SubCircuit subCircuit, bool include7SegmentDisplay)
+    private void EmitVerilogTop(Subcircuit subcircuit, bool include7SegmentDisplay)
     {
         renderer.Clear();
 
         try
         {
-            var verilogTop = service.EmitVerilogTop(subCircuit, include7SegmentDisplay);
+            var verilogTop = service.EmitVerilogTop(subcircuit, include7SegmentDisplay);
             renderer.Write(verilogTop);
             renderer.DrawLine(Environment.NewLine);
         }
@@ -175,13 +175,13 @@ public class EmitFlow(IPrompter prompter, IRenderer renderer, IExportService ser
         }
     }
 
-    private void EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay)
+    private void EmitXdc(Subcircuit subcircuit, bool include7SegmentDisplay)
     {
         renderer.Clear();
 
         try
         {
-            var xdc = service.EmitXdc(subCircuit, include7SegmentDisplay);
+            var xdc = service.EmitXdc(subcircuit, include7SegmentDisplay);
             renderer.Write(xdc);
             renderer.DrawLine(Environment.NewLine);
         }

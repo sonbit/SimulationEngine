@@ -12,67 +12,67 @@ using System.Threading.Tasks;
 
 namespace SimulationEngine.Infrastructure.Repositories;
 
-public partial class SubCircuitRepository(SimulationEngineDbContext dbContext, ITruthTableRepository truthTableRepository) : ISubCircuitRepository
+public partial class SubcircuitRepository(SimulationEngineDbContext dbContext, ITruthTableRepository truthTableRepository) : ISubcircuitRepository
 {
-    public async Task<SubCircuit> CreateOrGetAsync(SubCircuit subCircuit)
+    public async Task<Subcircuit> CreateOrGetAsync(Subcircuit subcircuit)
     {
-        var subCircuitClosure = SubCircuitCompiler.Compile(subCircuit);
-        var hash = subCircuitClosure.SubCircuitPlaced.SubCircuit.Hash;
-        await EnsurePersistedAsync(hash, subCircuitClosure);
-        return await dbContext.SubCircuits.AsNoTracking().FirstAsync(subCircuit => subCircuit.Hash == hash);
+        var closure = SubcircuitCompiler.Compile(subcircuit);
+        var hash = closure.Placed.Template.Hash;
+        await EnsurePersistedAsync(hash, closure);
+        return await dbContext.Subcircuits.AsNoTracking().FirstAsync(subcircuit => subcircuit.Hash == hash);
     }
 
-    public async Task<List<SubCircuit>> GetAllAsync() => await GetSubCircuitQuery().ToListAsync();
+    public async Task<List<Subcircuit>> GetAllAsync() => await GetSubcircuitQuery().ToListAsync();
 
-    public async Task<SubCircuit> GetByIdAsync(int id)
+    public async Task<Subcircuit> GetByIdAsync(int id)
     {
-        var (template, subCircuitPlacements) = await GetSubCircuitWithChildren(id);
-        if (template == null && subCircuitPlacements == null)
+        var (template, placements) = await GetTemplateWithPlacementsAsync(id);
+        if (template == null && placements == null)
             return null;
 
-        var subCircuit = await BuildInstanceFromTemplateAsync(template, subCircuitPlacements);
-        subCircuit.Id = id;
+        var subcircuit = await BuildInstanceAsync(template, placements);
+        subcircuit.Id = id;
 
-        return subCircuit;
+        return subcircuit;
     }
 
-    public async Task<SubCircuit> GetByTitleAsync(string title)
+    public async Task<Subcircuit> GetByTitleAsync(string title)
     {
         var titleLowerCase = title.ToLower();
-        var subCircuit = await dbContext.SubCircuits
+        var subcircuit = await dbContext.Subcircuits
             .FirstOrDefaultAsync(subCiruit => subCiruit.Title.ToLower().Contains(titleLowerCase));
 
-        return await GetByIdAsync(subCircuit?.Id ?? 0);
+        return await GetByIdAsync(subcircuit?.Id ?? 0);
     }
 
-    private async Task EnsurePersistedAsync(string hash, SubCircuitClosure subCircuitClosure)
+    private async Task EnsurePersistedAsync(string hash, SubcircuitClosure closure)
     {
-        if (await dbContext.SubCircuits.AsNoTracking().AnyAsync(s => s.Hash == hash)) 
+        if (await dbContext.Subcircuits.AsNoTracking().AnyAsync(subCircuit => subCircuit.Hash == hash)) 
             return;
 
-        var placed = subCircuitClosure.MapByHash[hash];
-        foreach (var childHash in placed.SubCircuitPlacementInfos.Select(p => p.ChildSubCircuitHash).Distinct(StringComparer.Ordinal))
-            await EnsurePersistedAsync(childHash, subCircuitClosure);
+        var placed = closure.PlacedByHash[hash];
+        foreach (var childTemplateHash in placed.PlacementInfos.Select(p => p.ChildTemplateHash).Distinct(StringComparer.Ordinal))
+            await EnsurePersistedAsync(childTemplateHash, closure);
 
-        await PersistPlacedAsync(placed);
+        await PersistTemplateAsync(placed);
     }
 
-    private IIncludableQueryable<SubCircuit, Terminal> GetSubCircuitQuery()
+    private IIncludableQueryable<Subcircuit, Terminal> GetSubcircuitQuery()
     {
-        return dbContext.SubCircuits
+        return dbContext.Subcircuits
             .AsNoTrackingWithIdentityResolution()
             .AsSplitQuery()
-            .Include(subCircuit => subCircuit.Ports)
+            .Include(subcircuit => subcircuit.Ports)
                 .ThenInclude(port => port.Metadata)
-            .Include(subCircuit => subCircuit.LogicGates)
+            .Include(subcircuit => subcircuit.LogicGates)
                 .ThenInclude(logicGate => logicGate.Metadata)
-            .Include(subCircuit => subCircuit.LogicGates)
+            .Include(subcircuit => subcircuit.LogicGates)
                 .ThenInclude(logicGate => logicGate.Pins)
-            .Include(subCircuit => subCircuit.LogicGates)
+            .Include(subcircuit => subcircuit.LogicGates)
                 .ThenInclude(logicGate => logicGate.TruthTable)
-            .Include(subCircuit => subCircuit.Wires)
+            .Include(subcircuit => subcircuit.Wires)
                 .ThenInclude(wire => wire.StartTerminal)
-            .Include(subCircuit => subCircuit.Wires)
+            .Include(subcircuit => subcircuit.Wires)
                 .ThenInclude(wire => wire.EndTerminal);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SimulationEngine.Designs.SubCircuits.Memory;
-using SimulationEngine.Designs.SubCircuits.Multiplexers;
+using SimulationEngine.Designs.Subcircuits.Memory;
+using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Compilers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Enums;
@@ -10,9 +10,9 @@ using SimulationEngine.Infrastructure.Repositories;
 
 namespace SimulationEngine.Tests.Infrastructure.Repositories;
 
-public sealed class SubCircuitRepositoryTests
+public sealed class SubcircuitRepositoryTests
 {
-    private static SubCircuitRepository CreateRepository(SimulationEngineDbContext dbContext) => new(dbContext, new TruthTableRepository(dbContext));
+    private static SubcircuitRepository CreateRepository(SimulationEngineDbContext dbContext) => new(dbContext, new TruthTableRepository(dbContext));
 
     [Fact]
     public async Task CreateOrGet_IncludingChildrenOfChildren()
@@ -29,10 +29,10 @@ public sealed class SubCircuitRepositoryTests
         var dbRam3 = await repository.GetByIdAsync(newDbRam3.Id);
 
         Assert.NotNull(dbRam3);
-        Assert.Equal(3, dbRam3.SubCircuits.Count);
+        Assert.Equal(3, dbRam3.Subcircuits.Count);
 
-        var ram3Closure = SubCircuitCompiler.Compile(dbRam3);
-        Assert.Equal(newDbRam3.Hash, ram3Closure.SubCircuitPlaced.SubCircuit.Hash);
+        var ram3Closure = SubcircuitCompiler.Compile(dbRam3);
+        Assert.Equal(newDbRam3.Hash, ram3Closure.Placed.Template.Hash);
     }
 
     [Fact]
@@ -50,11 +50,11 @@ public sealed class SubCircuitRepositoryTests
 
         Assert.Equal(dbMuxX.Hash, dbMuxY.Hash);
 
-        var equalHashCount = await dbContext.SubCircuits.AsNoTracking().CountAsync(subCircuit => subCircuit.Hash == dbMuxX.Hash);
+        var equalHashCount = await dbContext.Subcircuits.AsNoTracking().CountAsync(subcircuit => subcircuit.Hash == dbMuxX.Hash);
         Assert.Equal(1, equalHashCount);
 
-        var totalSubCircuits = await dbContext.SubCircuits.AsNoTracking().CountAsync();
-        Assert.True(totalSubCircuits >= 2);
+        var totalSubcircuits = await dbContext.Subcircuits.AsNoTracking().CountAsync();
+        Assert.True(totalSubcircuits >= 2);
     }
 
     [Fact]
@@ -70,18 +70,18 @@ public sealed class SubCircuitRepositoryTests
         var dbMux = await repository.GetByIdAsync(newDbMux.Id);
 
         Assert.NotNull(dbMux);
-        Assert.Equal(4, dbMux.SubCircuits.Count);
+        Assert.Equal(4, dbMux.Subcircuits.Count);
 
         var anyPlacementPortWire = dbMux.Wires.Any(wire => wire.StartTerminal is PortPlacement || wire.EndTerminal is PortPlacement);
 
-        var anyPlacementPortChildWire = dbMux.SubCircuits
-            .SelectMany(subCircuit => subCircuit.Wires)
+        var anyPlacementPortChildWire = dbMux.Subcircuits
+            .SelectMany(subcircuit => subcircuit.Wires)
             .Any(wire => wire.StartTerminal is PortPlacement || wire.EndTerminal is PortPlacement);
 
         Assert.False(anyPlacementPortWire || anyPlacementPortChildWire);
 
-        var muxClosure = SubCircuitCompiler.Compile(dbMux);
-        Assert.Equal(newDbMux.Hash, muxClosure.SubCircuitPlaced.SubCircuit.Hash);
+        var muxClosure = SubcircuitCompiler.Compile(dbMux);
+        Assert.Equal(newDbMux.Hash, muxClosure.Placed.Template.Hash);
     }
 
     [Fact]

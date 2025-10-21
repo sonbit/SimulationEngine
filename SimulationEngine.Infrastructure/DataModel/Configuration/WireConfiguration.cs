@@ -19,12 +19,12 @@ internal static class WireConfiguration
             .HasForeignKey(wire => wire.EndTerminalId);
 
         entity
-            .HasOne(wire => wire.SubCircuit)
-            .WithMany(subCircuit => subCircuit.Wires)
-            .HasForeignKey(wire => wire.SubCircuitId);
+            .HasOne(wire => wire.Subcircuit)
+            .WithMany(subcircuit => subcircuit.Wires)
+            .HasForeignKey(wire => wire.SubcircuitId);
 
         entity
-            .HasIndex(w => new { w.SubCircuitId, w.StartTerminalId, w.EndTerminalId })
+            .HasIndex(w => new { w.SubcircuitId, w.StartTerminalId, w.EndTerminalId })
             .IsUnique();
 
         entity

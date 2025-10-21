@@ -3,141 +3,141 @@ using SimulationEngine.Domain.Models.Metadata.Enums;
 
 namespace SimulationEngine.Domain.Models.Extensions;
 
-public static class SubCircuitExtensions
+public static class SubcircuitExtensions
 {
-    public static void AddBinaryInput(this SubCircuit subCircuit, string title = null) =>
-        subCircuit.AddInput(title, Radix.Binary);
+    public static void AddBinaryInput(this Subcircuit subcircuit, string title = null) =>
+        subcircuit.AddInput(title, Radix.Binary);
 
-    public static void AddBinaryOutput(this SubCircuit subCircuit, string title = null) =>
-        subCircuit.AddOutput(title, Radix.Binary);
+    public static void AddBinaryOutput(this Subcircuit subcircuit, string title = null) =>
+        subcircuit.AddOutput(title, Radix.Binary);
 
-    public static void AddBinaryInputs(this SubCircuit subCircuit, int count)
+    public static void AddBinaryInputs(this Subcircuit subcircuit, int count)
     {
         for (var i = 0; i < count; i++)
-            subCircuit.AddBinaryInput();
+            subcircuit.AddBinaryInput();
     }
 
-    public static void AddBinaryInputs(this SubCircuit subCircuit, params string[] titles)
+    public static void AddBinaryInputs(this Subcircuit subcircuit, params string[] titles)
     {
         foreach (var title in titles)
-            subCircuit.AddBinaryInput(title);
+            subcircuit.AddBinaryInput(title);
     }
 
-    public static LogicGate AddBinaryLogicGate(this SubCircuit subCircuit, string heptaIndex) =>
-        subCircuit.AddLogicGate(heptaIndex, Radix.Binary);
+    public static LogicGate AddBinaryLogicGate(this Subcircuit subcircuit, string heptaIndex) =>
+        subcircuit.AddLogicGate(heptaIndex, Radix.Binary);
 
-    public static void AddBinaryOutputs(this SubCircuit subCircuit, int count)
+    public static void AddBinaryOutputs(this Subcircuit subcircuit, int count)
     {
         for (var i = 0; i < count; i++)
-            subCircuit.AddBinaryOutput();
+            subcircuit.AddBinaryOutput();
     }
 
-    public static void AddBinaryOutputs(this SubCircuit subCircuit, params string[] titles)
+    public static void AddBinaryOutputs(this Subcircuit subcircuit, params string[] titles)
     {
         foreach (var title in titles)
-            subCircuit.AddBinaryOutput(title);
+            subcircuit.AddBinaryOutput(title);
     }
 
-    public static void AddInput(this SubCircuit subCircuit, string title = null) =>
-        subCircuit.AddPort(title, PortDirection.Input);
+    public static void AddInput(this Subcircuit subcircuit, string title = null) =>
+        subcircuit.AddPort(title, PortDirection.Input);
 
-    public static void AddInput(this SubCircuit subCircuit, Radix radix) =>
-        subCircuit.AddPort(null, PortDirection.Input, radix);
+    public static void AddInput(this Subcircuit subcircuit, Radix radix) =>
+        subcircuit.AddPort(null, PortDirection.Input, radix);
 
-    public static void AddInput(this SubCircuit subCircuit, string title, Radix radix) =>
-        subCircuit.AddPort(title, PortDirection.Input, radix);
+    public static void AddInput(this Subcircuit subcircuit, string title, Radix radix) =>
+        subcircuit.AddPort(title, PortDirection.Input, radix);
 
-    public static void AddInputs(this SubCircuit subCircuit, int count)
+    public static void AddInputs(this Subcircuit subcircuit, int count)
     {
         for (var i = 0; i < count; i++)
-            subCircuit.AddInput();
+            subcircuit.AddInput();
     }
 
-    public static void AddInputs(this SubCircuit subCircuit, params string[] titles)
+    public static void AddInputs(this Subcircuit subcircuit, params string[] titles)
     {
         foreach (var title in titles)
-            subCircuit.AddInput(title);
+            subcircuit.AddInput(title);
     }
 
-    public static void AddInputs(this SubCircuit subCircuit, params Radix[] radixes)
+    public static void AddInputs(this Subcircuit subcircuit, params Radix[] radixes)
     {
         foreach (var radix in radixes)
-            subCircuit.AddInput(radix);
+            subcircuit.AddInput(radix);
     }
 
-    public static void AddInputs(this SubCircuit subCircuit, params (string title, Radix radix)[] inputs)
+    public static void AddInputs(this Subcircuit subcircuit, params (string title, Radix radix)[] inputs)
     {
         foreach (var (title, radix) in inputs)
-            subCircuit.AddInput(title, radix);
+            subcircuit.AddInput(title, radix);
     }
 
-    public static LogicGate AddLogicGate(this SubCircuit subCircuit, string heptaIndex, Radix radix = Radix.TernaryBalanced)
+    public static LogicGate AddLogicGate(this Subcircuit subcircuit, string heptaIndex, Radix radix = Radix.TernaryBalanced)
     {
-        var logicGate = new LogicGate(heptaIndex, radix) { SubCircuit = subCircuit };
-        subCircuit.LogicGates.Add(logicGate);
+        var logicGate = new LogicGate(heptaIndex, radix) { Subcircuit = subcircuit };
+        subcircuit.LogicGates.Add(logicGate);
         return logicGate;
     }
 
-    public static void AddPort(this SubCircuit subCircuit, string title, PortDirection direction, Radix radix = Radix.TernaryBalanced)
+    public static void AddPort(this Subcircuit subcircuit, string title, PortDirection direction, Radix radix = Radix.TernaryBalanced)
     {
         var port = new Port(radix)
         {
             Title = title,
             Direction = direction,
             Ordinal = direction == PortDirection.Input
-                    ? subCircuit.Inputs.Count
-                    : subCircuit.Outputs.Count,
-            SubCircuit = subCircuit
+                    ? subcircuit.Inputs.Count
+                    : subcircuit.Outputs.Count,
+            Subcircuit = subcircuit
         };
 
-        subCircuit.Ports.Add(port);
+        subcircuit.Ports.Add(port);
     }
 
-    public static T AddSubCircuit<T>(this SubCircuit parent, T subCircuit) where T : SubCircuit
+    public static T AddSubcircuit<T>(this Subcircuit parent, T subcircuit) where T : Subcircuit
     {
-        parent.SubCircuits.Add(subCircuit);
-        return subCircuit;
+        parent.Subcircuits.Add(subcircuit);
+        return subcircuit;
     }
        
-    public static void AddOutput(this SubCircuit subCircuit, string title = null) =>
-        subCircuit.AddPort(title, PortDirection.Output);
+    public static void AddOutput(this Subcircuit subcircuit, string title = null) =>
+        subcircuit.AddPort(title, PortDirection.Output);
 
-    public static void AddOutput(this SubCircuit subCircuit, Radix radix) =>
-        subCircuit.AddPort(null, PortDirection.Output, radix);
+    public static void AddOutput(this Subcircuit subcircuit, Radix radix) =>
+        subcircuit.AddPort(null, PortDirection.Output, radix);
 
-    public static void AddOutput(this SubCircuit subCircuit, string title, Radix radix) =>
-        subCircuit.AddPort(title, PortDirection.Output, radix);
+    public static void AddOutput(this Subcircuit subcircuit, string title, Radix radix) =>
+        subcircuit.AddPort(title, PortDirection.Output, radix);
 
-    public static void AddOutputs(this SubCircuit subCircuit, int count)
+    public static void AddOutputs(this Subcircuit subcircuit, int count)
     {
         for (var i = 0; i < count; i++)
-            subCircuit.AddOutput();
+            subcircuit.AddOutput();
     }
 
-    public static void AddOutputs(this SubCircuit subCircuit, params string[] titles)
+    public static void AddOutputs(this Subcircuit subcircuit, params string[] titles)
     {
         foreach (var title in titles)
-            subCircuit.AddOutput(title);
+            subcircuit.AddOutput(title);
     }
 
-    public static void AddOutputs(this SubCircuit subCircuit, params Radix[] radixes)
+    public static void AddOutputs(this Subcircuit subcircuit, params Radix[] radixes)
     {
         foreach (var radix in radixes)
-            subCircuit.AddOutput(radix);
+            subcircuit.AddOutput(radix);
     }
 
-    public static void AddOutputs(this SubCircuit subCircuit, params (string title, Radix radix)[] inputs)
+    public static void AddOutputs(this Subcircuit subcircuit, params (string title, Radix radix)[] inputs)
     {
         foreach (var (title, radix) in inputs)
-            subCircuit.AddOutput(title, radix);
+            subcircuit.AddOutput(title, radix);
     }
 
-    public static void AddWire(this SubCircuit subCircuit, Terminal startTerminal, Terminal endTerminal) =>
-        subCircuit.Wires.Add(new Wire { StartTerminal = startTerminal, EndTerminal = endTerminal, SubCircuit = subCircuit });
+    public static void AddWire(this Subcircuit subcircuit, Terminal startTerminal, Terminal endTerminal) =>
+        subcircuit.Wires.Add(new Wire { StartTerminal = startTerminal, EndTerminal = endTerminal, Subcircuit = subcircuit });
 
-    public static void AddWires(this SubCircuit subCircuit, params (Terminal startTerminal, Terminal endTerminal)[] wires)
+    public static void AddWires(this Subcircuit subcircuit, params (Terminal startTerminal, Terminal endTerminal)[] wires)
     {
         foreach (var (startTerminal, endTerminal) in wires)
-            subCircuit.AddWire(startTerminal, endTerminal);
+            subcircuit.AddWire(startTerminal, endTerminal);
     }
 }

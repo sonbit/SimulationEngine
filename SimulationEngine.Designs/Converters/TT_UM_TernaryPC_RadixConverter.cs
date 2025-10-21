@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Counters;
+﻿using SimulationEngine.Designs.Subcircuits.Counters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters;
 
-public class TT_UM_TernaryPC_RadixConverter : SubCircuit
+public class TT_UM_TernaryPC_RadixConverter : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port LdEn => Inputs[1];
@@ -27,9 +27,9 @@ public class TT_UM_TernaryPC_RadixConverter : SubCircuit
         this.AddInputs(nameof(A3), nameof(A2), nameof(A1), nameof(A0), nameof(Dir));
         this.AddOutputs(nameof(PC3), nameof(PC2), nameof(PC1), nameof(PC0), nameof(RC2), nameof(RC1), nameof(RC0));
 
-        var syTriDirLoadCounter4 = this.AddSubCircuit(new SyTriDirLoadCounter4());
-        var bTSignedRadixConverter = this.AddSubCircuit(new BTSignedRadixConverter4());
-        var signedBTRadixConverter4 = this.AddSubCircuit(new SignedBTRadixConverter4());
+        var syTriDirLoadCounter4 = this.AddSubcircuit(new SyTriDirLoadCounter4());
+        var bTSignedRadixConverter = this.AddSubcircuit(new BTSignedRadixConverter4());
+        var signedBTRadixConverter4 = this.AddSubcircuit(new SignedBTRadixConverter4());
 
         this.AddWires([
             (Clk, syTriDirLoadCounter4.Clk),

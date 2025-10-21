@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class ALU2 : SubCircuit
+public class ALU2 : Subcircuit
 {
     public Port Func2 => Inputs[0];
     public Port Func1 => Inputs[1];
@@ -24,16 +24,16 @@ public class ALU2 : SubCircuit
 
         var DGDDDDDAD = this.AddLogicGate("DGDDDDDAD");
 
-        var shift2 = this.AddSubCircuit(new Shift2());
-        var _2TritMul = this.AddSubCircuit(new _2TritMul());
-        var addSub2 = this.AddSubCircuit(new AddSub2());
-        var cmp2 = this.AddSubCircuit(new CMP2());
-        var cmp2Tritwise = this.AddSubCircuit(new CMP2Tritwise());
-        var _2MUX2_0 = this.AddSubCircuit(new _2MUX2());
-        var _2MUX2_1 = this.AddSubCircuit(new _2MUX2());
-        var _2MUX2_2 = this.AddSubCircuit(new _2MUX2());
-        var _3MUX2_0 = this.AddSubCircuit(new _3MUX2());
-        var _3MUX2_1 = this.AddSubCircuit(new _3MUX2());
+        var shift2 = this.AddSubcircuit(new Shift2());
+        var _2TritMul = this.AddSubcircuit(new _2TritMul());
+        var addSub2 = this.AddSubcircuit(new AddSub2());
+        var cmp2 = this.AddSubcircuit(new CMP2());
+        var cmp2Tritwise = this.AddSubcircuit(new CMP2Tritwise());
+        var _2MUX2_0 = this.AddSubcircuit(new _2MUX2());
+        var _2MUX2_1 = this.AddSubcircuit(new _2MUX2());
+        var _2MUX2_2 = this.AddSubcircuit(new _2MUX2());
+        var _3MUX2_0 = this.AddSubcircuit(new _3MUX2());
+        var _3MUX2_1 = this.AddSubcircuit(new _3MUX2());
 
         this.AddWires([
             (A1, shift2.A1),

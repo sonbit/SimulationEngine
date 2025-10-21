@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Latches;
+﻿using SimulationEngine.Designs.Subcircuits.Latches;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Memory;
+namespace SimulationEngine.Designs.Subcircuits.Memory;
 
-public class RAM3 : SubCircuit
+public class RAM3 : Subcircuit
 {
     public Port Clk2 => Inputs[0];
     public Port Clk1 => Inputs[1];
@@ -20,9 +20,9 @@ public class RAM3 : SubCircuit
         this.AddInput(nameof(A));
         this.AddOutputs(nameof(Q2), nameof(Q1), nameof(Q0));
 
-        var tff0 = this.AddSubCircuit(new TFlipFlop());
-        var tff1 = this.AddSubCircuit(new TFlipFlop());
-        var tff2 = this.AddSubCircuit(new TFlipFlop());
+        var tff0 = this.AddSubcircuit(new TFlipFlop());
+        var tff1 = this.AddSubcircuit(new TFlipFlop());
+        var tff2 = this.AddSubcircuit(new TFlipFlop());
 
         this.AddWires([
             (Clk2, tff0.Clk),

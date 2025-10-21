@@ -1,20 +1,20 @@
-﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Compilers;
 
 namespace SimulationEngine.Tests.Domain;
 
-public sealed class SubCircuitCompilerTests
+public sealed class SubcircuitCompilerTests
 {
     [Fact]
     public void Compile_CreatesEqualHashes()
     {
-        var subCircuitX = ModelBuilders.CreateSubCircuit();
-        var subCircuitY = ModelBuilders.CreateSubCircuit();
+        var subcircuitX = ModelBuilders.CreateSubcircuit();
+        var subcircuitY = ModelBuilders.CreateSubcircuit();
 
-        var subCircuitPlacedX = SubCircuitCompiler.Compile(subCircuitX).SubCircuitPlaced;
-        var subCircuitPlacedY = SubCircuitCompiler.Compile(subCircuitY).SubCircuitPlaced;
+        var placedX = SubcircuitCompiler.Compile(subcircuitX).Placed;
+        var placedY = SubcircuitCompiler.Compile(subcircuitY).Placed;
 
-        Assert.Equal(subCircuitPlacedX.SubCircuit.Hash, subCircuitPlacedY.SubCircuit.Hash);
+        Assert.Equal(placedX.Template.Hash, placedY.Template.Hash);
     }
 
     [Fact]
@@ -22,16 +22,16 @@ public sealed class SubCircuitCompilerTests
     {
         var mux = new MUX();
 
-        var subCircuitCLosure = SubCircuitCompiler.Compile(mux);
+        var closure = SubcircuitCompiler.Compile(mux);
 
-        Assert.NotNull(subCircuitCLosure.SubCircuitPlaced);
-        Assert.False(string.IsNullOrWhiteSpace(subCircuitCLosure.SubCircuitPlaced.SubCircuit.Hash));
-        Assert.NotEmpty(subCircuitCLosure.MapByHash);
+        Assert.NotNull(closure.Placed);
+        Assert.False(string.IsNullOrWhiteSpace(closure.Placed.Template.Hash));
+        Assert.NotEmpty(closure.PlacedByHash);
 
-        var childSubCircuitHashes = subCircuitCLosure.SubCircuitPlaced.SubCircuitPlacementInfos
-            .Select(subCircuitPlacementInfo => subCircuitPlacementInfo.ChildSubCircuitHash).ToList();
+        var childTemplateHashes = closure.Placed.PlacementInfos
+            .Select(subcircuitPlacementInfo => subcircuitPlacementInfo.ChildTemplateHash).ToList();
 
-        Assert.Equal(mux.SubCircuits.Count, childSubCircuitHashes.Count);
-        Assert.Single(childSubCircuitHashes.Distinct(StringComparer.Ordinal));
+        Assert.Equal(mux.Subcircuits.Count, childTemplateHashes.Count);
+        Assert.Single(childTemplateHashes.Distinct(StringComparer.Ordinal));
     }
 }

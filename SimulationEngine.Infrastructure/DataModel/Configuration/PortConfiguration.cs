@@ -15,12 +15,12 @@ internal class PortConfiguration
             .IsRequired();
 
         entity
-            .HasOne(port => port.SubCircuit)
-            .WithMany(subCircuit => subCircuit.Ports)
-            .HasForeignKey(port => port.SubCircuitId);
+            .HasOne(port => port.Subcircuit)
+            .WithMany(subcircuit => subcircuit.Ports)
+            .HasForeignKey(port => port.SubcircuitId);
 
         entity
-            .HasIndex(port => new { port.SubCircuitId, port.Direction, port.Ordinal })
+            .HasIndex(port => new { port.SubcircuitId, port.Direction, port.Ordinal })
             .IsUnique();
     }
 }

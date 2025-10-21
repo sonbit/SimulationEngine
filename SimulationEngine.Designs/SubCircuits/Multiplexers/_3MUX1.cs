@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Multiplexers;
+namespace SimulationEngine.Designs.Subcircuits.Multiplexers;
 
-public class _3MUX1 : SubCircuit
+public class _3MUX1 : Subcircuit
 {
     public Port Sel => Inputs[0];
     public Port C => Inputs[1];

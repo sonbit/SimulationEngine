@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Counters;
+namespace SimulationEngine.Designs.Subcircuits.Counters;
 
-public class SyTriDirLoadCounter4 : SubCircuit
+public class SyTriDirLoadCounter4 : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port LdEn => Inputs[1];
@@ -27,10 +27,10 @@ public class SyTriDirLoadCounter4 : SubCircuit
         var cons_1 = this.AddLogicGate("RDC");
         var cons_2 = this.AddLogicGate("RDC");
 
-        var syTriDirLoadCounter4_0 = this.AddSubCircuit(new SyTriDirLoadCounter());
-        var syTriDirLoadCounter4_1 = this.AddSubCircuit(new SyTriDirLoadCounter());
-        var syTriDirLoadCounter4_2 = this.AddSubCircuit(new SyTriDirLoadCounter());
-        var syTriDirLoadCounter4_3 = this.AddSubCircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_0 = this.AddSubcircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_1 = this.AddSubcircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_2 = this.AddSubcircuit(new SyTriDirLoadCounter());
+        var syTriDirLoadCounter4_3 = this.AddSubcircuit(new SyTriDirLoadCounter());
 
         this.AddWires([
             (Clk, syTriDirLoadCounter4_0.Clk),

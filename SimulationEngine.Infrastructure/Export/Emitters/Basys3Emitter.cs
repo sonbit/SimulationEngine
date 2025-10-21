@@ -13,11 +13,11 @@ public partial class Basys3Emitter : IBasys3Emitter
 {
     private readonly StringBuilder Builder = new(64 * 1024);
 
-    public VerilogModule EmitTopModule(SubCircuit subCircuit, bool include7SegmentDisplay = false)
+    public VerilogModule EmitTopModule(Subcircuit subcircuit, bool include7SegmentDisplay = false)
     {
-        (var inputBits, var outputBits) = ValidateAndReturnBits(subCircuit);
+        (var inputBits, var outputBits) = ValidateAndReturnBits(subcircuit);
 
-        var topModuleName = $"{VerilogUtils.GetSubCircuitModuleName(subCircuit)}_top";
+        var topModuleName = $"{VerilogUtils.GetSubcircuitModuleName(subcircuit)}_top";
 
         Builder.Clear();
 
@@ -40,23 +40,23 @@ public partial class Basys3Emitter : IBasys3Emitter
         Builder.Remove(Builder.Length - 3, 1);
         Builder.AppendLine(");");
 
-        foreach (var output in subCircuit.Outputs)
+        foreach (var output in subcircuit.Outputs)
             Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndTitle(output)};");
         Builder.AppendLine();
 
-        var moduleName = VerilogUtils.GetSubCircuitModuleName(subCircuit);
+        var moduleName = VerilogUtils.GetSubcircuitModuleName(subcircuit);
         Builder.AppendLine($"\t{moduleName} {moduleName} (");
 
         var connections = new List<string>();
         var switchIndex = 0;
 
-        foreach (var inputPort in subCircuit.Inputs)
+        foreach (var inputPort in subcircuit.Inputs)
         {
             connections.Add($"\t\t.{inputPort.Title}(sw[{(inputPort.IsBinary() ? "" : $"{switchIndex + 1}:")}{switchIndex}])");
             switchIndex += inputPort.IsBinary() ? 1 : 2;
         }
 
-        foreach (var outputPort in subCircuit.Outputs)
+        foreach (var outputPort in subcircuit.Outputs)
             connections.Add($"\t\t.{outputPort.Title}({outputPort.Title})");
 
         Builder.AppendLine(string.Join(",\n", connections));
@@ -64,10 +64,10 @@ public partial class Basys3Emitter : IBasys3Emitter
         Builder.AppendLine();
 
         if (include7SegmentDisplay)
-            Add7SegmentDisplayModule(subCircuit.Outputs);
+            Add7SegmentDisplayModule(subcircuit.Outputs);
 
         var ledIndex = 0;
-        foreach (var output in subCircuit.Outputs)
+        foreach (var output in subcircuit.Outputs)
         {
             Builder.AppendLine($"\tassign led[{(output.IsBinary() ? "" : $"{ledIndex + 1}:")}{ledIndex}] = {output.Title};");
             ledIndex += output.IsBinary() ? 1 : 2;
@@ -82,10 +82,10 @@ public partial class Basys3Emitter : IBasys3Emitter
         };
     }
 
-    private static (int inputBits, int outputBits) ValidateAndReturnBits(SubCircuit subCircuit)
+    private static (int inputBits, int outputBits) ValidateAndReturnBits(Subcircuit subcircuit)
     {
-        var inputBits = subCircuit.Inputs.Sum(port => port.IsBinary() ? 1 : 2);
-        var outputBits = subCircuit.Outputs.Sum(port => port.IsBinary() ? 1 : 2);
+        var inputBits = subcircuit.Inputs.Sum(port => port.IsBinary() ? 1 : 2);
+        var outputBits = subcircuit.Outputs.Sum(port => port.IsBinary() ? 1 : 2);
 
         var errors = new List<string>();
 
@@ -95,7 +95,7 @@ public partial class Basys3Emitter : IBasys3Emitter
             errors.Add($"{outputBits} LED pins for its outputs");
 
         if (errors.Count > 0)
-            throw new InvalidOperationException($"{subCircuit.Title} requires {string.Join(" and ", errors)} (Basys 3 has 16{(errors.Count == 2 ? " of each" : "")})");
+            throw new InvalidOperationException($"{subcircuit.Title} requires {string.Join(" and ", errors)} (Basys 3 has 16{(errors.Count == 2 ? " of each" : "")})");
 
         return (inputBits, outputBits);
     }

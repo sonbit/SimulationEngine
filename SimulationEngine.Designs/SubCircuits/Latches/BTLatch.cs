@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Latches;
+namespace SimulationEngine.Designs.Subcircuits.Latches;
 
-public class BTLatch : SubCircuit
+public class BTLatch : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port Din => Inputs[1];

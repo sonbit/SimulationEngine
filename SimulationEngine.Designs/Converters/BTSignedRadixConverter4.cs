@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters;
 
-public class BTSignedRadixConverter4 : SubCircuit
+public class BTSignedRadixConverter4 : Subcircuit
 {
     public Port A2 => Inputs[0];
     public Port A1 => Inputs[1];

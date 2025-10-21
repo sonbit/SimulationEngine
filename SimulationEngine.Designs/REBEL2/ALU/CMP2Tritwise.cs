@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class CMP2Tritwise : SubCircuit
+public class CMP2Tritwise : Subcircuit
 {
     public Port Mode => Inputs[0];
     public Port B1 => Inputs[1];

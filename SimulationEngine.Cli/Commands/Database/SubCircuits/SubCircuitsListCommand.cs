@@ -1,13 +1,13 @@
 ﻿using SimulationEngine.Cli.Flows.Database;
 using Spectre.Console.Cli;
 
-namespace SimulationEngine.Cli.Commands.Database.SubCircuits;
+namespace SimulationEngine.Cli.Commands.Database.Subcircuits;
 
-public sealed class SubCircuitsListCommand(SubCircuitsFlow flow) : AsyncCommand
+public sealed class SubcircuitsListCommand(SubcircuitsFlow flow) : AsyncCommand
 {
     public override async Task<int> ExecuteAsync(CommandContext context)
     {
-        await flow.SubCircuitsListAsync();
+        await flow.SubcircuitsListAsync();
         return 0;
     }
 }

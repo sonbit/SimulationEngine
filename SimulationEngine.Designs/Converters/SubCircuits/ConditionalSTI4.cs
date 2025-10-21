@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.Converters.SubCircuits;
+namespace SimulationEngine.Designs.Converters.Subcircuits;
 
-public class ConditionalSTI4 : SubCircuit
+public class ConditionalSTI4 : Subcircuit
 {
     public Port Sign => Inputs[0];
     public Port A3 => Inputs[1];

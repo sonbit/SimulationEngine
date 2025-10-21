@@ -9,8 +9,8 @@ public partial class SimulationSession
     {
         var nets = _netOfTerminals.Values.Distinct().ToList();
 
-        Console.WriteLine($"[elab] inputs:      {SubCircuit.Inputs.Count}");
-        Console.WriteLine($"[elab] outputs:     {SubCircuit.Outputs.Count}");
+        Console.WriteLine($"[elab] inputs:      {Subcircuit.Inputs.Count}");
+        Console.WriteLine($"[elab] outputs:     {Subcircuit.Outputs.Count}");
         Console.WriteLine($"[elab] logic gates: {_processes.Count}");
         Console.WriteLine($"[elab] nets:        {nets.Count}");
 
@@ -38,7 +38,7 @@ public partial class SimulationSession
 
     public void PrintOutputDetails()
     {
-        foreach (var output in SubCircuit.Outputs)
+        foreach (var output in Subcircuit.Outputs)
             PrintOutputDetails(output);
     }
 
@@ -84,7 +84,7 @@ public partial class SimulationSession
 
     private List<Net> GetNonTopNets()
     {
-        var topPorts = SubCircuit.Inputs.Concat(SubCircuit.Outputs).ToHashSet();
+        var topPorts = Subcircuit.Inputs.Concat(Subcircuit.Outputs).ToHashSet();
 
         return [.. _netOfTerminals
             .Where(kv => !topPorts.Contains(kv.Key))

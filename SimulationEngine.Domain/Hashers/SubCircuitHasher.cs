@@ -9,23 +9,23 @@ using System.Text;
 
 namespace SimulationEngine.Domain.Hashers;
 
-public static class SubCircuitHasher
+public static class SubcircuitHasher
 {
     private const string LogicGatePin = $"{nameof(LogicGate)}{nameof(Port)}";
     private const char Separator = '|';
     private const string TopPort = $"Top{nameof(Port)}";
 
-    public static string Compute(SubCircuit subCircuit, IReadOnlyList<SubCircuitPlacement> subCircuitPlacements)
+    public static string Compute(Subcircuit subcircuit, IReadOnlyList<SubcircuitPlacement> subcircuitPlacements)
     {
         var sb = new StringBuilder();
 
-        BuildString(sb, [nameof(SubCircuit.Title), subCircuit.Title], true);
+        BuildString(sb, [nameof(Subcircuit.Title), subcircuit.Title], true);
 
-        var ports = subCircuit.OrderedPorts;
+        var ports = subcircuit.OrderedPorts;
         foreach (var port in ports)
             BuildString(sb, [nameof(Port), port.Title]);
 
-        var logicGates = subCircuit.LogicGates.OrderBy(logicGate => logicGate, LogicGateOrderComparer.Instance).ToList();
+        var logicGates = subcircuit.LogicGates.OrderBy(logicGate => logicGate, LogicGateOrderComparer.Instance).ToList();
         foreach (var logicGate in logicGates)
         {
             BuildString(sb, [nameof(LogicGate), logicGate.TruthTable.HeptaIndex]);
@@ -37,7 +37,7 @@ public static class SubCircuitHasher
             sb.Append(Environment.NewLine);
         }
 
-        var encodedWires = subCircuit.Wires
+        var encodedWires = subcircuit.Wires
             .Select(wire => $"{Encode(wire.StartTerminal)}->{Encode(wire.EndTerminal)}")
             .OrderBy(encodedWire => encodedWire, StringComparer.Ordinal)
             .ToList();
@@ -45,12 +45,12 @@ public static class SubCircuitHasher
         foreach (var wire in encodedWires)
             BuildString(sb, [nameof(Wire), wire], true);
 
-        subCircuitPlacements = [.. subCircuitPlacements
-            .OrderBy(x => x.ChildSubCircuit.Hash, StringComparer.Ordinal)
+        subcircuitPlacements = [.. subcircuitPlacements
+            .OrderBy(x => x.ChildTemplate.Hash, StringComparer.Ordinal)
             .ThenBy(x => x.Ordinal)];
 
-        foreach (var subCircuitPlacement in subCircuitPlacements)
-            BuildString(sb, ["Placement", subCircuitPlacement.ChildSubCircuit.Hash, $"{subCircuitPlacement.Ordinal}"], true);
+        foreach (var subcircuitPlacement in subcircuitPlacements)
+            BuildString(sb, ["Placement", subcircuitPlacement.ChildTemplate.Hash, $"{subcircuitPlacement.Ordinal}"], true);
 
         var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(sb.ToString()));
         return Convert.ToHexString(bytes);

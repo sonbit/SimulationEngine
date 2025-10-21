@@ -5,38 +5,38 @@ namespace SimulationEngine.Tests;
 
 public static class ModelBuilders
 {
-    public static SubCircuit CreateSubCircuit(string title = "Id", string truthTable = "20K", bool flipWireOrder = false)
+    public static Subcircuit CreateSubcircuit(string title = "Id", string truthTable = "20K", bool flipWireOrder = false)
     {
-        var subCircuit = new SubCircuit { Title = title };
-        subCircuit.AddInput();
-        subCircuit.AddOutput();
+        var subcircuit = new Subcircuit { Title = title };
+        subcircuit.AddInput();
+        subcircuit.AddOutput();
 
-        var logicGate = subCircuit.AddLogicGate(truthTable);
+        var logicGate = subcircuit.AddLogicGate(truthTable);
 
         if (!flipWireOrder)
-            subCircuit.AddWires([(subCircuit.Ports[0], logicGate.A), (logicGate.Q, subCircuit.Ports[1])]);
+            subcircuit.AddWires([(subcircuit.Ports[0], logicGate.A), (logicGate.Q, subcircuit.Ports[1])]);
         else 
-            subCircuit.AddWires([(logicGate.Q, subCircuit.Ports[1]), (subCircuit.Ports[0], logicGate.A)]);
+            subcircuit.AddWires([(logicGate.Q, subcircuit.Ports[1]), (subcircuit.Ports[0], logicGate.A)]);
 
-        return subCircuit;
+        return subcircuit;
     }
 
-    public static SubCircuit CreateSubCircuitWithChild(string parentTitle = "Parent", string truthTable = "20K")
+    public static Subcircuit CreateSubcircuitWithChild(string parentTitle = "Parent", string truthTable = "20K")
     {
-        var subCircuit = new SubCircuit { Title = parentTitle };
-        subCircuit.AddInput();
-        subCircuit.AddOutput();
+        var subcircuit = new Subcircuit { Title = parentTitle };
+        subcircuit.AddInput();
+        subcircuit.AddOutput();
 
-        var subCircuitChild = CreateSubCircuit("Child");
-        subCircuit.SubCircuits.Add(subCircuitChild);
+        var subcircuitChild = CreateSubcircuit("Child");
+        subcircuit.Subcircuits.Add(subcircuitChild);
 
-        var logicGate = subCircuit.AddLogicGate(truthTable);
+        var logicGate = subcircuit.AddLogicGate(truthTable);
 
-        subCircuit.AddWires([
-            (subCircuit.Ports[0], subCircuitChild.Ports[0]),
-            (subCircuitChild.Ports[1], logicGate.A),
-            (logicGate.Q, subCircuit.Ports[1])]);
+        subcircuit.AddWires([
+            (subcircuit.Ports[0], subcircuitChild.Ports[0]),
+            (subcircuitChild.Ports[1], logicGate.A),
+            (logicGate.Q, subcircuit.Ports[1])]);
 
-        return subCircuit;
+        return subcircuit;
     }
 }

@@ -1,7 +1,7 @@
-﻿using SimulationEngine.Designs.SubCircuits.Memory;
+﻿using SimulationEngine.Designs.Subcircuits.Memory;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.Designs.SubCircuits;
+namespace SimulationEngine.Tests.Designs.Subcircuits;
 
 public class MemoryTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {

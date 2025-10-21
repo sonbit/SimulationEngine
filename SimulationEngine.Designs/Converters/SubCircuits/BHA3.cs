@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.Converters.SubCircuits;
+namespace SimulationEngine.Designs.Converters.Subcircuits;
 
-public class BHA3 : SubCircuit
+public class BHA3 : Subcircuit
 {
     public Port D => Inputs[0];
     public Port C => Inputs[1];
@@ -19,9 +19,9 @@ public class BHA3 : SubCircuit
         this.AddBinaryInputs(nameof(D), nameof(C), nameof(B), nameof(A));
         this.AddBinaryOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
-        var bha0 = this.AddSubCircuit(new BHA());
-        var bha1 = this.AddSubCircuit(new BHA());
-        var bha2 = this.AddSubCircuit(new BHA());
+        var bha0 = this.AddSubcircuit(new BHA());
+        var bha1 = this.AddSubcircuit(new BHA());
+        var bha2 = this.AddSubcircuit(new BHA());
 
         this.AddWires([
             (D, bha0.B),

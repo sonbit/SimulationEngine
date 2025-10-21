@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.Calculators.SubCircuits;
+namespace SimulationEngine.Designs.Calculators.Subcircuits;
 
-public class BTM4 : SubCircuit
+public class BTM4 : Subcircuit
 {
     public Port X1 => Inputs[0];
     public Port X0 => Inputs[1];

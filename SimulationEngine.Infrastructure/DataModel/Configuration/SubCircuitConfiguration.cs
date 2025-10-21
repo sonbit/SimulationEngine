@@ -3,30 +3,30 @@ using SimulationEngine.Domain.Models;
 
 namespace SimulationEngine.Infrastructure.DataModel.Configuration;
 
-internal static class SubCircuitConfiguration
+internal static class SubcircuitConfiguration
 {
-    internal static void Configure(EntityTypeBuilder<SubCircuit> entity)
+    internal static void Configure(EntityTypeBuilder<Subcircuit> entity)
     {
         entity
-            .Property(subCircuit => subCircuit.Title)
+            .Property(subcircuit => subcircuit.Title)
             .HasMaxLength(100);
 
         entity
-            .Property(subCircuit => subCircuit.Hash)
+            .Property(subcircuit => subcircuit.Hash)
             .HasMaxLength(64);
 
         entity
-            .HasMany(subCircuit => subCircuit.Ports)
-            .WithOne(port => port.SubCircuit)
-            .HasForeignKey(port => port.SubCircuitId);
+            .HasMany(subcircuit => subcircuit.Ports)
+            .WithOne(port => port.Subcircuit)
+            .HasForeignKey(port => port.SubcircuitId);
 
         entity
-            .HasMany(subCircuit => subCircuit.Wires)
-            .WithOne(wire => wire.SubCircuit)
-            .HasForeignKey(wire => wire.SubCircuitId);
+            .HasMany(subcircuit => subcircuit.Wires)
+            .WithOne(wire => wire.Subcircuit)
+            .HasForeignKey(wire => wire.SubcircuitId);
 
         entity
-            .HasIndex(subCircuit => subCircuit.Hash)
+            .HasIndex(subcircuit => subcircuit.Hash)
             .IsUnique();
     }
 }

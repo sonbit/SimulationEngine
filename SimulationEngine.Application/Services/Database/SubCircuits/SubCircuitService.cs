@@ -2,10 +2,10 @@
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Repositories;
 
-namespace SimulationEngine.Application.Services.Database.SubCircuits;
+namespace SimulationEngine.Application.Services.Database.Subcircuits;
 
-public class SubCircuitService(ISubCircuitRepository repository) : BaseService<SubCircuit>(repository), ISubCircuitService
+public class SubcircuitService(ISubcircuitRepository repository) : BaseService<Subcircuit>(repository), ISubcircuitService
 {
-    public Task<SubCircuit> GetByTitleAsync(string title) => 
+    public Task<Subcircuit> GetByTitleAsync(string title) => 
         repository.GetByTitleAsync(title);
 }

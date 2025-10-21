@@ -16,12 +16,12 @@ internal static class PortPlacementConfiguration
             .IsRequired();
 
         entity
-            .HasOne(port => port.SubCircuitPlacement)
-            .WithMany(subCircuit => subCircuit.PortPlacements)
-            .HasForeignKey(port => port.SubCircuitPlacementId);
+            .HasOne(port => port.SubcircuitPlacement)
+            .WithMany(subcircuit => subcircuit.PortPlacements)
+            .HasForeignKey(port => port.SubcircuitPlacementId);
 
         entity
-            .HasIndex(port => new { port.SubCircuitPlacementId, port.IsInput, port.IndexWithinChild })
+            .HasIndex(port => new { port.SubcircuitPlacementId, port.IsInput, port.IndexWithinChild })
             .IsUnique();
     }
 }

@@ -3,9 +3,9 @@ using SimulationEngine.Domain.Models.Placements;
 
 namespace SimulationEngine.Domain.Compilers.Models;
 
-public record SubCircuitPlacementInfo
+public record SubcircuitPlacementInfo
 {
-    public SubCircuitPlacement SubCircuitPlacement { get; init; } = default!;
-    public SubCircuit ChildSubCircuit { get; init; } = default!;
-    public string ChildSubCircuitHash { get; init; } = "";
+    public SubcircuitPlacement Placement { get; init; }
+    public Subcircuit ChildTemplate { get; init; }
+    public string ChildTemplateHash { get; init; }
 }

@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.Converters.SubCircuits;
+namespace SimulationEngine.Designs.Converters.Subcircuits;
 
-public class XOR3 : SubCircuit
+public class XOR3 : Subcircuit
 {
     public Port Sign => Inputs[0];
     public Port A2 => Inputs[1];

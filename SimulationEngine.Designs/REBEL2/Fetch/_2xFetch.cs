@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Fetch;
 
-public class _2xFetch : SubCircuit
+public class _2xFetch : Subcircuit
 {
     public Port LdEn => Inputs[0];
     public Port LdAddr1 => Inputs[1];
@@ -63,8 +63,8 @@ public class _2xFetch : SubCircuit
             nameof(Pc1_1), nameof(Pc0_1), nameof(Op1_1), nameof(Op0_1), nameof(Rs11_1), nameof(Rs10_1), nameof(Rs01_1), nameof(Rs00_1), 
             nameof(Rd11_1), nameof(Rd10_1), nameof(Rd01_1), nameof(Rd00_1));
 
-        var fetch_0 = this.AddSubCircuit(new Fetch());
-        var fetch_1 = this.AddSubCircuit(new Fetch());
+        var fetch_0 = this.AddSubcircuit(new Fetch());
+        var fetch_1 = this.AddSubcircuit(new Fetch());
 
         this.AddWires([
             (LdEn, fetch_0.LdEn),

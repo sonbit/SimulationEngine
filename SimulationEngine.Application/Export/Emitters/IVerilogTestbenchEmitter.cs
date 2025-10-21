@@ -5,5 +5,5 @@ namespace SimulationEngine.Application.Export.Emitters;
 
 public interface IVerilogTestbenchEmitter
 {
-    VerilogModule EmitTestbench(SubCircuit subCircuit, string testString);
+    VerilogModule EmitTestbench(Subcircuit subcircuit, string testString);
 }

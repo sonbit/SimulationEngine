@@ -1,11 +1,11 @@
-﻿using SimulationEngine.Designs.SubCircuits.Demultiplexers;
-using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Demultiplexers;
+using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Memory;
+namespace SimulationEngine.Designs.Subcircuits.Memory;
 
-public class _9Reg2_1 : SubCircuit
+public class _9Reg2_1 : Subcircuit
 {
     public Port RdAddr1 => Inputs[0];
     public Port RdAddr0 => Inputs[1];
@@ -23,9 +23,9 @@ public class _9Reg2_1 : SubCircuit
         this.AddBinaryInput(nameof(Clk));
         this.AddOutputs(nameof(Q1), nameof(Q0));
 
-        var _9BDEMUX = this.AddSubCircuit(new _9BDEMUX());
-        var _8RegArray2 = this.AddSubCircuit(new _8RegArray2());
-        var _9MUX2 = this.AddSubCircuit(new _9MUX2());
+        var _9BDEMUX = this.AddSubcircuit(new _9BDEMUX());
+        var _8RegArray2 = this.AddSubcircuit(new _8RegArray2());
+        var _9MUX2 = this.AddSubcircuit(new _9MUX2());
 
         this.AddWires([
             (WrAddr1, _9BDEMUX.Sel1),

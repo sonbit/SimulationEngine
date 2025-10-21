@@ -1,11 +1,11 @@
-﻿using SimulationEngine.Designs.SubCircuits.Adders;
-using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Adders;
+using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class AddSub2 : SubCircuit
+public class AddSub2 : Subcircuit
 {
     public Port Sel => Inputs[0];
     public Port B1 => Inputs[1];
@@ -24,8 +24,8 @@ public class AddSub2 : SubCircuit
         var inv0 = this.AddLogicGate("5");
         var inv1 = this.AddLogicGate("5");
 
-        var _2MUX2 = this.AddSubCircuit(new _2MUX2());
-        var _2TritAdder = this.AddSubCircuit(new _2TritAdder());
+        var _2MUX2 = this.AddSubcircuit(new _2MUX2());
+        var _2TritAdder = this.AddSubcircuit(new _2TritAdder());
 
         this.AddWires([
             (B1, inv0.A),

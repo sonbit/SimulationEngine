@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Latches;
+﻿using SimulationEngine.Designs.Subcircuits.Latches;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Counters;
+namespace SimulationEngine.Designs.Subcircuits.Counters;
 
-public class SyTriDirLoadCounter : SubCircuit
+public class SyTriDirLoadCounter : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port LdEn => Inputs[1];
@@ -21,7 +21,7 @@ public class SyTriDirLoadCounter : SubCircuit
         var _7PB = this.AddLogicGate("7PB");
         var PPPPPPZD0 = this.AddLogicGate("PPPPPPZD0");
 
-        var tff = this.AddSubCircuit(new TFlipFlop());
+        var tff = this.AddSubcircuit(new TFlipFlop());
 
         this.AddWires([
             (Clk, tff.Clk),

@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Latches;
+namespace SimulationEngine.Designs.Subcircuits.Latches;
 
-public class _2Latch2 : SubCircuit
+public class _2Latch2 : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port A1 => Inputs[1];
@@ -17,8 +17,8 @@ public class _2Latch2 : SubCircuit
         this.AddInputs(nameof(A1), nameof(A0));
         this.AddOutputs(nameof(Q1), nameof(Q0));
 
-        var btl0 = this.AddSubCircuit(new BTLatch());
-        var btl1 = this.AddSubCircuit(new BTLatch());
+        var btl0 = this.AddSubcircuit(new BTLatch());
+        var btl1 = this.AddSubcircuit(new BTLatch());
 
         this.AddWires([
             (Clk, btl0.Clk),

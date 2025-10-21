@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class CMP2 : SubCircuit
+public class CMP2 : Subcircuit
 {
     public Port B1 => Inputs[0];
     public Port B0 => Inputs[1];
@@ -21,9 +21,9 @@ public class CMP2 : SubCircuit
         this.AddInputs(nameof(B1), nameof(B0), nameof(A1), nameof(A0));
         this.AddOutputs(nameof(Min1), nameof(Min0), nameof(Max1), nameof(Max0), nameof(Cmp));
 
-        var _2TritComp = this.AddSubCircuit(new _2TritComp());
-        var _2MUX2_0 = this.AddSubCircuit(new _2MUX2());
-        var _2MUX2_1 = this.AddSubCircuit(new _2MUX2());
+        var _2TritComp = this.AddSubcircuit(new _2TritComp());
+        var _2MUX2_0 = this.AddSubcircuit(new _2MUX2());
+        var _2MUX2_1 = this.AddSubcircuit(new _2MUX2());
 
         this.AddWires([
             (B1, _2TritComp.B1),

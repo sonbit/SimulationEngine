@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Decode;
 
-public class ALUCtrl2 : SubCircuit
+public class ALUCtrl2 : Subcircuit
 {
     public Port Op1 => Inputs[0];
     public Port Op0 => Inputs[1];

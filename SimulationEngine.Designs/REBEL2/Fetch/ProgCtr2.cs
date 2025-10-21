@@ -1,11 +1,11 @@
-﻿using SimulationEngine.Designs.SubCircuits.Latches;
-using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Latches;
+using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Fetch;
 
-public class ProgCtr2 : SubCircuit
+public class ProgCtr2 : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port LdEn => Inputs[1];
@@ -20,10 +20,10 @@ public class ProgCtr2 : SubCircuit
         this.AddInputs(nameof(LdEn), nameof(LdAddr1), nameof(LdAddr0));
         this.AddOutputs(nameof(Pc1), nameof(Pc0));
 
-        var _2MUX2 = this.AddSubCircuit(new _2MUX2());
-        var dle0 = this.AddSubCircuit(new DLatchEdge());
-        var dle1 = this.AddSubCircuit(new DLatchEdge());
-        var inc2 = this.AddSubCircuit(new Increment2());
+        var _2MUX2 = this.AddSubcircuit(new _2MUX2());
+        var dle0 = this.AddSubcircuit(new DLatchEdge());
+        var dle1 = this.AddSubcircuit(new DLatchEdge());
+        var inc2 = this.AddSubcircuit(new Increment2());
 
         this.AddWires([
             (LdEn, _2MUX2.Sel),

@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Database.SubCircuits;
+﻿using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Application.Services.Export;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows;
 
-public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService service, ISubCircuitService subCircuitService)
+public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService service, ISubcircuitService subcircuitService)
 {
     private enum MenuOptions
     {
@@ -21,7 +21,7 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
         Back
     }
 
-    public async Task RunMenuAsync(SubCircuit subCircuit)
+    public async Task RunMenuAsync(Subcircuit subcircuit)
     {
         renderer.Clear();
 
@@ -33,17 +33,17 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
             {
                 case MenuOptions.ExportVerilogFiles:
                 case MenuOptions.ExportVerilogFilesZipped:
-                    ExportVerilog(subCircuit, menuOption == MenuOptions.ExportVerilogFilesZipped);
+                    ExportVerilog(subcircuit, menuOption == MenuOptions.ExportVerilogFilesZipped);
                     break;
 
                 case MenuOptions.ExportVerilogFilesWithTopXdc:
                 case MenuOptions.ExportVerilogFilesWithTopXdc7Seg:
-                    ExportVerilogWithTopAndXdc(subCircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopXdc7Seg);
+                    ExportVerilogWithTopAndXdc(subcircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopXdc7Seg);
                     break;
 
                 case MenuOptions.ExportVerilogFilesWithTopXdcZipped:
                 case MenuOptions.ExportVerilogFilesWithTopXdc7SegZipped:
-                    ExportVerilogWithTopAndXdc(subCircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopXdc7SegZipped, true);
+                    ExportVerilogWithTopAndXdc(subcircuit, menuOption == MenuOptions.ExportVerilogFilesWithTopXdc7SegZipped, true);
                     break;
 
                 case MenuOptions.Back:
@@ -55,14 +55,14 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
 
     public async Task ExportVerilog(int id, bool includeTop, bool zip, string outputPath = "")
     {
-        var subCircuit = await subCircuitService.GetByIdAsync(id);
-        if (subCircuit is null)
+        var subcircuit = await subcircuitService.GetByIdAsync(id);
+        if (subcircuit is null)
         {
             renderer.DrawError($"Subcircuit with id {id} was not found.");
             return;
         }
 
-        ExportVerilog(subCircuit, includeTop, zip, outputPath);
+        ExportVerilog(subcircuit, includeTop, zip, outputPath);
     }
 
     public async Task ExportVerilog(string? title, bool includeTop, bool zip, string outputPath = "")
@@ -73,41 +73,41 @@ public class ExportFlow(IPrompter prompter, IRenderer renderer, IExportService s
             return;
         }
 
-        var subCircuit = await subCircuitService.GetByTitleAsync(title);
-        if (subCircuit is null)
+        var subcircuit = await subcircuitService.GetByTitleAsync(title);
+        if (subcircuit is null)
         {
             renderer.DrawError($"Subcircuit with title {title} was not found.");
             return;
         }
 
-        ExportVerilog(subCircuit, includeTop, zip, outputPath);
+        ExportVerilog(subcircuit, includeTop, zip, outputPath);
     }
 
-    private void ExportVerilog(SubCircuit subCircuit, bool includeTop, bool zip, string outputPath = "")
+    private void ExportVerilog(Subcircuit subcircuit, bool includeTop, bool zip, string outputPath = "")
     {
         if (includeTop)
-            ExportVerilogWithTopAndXdc(subCircuit, true, zip, outputPath);
+            ExportVerilogWithTopAndXdc(subcircuit, true, zip, outputPath);
         else
-            ExportVerilog(subCircuit, zip, outputPath);
+            ExportVerilog(subcircuit, zip, outputPath);
     }
 
-    private void ExportVerilog(SubCircuit subCircuit, bool zip = false, string outputPath = "")
+    private void ExportVerilog(Subcircuit subcircuit, bool zip = false, string outputPath = "")
     {
-        var testString = DesignUtils.GetTestString(subCircuit.Title);
-        var path = service.ExportVerilog(subCircuit, testString, zip, outputPath);
+        var testString = DesignUtils.GetTestString(subcircuit.Title);
+        var path = service.ExportVerilog(subcircuit, testString, zip, outputPath);
         renderer.Clear();
         renderer.Write(path);
         renderer.DrawLine(Environment.NewLine);
     }
 
-    private void ExportVerilogWithTopAndXdc(SubCircuit subCircuit, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
+    private void ExportVerilogWithTopAndXdc(Subcircuit subcircuit, bool include7SegmentDisplay = false, bool zip = false, string outputPath = "")
     {
         renderer.Clear();
 
         try
         {
-            var testString = DesignUtils.GetTestString(subCircuit.Title);
-            var path = service.ExportVerilogWithTopAndXdc(subCircuit, testString, include7SegmentDisplay, zip, outputPath);
+            var testString = DesignUtils.GetTestString(subcircuit.Title);
+            var path = service.ExportVerilogWithTopAndXdc(subcircuit, testString, include7SegmentDisplay, zip, outputPath);
             renderer.Write(path);
             renderer.DrawLine(Environment.NewLine);
         }

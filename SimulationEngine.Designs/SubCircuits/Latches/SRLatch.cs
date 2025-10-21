@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Latches;
+namespace SimulationEngine.Designs.Subcircuits.Latches;
 
-public class SRLatch : SubCircuit
+public class SRLatch : Subcircuit
 {
     public Port Reset => Inputs[0];
     public Port Set => Inputs[1];

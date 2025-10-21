@@ -57,23 +57,23 @@ public sealed partial class VerilogEmitter
         return name;
     }
 
-    private static IEnumerable<SubCircuit> EnumerateUniqueSubCircuits(SubCircuit rootSubCircuit)
+    private static IEnumerable<Subcircuit> EnumerateUniqueSubcircuits(Subcircuit root)
     {
         var seen = new HashSet<string>(StringComparer.Ordinal);
-        var subCircuitStack = new Stack<SubCircuit>();
-        subCircuitStack.Push(rootSubCircuit);
+        var subcircuitStack = new Stack<Subcircuit>();
+        subcircuitStack.Push(root);
 
-        while (subCircuitStack.Count > 0)
+        while (subcircuitStack.Count > 0)
         {
-            var subCircuit = subCircuitStack.Pop();
-            if (!seen.Add(SubCircuitHasher.Compute(subCircuit, [])))
+            var subcircuit = subcircuitStack.Pop();
+            if (!seen.Add(SubcircuitHasher.Compute(subcircuit, [])))
                 continue;
 
-            yield return subCircuit;
+            yield return subcircuit;
 
-            var subCircuits = subCircuit.SubCircuits;
-            for (int i = subCircuits.Count - 1; i >= 0; i--)
-                subCircuitStack.Push(subCircuits[i]);
+            var subcircuits = subcircuit.Subcircuits;
+            for (int i = subcircuits.Count - 1; i >= 0; i--)
+                subcircuitStack.Push(subcircuits[i]);
         }
     }
 

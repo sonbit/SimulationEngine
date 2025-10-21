@@ -1,11 +1,11 @@
-﻿using SimulationEngine.Designs.Calculators.SubCircuits;
-using SimulationEngine.Designs.SubCircuits.Deselectors;
+﻿using SimulationEngine.Designs.Calculators.Subcircuits;
+using SimulationEngine.Designs.Subcircuits.Deselectors;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Calculators;
 
-public class TT3_BTCalculator : SubCircuit
+public class TT3_BTCalculator : Subcircuit
 {
     public Port X1 => Inputs[0];
     public Port X0 => Inputs[1];
@@ -21,9 +21,9 @@ public class TT3_BTCalculator : SubCircuit
         this.AddInputs(nameof(X1), nameof(X0), nameof(Y1), nameof(Y0));
         this.AddOutputs(nameof(S3), nameof(S2), nameof(S1), nameof(S0));
 
-        var btm4 = this.AddSubCircuit(new BTM4());
-        var bta4 = this.AddSubCircuit(new BTA4());
-        var deselect4 = this.AddSubCircuit(new Deselect4());
+        var btm4 = this.AddSubcircuit(new BTM4());
+        var bta4 = this.AddSubcircuit(new BTA4());
+        var deselect4 = this.AddSubcircuit(new Deselect4());
 
         this.AddWires([
             (X1, btm4.X1),

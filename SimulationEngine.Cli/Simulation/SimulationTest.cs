@@ -9,23 +9,23 @@ namespace SimulationEngine.Cli.Simulation;
 
 public static class SimulationTest
 {
-    public static void Simulate(SubCircuit subCircuit, IRenderer renderer)
+    public static void Simulate(Subcircuit subcircuit, IRenderer renderer)
     {
-        var testString = DesignUtils.GetTestString(subCircuit.Title);
+        var testString = DesignUtils.GetTestString(subcircuit.Title);
         if (string.IsNullOrWhiteSpace(testString))
         {
-            renderer.DrawError($"No tests defined for subcircuit {subCircuit.Title}");
+            renderer.DrawError($"No tests defined for subcircuit {subcircuit.Title}");
             return;
         }
 
-        Simulate(subCircuit, testString, renderer);
+        Simulate(subcircuit, testString, renderer);
     }
 
-    private static void Simulate(SubCircuit subCircuit, string testString, IRenderer renderer)
+    private static void Simulate(Subcircuit subcircuit, string testString, IRenderer renderer)
     {
         renderer.Clear();
 
-        var simulationSession = SimulationSession.Build(subCircuit);
+        var simulationSession = SimulationSession.Build(subcircuit);
         var allPassed = true;
         var lineNumber = 1;
         var evaluationStrings = new List<TestResult>();
@@ -66,9 +66,9 @@ public static class SimulationTest
         );
 
         if (allPassed)
-            renderer.DrawLine($"[green]All tests passed for {subCircuit.Title}[/]");
+            renderer.DrawLine($"[green]All tests passed for {subcircuit.Title}[/]");
         else
-            renderer.DrawLine($"[red]Some tests failed for {subCircuit.Title}[/]");
+            renderer.DrawLine($"[red]Some tests failed for {subcircuit.Title}[/]");
 
         renderer.DrawLine($"Elapsed time: {stopWatch.Elapsed}");
     }

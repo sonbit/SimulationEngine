@@ -10,9 +10,9 @@ public partial class Basys3Emitter
         ["T1","R2","W2","U1","T2","R3","V2","T3","W14","W13","W15","V15","W16","W17","V17","V16"];
     private static readonly string[] SegPinsReversed = ["U7","V5","U5","V8","U8","W6","W7"];
 
-    public string EmitXdc(SubCircuit subCircuit, bool include7SegmentDisplay = false)
+    public string EmitXdc(Subcircuit subcircuit, bool include7SegmentDisplay = false)
     {
-        (var inputBits, var outputBits) = ValidateAndReturnBits(subCircuit);
+        (var inputBits, var outputBits) = ValidateAndReturnBits(subcircuit);
 
         Builder.Clear();
 

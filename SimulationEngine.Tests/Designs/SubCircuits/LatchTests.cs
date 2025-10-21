@@ -1,7 +1,7 @@
-﻿using SimulationEngine.Designs.SubCircuits.Latches;
+﻿using SimulationEngine.Designs.Subcircuits.Latches;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.Designs.SubCircuits;
+namespace SimulationEngine.Tests.Designs.Subcircuits;
 
 public class LatchTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {

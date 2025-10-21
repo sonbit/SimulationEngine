@@ -5,5 +5,5 @@ namespace SimulationEngine.Application.Export.Emitters;
 
 public interface IVerilogEmitter
 {
-    Verilog EmitSubCircuit(SubCircuit topSubCircuit);
+    Verilog EmitSubcircuit(Subcircuit topSubcircuit);
 }

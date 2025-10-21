@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Adders;
+﻿using SimulationEngine.Designs.Subcircuits.Adders;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.ALU;
 
-public class _2TritMul : SubCircuit
+public class _2TritMul : Subcircuit
 {
     public Port B1 => Inputs[0];
     public Port B0 => Inputs[1];
@@ -25,8 +25,8 @@ public class _2TritMul : SubCircuit
         var PD5_2 = this.AddLogicGate("PD5");
         var PD5_3 = this.AddLogicGate("PD5");
 
-        var triHalfAdder_0 = this.AddSubCircuit(new TriHalfAdder());
-        var triHalfAdder_1 = this.AddSubCircuit(new TriHalfAdder());
+        var triHalfAdder_0 = this.AddSubcircuit(new TriHalfAdder());
+        var triHalfAdder_1 = this.AddSubcircuit(new TriHalfAdder());
 
         this.AddWires([
             (B1, PD5_0.B),

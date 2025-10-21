@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.Converters.SubCircuits;
+﻿using SimulationEngine.Designs.Converters.Subcircuits;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.Converters;
 
-public class SignedBTRadixConverter4 : SubCircuit
+public class SignedBTRadixConverter4 : Subcircuit
 {
     public Port Sign => Inputs[0];
     public Port A2 => Inputs[1];
@@ -20,10 +20,10 @@ public class SignedBTRadixConverter4 : SubCircuit
         this.AddBinaryInputs(nameof(Sign), nameof(A2), nameof(A1), nameof(A0));
         this.AddOutputs(nameof(Q3), nameof(Q2), nameof(Q1), nameof(Q0));
 
-        var xor3 = this.AddSubCircuit(new XOR3());
-        var bha3 = this.AddSubCircuit(new BHA3());
-        var unsignedBT_RadixConverter4 = this.AddSubCircuit(new UnsignedBT_RadixConverter4());
-        var conditionalSTI4 = this.AddSubCircuit(new ConditionalSTI4());
+        var xor3 = this.AddSubcircuit(new XOR3());
+        var bha3 = this.AddSubcircuit(new BHA3());
+        var unsignedBT_RadixConverter4 = this.AddSubcircuit(new UnsignedBT_RadixConverter4());
+        var conditionalSTI4 = this.AddSubcircuit(new ConditionalSTI4());
 
         this.AddWires([
             (Sign, xor3.Sign),

@@ -1,10 +1,10 @@
-﻿using SimulationEngine.Designs.SubCircuits.Latches;
+﻿using SimulationEngine.Designs.Subcircuits.Latches;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Memory;
+namespace SimulationEngine.Designs.Subcircuits.Memory;
 
-public class _8RegArray2 : SubCircuit
+public class _8RegArray2 : Subcircuit
 {
     public Port Clk8 => Inputs[0];
     public Port Clk7 => Inputs[1];
@@ -48,15 +48,15 @@ public class _8RegArray2 : SubCircuit
             nameof(Q51), nameof(Q50), nameof(Q41), nameof(Q40), nameof(Q31), nameof(Q30), 
             nameof(Q21), nameof(Q20), nameof(Q11), nameof(Q10), nameof(Q01), nameof(Q00));
 
-        var _2Latch2_0 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_1 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_2 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_3 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_4 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_5 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_6 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_7 = this.AddSubCircuit(new _2Latch2());
-        var _2Latch2_8 = this.AddSubCircuit(new _2Latch2());
+        var _2Latch2_0 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_1 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_2 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_3 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_4 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_5 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_6 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_7 = this.AddSubcircuit(new _2Latch2());
+        var _2Latch2_8 = this.AddSubcircuit(new _2Latch2());
 
         this.AddWires([
             (Clk8, _2Latch2_0.Clk),

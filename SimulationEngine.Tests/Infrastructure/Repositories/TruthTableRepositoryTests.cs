@@ -14,10 +14,11 @@ public sealed class TruthTableRepositoryTests
         await using var dbContext = db.NewContext();
         var repository = new TruthTableRepository(dbContext);
 
-        var truthTable = await repository.CreateOrGetAsync(CreateTruthTable("B7P"));
+        var heptaIndex = "B7P";
+        var truthTable = await repository.CreateOrGetAsync(CreateTruthTable(heptaIndex));
 
         Assert.NotEqual(0, truthTable.Id);
-        Assert.Equal("B7P", truthTable.HeptaIndex);
+        Assert.Equal(heptaIndex, truthTable.HeptaIndex);
         Assert.Equal(1, await dbContext.TruthTables.CountAsync());
     }
 
@@ -63,11 +64,12 @@ public sealed class TruthTableRepositoryTests
         await using var dbContext = db.NewContext();
         var repo = new TruthTableRepository(dbContext);
 
-        await repo.CreateOrGetAsync(CreateTruthTable("B7P7PBPB7"));
+        var heptaIndex = "B7P7PBPB7";
+        await repo.CreateOrGetAsync(CreateTruthTable(heptaIndex));
 
-        var truthTable = await repo.GetByHeptaIndexAsync("B7P7PBPB7");
+        var truthTable = await repo.GetByHeptaIndexAsync(heptaIndex);
         Assert.NotNull(truthTable);
-        Assert.Equal("B7P7PBPB7", truthTable.HeptaIndex);
+        Assert.Equal(heptaIndex, truthTable.HeptaIndex);
     }
 
     private static TruthTable CreateTruthTable(string heptaIndex) => heptaIndex.Length switch

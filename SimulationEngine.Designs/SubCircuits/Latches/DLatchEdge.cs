@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Latches;
+namespace SimulationEngine.Designs.Subcircuits.Latches;
 
-public class DLatchEdge : SubCircuit
+public class DLatchEdge : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port Din => Inputs[1];
@@ -15,8 +15,8 @@ public class DLatchEdge : SubCircuit
         this.AddInput(nameof(Din));
         this.AddOutputs(nameof(Dout));
 
-        var btl0 = this.AddSubCircuit(new BTLatch());
-        var btl1 = this.AddSubCircuit(new BTLatch());
+        var btl0 = this.AddSubcircuit(new BTLatch());
+        var btl1 = this.AddSubcircuit(new BTLatch());
 
         var inv0 = this.AddBinaryLogicGate("2");
         var inv1 = this.AddBinaryLogicGate("2");

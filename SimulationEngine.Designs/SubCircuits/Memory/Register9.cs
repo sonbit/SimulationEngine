@@ -1,11 +1,11 @@
-﻿using SimulationEngine.Designs.SubCircuits.Demultiplexers;
-using SimulationEngine.Designs.SubCircuits.Multiplexers;
+﻿using SimulationEngine.Designs.Subcircuits.Demultiplexers;
+using SimulationEngine.Designs.Subcircuits.Multiplexers;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Memory;
+namespace SimulationEngine.Designs.Subcircuits.Memory;
 
-public class Register9 : SubCircuit
+public class Register9 : Subcircuit
 {
     public Port RdAddr1 => Inputs[0];
     public Port RdAddr0 => Inputs[1];
@@ -22,11 +22,11 @@ public class Register9 : SubCircuit
         this.AddInput(nameof(WrData));
         this.AddOutput(nameof(Q));
 
-        var demux = this.AddSubCircuit(new DEMUX());
-        var ram3_0 = this.AddSubCircuit(new RAM3());
-        var ram3_1 = this.AddSubCircuit(new RAM3());
-        var ram3_2 = this.AddSubCircuit(new RAM3());
-        var mux = this.AddSubCircuit(new MUX());
+        var demux = this.AddSubcircuit(new DEMUX());
+        var ram3_0 = this.AddSubcircuit(new RAM3());
+        var ram3_1 = this.AddSubcircuit(new RAM3());
+        var ram3_2 = this.AddSubcircuit(new RAM3());
+        var mux = this.AddSubcircuit(new MUX());
 
         this.AddWires([
             (WrAddr1, demux.Sel1),

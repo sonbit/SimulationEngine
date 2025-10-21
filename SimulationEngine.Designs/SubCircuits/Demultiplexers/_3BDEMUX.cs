@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Demultiplexers;
+namespace SimulationEngine.Designs.Subcircuits.Demultiplexers;
 
-public class _3BDEMUX : SubCircuit
+public class _3BDEMUX : Subcircuit
 {
     public Port Din => Inputs[0];
     public Port Clk => Inputs[1];

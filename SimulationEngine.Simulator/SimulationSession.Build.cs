@@ -7,7 +7,7 @@ namespace SimulationEngine.Simulator;
 
 public partial class SimulationSession
 {
-    public readonly SubCircuit SubCircuit;
+    public readonly Subcircuit Subcircuit;
     private readonly DeltaKernel _deltaKernel = new();
     private readonly List<IProcess> _processes = [];
     private readonly Dictionary<Terminal, Net> _netOfTerminals = new(ReferenceEqualityComparer<Terminal>.Instance);
@@ -18,14 +18,14 @@ public partial class SimulationSession
         set => _deltaKernel.Trace = value; 
     }
 
-    private SimulationSession(SubCircuit subCircuit) => SubCircuit = subCircuit;
+    private SimulationSession(Subcircuit subcircuit) => Subcircuit = subcircuit;
 
-    public static SimulationSession Build(SubCircuit subCircuit, bool trace = false)
+    public static SimulationSession Build(Subcircuit subcircuit, bool trace = false)
     {
-        var simSession = new SimulationSession(subCircuit) { Trace = trace };
+        var simSession = new SimulationSession(subcircuit) { Trace = trace };
 
-        BuildNets(subCircuit, simSession._netOfTerminals);
-        BuildProcesses(subCircuit, simSession._netOfTerminals, simSession._processes, path: subCircuit.Title);
+        BuildNets(subcircuit, simSession._netOfTerminals);
+        BuildProcesses(subcircuit, simSession._netOfTerminals, simSession._processes, path: subcircuit.Title);
 
         if (trace)
             simSession.ReportNetIssues();
@@ -34,36 +34,36 @@ public partial class SimulationSession
         return simSession;
     }
 
-    private static List<Net> BuildNets(SubCircuit subCircuit, Dictionary<Terminal, Net> map)
+    private static List<Net> BuildNets(Subcircuit subcircuit, Dictionary<Terminal, Net> map)
     {
         var unionFind = new UnionFinder<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
 
-        foreach (var terminal in EnumerateAllTerminalsRecursive(subCircuit))
+        foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
             unionFind.Add(terminal);
 
-        UnionAllWiresRecursive(subCircuit, unionFind);
+        UnionAllWiresRecursive(subcircuit, unionFind);
 
-        var rootTerminalToNet = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
+        var netByRootTerminal = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
 
-        foreach (var terminal in EnumerateAllTerminalsRecursive(subCircuit))
+        foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
         {
             var rootTerminal = unionFind.Find(terminal);
-            if (!rootTerminalToNet.TryGetValue(rootTerminal, out var net))
+            if (!netByRootTerminal.TryGetValue(rootTerminal, out var net))
             {
                 net = new Net($"net({rootTerminal.Title})");
-                rootTerminalToNet[rootTerminal] = net;
+                netByRootTerminal[rootTerminal] = net;
             }
             map[terminal] = net;
         }
 
-        return [.. rootTerminalToNet.Values];
+        return [.. netByRootTerminal.Values];
     }
 
-    private static void BuildProcesses(SubCircuit subCircuit, Dictionary<Terminal, Net> netOf, List<IProcess> processes, string path)
+    private static void BuildProcesses(Subcircuit subcircuit, Dictionary<Terminal, Net> netOf, List<IProcess> processes, string path)
     {
         var driverCount = new Dictionary<Net, int>();
 
-        foreach (var logicGate in subCircuit.LogicGates ?? Enumerable.Empty<LogicGate>())
+        foreach (var logicGate in subcircuit.LogicGates ?? Enumerable.Empty<LogicGate>())
         {
             if (logicGate.TruthTable?.Definition == null)
                 throw new InvalidOperationException($"Gate missing TruthTable.Definition in {path}.");
@@ -90,37 +90,37 @@ public partial class SimulationSession
                     a, b, c, d, q, logicGate.TruthTable.Definition));
         }
 
-        if (subCircuit.SubCircuits != null)
+        if (subcircuit.Subcircuits != null)
         {
-            var duplicatedSubCircuits = subCircuit.SubCircuits?
-                .GroupBy(x => x, ReferenceEqualityComparer<SubCircuit>.Instance)
+            var duplicatedSubcircuits = subcircuit.Subcircuits?
+                .GroupBy(x => x, ReferenceEqualityComparer<Subcircuit>.Instance)
                 .Where(g => g.Count() > 1);
 
-            if (duplicatedSubCircuits != null)
+            if (duplicatedSubcircuits != null)
             {
-                foreach (var dup in duplicatedSubCircuits)
+                foreach (var dup in duplicatedSubcircuits)
                     throw new InvalidOperationException(
-                        $"SubCircuit '{path}/{subCircuit.Title}' reuses the same child instance '{dup.Key.Title}'. " +
+                        $"Subcircuit '{path}/{subcircuit.Title}' reuses the same child instance '{dup.Key.Title}'. " +
                         "Instantiate distinct copies for each use.");
             }
 
             var index = 0;
-            foreach (var child in subCircuit.SubCircuits!)
+            foreach (var child in subcircuit.Subcircuits!)
                 BuildProcesses(child, netOf, processes, $"{path}#{index++}/{child.Title}");
         }
     }
 
-    private static IEnumerable<Terminal> EnumerateAllTerminalsRecursive(SubCircuit subCircuit)
+    private static IEnumerable<Terminal> EnumerateAllTerminalsRecursive(Subcircuit subcircuit)
     {
-        if (subCircuit.Ports != null)
+        if (subcircuit.Ports != null)
         {
-            foreach (var port in subCircuit.Ports)
+            foreach (var port in subcircuit.Ports)
                 yield return port;
         }
 
-        if (subCircuit.LogicGates != null)
+        if (subcircuit.LogicGates != null)
         {
-            foreach (var logicGate in subCircuit.LogicGates)
+            foreach (var logicGate in subcircuit.LogicGates)
             {
                 if (logicGate.A != null) yield return logicGate.A;
                 if (logicGate.B != null) yield return logicGate.B;
@@ -130,9 +130,9 @@ public partial class SimulationSession
             }
         }
 
-        if (subCircuit.SubCircuits != null)
+        if (subcircuit.Subcircuits != null)
         {
-            foreach (var child in subCircuit.SubCircuits)
+            foreach (var child in subcircuit.Subcircuits)
             {
                 foreach (var terminal in EnumerateAllTerminalsRecursive(child))
                     yield return terminal;
@@ -140,19 +140,19 @@ public partial class SimulationSession
         }
     }
 
-    private static void UnionAllWiresRecursive(SubCircuit subCircuit, UnionFinder<Terminal> unionFind)
+    private static void UnionAllWiresRecursive(Subcircuit subcircuit, UnionFinder<Terminal> unionFind)
     {
-        foreach (var wire in subCircuit.Wires ?? Enumerable.Empty<Wire>())
+        foreach (var wire in subcircuit.Wires ?? Enumerable.Empty<Wire>())
         {
             unionFind.Add(wire.StartTerminal);
             unionFind.Add(wire.EndTerminal);
             unionFind.Union(wire.StartTerminal, wire.EndTerminal);
         }
 
-        if (subCircuit.SubCircuits == null)
+        if (subcircuit.Subcircuits == null)
             return;
 
-        foreach (var child in subCircuit.SubCircuits)
+        foreach (var child in subcircuit.Subcircuits)
             UnionAllWiresRecursive(child, unionFind);
     }
 }

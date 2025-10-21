@@ -10,7 +10,7 @@ namespace SimulationEngine.Cli.Simulation;
 
 public static class SimulationFile
 {
-    public static async Task<int> SimulateFileAsync(SubCircuit subCircuit, IPrompter prompter, IRenderer renderer, bool normalize)
+    public static async Task<int> SimulateFileAsync(Subcircuit subcircuit, IPrompter prompter, IRenderer renderer, bool normalize)
     {
         var directoryPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
@@ -21,7 +21,7 @@ public static class SimulationFile
             return 1;
         }
 
-        var (testResults, elapsed) = await SimulateFileAsync(subCircuit, file, renderer, normalize);
+        var (testResults, elapsed) = await SimulateFileAsync(subcircuit, file, renderer, normalize);
         if (testResults is null || elapsed is null)
             return 1;
 
@@ -45,9 +45,9 @@ public static class SimulationFile
         return 0;
     }
 
-    public static async Task<int> SimulateFileAsync(SubCircuit subCircuit, FileInfo file, IRenderer renderer, bool normalize, bool benchmark)
+    public static async Task<int> SimulateFileAsync(Subcircuit subcircuit, FileInfo file, IRenderer renderer, bool normalize, bool benchmark)
     {
-        var (testResults, elapsed) = await SimulateFileAsync(subCircuit, file, renderer, normalize);
+        var (testResults, elapsed) = await SimulateFileAsync(subcircuit, file, renderer, normalize);
         if (testResults is null || elapsed is null)
             return 1;
 
@@ -60,12 +60,12 @@ public static class SimulationFile
         return 0;
     }
 
-    private async static Task<(List<TestResult>? testResults, TimeSpan? elapsed)> SimulateFileAsync(SubCircuit subCircuit, FileInfo file, IRenderer renderer, bool normalize)
+    private async static Task<(List<TestResult>? testResults, TimeSpan? elapsed)> SimulateFileAsync(Subcircuit subcircuit, FileInfo file, IRenderer renderer, bool normalize)
     {
         renderer.Clear();
 
-        var simulationSession = SimulationSession.Build(subCircuit);
-        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
+        var simulationSession = SimulationSession.Build(subcircuit);
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
         var testString = await File.ReadAllTextAsync(file.FullName);
 
         var lineNumber = 1;
@@ -75,7 +75,7 @@ public static class SimulationFile
 
         foreach (var inputs in TestStringConverter.GetInputs(testString))
         {
-            if (InputValidator.Validate(subCircuit, inputs, normalize, allowedValuesPerInput) is string message)
+            if (InputValidator.Validate(subcircuit, inputs, normalize, allowedValuesPerInput) is string message)
             {
                 renderer.DrawError(message);
                 return (null, null);

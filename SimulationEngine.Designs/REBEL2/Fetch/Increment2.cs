@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Fetch;
 
-public class Increment2 : SubCircuit
+public class Increment2 : Subcircuit
 {
     public Port X1 => Inputs[0];
     public Port X0 => Inputs[1];

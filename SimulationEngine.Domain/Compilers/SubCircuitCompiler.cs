@@ -9,142 +9,144 @@ using System.Linq;
 
 namespace SimulationEngine.Domain.Compilers;
 
-public static class SubCircuitCompiler
+public static class SubcircuitCompiler
 {
-    public static SubCircuitClosure Compile(SubCircuit subCircuit)
+    public static SubcircuitClosure Compile(Subcircuit author)
     {
-        var subCircuitPlacedBySubCircuit = new Dictionary<SubCircuit, SubCircuitPlaced>(ReferenceEqualityComparer.Instance);
-        var subCircuitPlacedByHash = new Dictionary<string, SubCircuitPlaced>(StringComparer.Ordinal);
+        var placedByAuthor = new Dictionary<Subcircuit, SubcircuitPlaced>(ReferenceEqualityComparer.Instance);
+        var placedByHash = new Dictionary<string, SubcircuitPlaced>(StringComparer.Ordinal);
 
-        return new SubCircuitClosure 
+        return new SubcircuitClosure 
         { 
-            SubCircuitPlaced = CompileRecursive(subCircuitPlacedBySubCircuit, subCircuit, subCircuitPlacedByHash), 
-            MapByHash = subCircuitPlacedByHash 
+            Placed = CompileRecursive(placedByAuthor, author, placedByHash), 
+            PlacedByHash = placedByHash 
         };
     }
 
-    private static (SubCircuit subCircuit, List<SubCircuitPlacement> subCircuitPlacements) BuildPlaced(SubCircuit authorSubCircuit)
+    private static (Subcircuit subcircuit, List<SubcircuitPlacement> placements) BuildPlaced(Subcircuit author)
     {
-        var subCircuit = new SubCircuit
+        var parent = new Subcircuit
         {
-            Title = authorSubCircuit.Title,
-            Ports = [.. authorSubCircuit.Ports.Select(port => new Port(port))],
-            LogicGates = [.. authorSubCircuit.LogicGates.Select(logicGate => new LogicGate(logicGate))],
+            Title = author.Title,
+            Ports = [.. author.Ports.Select(port => new Port(port))],
+            LogicGates = [.. author.LogicGates.Select(logicGate => new LogicGate(logicGate))],
             Wires = []
         };
 
-        foreach (var port in subCircuit.Ports)
-            port.SubCircuit = subCircuit;
+        foreach (var port in parent.Ports)
+            port.Subcircuit = parent;
 
-        foreach (var logicGate in subCircuit.LogicGates)
+        foreach (var logicGate in parent.LogicGates)
         {
             foreach (var pin in logicGate.Pins)
                 pin.LogicGate = logicGate;
         }
 
-        var topPortMap = authorSubCircuit.Ports
-            .Zip(subCircuit.Ports)
+        var topPortMap = author.Ports
+            .Zip(parent.Ports)
             .ToDictionary(portPair => portPair.First, portPair => portPair.Second);
 
-        var logicGateMap = authorSubCircuit.LogicGates
-            .Zip(subCircuit.LogicGates)
+        var logicGateMap = author.LogicGates
+            .Zip(parent.LogicGates)
             .ToDictionary(portPair => portPair.First, portPair => portPair.Second);
 
         Pin MapPin(Pin old) => 
             logicGateMap[old.LogicGate].Pins.Single(p => p.Role == old.Role);
 
-        var subCircuitPlacements = new List<SubCircuitPlacement>(authorSubCircuit.SubCircuits.Count);
-        for (int index = 0; index < authorSubCircuit.SubCircuits.Count; index++)
+        var placements = new List<SubcircuitPlacement>(author.Subcircuits.Count);
+        for (int index = 0; index < author.Subcircuits.Count; index++)
         {
-            var childSubCircuit = authorSubCircuit.SubCircuits[index];
-            var subCircuitPlacement = new SubCircuitPlacement
+            var child = author.Subcircuits[index];
+            var parentPlacement = new SubcircuitPlacement
             {
-                ParentSubCircuit = subCircuit,
-                ChildSubCircuit = childSubCircuit,
+                ParentTemplate = parent,
+                ChildTemplate = child,
                 Ordinal = index,
-                Title = childSubCircuit.Title,
+                Title = child.Title,
                 PortPlacements = []
             };
 
-            for (int i = 0; i < childSubCircuit.Inputs.Count; i++) 
-                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = true, IndexWithinChild = i, Title = childSubCircuit.Inputs[i].Title });
+            for (int i = 0; i < child.Inputs.Count; i++)
+                parentPlacement.PortPlacements.Add(new PortPlacement(true, i, child.Inputs[i].Title, parentPlacement));
 
-            for (int i = 0; i < childSubCircuit.Outputs.Count; i++)
-                subCircuitPlacement.PortPlacements.Add(new PortPlacement { SubCircuitPlacement = subCircuitPlacement, IsInput = false, IndexWithinChild = i, Title = childSubCircuit.Outputs[i].Title });
+            for (int i = 0; i < child.Outputs.Count; i++)
+                parentPlacement.PortPlacements.Add(new PortPlacement(false, i, child.Outputs[i].Title, parentPlacement));
 
-            subCircuitPlacements.Add(subCircuitPlacement);
+            placements.Add(parentPlacement);
         }
 
-        PortPlacement MapChildPort(SubCircuit childSubCircuit, Port childPort)
+        PortPlacement MapChildPort(Subcircuit child, Port port)
         {
-            int childSubCircuitIndex = authorSubCircuit.SubCircuits.IndexOf(childSubCircuit);
-            var subCircuitPlacement = subCircuitPlacements[childSubCircuitIndex];
+            int childIndex = author.Subcircuits.IndexOf(child);
+            var placement = placements[childIndex];
 
-            var isInput = childPort.IsInput();
-            var ports = isInput ? childSubCircuit.Inputs : childSubCircuit.Outputs;
+            var isInput = port.IsInput();
+            var ports = isInput ? child.Inputs : child.Outputs;
+            int childPortIndex = ports.IndexOf(port);
 
-            int childPortIndex = ports.IndexOf(childPort);
-            return subCircuitPlacement.PortPlacements.Single(pp => pp.IsInput == isInput && pp.IndexWithinChild == childPortIndex);
+            return placement.PortPlacements.Single(portPlacement => 
+                portPlacement.IsInput == isInput && 
+                portPlacement.IndexWithinChild == childPortIndex);
         }
 
-        foreach (var wire in authorSubCircuit.Wires)
+        foreach (var wire in author.Wires)
         {
             Terminal startTerminal = wire.StartTerminal switch
             {
-                Port port when authorSubCircuit.Ports.Contains(port) => topPortMap[port],
-                Pin pin when authorSubCircuit.LogicGates.Contains(pin.LogicGate) => MapPin(pin),
-                Port port when authorSubCircuit.SubCircuits.Contains(port.SubCircuit) => MapChildPort(port.SubCircuit, port),
+                Port port when author.Ports.Contains(port) => topPortMap[port],
+                Pin pin when author.LogicGates.Contains(pin.LogicGate) => MapPin(pin),
+                Port port when author.Subcircuits.Contains(port.Subcircuit) => MapChildPort(port.Subcircuit, port),
                 _ => throw new InvalidOperationException("Unsupported wire start")
             };
             Terminal endTerminal = wire.EndTerminal switch
             {
-                Port port when authorSubCircuit.Ports.Contains(port) => topPortMap[port],
-                Pin pin when authorSubCircuit.LogicGates.Contains(pin.LogicGate) => MapPin(pin),
-                Port port when authorSubCircuit.SubCircuits.Contains(port.SubCircuit) => MapChildPort(port.SubCircuit, port),
+                Port port when author.Ports.Contains(port) => topPortMap[port],
+                Pin pin when author.LogicGates.Contains(pin.LogicGate) => MapPin(pin),
+                Port port when author.Subcircuits.Contains(port.Subcircuit) => MapChildPort(port.Subcircuit, port),
                 _ => throw new InvalidOperationException("Unsupported wire end")
             };
 
-            subCircuit.Wires.Add(new Wire { SubCircuit = subCircuit, StartTerminal = startTerminal, EndTerminal = endTerminal });
+            parent.Wires.Add(new Wire { Subcircuit = parent, StartTerminal = startTerminal, EndTerminal = endTerminal });
         }
 
-        return (subCircuit, subCircuitPlacements);
+        return (parent, placements);
     }
 
-    private static SubCircuitPlaced CompileRecursive(
-        Dictionary<SubCircuit, SubCircuitPlaced> subCircuitPlacedBySubCircuit,
-        SubCircuit authorSubCircuit,
-        Dictionary<string, SubCircuitPlaced> subCircuitPlacedByHash)
+    private static SubcircuitPlaced CompileRecursive(
+        Dictionary<Subcircuit, SubcircuitPlaced> placedByAuthor,
+        Subcircuit author,
+        Dictionary<string, SubcircuitPlaced> placedByHash)
     {
-        if (subCircuitPlacedBySubCircuit.TryGetValue(authorSubCircuit, out var cachedSubCircuitPlaced)) 
-            return cachedSubCircuitPlaced;
+        if (placedByAuthor.TryGetValue(author, out var cachedPlaced)) 
+            return cachedPlaced;
 
-        var (subCircuit, subCircuitPlacements) = BuildPlaced(authorSubCircuit);
+        var (subcircuit, placements) = BuildPlaced(author);
 
-        var subCircuitPlacementInfos = new List<SubCircuitPlacementInfo>(subCircuitPlacements.Count);
-        for (int i = 0; i < subCircuitPlacements.Count; i++)
+        var placementInfos = new List<SubcircuitPlacementInfo>(placements.Count);
+        for (int i = 0; i < placements.Count; i++)
         {
-            var childAuthorSubCircuit = authorSubCircuit.SubCircuits[i];
-            var childSubCircuitPlaced = CompileRecursive(subCircuitPlacedBySubCircuit, childAuthorSubCircuit, subCircuitPlacedByHash);
-            var childSubCircuitHash = SubCircuitHasher.Compute(childSubCircuitPlaced.SubCircuit, 
-                [.. childSubCircuitPlaced.SubCircuitPlacementInfos.Select(subCircuitPlacementInfo => subCircuitPlacementInfo.SubCircuitPlacement)]);
-            childSubCircuitPlaced.SubCircuit.Hash = childSubCircuitHash;
+            var child = author.Subcircuits[i];
+            var childPlaced = CompileRecursive(placedByAuthor, child, placedByHash);
+            var childHash = SubcircuitHasher.Compute(childPlaced.Template, 
+                [.. childPlaced.PlacementInfos.Select(placementInfo => placementInfo.Placement)]);
+            childPlaced.Template.Hash = childHash;
 
-            subCircuitPlacementInfos.Add(new SubCircuitPlacementInfo
+            placementInfos.Add(new SubcircuitPlacementInfo
             {
-                SubCircuitPlacement = subCircuitPlacements[i],
-                ChildSubCircuit = childAuthorSubCircuit,
-                ChildSubCircuitHash = childSubCircuitHash
+                Placement = placements[i],
+                ChildTemplate = child,
+                ChildTemplateHash = childHash
             });
         }
 
-        var hash = SubCircuitHasher.Compute(subCircuit, 
-            [.. subCircuitPlacementInfos.Select(subCircuitPlacementInfo => subCircuitPlacementInfo.SubCircuitPlacement)]);
-        subCircuit.Hash = hash;
+        var hash = SubcircuitHasher.Compute(subcircuit, 
+            [.. placementInfos.Select(placementInfo => placementInfo.Placement)]);
+        subcircuit.Hash = hash;
 
-        var subCircuitPlaced = new SubCircuitPlaced { SubCircuit = subCircuit, SubCircuitPlacementInfos = subCircuitPlacementInfos };
-        subCircuitPlacedBySubCircuit[authorSubCircuit] = subCircuitPlaced;
-        subCircuitPlacedByHash[hash] = subCircuitPlaced;
+        var placed = new SubcircuitPlaced { Template = subcircuit, PlacementInfos = placementInfos };
+        placedByAuthor[author] = placed;
+        placedByHash[hash] = placed;
 
-        return subCircuitPlaced;
+        return placed;
     }
 }

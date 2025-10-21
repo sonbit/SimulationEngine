@@ -11,22 +11,22 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
 {
     private readonly StringBuilder Builder = new(64 * 1024);
 
-    public VerilogModule EmitTestbench(SubCircuit subCircuit, string testString)
+    public VerilogModule EmitTestbench(Subcircuit subcircuit, string testString)
     {
-        var moduleName = $"{VerilogUtils.GetSubCircuitModuleName(subCircuit)}_tb";
+        var moduleName = $"{VerilogUtils.GetSubcircuitModuleName(subcircuit)}_tb";
 
         Builder.Clear();
 
         Builder.AppendLine($"module {moduleName};");
-        foreach (var input in subCircuit.Inputs)
+        foreach (var input in subcircuit.Inputs)
             Builder.AppendLine($"\treg {VerilogUtils.GetPortWidthAndTitle(input)};");
 
-        foreach (var output in subCircuit.Outputs)
+        foreach (var output in subcircuit.Outputs)
             Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndTitle(output)};");
         Builder.AppendLine();
 
-        AddDut(subCircuit);
-        AddTests(subCircuit, testString);
+        AddDut(subcircuit);
+        AddTests(subcircuit, testString);
 
         Builder.Append("endmodule");
 
@@ -37,11 +37,11 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
         };
     }
 
-    private void AddDut(SubCircuit subCircuit)
+    private void AddDut(Subcircuit subcircuit)
     {
-        Builder.AppendLine($"\t{VerilogUtils.GetSubCircuitModuleName(subCircuit)} dut (");
+        Builder.AppendLine($"\t{VerilogUtils.GetSubcircuitModuleName(subcircuit)} dut (");
 
-        foreach (var port in subCircuit.OrderedPorts)
+        foreach (var port in subcircuit.OrderedPorts)
             Builder.AppendLine($"\t\t.{port.Title}({port.Title}),");
         Builder.Remove(Builder.Length - 3, 1);
 
@@ -49,7 +49,7 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
         Builder.AppendLine();
     }
 
-    private void AddTests(SubCircuit subCircuit, string testString)
+    private void AddTests(Subcircuit subcircuit, string testString)
     {
         var testVectors = TestStringConverter.GetInputOutputPairs(testString);
 
@@ -63,17 +63,17 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
 
             var (inputs, expectedOutputs) = testVectors[i];
 
-            for (int k = 0; k < subCircuit.Inputs.Count; k++)
+            for (int k = 0; k < subcircuit.Inputs.Count; k++)
             {
-                var port = subCircuit.Inputs[k];
+                var port = subcircuit.Inputs[k];
                 Builder.AppendLine($"\t\t{port.Title} = {RadixConverter.Convert(port, inputs[k])};");
             }
 
             Builder.AppendLine("\t\t#1;");
 
-            for (int k = 0; k < subCircuit.Outputs.Count; k++)
+            for (int k = 0; k < subcircuit.Outputs.Count; k++)
             {
-                var port = subCircuit.Outputs[k];
+                var port = subcircuit.Outputs[k];
                 var title = port.Title;
                 var expectedString = RadixConverter.Convert(port, expectedOutputs[k]);
                 Builder.AppendLine($"\t\tif ({title} !== {expectedString}) begin $display(\"FAIL vec {i}: {title} (got %b at %0d)\", {title}, $time); $stop; end");

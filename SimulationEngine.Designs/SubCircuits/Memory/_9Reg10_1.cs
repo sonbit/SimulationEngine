@@ -1,9 +1,9 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
-namespace SimulationEngine.Designs.SubCircuits.Memory;
+namespace SimulationEngine.Designs.Subcircuits.Memory;
 
-public class _9Reg10_1 : SubCircuit
+public class _9Reg10_1 : Subcircuit
 {
     public Port RdAddr1 => Inputs[0];
     public Port RdAddr0 => Inputs[1];
@@ -44,11 +44,11 @@ public class _9Reg10_1 : SubCircuit
             nameof(Rs11), nameof(Rs10), nameof(Rs01), nameof(Rs00), 
             nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00));
 
-        var _9Reg21_0 = this.AddSubCircuit(new _9Reg2_1());
-        var _9Reg21_1 = this.AddSubCircuit(new _9Reg2_1());
-        var _9Reg21_2 = this.AddSubCircuit(new _9Reg2_1());
-        var _9Reg21_3 = this.AddSubCircuit(new _9Reg2_1());
-        var _9Reg21_4 = this.AddSubCircuit(new _9Reg2_1());
+        var _9Reg21_0 = this.AddSubcircuit(new _9Reg2_1());
+        var _9Reg21_1 = this.AddSubcircuit(new _9Reg2_1());
+        var _9Reg21_2 = this.AddSubcircuit(new _9Reg2_1());
+        var _9Reg21_3 = this.AddSubcircuit(new _9Reg2_1());
+        var _9Reg21_4 = this.AddSubcircuit(new _9Reg2_1());
 
         this.AddWires([
             (RdAddr1, _9Reg21_0.RdAddr1),

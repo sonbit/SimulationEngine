@@ -4,7 +4,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2;
 
-public class REBEL2 : SubCircuit
+public class REBEL2 : Subcircuit
 {
 
 
@@ -13,7 +13,7 @@ public class REBEL2 : SubCircuit
         var fetch = new Fetch.Fetch();
         var decode = new Decode.Decode();
         var alu = new ALU2();
-        SubCircuits = [fetch, decode, alu];
+        Subcircuits = [fetch, decode, alu];
 
         this.AddWires([
             (fetch.Pc1, decode.Pc1),

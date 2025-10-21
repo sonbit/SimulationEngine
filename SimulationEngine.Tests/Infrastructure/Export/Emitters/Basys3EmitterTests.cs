@@ -1,7 +1,7 @@
 ﻿using SimulationEngine.Designs.REBEL2.ALU;
 using SimulationEngine.Designs.REBEL2.Decode;
 using SimulationEngine.Designs.REBEL2.Fetch;
-using SimulationEngine.Designs.SubCircuits.Memory;
+using SimulationEngine.Designs.Subcircuits.Memory;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Infrastructure.Export.Emitters;
 using Xunit.Abstractions;
@@ -54,15 +54,15 @@ public class Basys3EmitterTests(ITestOutputHelper testOutputHelper) : BaseEmitte
     [Fact]
     public void Register9_Xdc_Validate() => BaseXdcValidate(new Register9(), "Baselines/Register9/Register9_Xdc_Expected.txt", false);
 
-    private void BaseTopValidate(SubCircuit subCircuit, string filePath, bool include7SegmentDisplay, bool skipEvaluation = false)
+    private void BaseTopValidate(Subcircuit subcircuit, string filePath, bool include7SegmentDisplay, bool skipEvaluation = false)
     {
-        var output = new Basys3Emitter().EmitTopModule(subCircuit, include7SegmentDisplay).Content.Trim();
+        var output = new Basys3Emitter().EmitTopModule(subcircuit, include7SegmentDisplay).Content.Trim();
         Validate(filePath, output, skipEvaluation);
     }
 
-    private void BaseXdcValidate(SubCircuit subCircuit, string filePath, bool include7SegmentDisplay, bool skipEvaluation = false)
+    private void BaseXdcValidate(Subcircuit subcircuit, string filePath, bool include7SegmentDisplay, bool skipEvaluation = false)
     {
-        var output = new Basys3Emitter().EmitXdc(subCircuit, include7SegmentDisplay).Trim();
+        var output = new Basys3Emitter().EmitXdc(subcircuit, include7SegmentDisplay).Trim();
         Validate(filePath, output, skipEvaluation);
     }
 }

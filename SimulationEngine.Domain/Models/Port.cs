@@ -22,6 +22,6 @@ public class Port : Terminal
 
     public PortMetadata Metadata { get; set; } = new PortMetadata();
     public int PortMetadataId { get; set; }
-    public SubCircuit SubCircuit { get; set; }
-    public int SubCircuitId { get; set; }
+    public Subcircuit Subcircuit { get; set; }
+    public int SubcircuitId { get; set; }
 }

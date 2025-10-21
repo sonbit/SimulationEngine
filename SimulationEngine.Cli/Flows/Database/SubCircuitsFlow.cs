@@ -1,4 +1,4 @@
-﻿using SimulationEngine.Application.Services.Database.SubCircuits;
+﻿using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Designs;
@@ -7,7 +7,7 @@ using System.ComponentModel;
 
 namespace SimulationEngine.Cli.Flows.Database;
 
-public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISubCircuitService service, SubCircuitFlow subCircuitFlow)
+public sealed class SubcircuitsFlow(IPrompter prompter, IRenderer renderer, ISubcircuitService service, SubcircuitFlow subcircuitFlow)
 {
     private enum MenuOptions
     {
@@ -23,26 +23,26 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
     {
         while (true)
         {
-            switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]SubCircuits[/]"))
+            switch (await prompter.SelectEnumAsync<MenuOptions>("[bold]Subcircuits[/]"))
             {
                 case MenuOptions.ListAll:
-                    await SubCircuitsListAsync(); 
+                    await SubcircuitsListAsync(); 
                     break;
 
                 case MenuOptions.SelectFromList:
-                    await SubCircuitsSelectAsync(); 
+                    await SubcircuitsSelectAsync(); 
                     break;
 
                 case MenuOptions.FindById:
-                    await SubCircuitsFindAsync(); 
+                    await SubcircuitsFindAsync(); 
                     break;
 
                 case MenuOptions.FindByTitle:
-                    await SubCircuitsFindByTitleAsync();
+                    await SubcircuitsFindByTitleAsync();
                     break;
 
                 case MenuOptions.Populate:
-                    await SubCircuitsPopulateAsync();
+                    await SubcircuitsPopulateAsync();
                     break;
 
                 case MenuOptions.Back:
@@ -52,121 +52,121 @@ public sealed class SubCircuitsFlow(IPrompter prompter, IRenderer renderer, ISub
         }
     }
 
-    public async Task SubCircuitsFindAsync(int? id = null)
+    public async Task SubcircuitsFindAsync(int? id = null)
     {
-        id ??= await prompter.AskIdAsync("Enter SubCircuit id:");
+        id ??= await prompter.AskIdAsync("Enter Subcircuit id:");
         if (id.HasValue && id.Value == 0)
         {
             renderer.DrawError("Invalid id");
             return;
         }
 
-        var subCircuit = await service.GetByIdAsync(id.Value);
-        if (subCircuit is null)
+        var subcircuit = await service.GetByIdAsync(id.Value);
+        if (subcircuit is null)
         {
-            renderer.DrawError($"SubCircuit with id {id} was not found");
+            renderer.DrawError($"Subcircuit with id {id} was not found");
             return;
         }
 
-        await subCircuitFlow.RunMenuAsync(subCircuit);
+        await subcircuitFlow.RunMenuAsync(subcircuit);
     }
 
-    public async Task SubCircuitsFindByTitleAsync(string? title = null)
+    public async Task SubcircuitsFindByTitleAsync(string? title = null)
     {
-        title ??= await prompter.AskAsync("Enter SubCircuit title (Full or partial, finds first match):");
+        title ??= await prompter.AskAsync("Enter Subcircuit title (Full or partial, finds first match):");
         if (string.IsNullOrWhiteSpace(title))
         {
             renderer.DrawError("Invalid title");
             return;
         }
 
-        var subCircuit = await service.GetByTitleAsync(title);
-        if (subCircuit is null)
+        var subcircuit = await service.GetByTitleAsync(title);
+        if (subcircuit is null)
         {
-            renderer.DrawError($"SubCircuit with title {title} was not found");
+            renderer.DrawError($"Subcircuit with title {title} was not found");
             return;
         }
 
-        await subCircuitFlow.RunMenuAsync(subCircuit);
+        await subcircuitFlow.RunMenuAsync(subcircuit);
     }
 
-    public async Task SubCircuitsListAsync()
+    public async Task SubcircuitsListAsync()
     {
-        var subCircuits = await service.GetAllAsync();
-        if (subCircuits.Count == 0)
+        var subcircuits = await service.GetAllAsync();
+        if (subcircuits.Count == 0)
         {
-            renderer.DrawWarning("No SubCircuits found");
+            renderer.DrawWarning("No Subcircuits found");
             return;
         }
 
-        renderer.DrawTableFromPropertiesWithColumnNames(subCircuits.Select(subCircuit => new
+        renderer.DrawTableFromPropertiesWithColumnNames(subcircuits.Select(subcircuit => new
         {
-            subCircuit.Id,
-            subCircuit.Title,
-            Inputs = subCircuit.Inputs.Count,
-            LogicGates = subCircuit.LogicGates.Count,
-            Outputs = subCircuit.Outputs.Count,
-            SubCircuits = subCircuit.SubCircuits.Count,
-            Wires = subCircuit.Wires.Count
+            subcircuit.Id,
+            subcircuit.Title,
+            Inputs = subcircuit.Inputs.Count,
+            LogicGates = subcircuit.LogicGates.Count,
+            Outputs = subcircuit.Outputs.Count,
+            Subcircuits = subcircuit.Subcircuits.Count,
+            Wires = subcircuit.Wires.Count
         }), 
         true,
         [
-            nameof(SubCircuit.Id),
-            nameof(SubCircuit.Title),
-            nameof(SubCircuit.Inputs),
-            nameof(SubCircuit.LogicGates),
-            nameof(SubCircuit.Outputs),
-            nameof(SubCircuit.SubCircuits),
-            nameof(SubCircuit.Wires)
+            nameof(Subcircuit.Id),
+            nameof(Subcircuit.Title),
+            nameof(Subcircuit.Inputs),
+            nameof(Subcircuit.LogicGates),
+            nameof(Subcircuit.Outputs),
+            nameof(Subcircuit.Subcircuits),
+            nameof(Subcircuit.Wires)
         ]);
     }
 
-    public async Task SubCircuitsPopulateAsync()
+    public async Task SubcircuitsPopulateAsync()
     {
         var designsAssembly = typeof(StandardCellLibrary).Assembly;
 
         var designs = designsAssembly
             .GetTypes()
-            .Where(type => type.IsClass && !type.IsAbstract && typeof(SubCircuit).IsAssignableFrom(type))
+            .Where(type => type.IsClass && !type.IsAbstract && typeof(Subcircuit).IsAssignableFrom(type))
             .ToList();
 
         foreach (var design in designs)
         {
-            var subCircuit = (SubCircuit?)Activator.CreateInstance(design, nonPublic: true);
-            if (subCircuit == null)
+            var subcircuit = (Subcircuit?)Activator.CreateInstance(design, nonPublic: true);
+            if (subcircuit == null)
                 continue;
-            await service.CreateOrGetAsync(subCircuit);
+            await service.CreateOrGetAsync(subcircuit);
         }
     }
 
-    private async Task SubCircuitsSelectAsync()
+    private async Task SubcircuitsSelectAsync()
     {
-        var subCircuits = await service.GetAllAsync();
-        if (subCircuits.Count == 0)
+        var subcircuits = await service.GetAllAsync();
+        if (subcircuits.Count == 0)
         {
-            renderer.DrawWarning("No SubCircuits found");
+            renderer.DrawWarning("No Subcircuits found");
             return;
         }
 
         renderer.Clear();
 
-        var selectedSubCircuit = await prompter.SelectOrBackAsync(
-            "Select a SubCircuit",
-            subCircuits,
-            subCircuit => $"{subCircuit.Title} [grey]({subCircuit.Id})[/]");
+        var selectedSubcircuit = await prompter.SelectOrBackAsync(
+            "Select a Subcircuit",
+            subcircuits,
+            subcircuit => $"{subcircuit.Title} [grey]({subcircuit.Id})[/]");
 
-        if (selectedSubCircuit?.Id is null)
+        if (selectedSubcircuit?.Id is null)
             return;
 
-        var subCircuit = await service.GetByIdAsync(selectedSubCircuit.Id);
-        if (subCircuit is null)
+        var subcircuit = await service.GetByIdAsync(selectedSubcircuit.Id);
+        if (subcircuit is null)
         {
-            renderer.DrawError($"SubCircuit with id {selectedSubCircuit.Id} was not found");
+            renderer.DrawError($"Subcircuit with id {selectedSubcircuit.Id} was not found");
             return;
         }
 
         renderer.Clear();
 
-        await subCircuitFlow.RunMenuAsync(subCircuit);
+        await subcircuitFlow.RunMenuAsync(subcircuit);
     }
 }

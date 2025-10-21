@@ -1,7 +1,7 @@
-﻿using SimulationEngine.Designs.SubCircuits.Counters;
+﻿using SimulationEngine.Designs.Subcircuits.Counters;
 using Xunit.Abstractions;
 
-namespace SimulationEngine.Tests.Designs.SubCircuits;
+namespace SimulationEngine.Tests.Designs.Subcircuits;
 
 public class CounterTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {

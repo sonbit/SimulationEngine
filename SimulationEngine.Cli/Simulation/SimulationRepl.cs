@@ -11,25 +11,25 @@ namespace SimulationEngine.Cli.Simulation;
 
 public static class SimulationRepl
 {
-    public static async Task<int> SimulateReplAsync(SubCircuit subCircuit, IRenderer renderer, bool normalize = false)
+    public static async Task<int> SimulateReplAsync(Subcircuit subcircuit, IRenderer renderer, bool normalize = false)
     {
         renderer.DrawHeader($"Simulator");
 
-        var inputs = string.Join("\n", subCircuit.Inputs
+        var inputs = string.Join("\n", subcircuit.Inputs
             .Select(port => $"  {Markup.Escape(port.Title)}{(!normalize ? $" - {Markup.Escape(port.GetRadix().GetDescription())}" : "")}"));
 
-        var outputs = string.Join("\n", subCircuit.Outputs
+        var outputs = string.Join("\n", subcircuit.Outputs
             .Select(port => $"  {Markup.Escape(port.Title)}{(!normalize ? $" - {Markup.Escape(port.GetRadix().GetDescription())}" : "")}"));
 
-        renderer.DrawPanel(subCircuit.Title, $"Inputs \n{inputs}\n\nOutputs \n{outputs}");
+        renderer.DrawPanel(subcircuit.Title, $"Inputs \n{inputs}\n\nOutputs \n{outputs}");
 
-        var inputCount = subCircuit.Inputs.Count;
-        var outputCount = subCircuit.Outputs.Count;
+        var inputCount = subcircuit.Inputs.Count;
+        var outputCount = subcircuit.Outputs.Count;
         renderer.DrawLine($"[grey]Type or paste {inputCount} inputs to get {outputCount} outputs[/]");
         renderer.DrawLine("[grey]Press [bold]Esc[/] when done[/]");
 
-        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subCircuit);
-        var simulationSession = SimulationSession.Build(subCircuit);
+        var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
+        var simulationSession = SimulationSession.Build(subcircuit);
 
         var buf = new StringBuilder();
         var history = new List<(string In, string Out)>();
@@ -113,7 +113,7 @@ public static class SimulationRepl
                             break;
                         }
 
-                        status = InputValidator.Validate(subCircuit, ch, buf.Length, normalize, allowedValuesPerInput);
+                        status = InputValidator.Validate(subcircuit, ch, buf.Length, normalize, allowedValuesPerInput);
                         isError = status is not null;
 
                         if (isError)

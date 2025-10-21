@@ -3,7 +3,7 @@ using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Decode;
 
-public class ExecCtrl : SubCircuit
+public class ExecCtrl : Subcircuit
 {
     public Port Op1 => Inputs[0];
     public Port Op0 => Inputs[1];
@@ -32,7 +32,7 @@ public class ExecCtrl : SubCircuit
         var HHH088088 = this.AddLogicGate("HHH088088");
         var ZXZ = this.AddLogicGate("ZXZ");
 
-        var aluCtrl2 = this.AddSubCircuit(new ALUCtrl2());
+        var aluCtrl2 = this.AddSubcircuit(new ALUCtrl2());
 
         this.AddWires([
             (Op1, aluCtrl2.Op1),
