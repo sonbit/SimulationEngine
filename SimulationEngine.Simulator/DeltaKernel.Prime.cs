@@ -7,7 +7,7 @@ internal sealed partial class DeltaKernel
     private const byte DefaultValue = 0;
     private const int LoopDeltaLimit = 4;
 
-    private readonly Queue<HashSet<Net>> _recentDeltaChanges = new();
+    private readonly Queue<HashSet<Net>> _recentNetWrites = new();
     private HashSet<Net> _allNets = [];
 
     public void Prime(IEnumerable<IProcess> processes, HashSet<Net> allNets)
@@ -15,71 +15,75 @@ internal sealed partial class DeltaKernel
         _allNets = allNets;
 
         foreach (var process in processes)
-            ScheduleDelta(process);
+            ScheduleProcess(process);
 
-        IterateInitialProcesses();
+        InitialRunDeltaToQuiescence();
     }
 
-    private void IterateInitialProcesses()
+    private bool InitialCommitPendingNetUpdates()
     {
-        int iterations = 0;
+        if (_pendingNetWrites.Count == 0)
+            return false;
+
+        var netWrites = new List<Net>();
+
+        foreach (var net in _pendingNetWrites.ToArray())
+        {
+            if (net.CommitAndScheduleFanout(this))
+                netWrites.Add(net);
+            _pendingNetWrites.Remove(net);
+        }
+
+        if (netWrites.Count > 0)
+        {
+            _recentNetWrites.Enqueue([.. netWrites]);
+            while (_recentNetWrites.Count > LoopDeltaLimit)
+                _recentNetWrites.Dequeue();
+        }
+
+        return netWrites.Count > 0;
+    }
+
+    private void InitialRunDeltaToQuiescence()
+    {
+        int delta = 0;
 
         while (true)
         {
-            while (_deltaQueue.Count > 0)
-                DequeueAndEvaluate();
+            while (_readyQueue.Count > 0)
+                EvaluateNextReadyProcess();
 
-            bool anyDirtyNets = false;
-            var thisDeltaChanged = new List<Net>();
-
-            foreach (var dirtyNet in _dirtyNets.ToArray())
-            {
-                if (dirtyNet.CommitAndWake(this))
-                {
-                    anyDirtyNets = true;
-                    thisDeltaChanged.Add(dirtyNet);
-                }
-                _dirtyNets.Remove(dirtyNet);
-            }
-
-            if (thisDeltaChanged.Count > 0)
-            {
-                _recentDeltaChanges.Enqueue([.. thisDeltaChanged]);
-                while (_recentDeltaChanges.Count > LoopDeltaLimit)
-                    _recentDeltaChanges.Dequeue();
-            }
-
-            if (!anyDirtyNets)
+            if (!InitialCommitPendingNetUpdates())
                 break;
 
-            if (++iterations <= MaxDelta)
+            if (++delta <= MaxDelta)
                 continue;
 
             if (TryResolveLoop())
             {
-                iterations = 0;
-                _recentDeltaChanges.Clear();
+                delta = 0;
+                _recentNetWrites.Clear();
                 continue;
             }
 
-            throw new InvalidOperationException("Initialization did not converge and no loop could be resolved");
+            throw new InvalidOperationException("Delta-cycle failed to resolve loop convergence");
         }
     }
 
     private bool TryResolveLoop()
     {
         var oscillators = new HashSet<Net>();
-        foreach (var recentDeltaChange in _recentDeltaChanges)
-            oscillators.UnionWith(recentDeltaChange);
+        foreach (var recentNetWrite in _recentNetWrites)
+            oscillators.UnionWith(recentNetWrite);
 
         if (oscillators.Count == 0 || oscillators.Count > LoopDeltaLimit)
             return false;
 
         var stableNet = new HashSet<Net>(_allNets);
-        foreach (var recentDeltaChangeNets in _recentDeltaChanges)
-            stableNet.ExceptWith(recentDeltaChangeNets);
-        foreach (var dirtyNet in _dirtyNets)
-            stableNet.Remove(dirtyNet);
+        foreach (var recentNetWrite in _recentNetWrites)
+            stableNet.ExceptWith(recentNetWrite);
+        foreach (var pendingNetWrite in _pendingNetWrites)
+            stableNet.Remove(pendingNetWrite);
 
         foreach (var net in oscillators)
         {
@@ -95,14 +99,14 @@ internal sealed partial class DeltaKernel
         }
 
         var oscillator = oscillators.OrderBy(net => net.Name, StringComparer.Ordinal).First();
-        oscillator.NextValue = DefaultValue;
-        oscillator.CurrentValue = DefaultValue;
+        oscillator.PendingValue = DefaultValue;
+        oscillator.Value = DefaultValue;
 
         foreach (var process in oscillator.Fanout)
-            ScheduleDelta(process);
+            ScheduleProcess(process);
 
         if (Trace)
-            Console.WriteLine($" tie-break: forced {oscillator.Name} := {DefaultValue}");
+            Console.WriteLine($"\ttie-break: forced {oscillator.Name} := {DefaultValue}");
 
         return true;
     }

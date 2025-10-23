@@ -2,7 +2,7 @@
 
 internal sealed class LogicGateProcess : IProcess
 {
-    public readonly Net? _a;
+    public readonly Net _a;
     public readonly Net? _b;
     public readonly Net? _c;
     public readonly Net? _d;
@@ -11,7 +11,7 @@ internal sealed class LogicGateProcess : IProcess
     private readonly byte[] _truthTable;
     private readonly byte _arity;
 
-    public LogicGateProcess(string name, Net? a, Net? b, Net? c, Net? d, Net q, byte[] truthTable)
+    public LogicGateProcess(string name, Net a, Net? b, Net? c, Net? d, Net q, byte[] truthTable)
     {
         Name = name;
         _a = a; 
@@ -30,7 +30,7 @@ internal sealed class LogicGateProcess : IProcess
             _ => throw new ArgumentException("TruthTable length must be 3, 9, 27, or 81 (Arity 1 to 4)") 
         };
 
-        _a?.Fanout.Add(this);
+        _a.Fanout.Add(this);
         _b?.Fanout.Add(this);
         _c?.Fanout.Add(this);
         _d?.Fanout.Add(this);
@@ -41,8 +41,8 @@ internal sealed class LogicGateProcess : IProcess
 
     public void Evaluate(DeltaKernel deltaKernel)
     {
-        var tri = GetOutput();
-        _q.Propose(tri, deltaKernel, this);
+        var tri = _truthTable[ComputeIndex()];
+        _q.StageWrite(tri, deltaKernel, this);
     }
 
     public List<Net> GetInputs()
@@ -55,21 +55,14 @@ internal sealed class LogicGateProcess : IProcess
         return inputs;
     }
 
-    private byte GetOutput()
+    private int ComputeIndex()
     {
-        var index = ComputeIndex(
-            _a?.CurrentValue ?? 0, 
-            _b?.CurrentValue ?? 0, 
-            _c?.CurrentValue ?? 0, 
-            _d?.CurrentValue ?? 0, 
-            _arity);
+        var a = _a?.Value ?? 0;
+        var b = _b?.Value ?? 0;
+        var c = _c?.Value ?? 0;
+        var d = _d?.Value ?? 0;
 
-        return _truthTable[index];
-    }
-
-    private static int ComputeIndex(byte a, byte b, byte c, byte d, byte arity)
-    {
-        return arity switch
+        return _arity switch
         {
             1 => a,
             2 => b + 3 * a,

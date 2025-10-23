@@ -41,7 +41,7 @@ public partial class SimulationSession
         return GetOutputs(isNormalized);
     }
 
-    private byte GetOutputByte(Port port) => _netOfTerminals[port].CurrentValue;
+    private byte GetOutputByte(Port port) => _netOfTerminals[port].Value;
 
     private string GetOutputsWithRadix()
     {

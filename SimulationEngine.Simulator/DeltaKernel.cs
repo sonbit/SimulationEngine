@@ -6,18 +6,18 @@ internal sealed partial class DeltaKernel
 {
     private const int MaxDelta = 100000;
 
-    private readonly Queue<IProcess> _deltaQueue = new();
+    private readonly Queue<IProcess> _readyQueue = new();
     private readonly HashSet<IProcess> _scheduled = [];
-    private readonly HashSet<Net> _dirtyNets = [];
+    private readonly HashSet<Net> _pendingNetWrites = [];
 
     public bool Trace { get; set; } = false;
 
-    public void MarkNetDirty(Net net) => _dirtyNets.Add(net);
+    public void MarkPendingWrite(Net net) => _pendingNetWrites.Add(net);
 
-    public void ScheduleDelta(IProcess process)
+    public void ScheduleProcess(IProcess process)
     {
         if (_scheduled.Add(process))
-            _deltaQueue.Enqueue(process);
+            _readyQueue.Enqueue(process);
     }
 
     public void Set(Net net, byte value)
@@ -25,46 +25,52 @@ internal sealed partial class DeltaKernel
         if (Trace) 
             Console.WriteLine($"set {net.Name} -> {value}");
 
-        net.Propose(value, this, null);
-        IterateProcesses();
+        net.StageWrite(value, this, null);
+        RunDeltaToQuiescence();
     }
 
-    private void DequeueAndEvaluate()
+    private bool CommitPendingNetUpdates()
     {
-        var process = _deltaQueue.Dequeue();
+        if (_pendingNetWrites.Count == 0)
+            return false;
+
+        var anyScheduled = false;
+
+        foreach (var net in _pendingNetWrites.ToArray())
+        {
+            if (net.CommitAndScheduleFanout(this))
+                anyScheduled = true;
+            _pendingNetWrites.Remove(net);
+        }
+
+        return anyScheduled;
+    }
+
+    private void EvaluateNextReadyProcess()
+    {
+        var process = _readyQueue.Dequeue();
         _scheduled.Remove(process);
 
         if (Trace)
-            Console.WriteLine($" eval {process.Name}");
+            Console.WriteLine($"\teval {process.Name}");
 
         process.Evaluate(this);
     }
 
-    private void IterateProcesses()
+    private void RunDeltaToQuiescence()
     {
-        int iterations = 0;
+        var delta = 0;
 
         while (true)
         {
-            while (_deltaQueue.Count > 0)
-                DequeueAndEvaluate();
+            while (_readyQueue.Count > 0)
+                EvaluateNextReadyProcess();
 
-            bool anyDirtyNets = false;
-            foreach (var dirtyNet in _dirtyNets.ToArray())
-            {
-                if (dirtyNet.CommitAndWake(this))
-                    anyDirtyNets = true;
-
-                _dirtyNets.Remove(dirtyNet);
-            }
-
-            if (!anyDirtyNets) 
+            if (!CommitPendingNetUpdates()) 
                 break;
 
-            if (++iterations <= MaxDelta)
-                continue;
-
-            throw new InvalidOperationException("Reached delta limit before converging");
+            if (++delta > MaxDelta)
+                throw new InvalidOperationException("Delta-cycle limit reached before convergence");
         }
     }
 }

@@ -25,7 +25,7 @@ public partial class SimulationSession
         var simSession = new SimulationSession(subcircuit) { Trace = trace };
 
         BuildNets(subcircuit, simSession._netOfTerminals);
-        BuildProcesses(subcircuit, simSession._netOfTerminals, simSession._processes, path: subcircuit.Title);
+        BuildProcesses(subcircuit, simSession._netOfTerminals, simSession._processes, subcircuit.Title);
 
         if (trace)
             simSession.ReportNetIssues();
@@ -68,7 +68,7 @@ public partial class SimulationSession
             if (logicGate.TruthTable?.Definition == null)
                 throw new InvalidOperationException($"Gate missing TruthTable.Definition in {path}.");
 
-            var a = logicGate.A != null ? netOf[logicGate.A] : null;
+            var a = netOf[logicGate.A];
             var b = logicGate.B != null ? netOf[logicGate.B] : null;
             var c = logicGate.C != null ? netOf[logicGate.C] : null;
             var d = logicGate.D != null ? netOf[logicGate.D] : null;

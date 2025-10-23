@@ -3,13 +3,13 @@
 internal sealed class Net(string name)
 {
     public string Name { get; } = name;
-    public byte CurrentValue { get; set; }
-    public byte NextValue { get; set; }
-    public bool Dirty { get; private set; }
+    public byte Value { get; set; }
+    public byte PendingValue { get; set; }
+    public bool HasPendingWrite { get; private set; }
 
     public IProcess? Driver { get; private set; }
     public int DriverCount { get; private set; }
-    public IProcess? LastDriver { get; private set; }
+    public IProcess? LastWriter { get; private set; }
 
     public List<IProcess> Fanout { get; private set; } = [];
 
@@ -19,33 +19,33 @@ internal sealed class Net(string name)
         Driver ??= process;
     }
 
-    public void Propose(byte value, DeltaKernel deltaKernel, IProcess? process = null)
+    public void StageWrite(byte value, DeltaKernel kernel, IProcess? process = null)
     {
-        if (Dirty && NextValue == value) 
+        if (HasPendingWrite && PendingValue == value) 
             return;
 
-        NextValue = value;
-        Dirty = true;
-        LastDriver = process;
+        PendingValue = value;
+        HasPendingWrite = true;
+        LastWriter = process;
 
-        deltaKernel.MarkNetDirty(this);
+        kernel.MarkPendingWrite(this);
     }
 
-    internal bool CommitAndWake(DeltaKernel deltaKernel)
+    internal bool CommitAndScheduleFanout(DeltaKernel kernel)
     {
-        if (!Dirty) 
+        if (!HasPendingWrite) 
             return false;
-        Dirty = false;
+        HasPendingWrite = false;
 
-        if (CurrentValue == NextValue) 
+        if (Value == PendingValue) 
             return false;
-        CurrentValue = NextValue;
+        Value = PendingValue;
 
-        if (deltaKernel.Trace) 
-            Console.WriteLine($"  commit {Name} := {CurrentValue} (by {LastDriver?.Name ?? "stimulus"})");
+        if (kernel.Trace) 
+            Console.WriteLine($"  commit {Name} := {Value} (by {LastWriter?.Name ?? "stimulus"})");
 
         foreach (var process in Fanout) 
-            deltaKernel.ScheduleDelta(process);
+            kernel.ScheduleProcess(process);
 
         return true;
     }

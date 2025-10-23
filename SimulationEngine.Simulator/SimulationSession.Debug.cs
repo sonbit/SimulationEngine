@@ -45,10 +45,10 @@ public partial class SimulationSession
                 Console.WriteLine("\tNo driver registered.");
                 break;
             case LogicGateProcess logicGateProcess:
-                var a = logicGateProcess._a?.CurrentValue ?? 0;
-                var b = logicGateProcess._b?.CurrentValue ?? 0;
-                var c = logicGateProcess._c?.CurrentValue ?? 0;
-                var d = logicGateProcess._d?.CurrentValue ?? 0;
+                var a = logicGateProcess._a?.Value ?? 0;
+                var b = logicGateProcess._b?.Value ?? 0;
+                var c = logicGateProcess._c?.Value ?? 0;
+                var d = logicGateProcess._d?.Value ?? 0;
 
                 Console.WriteLine($"[diag] {port.Title}: driven by {logicGateProcess.Name}");
                 Console.WriteLine($"\t\tinputs: A={a} B={b} C={c} D={d}");
@@ -58,7 +58,7 @@ public partial class SimulationSession
                 break;
         }
 
-        Console.WriteLine($"\tLastWriter: {net.LastDriver?.Name ?? "stimulus"}");
+        Console.WriteLine($"\tLastWriter: {net.LastWriter?.Name ?? "stimulus"}");
     }
 
     private IEnumerable<Net> InternalNets()
