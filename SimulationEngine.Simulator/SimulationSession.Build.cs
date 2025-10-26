@@ -34,7 +34,7 @@ public partial class SimulationSession
         return simSession;
     }
 
-    private static List<Net> BuildNets(Subcircuit subcircuit, Dictionary<Terminal, Net> map)
+    private static void BuildNets(Subcircuit subcircuit, Dictionary<Terminal, Net> map)
     {
         var unionFinder = new UnionFinder<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
 
@@ -44,19 +44,16 @@ public partial class SimulationSession
         UnionAllWiresRecursive(subcircuit, unionFinder);
 
         var netByRootTerminal = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
-
         foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
         {
-            var rootTerminal = unionFinder.Find(terminal);
-            if (!netByRootTerminal.TryGetValue(rootTerminal, out var net))
+            var parentTerminal = unionFinder.Find(terminal);
+            if (!netByRootTerminal.TryGetValue(parentTerminal, out var net))
             {
-                net = new Net($"net({rootTerminal.Title})");
-                netByRootTerminal[rootTerminal] = net;
+                net = new Net($"net({parentTerminal.Title})");
+                netByRootTerminal[parentTerminal] = net;
             }
             map[terminal] = net;
         }
-
-        return [.. netByRootTerminal.Values];
     }
 
     private static void BuildProcesses(Subcircuit subcircuit, Dictionary<Terminal, Net> netOf, List<IProcess> processes, string path)
@@ -76,18 +73,18 @@ public partial class SimulationSession
             if (logicGate.Q == null)
                 throw new InvalidOperationException($"Gate in {path} has null PortQ.");
 
-            var netQ = netOf[logicGate.Q];
+            var q = netOf[logicGate.Q];
 
-            driverCount.TryGetValue(netQ, out var count);
-            driverCount[netQ] = count + 1;
-            if (driverCount[netQ] > 1)
+            driverCount.TryGetValue(q, out var count);
+            driverCount[q] = count + 1;
+            if (driverCount[q] > 1)
                 throw new InvalidOperationException(
-                    $"Multiple drivers detected on {path}:{netQ.Name}.");
+                    $"Multiple drivers detected on {path}:{q.Name}.");
 
             processes.Add(
                 new LogicGateProcess(
                     $"{path}/gate[{logicGate.TruthTable.HeptaIndex ?? logicGate.TruthTable.Definition.Length.ToString()}]",
-                    a, b, c, d, netQ, logicGate.TruthTable.Definition));
+                    a, b, c, d, q, logicGate.TruthTable.Definition));
         }
 
         if (subcircuit.Subcircuits == null)
@@ -139,12 +136,8 @@ public partial class SimulationSession
 
     private static void UnionAllWiresRecursive(Subcircuit subcircuit, UnionFinder<Terminal> unionFinder)
     {
-        foreach (var wire in subcircuit.Wires ?? Enumerable.Empty<Wire>())
-        {
-            unionFinder.Add(wire.StartTerminal);
-            unionFinder.Add(wire.EndTerminal);
+        foreach (var wire in subcircuit.Wires ?? [])
             unionFinder.Union(wire.StartTerminal, wire.EndTerminal);
-        }
 
         if (subcircuit.Subcircuits == null)
             return;

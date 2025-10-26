@@ -7,19 +7,11 @@ internal sealed class Net(string name)
     public byte PendingValue { get; set; }
     public bool HasPendingWrite { get; private set; }
 
-    public IProcess? Driver { get; private set; }
-    public int DriverCount { get; private set; }
+    public IProcess? Driver { get; set; }
     public IProcess? LastWriter { get; private set; }
-
     public List<IProcess> Fanout { get; private set; } = [];
 
-    public void RegisterDriver(IProcess process)
-    {
-        DriverCount++;
-        Driver ??= process;
-    }
-
-    public void StageWrite(byte value, DeltaKernel kernel, IProcess? process = null)
+    internal void StageWrite(byte value, DeltaKernel kernel, IProcess? process = null)
     {
         if (HasPendingWrite && PendingValue == value) 
             return;

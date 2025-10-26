@@ -2,11 +2,6 @@
 
 internal sealed class LogicGateProcess : IProcess
 {
-    public readonly Net _a;
-    public readonly Net? _b;
-    public readonly Net? _c;
-    public readonly Net? _d;
-
     private readonly Net _q;
     private readonly byte[] _truthTable;
     private readonly byte _arity;
@@ -14,10 +9,10 @@ internal sealed class LogicGateProcess : IProcess
     public LogicGateProcess(string name, Net a, Net? b, Net? c, Net? d, Net q, byte[] truthTable)
     {
         Name = name;
-        _a = a; 
-        _b = b;
-        _c = c; 
-        _d = d;
+        A = a; 
+        B = b;
+        C = c; 
+        D = d;
         _q = q;
 
         _truthTable = truthTable ?? throw new ArgumentNullException(nameof(truthTable));
@@ -30,37 +25,41 @@ internal sealed class LogicGateProcess : IProcess
             _ => throw new ArgumentException("TruthTable length must be 3, 9, 27, or 81 (Arity 1 to 4)") 
         };
 
-        _a.Fanout.Add(this);
-        _b?.Fanout.Add(this);
-        _c?.Fanout.Add(this);
-        _d?.Fanout.Add(this);
-        _q.RegisterDriver(this);
+        A.Fanout.Add(this);
+        B?.Fanout.Add(this);
+        C?.Fanout.Add(this);
+        D?.Fanout.Add(this);
+        _q.Driver = this;
     }
 
+    public Net A { get; private set; }
+    public Net? B { get; private set; }
+    public Net? C { get; private set; }
+    public Net? D { get; private set; }
     public string Name { get; }
 
     public void Evaluate(DeltaKernel deltaKernel)
     {
-        var tri = _truthTable[ComputeIndex()];
-        _q.StageWrite(tri, deltaKernel, this);
+        var trit = _truthTable[ComputeIndex()];
+        _q.StageWrite(trit, deltaKernel, this);
     }
 
     public List<Net> GetInputs()
     {
         var inputs = new List<Net>();
-        if (_a is not null) inputs.Add(_a);
-        if (_b is not null) inputs.Add(_b);
-        if (_c is not null) inputs.Add(_c);
-        if (_d is not null) inputs.Add(_d);
+        if (A is not null) inputs.Add(A);
+        if (B is not null) inputs.Add(B);
+        if (C is not null) inputs.Add(C);
+        if (D is not null) inputs.Add(D);
         return inputs;
     }
 
     private int ComputeIndex()
     {
-        var a = _a?.Value ?? 0;
-        var b = _b?.Value ?? 0;
-        var c = _c?.Value ?? 0;
-        var d = _d?.Value ?? 0;
+        var a = A.Value;
+        var b = B?.Value ?? 0;
+        var c = C?.Value ?? 0;
+        var d = D?.Value ?? 0;
 
         return _arity switch
         {

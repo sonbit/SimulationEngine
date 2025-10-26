@@ -14,7 +14,7 @@ public partial class SimulationSession
         Console.WriteLine($"[elab] nets:        {nets.Count}");
 
         var internalNets = InternalNets().ToList();
-        var noDriver = internalNets.Where(n => n.DriverCount == 0).ToList();
+        var noDriver = internalNets.Where(n => n.Driver != null).ToList();
         var noFanout = internalNets.Where(n => n.Fanout.Count == 0).ToList();
 
         Console.WriteLine($"[elab] nets NO driver: {noDriver.Count}");
@@ -45,10 +45,10 @@ public partial class SimulationSession
                 Console.WriteLine("\tNo driver registered.");
                 break;
             case LogicGateProcess logicGateProcess:
-                var a = logicGateProcess._a?.Value ?? 0;
-                var b = logicGateProcess._b?.Value ?? 0;
-                var c = logicGateProcess._c?.Value ?? 0;
-                var d = logicGateProcess._d?.Value ?? 0;
+                var a = logicGateProcess.A?.Value ?? 0;
+                var b = logicGateProcess.B?.Value ?? 0;
+                var c = logicGateProcess.C?.Value ?? 0;
+                var d = logicGateProcess.D?.Value ?? 0;
 
                 Console.WriteLine($"[diag] {port.Title}: driven by {logicGateProcess.Name}");
                 Console.WriteLine($"\t\tinputs: A={a} B={b} C={c} D={d}");

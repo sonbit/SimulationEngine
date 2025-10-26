@@ -29,9 +29,6 @@ internal sealed class UnionFinder<T>(IEqualityComparer<T> equalityComparer) wher
 
     public void Union(T x, T y)
     {
-        Add(x); 
-        Add(y);
-
         var foundX = Find(x); 
         var foundY = Find(y);
 

@@ -39,7 +39,7 @@ internal sealed partial class DeltaKernel
         foreach (var net in _pendingNetWrites.ToArray())
         {
             if (net.CommitAndScheduleFanout(this))
-                anyScheduled = true;
+                anyScheduled = true; 
             _pendingNetWrites.Remove(net);
         }
 
