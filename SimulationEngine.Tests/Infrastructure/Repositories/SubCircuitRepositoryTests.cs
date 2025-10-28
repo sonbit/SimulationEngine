@@ -58,7 +58,7 @@ public sealed class SubcircuitRepositoryTests
     }
 
     [Fact]
-    public async Task CreateOrGet_PlacementPortsEmpty()
+    public async Task CreateOrGet_PortPlacementsEmpty()
     {
         using var db = new SqliteInMemoryDb();
         await using var dbContext = db.NewContext();
@@ -72,13 +72,13 @@ public sealed class SubcircuitRepositoryTests
         Assert.NotNull(dbMux);
         Assert.Equal(4, dbMux.Subcircuits.Count);
 
-        var anyPlacementPortWire = dbMux.Wires.Any(wire => wire.StartTerminal is PortPlacement || wire.EndTerminal is PortPlacement);
+        var anyPortPlacementWire = dbMux.Wires.Any(wire => wire.StartTerminal is PortPlacement || wire.EndTerminal is PortPlacement);
 
-        var anyPlacementPortChildWire = dbMux.Subcircuits
+        var anyPortPlacementChildWire = dbMux.Subcircuits
             .SelectMany(subcircuit => subcircuit.Wires)
             .Any(wire => wire.StartTerminal is PortPlacement || wire.EndTerminal is PortPlacement);
 
-        Assert.False(anyPlacementPortWire || anyPlacementPortChildWire);
+        Assert.False(anyPortPlacementWire || anyPortPlacementChildWire);
 
         var muxClosure = SubcircuitCompiler.Compile(dbMux);
         Assert.Equal(newDbMux.Hash, muxClosure.Placed.Template.Hash);
