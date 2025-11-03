@@ -12,7 +12,7 @@ public partial class SimulationSession
         if (normalize)
             return string.Join("", GetOutputBytes());
         else
-            return GetOutputsWithRadix();
+            return GetOutputsWithRadix(Subcircuit);
     }
 
     public void SetInputBytes(byte[] values)
@@ -41,15 +41,17 @@ public partial class SimulationSession
         return GetOutputs(isNormalized);
     }
 
+    public string GetOutputs(Subcircuit subcircuit) => GetOutputsWithRadix(subcircuit);
+
     private byte GetOutputByte(Port port) => _netOfTerminals[port].Value;
 
-    private string GetOutputsWithRadix()
+    private string GetOutputsWithRadix(Subcircuit subcircuit)
     {
-        var chars = new char[Subcircuit.Outputs.Count];
+        var chars = new char[subcircuit.Outputs.Count];
 
-        for (int i = 0; i < Subcircuit.Outputs.Count; i++)
+        for (int i = 0; i < subcircuit.Outputs.Count; i++)
         {
-            var port = Subcircuit.Outputs[i];
+            var port = subcircuit.Outputs[i];
             var value = GetOutputByte(port);
             chars[i] = port.ToChar(value);
         }

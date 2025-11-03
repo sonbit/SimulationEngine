@@ -15,6 +15,7 @@ public record TestResult(
 public static class TestStringConverter
 {
     private static readonly char[] ColumnSeparators = [' ', ','];
+    private static readonly char[] CommentSeparators = ['#', '$'];
     private static readonly char[] RowSeparators = ['\r', '\n'];
 
     public static TestResult GetResult(int lineNumber, string inputs, string outputs) =>
@@ -30,8 +31,14 @@ public static class TestStringConverter
 
         foreach (var row in rows)
         {
-            var parts = row.Split(ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
-            tests.Add((parts[0], parts[1]));
+            var parts = row
+                .Split(CommentSeparators, StringSplitOptions.RemoveEmptyEntries)[0].Trim()
+                .Split(ColumnSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 0)
+                continue;
+
+            tests.Add((parts[0], string.Join(" ", parts[1..])));
         }
 
         return tests;
