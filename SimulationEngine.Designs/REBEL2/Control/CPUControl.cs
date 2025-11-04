@@ -18,27 +18,30 @@ public class CPUControl : Subcircuit
     public Port Alu_B_Mux_Ctrl => Outputs[4];
     public Port Add_A_Mux_Ctrl => Outputs[5];
     public Port Prog_Ctr => Outputs[6];
+    public Port Wb_Ctr => Outputs[7];
 
     public CPUControl()
     {
         this.AddInputs(
-            nameof(Op1),  
-            nameof(Op0), 
-            nameof(Rd1), 
+            nameof(Op1),
+            nameof(Op0),
+            nameof(Rd1),
             nameof(Rd0),
             nameof(Cmp));
         this.AddOutputs(
-            nameof(Alu_Func2), 
-            nameof(Alu_Func1), 
-            nameof(Alu_Func0), 
+            nameof(Alu_Func2),
+            nameof(Alu_Func1),
+            nameof(Alu_Func0),
             nameof(Alu_A_Mux_Ctrl),
-            nameof(Alu_B_Mux_Ctrl), 
+            nameof(Alu_B_Mux_Ctrl),
             nameof(Add_A_Mux_Ctrl),
-            nameof(Prog_Ctr));
+            nameof(Prog_Ctr),
+            nameof(Wb_Ctr));
 
         var aluControl = this.AddSubcircuit(new AluControlWithShift());
         var muxControl = this.AddSubcircuit(new MuxControl());
-
+        var wbControl = this.AddLogicGate("Z8Z");
+     
         this.AddWires([
             (Op1, aluControl.Op1),
             (Op0, aluControl.Op0),
@@ -57,7 +60,12 @@ public class CPUControl : Subcircuit
             (muxControl.AluAMux, Alu_A_Mux_Ctrl),
             (muxControl.AluBMux, Alu_B_Mux_Ctrl),
             (muxControl.AddAMux, Add_A_Mux_Ctrl),
-            (muxControl.ProgCtr, Prog_Ctr)
+            (muxControl.ProgCtr, Prog_Ctr),
+
+            (wbControl.B, Op1),
+            (wbControl.A, Op0),
+            (wbControl.Q, Wb_Ctr),
+
         ]);
     }
 

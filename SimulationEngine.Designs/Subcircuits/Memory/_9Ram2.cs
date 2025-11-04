@@ -16,15 +16,16 @@ public class _9Ram2 : Subcircuit
     public Port WrData1 => Inputs[6];
     public Port WrData0 => Inputs[7];
     public Port Clk => Inputs[8];
+    public Port WrEnable => Inputs[9];  
     public Port RdData11 => Outputs[0];
     public Port RdData10 => Outputs[1];
     public Port RdData01 => Outputs[2];
     public Port RdData00 => Outputs[3];
-
+    
     public _9Ram2()
     {
         this.AddInputs(
-            nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr01), nameof(RdAddr00),
+            nameof(WrEnable), nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr01), nameof(RdAddr00),
             nameof(WrAddr1), nameof(WrAddr0), nameof(WrData1), nameof(WrData0));
         this.AddBinaryInput(nameof(Clk));
         this.AddOutputs(nameof(RdData11), nameof(RdData10), nameof(RdData01), nameof(RdData00));
@@ -33,11 +34,15 @@ public class _9Ram2 : Subcircuit
         var _8Reg2 = this.AddSubcircuit(new _8Reg2());
         var _9MUX2_0 = this.AddSubcircuit(new _9MUX2());
         var _9MUX2_1 = this.AddSubcircuit(new _9MUX2());
+        var _K00 = this.AddLogicGate("K00");
 
         this.AddWires([
-            (WrAddr1, _9BDEMUX.Sel1),
-            (WrAddr0, _9BDEMUX.Sel0),
-            (Clk, _9BDEMUX.Clk),
+            (Clk, _K00.A),
+            (WrEnable, _K00.B),
+        
+            (RdAddr11, _9BDEMUX.Sel1),
+            (RdAddr10, _9BDEMUX.Sel0),
+            (_K00.Q, _9BDEMUX.Clk),
 
             (_9BDEMUX.ClkQ8, _8Reg2.Clk8),
             (_9BDEMUX.ClkQ7, _8Reg2.Clk7),

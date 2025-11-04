@@ -18,6 +18,7 @@ using SimulationEngine.Cli.Flows;
 using SimulationEngine.Cli.Flows.Database;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
+using SimulationEngine.Designs.REBEL2;
 using SimulationEngine.Domain.Repositories;
 using SimulationEngine.Infrastructure.DataModel;
 using SimulationEngine.Infrastructure.Export.Emitters;
@@ -25,92 +26,61 @@ using SimulationEngine.Infrastructure.Repositories;
 using SimulationEngine.Infrastructure.UnitOfWork;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using SimulationEngine.Domain.Converters;
+using SimulationEngine.Domain.Models;
+using SimulationEngine.Simulator;
 
-var host = Host.CreateDefaultBuilder(args)
-    .ConfigureLogging(logging =>
-    {
-        logging.ClearProviders();
-    })
-    .ConfigureServices(services =>
-    {
-        services.AddDbContext<SimulationEngineDbContext>(opts => opts.UseSqlite("Data Source=SimulationEngine.db"));
-        services.AddScoped<ISubcircuitRepository, SubcircuitRepository>();
-        services.AddScoped<ITruthTableRepository, TruthTableRepository>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+var rebel2 = new REBEL2();
+var simulationSession = SimulationSession.Build(rebel2);
 
-        services.AddScoped<IDatabaseService, DatabaseService>();
-        services.AddScoped<IExportService, ExportService>();
-        services.AddScoped<ISubcircuitService, SubcircuitService>();
-        services.AddScoped<ITruthTableService, TruthTableService>();
+var romFlipFlops0 = rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1];
+//var romFlipFlops1 = rebel2.Subcircuits[1].Subcircuits[1].Subcircuits[1];
+// var romFlipFlops2 = rebel2.Subcircuits[1].Subcircuits[2].Subcircuits[1];
+// var romFlipFlops3 = rebel2.Subcircuits[1].Subcircuits[3].Subcircuits[1];
+// var romFlipFlops4 = rebel2.Subcircuits[1].Subcircuits[4].Subcircuits[1];
 
-        services.AddScoped<IVerilogEmitter, VerilogEmitter>();
-        services.AddScoped<IVerilogTestbenchEmitter, VerilogTestbenchEmitter>();
-        services.AddScoped<IBasys3Emitter, Basys3Emitter>();
-
-        services.AddSingleton(sp => AnsiConsole.Console);
-        services.AddSingleton<IPrompter, Prompter>();
-        services.AddSingleton<IRenderer, Renderer>();
-
-        services.AddScoped<DatabaseFlow>();
-        services.AddScoped<EmitFlow>();
-        services.AddScoped<ExportFlow>();
-        services.AddScoped<SimulationFlow>();
-        services.AddScoped<SubcircuitFlow>();
-        services.AddScoped<SubcircuitsFlow>();
-        services.AddScoped<TruthTablesFlow>();
-
-        services.AddScoped<DatabaseMenuCommand>();
-        services.AddScoped<EmitCommand>();
-        services.AddScoped<ExportCommand>();
-        services.AddScoped<MainMenuCommand>();
-        services.AddScoped<SubcircuitsFindCommand>();
-        services.AddScoped<SubcircuitsListCommand>();
-        services.AddScoped<SubcircuitsPopulateCommand>();
-        services.AddScoped<SubcircuitsShowTreeCommand>();
-        services.AddScoped<TruthTablesFindCommand>();
-        services.AddScoped<TruthTablesListCommand>();
-        services.AddScoped<TruthTablesPopulateCommand>();
-    })
-    .Build();
-
-var app = new CommandApp(new TypeRegistrar(host.Services));
-app.Configure(cfg =>
+var subcircuits = new List<Subcircuit> 
 {
-    cfg.SetApplicationName(nameof(SimulationEngine));
-    cfg.SetExceptionHandler((ex, _) => AnsiConsole.WriteException(ex));
+    romFlipFlops0,
+    //romFlipFlops1,
+    // romFlipFlops2,
+    // romFlipFlops3,
+    // romFlipFlops4,
+};
 
-    cfg.AddCommand<MainMenuCommand>("menu");
+// var testString = """
+//     00-00000--00 $ CommentStyle1
+//     01-00000--00 # CommentStyle2
+//     00-00000-000
+//     01-00000-000
+//     00-00000-+00
+//     01-00000-+00
+//     00-000000-00
+//     01-000000-00
+//     00-000000000
+//     01-000000000
+//     00-000000+00
+//     01-000000+00
+//     00-00000+-00
+//     01-00000+-00
+//     00-00000+000
+//     01-00000+000
+//     00-00000++00
+//     01-00000++00
+// """;
 
-    cfg.AddBranch("sim", sim =>
-    {
-        sim.AddCommand<SimulationMenuCommand>("menu");
-        sim.AddCommand<SimulationRunCommand>("run");
-    });
+var testString = """
+    01-00000++00 $ 01 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
+    11-0++++++++ $ 11 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
+""";
+   
+var tests = TestStringConverter.GetInputOutputPairs(testString);
 
-    cfg.AddBranch("db", db =>
-    {
-        db.AddCommand<DatabaseMenuCommand>("menu");
-        db.AddCommand<DatabaseRecreateCommand>("recreate");
+foreach (var (inputs, expectedOutputs) in tests)
+{
+    simulationSession.SetInputs(inputs);
+    Console.WriteLine(string.Join(" ", subcircuits.Select(simulationSession.GetOutputs)));
+}
 
-        db.AddBranch("sc", sc =>
-        {
-            sc.AddCommand<SubcircuitsFindCommand>("find");
-            sc.AddCommand<SubcircuitsListCommand>("list");
-            sc.AddCommand<SubcircuitsPopulateCommand>("populate");
-            sc.AddCommand<SubcircuitsShowTreeCommand>("tree");
-            sc.AddCommand<EmitCommand>("emit");
-            sc.AddCommand<ExportCommand>("export");
-        });
 
-        db.AddBranch("tt", tt =>
-        {
-            tt.AddCommand<TruthTablesFindCommand>("find");
-            tt.AddCommand<TruthTablesListCommand>("list");
-            tt.AddCommand<TruthTablesPopulateCommand>("populate");
-        });
-    });
-});
-
-app.SetDefaultCommand<SimulationRunCommand>();
-
-await app.RunAsync(args.Length == 0 ? ["menu"] : args);
+return;

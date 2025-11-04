@@ -1,4 +1,5 @@
-﻿using SimulationEngine.Designs.REBEL2.ALU;
+﻿using System.Security.Cryptography;
+using SimulationEngine.Designs.REBEL2.ALU;
 using SimulationEngine.Designs.REBEL2.Control;
 using SimulationEngine.Designs.REBEL2.Fetch;
 using SimulationEngine.Designs.Subcircuits.Adders;
@@ -13,8 +14,6 @@ public class REBEL2 : Subcircuit
 {
     public Port Clk => Inputs[0];
     public Port WrInst => Inputs[1];
-    //public Port WrAddr1 => Inputs[2];
-    //public Port WrAddr0 => Inputs[3];
     public Port WrData9 => Inputs[2];
     public Port WrData8 => Inputs[3];
     public Port WrData7 => Inputs[4];
@@ -32,8 +31,6 @@ public class REBEL2 : Subcircuit
             nameof(Clk), 
             nameof(WrInst));
         this.AddInputs(
-            //nameof(WrAddr1), 
-            //nameof(WrAddr0),
             nameof(WrData9), 
             nameof(WrData8), 
             nameof(WrData7), 
@@ -45,7 +42,7 @@ public class REBEL2 : Subcircuit
             nameof(WrData1), 
             nameof(WrData0));
 
-        var _20K = this.AddLogicGate("20K");
+        var _K00 = this.AddLogicGate("K00");
 
         var prog_ctr = this.AddSubcircuit(new ProgCtr2());
         var instr_reg = this.AddSubcircuit(new _9Rom10());
@@ -57,20 +54,41 @@ public class REBEL2 : Subcircuit
         var alu = this.AddSubcircuit(new ALU2());
         var wr_add = this.AddSubcircuit(new _2TritAdder()); // Ignore Carry
 
+        var hardwired00 = this.AddLogicGate("ZTZDDD030");
+        var hardwired01 = this.AddLogicGate("ZTZDDD030");
+        var hardwired10 = this.AddLogicGate("ZTZDDD030");
+        var hardwired11 = this.AddLogicGate("ZTZDDD030");
+
         this.AddWires([
+
+            (instr_reg.Rs11, hardwired01.A),
+            (instr_reg.Rs10, hardwired01.B),
+            (instr_reg.Rs11, hardwired00.A),
+            (instr_reg.Rs10, hardwired00.B),
+
+            (instr_reg.Rs01, hardwired11.A),
+            (instr_reg.Rs00, hardwired11.B),
+            (instr_reg.Rs01, hardwired10.A),
+            (instr_reg.Rs00, hardwired10.B),
+
+            (reg.RdData00, hardwired00.C),
+            (reg.RdData01, hardwired01.C),
+            (reg.RdData10, hardwired10.C),
+            (reg.RdData11, hardwired11.C),
+
             (Clk, prog_ctr.Clk),
             (cpuControl.Prog_Ctr, prog_ctr.LdEn),
             (wr_add.Q1, prog_ctr.LdAddr1),
             (wr_add.Q0, prog_ctr.LdAddr0),
 
-            (WrInst, _20K.B),
-            (Clk, _20K.A),
+            (WrInst, _K00.B),
+            (Clk, _K00.A),
 
-            (_20K.Q, instr_reg.Clk),
+            (_K00.Q, instr_reg.Clk),
             (prog_ctr.Pc1, instr_reg.RdAddr1),
             (prog_ctr.Pc0, instr_reg.RdAddr0),
-            //(WrAddr1, instr_reg.WrAddr1),
-            //(WrAddr0, instr_reg.WrAddr0),
+            (prog_ctr.Pc1, instr_reg.WrAddr1),
+            (prog_ctr.Pc0, instr_reg.WrAddr0),
             (WrData9, instr_reg.WrData9),
             (WrData8, instr_reg.WrData8),
             (WrData7, instr_reg.WrData7),
@@ -88,23 +106,24 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rd00, cpuControl.Rd0),
             (alu.Q0, cpuControl.Cmp),
 
-            (Clk, reg.Clk), 
+            (Clk, reg.Clk),
             (instr_reg.Rs11, reg.RdAddr11),
             (instr_reg.Rs10, reg.RdAddr10),
             (instr_reg.Rs01, reg.RdAddr01),
             (instr_reg.Rs00, reg.RdAddr00),
-            (instr_reg.Rd11, reg.WrData1),
-            (instr_reg.Rd10, reg.WrData0),
+            (instr_reg.Rd11, reg.WrAddr1),
+            (instr_reg.Rd10, reg.WrAddr0),
+            (cpuControl.Wb_Ctr, reg.WrEnable),
 
             (cpuControl.Alu_A_Mux_Ctrl, alu_a_mux.Sel),
             (prog_ctr.Pc1, alu_a_mux.B1),
             (prog_ctr.Pc0, alu_a_mux.B0),
-            (reg.RdData11, alu_a_mux.A1),
-            (reg.RdData10, alu_a_mux.A0),
+            (hardwired11.Q, alu_a_mux.A1),
+            (hardwired10.Q, alu_a_mux.A0),
 
             (cpuControl.Alu_B_Mux_Ctrl, alu_b_mux.Sel),
-            (reg.RdData01, alu_b_mux.C1),
-            (reg.RdData00, alu_b_mux.C0),
+            (hardwired01.Q, alu_b_mux.C1),
+            (hardwired00.Q, alu_b_mux.C0),
             //(, alu_b_mux.B1), // Always 0 - Not necessary to handle, heptaindex independent of B
             //(, alu_b_mux.B0), // Always 1 - Not necessary to handle, heptaindex independent of B
             (instr_reg.Rs01, alu_b_mux.A1),

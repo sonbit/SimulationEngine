@@ -21,8 +21,8 @@ public class ProgCtr2 : Subcircuit
         this.AddOutputs(nameof(Pc1), nameof(Pc0));
 
         var _2MUX2 = this.AddSubcircuit(new _2MUX2());
-        var dle0 = this.AddSubcircuit(new DLatchEdge());
-        var dle1 = this.AddSubcircuit(new DLatchEdge());
+        var dle0 = this.AddSubcircuit(new TFlipFlop());
+        var dle1 = this.AddSubcircuit(new TFlipFlop());
         var inc2 = this.AddSubcircuit(new Increment2());
 
         this.AddWires([
@@ -33,16 +33,16 @@ public class ProgCtr2 : Subcircuit
             (inc2.Q0, _2MUX2.A0),
 
             (Clk, dle0.Clk),
-            (_2MUX2.Q1, dle0.Din),
+            (_2MUX2.Q1, dle0.A),
 
             (Clk, dle1.Clk),
-            (_2MUX2.Q0, dle1.Din),
+            (_2MUX2.Q0, dle1.A),
 
-            (dle0.Dout, inc2.X1),
-            (dle1.Dout, inc2.X0),
+            (dle0.Q, inc2.X1),
+            (dle1.Q, inc2.X0),
 
-            (dle0.Dout, Pc1),
-            (dle1.Dout, Pc0)
+            (dle0.Q, Pc1),
+            (dle1.Q, Pc0)
         ]);
     }
 
