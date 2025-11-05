@@ -62,8 +62,8 @@ public class CPUControl : Subcircuit
             (muxControl.AddAMux, Add_A_Mux_Ctrl),
             (muxControl.ProgCtr, Prog_Ctr),
 
-            (wbControl.B, Op1),
-            (wbControl.A, Op0),
+            (Op1, wbControl.B),
+            (Op0, wbControl.A),
             (wbControl.Q, Wb_Ctr),
 
         ]);

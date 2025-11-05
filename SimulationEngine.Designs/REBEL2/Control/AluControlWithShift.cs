@@ -38,7 +38,7 @@ public class AluControlWithShift : Subcircuit
             (Op0, gdd.A),
 
             (Op1, aluControlFlow.Op1),
-            (Op0, aluControlFlow.Op1),
+            (Op0, aluControlFlow.Op0),
             (Rd1, aluControlFlow.Rd1),
             (Rd0, aluControlFlow.Rd0),
 

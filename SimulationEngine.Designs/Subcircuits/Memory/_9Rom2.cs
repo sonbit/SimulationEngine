@@ -19,7 +19,13 @@ public class _9Rom2 : Subcircuit
 
     public _9Rom2()
     {
-        this.AddInputs(nameof(RdAddr1), nameof(RdAddr0), nameof(WrAddr1), nameof(WrAddr0), nameof(WrData1), nameof(WrData0));
+        this.AddInputs(
+            nameof(RdAddr1), 
+            nameof(RdAddr0), 
+            nameof(WrAddr1), 
+            nameof(WrAddr0), 
+            nameof(WrData1), 
+            nameof(WrData0));
         this.AddBinaryInput(nameof(Clk));
         this.AddOutputs(nameof(Q1), nameof(Q0));
 

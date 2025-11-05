@@ -39,9 +39,22 @@ var romFlipFlops0 = rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1];
 // var romFlipFlops3 = rebel2.Subcircuits[1].Subcircuits[3].Subcircuits[1];
 // var romFlipFlops4 = rebel2.Subcircuits[1].Subcircuits[4].Subcircuits[1];
 
-var subcircuits = new List<Subcircuit> 
+var subcircuits = new List<Subcircuit>
 {
-    romFlipFlops0,
+//    rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1],
+//    rebel2.Subcircuits[1].Subcircuits[1].Subcircuits[1],
+//    rebel2.Subcircuits[1].Subcircuits[2].Subcircuits[1],
+//    rebel2.Subcircuits[1].Subcircuits[3].Subcircuits[1],
+//    rebel2.Subcircuits[1].Subcircuits[4].Subcircuits[1],
+    //rebel2.Subcircuits[1].Subcircuits[0],
+    //rebel2.Subcircuits[1].Subcircuits[1],
+    //rebel2.Subcircuits[1].Subcircuits[2],
+    //rebel2.Subcircuits[1].Subcircuits[3],
+    //rebel2.Subcircuits[1].Subcircuits[4],
+    rebel2.Subcircuits[1],
+    rebel2.Subcircuits[3],
+    rebel2.Subcircuits[2],
+
     //romFlipFlops1,
     // romFlipFlops2,
     // romFlipFlops3,
@@ -70,8 +83,10 @@ var subcircuits = new List<Subcircuit>
 // """;
 
 var testString = """
-    01-00000++00 $ 01 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
-    11-0++++++++ $ 11 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
+    00-00000++00
+    11-00000++00
+    #01-0++++++++ $ 01 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
+    #11-0++++++++ $ 11 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2) 
 """;
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);
@@ -80,6 +95,7 @@ foreach (var (inputs, expectedOutputs) in tests)
 {
     simulationSession.SetInputs(inputs);
     Console.WriteLine(string.Join(" ", subcircuits.Select(simulationSession.GetOutputs)));
+
 }
 
 
