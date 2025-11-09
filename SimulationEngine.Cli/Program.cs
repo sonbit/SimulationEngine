@@ -41,11 +41,13 @@ var romFlipFlops0 = rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1];
 
 var subcircuits = new List<Subcircuit>
 {
-//    rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[1].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[2].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[3].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[4].Subcircuits[1],
+   //rebel2.Subcircuits[3].Subcircuits[0].Subcircuits[1],
+   rebel2.Subcircuits[3].Subcircuits[0],
+   rebel2.Subcircuits[3].Subcircuits[1],
+
+   //rebel2.Subcircuits[3].Subcircuits[2].Subcircuits[1],
+   //rebel2.Subcircuits[3].Subcircuits[3].Subcircuits[1],
+   //rebel2.Subcircuits[3].Subcircuits[4].Subcircuits[1],
     //rebel2.Subcircuits[1].Subcircuits[0],
     //rebel2.Subcircuits[1].Subcircuits[1],
     //rebel2.Subcircuits[1].Subcircuits[2],
@@ -53,8 +55,8 @@ var subcircuits = new List<Subcircuit>
     //rebel2.Subcircuits[1].Subcircuits[4],
     rebel2.Subcircuits[1],
     rebel2.Subcircuits[3],
-    rebel2.Subcircuits[2],
-
+    rebel2.Subcircuits[2]
+    
     //romFlipFlops1,
     // romFlipFlops2,
     // romFlipFlops3,
@@ -83,10 +85,54 @@ var subcircuits = new List<Subcircuit>
 // """;
 
 var testString = """
-    00-00000++00
+    01-00000--00 $INIT RAM
+    11-00000--00
+   
+    01-00000-000
+    11-00000-000
+
+    01-00000-+00
+    11-00000-+00
+
+    01-000000-00
+    11-000000-00
+   
+    01-000000000
+    11-000000000
+
+    01-000000+00
+    11-000000+00
+
+    01-00000+-00
+    11-00000+-00
+   
+    01-00000+000
+    11-00000+000
+
+    01-00000++00
     11-00000++00
-    #01-0++++++++ $ 01 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
-    #11-0++++++++ $ 11 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2) 
+
+    000000000000 $ SET RAM
+    100000000000
+    000000000000
+    100000000000
+    000000000000
+    100000000000
+    000000000000
+    100000000000
+    000000000000
+    100000000000
+    00000000++00
+    100000000000
+    000000000000
+    100000000000
+    000000000000
+    100000000000
+    000000000000
+    100000000000
+
+    #01-00000++00 $ START 
+    #11-00000++00
 """;
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);

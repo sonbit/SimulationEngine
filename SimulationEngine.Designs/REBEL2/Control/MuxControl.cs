@@ -45,7 +45,7 @@ public class MuxControl : Subcircuit
             (Op1, rdd.B),
             (Op0, rdd.A),
 
-            (Rd1, _9VZ9VZ0VZ.C), // Rd0 feilkobling?
+            (Rd1, _9VZ9VZ0VZ.C),
             (Op1, _9VZ9VZ0VZ.B),
             (Op0, _9VZ9VZ0VZ.A),
 

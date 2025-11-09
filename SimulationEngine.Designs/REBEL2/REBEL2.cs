@@ -43,6 +43,7 @@ public class REBEL2 : Subcircuit
             nameof(WrData0));
 
         var _K00 = this.AddLogicGate("K00");
+        var _200 = this.AddLogicGate("200");
 
         var prog_ctr = this.AddSubcircuit(new ProgCtr2());
         var instr_reg = this.AddSubcircuit(new _9Rom10());
@@ -84,6 +85,9 @@ public class REBEL2 : Subcircuit
             (WrInst, _K00.B),
             (Clk, _K00.A),
 
+            (WrInst , _200.B),
+            (Clk , _200.A),
+
             (_K00.Q, instr_reg.Clk),
             (prog_ctr.Pc1, instr_reg.RdAddr1),
             (prog_ctr.Pc0, instr_reg.RdAddr0),
@@ -106,7 +110,7 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rd00, cpuControl.Rd0),
             (alu.Q0, cpuControl.Cmp),
 
-            (Clk, reg.Clk),
+            (_200.Q, reg.Clk),
             (instr_reg.Rs11, reg.RdAddr11),
             (instr_reg.Rs10, reg.RdAddr10),
             (instr_reg.Rs01, reg.RdAddr01),
