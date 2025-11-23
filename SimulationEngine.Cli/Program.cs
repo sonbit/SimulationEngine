@@ -41,11 +41,13 @@ var romFlipFlops0 = rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1];
 
 var subcircuits = new List<Subcircuit>
 {
-//    rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[1].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[2].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[3].Subcircuits[1],
-//    rebel2.Subcircuits[1].Subcircuits[4].Subcircuits[1],
+   //rebel2.Subcircuits[3].Subcircuits[0].Subcircuits[1],
+   rebel2.Subcircuits[3].Subcircuits[0],
+   rebel2.Subcircuits[3].Subcircuits[1],
+
+   //rebel2.Subcircuits[3].Subcircuits[2].Subcircuits[1],
+   //rebel2.Subcircuits[3].Subcircuits[3].Subcircuits[1],
+   //rebel2.Subcircuits[3].Subcircuits[4].Subcircuits[1],
     //rebel2.Subcircuits[1].Subcircuits[0],
     //rebel2.Subcircuits[1].Subcircuits[1],
     //rebel2.Subcircuits[1].Subcircuits[2],
@@ -53,8 +55,8 @@ var subcircuits = new List<Subcircuit>
     //rebel2.Subcircuits[1].Subcircuits[4],
     rebel2.Subcircuits[1],
     rebel2.Subcircuits[3],
-    rebel2.Subcircuits[2],
-
+    rebel2.Subcircuits[2]
+    
     //romFlipFlops1,
     // romFlipFlops2,
     // romFlipFlops3,
@@ -83,10 +85,54 @@ var subcircuits = new List<Subcircuit>
 // """;
 
 var testString = """
-    00-00000++00
-    11-00000++00
-    #01-0++++++++ $ 01 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2)  
-    #11-0++++++++ $ 11 -0 (OPCODE) 00  (IMM) ++ (RD1)  xx (RD2) 
+    # ASSUME PC = -- (as no PC reset pin is available)
+
+    #SET ROM TO RESET RAM by clock cycling, wr enable and programming ADDi with opcode -0 to each reg. address ranging from x-4 to x+4 the value ++
+    01-00000--++ $BINARY SIGNALS Clock=0, WrEn=1 TERNARY SIGNALS OP=-0 (ADDi),  RS1=00 (x0), RS2=00 (irrelevant), RD1=-- (x-4), RD2/FUNC=++ (imm=++)
+    11-00000--++ 
+    01-00000-0++ 
+    11-00000-0++
+    01-00000-+++ 
+    11-00000-+++
+
+    01-000000-++ 
+    11-000000-++ 
+    01-0000000++ 
+    11-0000000++
+    01-000000+++ 
+    11-000000+++
+
+    01-00000+-++ 
+    11-00000+-++ 
+    01-00000+0++ 
+    11-00000+0++
+    01-00000++++ 
+    11-00000++++
+
+    $SET RAM (cycle through the ROM, but since the instructions are now in the ROM and wr enable is FALSE, the RAM is now affected)
+    000000000000
+    100000000000
+    000000000000 
+    100000000000
+    000000000000 
+    100000000000
+
+    000000000000 
+    100000000000
+    000000000000 
+    100000000000
+    000000000000 
+    100000000000
+
+    000000000000 
+    100000000000
+    000000000000 
+    100000000000
+    000000000000 
+    100000000000
+
+
+   
 """;
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);

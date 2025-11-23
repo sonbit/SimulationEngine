@@ -43,6 +43,7 @@ public class REBEL2 : Subcircuit
             nameof(WrData0));
 
         var _K00 = this.AddLogicGate("K00");
+        var _200 = this.AddLogicGate("200");
 
         var prog_ctr = this.AddSubcircuit(new ProgCtr2());
         var instr_reg = this.AddSubcircuit(new _9Rom10());
@@ -51,6 +52,7 @@ public class REBEL2 : Subcircuit
         var alu_a_mux = this.AddSubcircuit(new _2MUX2());
         var alu_b_mux = this.AddSubcircuit(new _3MUX2());
         var add_a_mux = this.AddSubcircuit(new _2MUX2());
+        var add_b_mux = this.AddSubcircuit(new _3MUX2());
         var alu = this.AddSubcircuit(new ALU2());
         var wr_add = this.AddSubcircuit(new _2TritAdder()); // Ignore Carry
 
@@ -84,6 +86,9 @@ public class REBEL2 : Subcircuit
             (WrInst, _K00.B),
             (Clk, _K00.A),
 
+            (WrInst , _200.B),
+            (Clk , _200.A),
+
             (_K00.Q, instr_reg.Clk),
             (prog_ctr.Pc1, instr_reg.RdAddr1),
             (prog_ctr.Pc0, instr_reg.RdAddr0),
@@ -106,7 +111,7 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rd00, cpuControl.Rd0),
             (alu.Q0, cpuControl.Cmp),
 
-            (Clk, reg.Clk),
+            (_200.Q, reg.Clk),
             (instr_reg.Rs11, reg.RdAddr11),
             (instr_reg.Rs10, reg.RdAddr10),
             (instr_reg.Rs01, reg.RdAddr01),
@@ -135,6 +140,14 @@ public class REBEL2 : Subcircuit
             (prog_ctr.Pc1, add_a_mux.A1),
             (prog_ctr.Pc0, add_a_mux.A0),
 
+            (cpuControl.Add_B_Mux_Ctrl, add_b_mux.Sel),
+            (instr_reg.Rs01, add_b_mux.C0),
+            (instr_reg.Rs00, add_b_mux.C1),
+            (instr_reg.Rd11, add_b_mux.B0),
+            (instr_reg.Rd10, add_b_mux.B1),
+            (instr_reg.Rd01, add_b_mux.A0),
+            (instr_reg.Rd00, add_b_mux.A1),
+
             (cpuControl.Alu_Func2, alu.Func2),
             (cpuControl.Alu_Func1, alu.Func1),
             (cpuControl.Alu_Func0, alu.Func0),
@@ -144,10 +157,10 @@ public class REBEL2 : Subcircuit
             (alu_b_mux.Q0, alu.A0),
 
             (add_a_mux.Q1, wr_add.B1),
-            (add_a_mux.Q1, wr_add.B0),
-            (instr_reg.Rs01, wr_add.A1),
-            (instr_reg.Rs00, wr_add.A0),
-
+            (add_a_mux.Q0, wr_add.B0),
+            (add_b_mux.Q1, wr_add.A1),
+            (add_b_mux.Q0, wr_add.A0),
+           
             //(alu.Cout, ), 
             (alu.Q1, reg.WrData1),
             (alu.Q0, reg.WrData0),
