@@ -9,10 +9,10 @@ public class CPUControlTests(ITestOutputHelper testOutputHelper) : BaseDesignTes
     public void AluControlFlow_Validate() => TestSimulatation(new AluControlFlow(), true);
 
     [Fact]
-    public void AluControlWithShift_Validate() => TestSimulatation(new AluControlWithShift());
+    public void AluControlWithShift_Validate() => TestSimulatation(new AluControlWithShift(), true);
 
     [Fact]
-    public void CPUControl_Validate() => TestSimulatation(new CPUControl());
+    public void CPUControl_Validate() => TestSimulatation(new CPUControl(), true);
 
     [Fact]
     public void MuxControl_Validate() => TestSimulatation(new MuxControl());
