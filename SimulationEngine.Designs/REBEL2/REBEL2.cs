@@ -146,12 +146,12 @@ public class REBEL2 : Subcircuit
             (prog_ctr.Pc0, add_a_mux.A0),
 
             (cpuControl.Add_B_Mux_Ctrl, add_b_mux.Sel),
-            (instr_reg.Rs01, add_b_mux.C0),
-            (instr_reg.Rs00, add_b_mux.C1),
-            (instr_reg.Rd11, add_b_mux.B0),
-            (instr_reg.Rd10, add_b_mux.B1),
-            (instr_reg.Rd01, add_b_mux.A0),
-            (instr_reg.Rd00, add_b_mux.A1),
+            (instr_reg.Rs01, add_b_mux.C1),
+            (instr_reg.Rs00, add_b_mux.C0),
+            (instr_reg.Rd11, add_b_mux.B1),
+            (instr_reg.Rd10, add_b_mux.B0),
+            (instr_reg.Rd01, add_b_mux.A1),
+            (instr_reg.Rd00, add_b_mux.A0),
 
             (cpuControl.Alu_Func2, alu.Func2),
             (cpuControl.Alu_Func1, alu.Func1),
