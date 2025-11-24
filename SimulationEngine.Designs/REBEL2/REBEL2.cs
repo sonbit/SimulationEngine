@@ -25,6 +25,11 @@ public class REBEL2 : Subcircuit
     public Port WrData1 => Inputs[10];
     public Port WrData0 => Inputs[11];
 
+    public Subcircuit ProgramCounter => Subcircuits[0];
+    public Subcircuit ROM => Subcircuits[1];
+    public Subcircuit CPUControl => Subcircuits[2];
+    public Subcircuit RAM => Subcircuits[3];
+
     public REBEL2()
     {
         this.AddBinaryInputs(
