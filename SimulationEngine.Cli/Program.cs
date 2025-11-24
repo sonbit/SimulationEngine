@@ -63,50 +63,68 @@ var subcircuits = new List<Subcircuit>
 // """;
 
 var testString = """
-    # ASSUME PC = -- (as no PC reset pin is available)
+    # INIT ROM WITH BOGUS DUE TO MISSING RESET PC PIN
+    01----------
+    110000000000
+    01---------- 
+    110000000000
+  
+    01---------- 
+    110000000000 
+    01---------- 
+    110000000000
+    01---------- 
+    110000000000
+  
+    01---------- 
+    110000000000 
+    01---------- 
+    110000000000
+    01---------- 
+    110000000000
 
-    #SET ROM TO RESET RAM by clock cycling, wr enable and programming ADDi with opcode -0 to each reg. address ranging from x-4 to x+4 the value ++
-    01-00000--++ $BINARY SIGNALS Clock=0, WrEn=1 TERNARY SIGNALS OP=-0 (ADDi),  RS1=00 (x0), RS2=00 (irrelevant), RD1=-- (x-4), RD2/FUNC=++ (imm=++)
-    11-00000--++ 
-    01-00000-0++ 
-    11-00000-0++
-    01-00000-+++ 
-    11-00000-+++
+    # LOAD INSTRUCTIONS INTO ROM
+    01-000++---- #ADDi (x-4) = (x0) plus ++ => write ++ into x-4 
+    110000000000
+    01-000++-0-- #ADDi (x-3) = (x0) plus ++ => write ++ into x-3
+    110000000000
+    01-000++-+-- #ADDi (x-2) = (x0) plus ++ => write ++ into x-2
+    110000000000
 
-    01-000000-++ 
-    11-000000-++ 
-    01-0000000++ 
-    11-0000000++
-    01-000000+++ 
-    11-000000+++
+    01-000++0--- #ADDi (x-1) = (x0) plus ++ => write ++ into x-1
+    110000000000
+    01-000++00-- #ADDi (x0) = (x0) plus ++ => HARDWIRED 00 so no effect
+    110000000000
+    01-000++0+-- #ADDi (x1) = (x0) plus ++ => write ++ into x1
+    110000000000
 
-    01-00000+-++ 
-    11-00000+-++ 
-    01-00000+0++ 
-    11-00000+0++
-    01-00000++++ 
-    11-00000++++
+    01-000+++--- #ADDi (x2) = (x0) plus ++ => write ++ into x2
+    110000000000
+    01-000+++0-- #ADDi (x3) = (x0) plus ++ => write ++ into x3
+    110000000000
+    01-000++++-- #ADDi (x4) = (x0) plus ++ => write ++ into x4
+    110000000000
 
-    $SET RAM (cycle through the ROM, but since the instructions are now in the ROM and wr enable is FALSE, the RAM is now affected)
-    000000000000
+    #START EXECUTING INSTRUCTIONS
+    000000000000 #instruction at PC address --
     100000000000
-    000000000000 
+    000000000000 #instruction at PC address -0
     100000000000
-    000000000000 
-    100000000000
-
-    000000000000 
-    100000000000
-    000000000000 
-    100000000000
-    000000000000 
+    000000000000 #instruction at PC address -+
     100000000000
 
-    000000000000 
+    000000000000 #instruction at PC address 0-
     100000000000
-    000000000000 
+    000000000000 #instruction at PC address 00
     100000000000
-    000000000000 
+    000000000000 #instruction at PC address 0+
+    100000000000
+
+    000000000000 #instruction at PC address +-
+    100000000000
+    000000000000 #instruction at PC address +0  
+    100000000000
+    000000000000 #instruction at PC address ++
     100000000000
 """;
    
