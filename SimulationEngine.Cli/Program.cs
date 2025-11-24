@@ -33,34 +33,12 @@ using SimulationEngine.Simulator;
 var rebel2 = new REBEL2();
 var simulationSession = SimulationSession.Build(rebel2);
 
-var romFlipFlops0 = rebel2.Subcircuits[1].Subcircuits[0].Subcircuits[1];
-//var romFlipFlops1 = rebel2.Subcircuits[1].Subcircuits[1].Subcircuits[1];
-// var romFlipFlops2 = rebel2.Subcircuits[1].Subcircuits[2].Subcircuits[1];
-// var romFlipFlops3 = rebel2.Subcircuits[1].Subcircuits[3].Subcircuits[1];
-// var romFlipFlops4 = rebel2.Subcircuits[1].Subcircuits[4].Subcircuits[1];
-
 var subcircuits = new List<Subcircuit>
 {
-   //rebel2.Subcircuits[3].Subcircuits[0].Subcircuits[1],
-   rebel2.Subcircuits[3].Subcircuits[0],
-   rebel2.Subcircuits[3].Subcircuits[1],
-
-   //rebel2.Subcircuits[3].Subcircuits[2].Subcircuits[1],
-   //rebel2.Subcircuits[3].Subcircuits[3].Subcircuits[1],
-   //rebel2.Subcircuits[3].Subcircuits[4].Subcircuits[1],
-    //rebel2.Subcircuits[1].Subcircuits[0],
-    //rebel2.Subcircuits[1].Subcircuits[1],
-    //rebel2.Subcircuits[1].Subcircuits[2],
-    //rebel2.Subcircuits[1].Subcircuits[3],
-    //rebel2.Subcircuits[1].Subcircuits[4],
-    rebel2.Subcircuits[1],
-    rebel2.Subcircuits[3],
-    rebel2.Subcircuits[2]
-    
-    //romFlipFlops1,
-    // romFlipFlops2,
-    // romFlipFlops3,
-    // romFlipFlops4,
+    rebel2.ProgramCounter,
+    rebel2.ROM,
+    rebel2.RAM,
+    rebel2.CPUControl,
 };
 
 // var testString = """
@@ -130,19 +108,14 @@ var testString = """
     100000000000
     000000000000 
     100000000000
-
-
-   
 """;
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);
 
+Console.WriteLine("PC\tROM\t\tRAM\t\t\tCPUCtrl");
+
 foreach (var (inputs, expectedOutputs) in tests)
 {
     simulationSession.SetInputs(inputs);
-    Console.WriteLine(string.Join(" ", subcircuits.Select(simulationSession.GetOutputs)));
-
+    Console.WriteLine(string.Join("\t", subcircuits.Select(simulationSession.GetOutputs)));
 }
-
-
-return;

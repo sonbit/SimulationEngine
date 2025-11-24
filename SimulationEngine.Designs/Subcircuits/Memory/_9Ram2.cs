@@ -25,9 +25,9 @@ public class _9Ram2 : Subcircuit
     public _9Ram2()
     {
         this.AddInputs(
-            nameof(WrEnable), nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr01), nameof(RdAddr00),
+            nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr01), nameof(RdAddr00),
             nameof(WrAddr1), nameof(WrAddr0), nameof(WrData1), nameof(WrData0));
-        this.AddBinaryInput(nameof(Clk));
+        this.AddBinaryInputs(nameof(Clk), nameof(WrEnable));
         this.AddOutputs(nameof(RdData11), nameof(RdData10), nameof(RdData01), nameof(RdData00));
 
         var _9BDEMUX = this.AddSubcircuit(new _9BDEMUX());
@@ -40,8 +40,8 @@ public class _9Ram2 : Subcircuit
             (Clk, _K00.A),
             (WrEnable, _K00.B),
         
-            (RdAddr11, _9BDEMUX.Sel1),
-            (RdAddr10, _9BDEMUX.Sel0),
+            (WrAddr1, _9BDEMUX.Sel1),
+            (WrAddr0, _9BDEMUX.Sel0),
             (_K00.Q, _9BDEMUX.Clk),
 
             (_9BDEMUX.ClkQ8, _8Reg2.Clk8),
@@ -104,4 +104,23 @@ public class _9Ram2 : Subcircuit
             (_9MUX2_1.Q0, RdData00)
         ]);
     }
+
+    public override string GetTestString() => """
+        --------00 ----
+        --------11 ----
+        --------00 ----
+        ------0011 0000
+        ------0000 0000
+        ------++11 ++++
+        ----00--00 ++++
+        ----00--11 ++++
+        ----000000 ++++
+        ----000011 ++++
+        --00000000 ++00
+        ----000000 ++++
+        0000000000 0000
+        ++++000000 ----
+        ++00000000 ----
+        00++000000 ----
+    """;
 }

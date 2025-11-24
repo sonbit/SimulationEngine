@@ -6,6 +6,9 @@ namespace SimulationEngine.Tests.Designs.Subcircuits;
 public class LatchTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {
     [Fact]
+    public void _2TFlipFlop_Validate() => TestSimulatation(new _2TFlipFlop());
+
+    [Fact]
     public void _2Latch2_Validate() => TestSimulatation(new _2Latch2());
 
     [Fact]
