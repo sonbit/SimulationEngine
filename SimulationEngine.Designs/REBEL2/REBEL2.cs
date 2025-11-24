@@ -28,7 +28,7 @@ public class REBEL2 : Subcircuit
     public Subcircuit ProgramCounter => Subcircuits[0];
     public Subcircuit ROM => Subcircuits[1];
     public Subcircuit CPUControl => Subcircuits[2];
-    public Subcircuit RAM => Subcircuits[3];
+    public Subcircuit RAM => Subcircuits[3].Subcircuits[1];
 
     public REBEL2()
     {
@@ -53,7 +53,7 @@ public class REBEL2 : Subcircuit
         var prog_ctr = this.AddSubcircuit(new ProgCtr2());
         var instr_reg = this.AddSubcircuit(new _9Rom10());
         var cpuControl = this.AddSubcircuit(new CPUControl());
-        var reg = this.AddSubcircuit(new _9Ram2());
+        var ram = this.AddSubcircuit(new _9Ram2());
         var alu_a_mux = this.AddSubcircuit(new _2MUX2());
         var alu_b_mux = this.AddSubcircuit(new _3MUX2());
         var add_a_mux = this.AddSubcircuit(new _2MUX2());
@@ -78,10 +78,10 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rs01, hardwired10.A),
             (instr_reg.Rs00, hardwired10.B),
 
-            (reg.RdData00, hardwired00.C),
-            (reg.RdData01, hardwired01.C),
-            (reg.RdData10, hardwired10.C),
-            (reg.RdData11, hardwired11.C),
+            (ram.RdData00, hardwired00.C),
+            (ram.RdData01, hardwired01.C),
+            (ram.RdData10, hardwired10.C),
+            (ram.RdData11, hardwired11.C),
 
             (Clk, prog_ctr.Clk),
             (cpuControl.Prog_Ctr, prog_ctr.LdEn),
@@ -116,14 +116,14 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rd00, cpuControl.Rd0),
             (alu.Q0, cpuControl.Cmp),
 
-            (_200.Q, reg.Clk),
-            (instr_reg.Rs11, reg.RdAddr11),
-            (instr_reg.Rs10, reg.RdAddr10),
-            (instr_reg.Rs01, reg.RdAddr01),
-            (instr_reg.Rs00, reg.RdAddr00),
-            (instr_reg.Rd11, reg.WrAddr1),
-            (instr_reg.Rd10, reg.WrAddr0),
-            (cpuControl.Wb_Ctr, reg.WrEnable),
+            (_200.Q, ram.Clk),
+            (instr_reg.Rs11, ram.RdAddr11),
+            (instr_reg.Rs10, ram.RdAddr10),
+            (instr_reg.Rs01, ram.RdAddr01),
+            (instr_reg.Rs00, ram.RdAddr00),
+            (instr_reg.Rd11, ram.WrAddr1),
+            (instr_reg.Rd10, ram.WrAddr0),
+            (cpuControl.Wb_Ctr, ram.WrEnable),
 
             (cpuControl.Alu_A_Mux_Ctrl, alu_a_mux.Sel),
             (prog_ctr.Pc1, alu_a_mux.B1),
@@ -140,8 +140,8 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rs00, alu_b_mux.A0),
 
             (cpuControl.Add_A_Mux_Ctrl, add_a_mux.Sel),
-            (reg.RdData11, add_a_mux.B1),
-            (reg.RdData10, add_a_mux.B0),
+            (ram.RdData11, add_a_mux.B1),
+            (ram.RdData10, add_a_mux.B0),
             (prog_ctr.Pc1, add_a_mux.A1),
             (prog_ctr.Pc0, add_a_mux.A0),
 
@@ -167,8 +167,8 @@ public class REBEL2 : Subcircuit
             (add_b_mux.Q0, wr_add.A0),
            
             //(alu.Cout, ), 
-            (alu.Q1, reg.WrData1),
-            (alu.Q0, reg.WrData0),
+            (alu.Q1, ram.WrData1),
+            (alu.Q0, ram.WrData0),
         ]);
     }
 

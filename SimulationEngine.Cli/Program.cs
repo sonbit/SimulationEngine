@@ -112,7 +112,7 @@ var testString = """
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);
 
-Console.WriteLine("PC\tROM\t\tRAM\tCPUCtrl");
+Console.WriteLine("PC\tROM\t\tRAM\t\t\tCPUCtrl");
 
 foreach (var (inputs, expectedOutputs) in tests)
 {
