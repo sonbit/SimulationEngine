@@ -118,16 +118,16 @@ module c_ProgCtr2 (
 		.Q0(tnet_3)
 	);
 
-	c_DLatchEdge c_DLatchEdge_0 (
+	c_TFlipFlop c_TFlipFlop_0 (
 		.Clk(Clk),
-		.Din(tnet_2),
-		.Dout(tnet_4)
+		.A(tnet_2),
+		.Q(tnet_4)
 	);
 
-	c_DLatchEdge c_DLatchEdge_1 (
+	c_TFlipFlop c_TFlipFlop_1 (
 		.Clk(Clk),
-		.Din(tnet_3),
-		.Dout(tnet_5)
+		.A(tnet_3),
+		.Q(tnet_5)
 	);
 
 	c_Increment2 c_Increment2_0 (
@@ -171,13 +171,12 @@ module c_2MUX2 (
 	assign Q0 = tnet_1;
 endmodule
 
-module c_DLatchEdge (
+module c_TFlipFlop (
 	input Clk,
-	input [1:0] Din,
-	output [1:0] Dout
+	input [1:0] A,
+	output [1:0] Q
 );
 	wire bnet_0;
-	wire bnet_1;
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
@@ -186,24 +185,19 @@ module c_DLatchEdge (
 		.Q(bnet_0)
 	);
 
-	f_2 f_2_1 (
-		.A(bnet_0),
-		.Q(bnet_1)
-	);
-
 	c_BTLatch c_BTLatch_0 (
 		.Clk(bnet_0),
-		.Din(Din),
+		.Din(A),
 		.Dout(tnet_0)
 	);
 
 	c_BTLatch c_BTLatch_1 (
-		.Clk(bnet_1),
+		.Clk(Clk),
 		.Din(tnet_0),
 		.Dout(tnet_1)
 	);
 
-	assign Dout = tnet_1;
+	assign Q = tnet_1;
 endmodule
 
 module c_BTLatch (
