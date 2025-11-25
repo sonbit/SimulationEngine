@@ -38,7 +38,8 @@ var subcircuits = new List<Subcircuit>
     rebel2.ProgramCounter,
     rebel2.ROM,
     rebel2.RAM,
-    rebel2.CPUControl,
+    rebel2.ALU,
+    rebel2.WrAdd
 };
 
 // var testString = """
@@ -130,7 +131,7 @@ var testString = """
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);
 
-Console.WriteLine("PC\tROM\t\tRAM\t\t\tCPUCtrl");
+Console.WriteLine("PC\tROM\t\tRAM\t\t\tALU\tWrAdd");
 
 foreach (var (inputs, expectedOutputs) in tests)
 {

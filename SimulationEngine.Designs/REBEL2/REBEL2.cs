@@ -29,6 +29,8 @@ public class REBEL2 : Subcircuit
     public Subcircuit ROM => Subcircuits[1];
     public Subcircuit CPUControl => Subcircuits[2];
     public Subcircuit RAM => Subcircuits[3].Subcircuits[1];
+    public Subcircuit ALU => Subcircuits[8];
+    public Subcircuit WrAdd => Subcircuits[9];
 
     public REBEL2()
     {
