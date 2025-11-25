@@ -21,6 +21,8 @@ public class ProgCtr2 : Subcircuit
         this.AddOutputs(nameof(Pc1), nameof(Pc0));
 
         var _2MUX2 = this.AddSubcircuit(new _2MUX2());
+        var _2 = this.AddBinaryLogicGate("2"); //create a falling edge counter by inverting the clock
+
         var dle0 = this.AddSubcircuit(new TFlipFlop());
         var dle1 = this.AddSubcircuit(new TFlipFlop());
         var inc2 = this.AddSubcircuit(new Increment2());
@@ -32,10 +34,12 @@ public class ProgCtr2 : Subcircuit
             (inc2.Q1, _2MUX2.A1),
             (inc2.Q0, _2MUX2.A0),
 
-            (Clk, dle0.Clk),
+            (Clk, _2.A),
+
+            (_2.Q, dle0.Clk),
             (_2MUX2.Q1, dle0.A),
 
-            (Clk, dle1.Clk),
+            (_2.Q, dle1.Clk),
             (_2MUX2.Q0, dle1.A),
 
             (dle0.Q, inc2.X1),

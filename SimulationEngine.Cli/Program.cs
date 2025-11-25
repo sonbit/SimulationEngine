@@ -65,25 +65,49 @@ var subcircuits = new List<Subcircuit>
 // """;
 
 var testString = """
-    # INIT ROM WITH BOGUS DUE TO MISSING RESET PC PIN
-    01----------
+    # LOAD INSTRUCTIONS INTO ROM TO RESET RAM (HARDWIRED x0 HACK)
+    01-0--++00-- #ADDi (x0) = (x4) plus ++ => write 00 into x0 
     110000000000
-    01---------- 
+    01-0--++00-- #ADDi (x-3) = (x0) plus ++ => write ++ into x-3
     110000000000
-  
-    01---------- 
-    110000000000 
-    01---------- 
+    01-0--++00-- #ADDi (x-2) = (x0) plus ++ => write ++ into x-2
     110000000000
-    01---------- 
+
+    01-0--++00-- #ADDi (x-1) = (x0) plus ++ => write ++ into x-1
     110000000000
-  
-    01---------- 
-    110000000000 
-    01---------- 
+    01-0--++00-- #ADDi (x0) = (x0) plus ++ => HARDWIRED 00 so no effect
     110000000000
-    01---------- 
+    01-0--++00-- #ADDi (x1) = (x0) plus ++ => write ++ into x1
     110000000000
+
+    01-0--++00-- #ADDi (x2) = (x0) plus ++ => write ++ into x2
+    110000000000
+    01-0--++00-- #ADDi (x3) = (x0) plus ++ => write ++ into x3
+    110000000000
+    01-0--++00-- #ADDi (x4) = (x0) plus ++ => write ++ into x4
+    110000000000
+    
+    #START EXECUTING INSTRUCTIONS
+    000000000000 #instruction at PC address --
+    100000000000
+    000000000000 #instruction at PC address -0
+    100000000000
+    000000000000 #instruction at PC address -+
+    100000000000
+
+    000000000000 #instruction at PC address 0-
+    100000000000
+    000000000000 #instruction at PC address 00
+    100000000000
+    000000000000 #instruction at PC address 0+
+    100000000000
+
+    000000000000 #instruction at PC address +-
+    100000000000
+    000000000000 #instruction at PC address +0  
+    100000000000
+    000000000000 #instruction at PC address ++
+    100000000000
 
     # LOAD INSTRUCTIONS INTO ROM
     01-000++---- #ADDi (x-4) = (x0) plus ++ => write ++ into x-4 
@@ -95,7 +119,7 @@ var testString = """
 
     01-000++0--- #ADDi (x-1) = (x0) plus ++ => write ++ into x-1
     110000000000
-    01-000++00-- #ADDi (x0) = (x0) plus ++ => HARDWIRED 00 so no effect
+    01-0000000-- #ADDi (x0) = (x0) plus ++ => HARDWIRED 00 so no effect
     110000000000
     01-000++0+-- #ADDi (x1) = (x0) plus ++ => write ++ into x1
     110000000000
@@ -106,7 +130,7 @@ var testString = """
     110000000000
     01-000++++-- #ADDi (x4) = (x0) plus ++ => write ++ into x4
     110000000000
-
+    
     #START EXECUTING INSTRUCTIONS
     000000000000 #instruction at PC address --
     100000000000
