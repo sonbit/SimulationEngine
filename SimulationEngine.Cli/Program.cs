@@ -131,10 +131,19 @@ var testString = """
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);
 
-Console.WriteLine("PC\tROM\t\tRAM\t\t\tALU\tWrAdd");
+Console.WriteLine("PC\tROM\t\tRAM\t\t\tALU-IN\tALU-OUT\tWR-IN\tWR-OUT");
 
-foreach (var (inputs, expectedOutputs) in tests)
+foreach (var (inputs, _) in tests)
 {
     simulationSession.SetInputs(inputs);
-    Console.WriteLine(string.Join("\t", subcircuits.Select(simulationSession.GetOutputs)));
+
+    var columns = new List<string>();
+    foreach (var subcircuit in subcircuits)
+    {
+        if (subcircuit == rebel2.ALU || subcircuit == rebel2.WrAdd)
+            columns.Add(simulationSession.GetInputs(subcircuit));
+        columns.Add(simulationSession.GetOutputs(subcircuit));
+    }
+
+    Console.WriteLine(string.Join('\t', columns));
 }

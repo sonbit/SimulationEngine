@@ -5,7 +5,7 @@ namespace SimulationEngine.Simulator;
 
 public partial class SimulationSession
 {
-    public byte[] GetOutputBytes() => [.. Subcircuit.Outputs.Select(GetOutputByte)];
+    public byte[] GetOutputBytes() => [.. Subcircuit.Outputs.Select(GetPortByte)];
 
     public string GetOutputs(bool normalize = false)
     {
@@ -41,9 +41,25 @@ public partial class SimulationSession
         return GetOutputs(isNormalized);
     }
 
+    public string GetInputs(Subcircuit subcircuit) => GetInputsWithRadix(subcircuit);
+
     public string GetOutputs(Subcircuit subcircuit) => GetOutputsWithRadix(subcircuit);
 
-    private byte GetOutputByte(Port port) => _netOfTerminals[port].Value;
+    private string GetInputsWithRadix(Subcircuit subcircuit)
+    {
+        var chars = new char[subcircuit.Inputs.Count];
+
+        for (int i = 0; i < subcircuit.Inputs.Count; i++)
+        {
+            var port = subcircuit.Inputs[i];
+            var value = GetPortByte(port);
+            chars[i] = port.ToChar(value);
+        }
+
+        return new string(chars);
+    }
+
+    private byte GetPortByte(Port port) => _netOfTerminals[port].Value;
 
     private string GetOutputsWithRadix(Subcircuit subcircuit)
     {
@@ -52,7 +68,7 @@ public partial class SimulationSession
         for (int i = 0; i < subcircuit.Outputs.Count; i++)
         {
             var port = subcircuit.Outputs[i];
-            var value = GetOutputByte(port);
+            var value = GetPortByte(port);
             chars[i] = port.ToChar(value);
         }
 
