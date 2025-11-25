@@ -38,6 +38,7 @@ var subcircuits = new List<Subcircuit>
     rebel2.ProgramCounter,
     rebel2.ROM,
     rebel2.RAM,
+    rebel2.CPUControl,
     rebel2.ALU,
     rebel2.WrAdd
 };
@@ -131,7 +132,7 @@ var testString = """
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);
 
-Console.WriteLine("PC\tROM\t\tRAM\t\t\tALU-IN\tALU-OUT\tWR-IN\tWR-OUT");
+Console.WriteLine("PC-IN\tPC\tROM\t\tRAM\t\t\tCTRL-IN\tCTRL-OUT\tALU-IN\tALU-OUT\tWR-IN\tWR-OUT");
 
 foreach (var (inputs, _) in tests)
 {
@@ -140,7 +141,7 @@ foreach (var (inputs, _) in tests)
     var columns = new List<string>();
     foreach (var subcircuit in subcircuits)
     {
-        if (subcircuit == rebel2.ALU || subcircuit == rebel2.WrAdd)
+        if (subcircuit == rebel2.ProgramCounter || subcircuit == rebel2.CPUControl || subcircuit == rebel2.ALU || subcircuit == rebel2.WrAdd)
             columns.Add(simulationSession.GetInputs(subcircuit));
         columns.Add(simulationSession.GetOutputs(subcircuit));
     }
