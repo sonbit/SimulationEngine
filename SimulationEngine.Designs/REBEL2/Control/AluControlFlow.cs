@@ -8,8 +8,8 @@ public class AluControlFlow : Subcircuit
 {
     public Port Op1 => Inputs[0];
     public Port Op0 => Inputs[1];
-    public Port Rd1 => Inputs[2];
-    public Port Rd0 => Inputs[3];
+    public Port Rd21 => Inputs[2];
+    public Port Rd20 => Inputs[3];
 
     public Port Func2 => Outputs[0];
     public Port Func1 => Outputs[1];
@@ -20,8 +20,8 @@ public class AluControlFlow : Subcircuit
         this.AddInputs(
             nameof(Op1),
             nameof(Op0),
-            nameof(Rd1),
-            nameof(Rd0));
+            nameof(Rd21),
+            nameof(Rd20));
 
         this.AddOutputs(
             nameof(Func2),
@@ -54,12 +54,12 @@ public class AluControlFlow : Subcircuit
             (Op1, dae.B),
             (Op0, dae.A),
 
-            (Rd1, _060.B),
-            (Rd0, _060.A),
+            (Rd21, _060.B),
+            (Rd20, _060.A),
 
-            (Rd0, _2.A),
-            (Rd1, v.A),
-            (Rd0, d.A),
+            (Rd20, _2.A),
+            (Rd21, v.A),
+            (Rd20, d.A),
             (_060.Q, h.A),
 
             (dar.Q, _3MUX1_0.Sel),

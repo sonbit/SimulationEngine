@@ -9,8 +9,8 @@ public class _9Ram2 : Subcircuit
 {
     public Port RdAddr11 => Inputs[0];
     public Port RdAddr10 => Inputs[1];
-    public Port RdAddr01 => Inputs[2];
-    public Port RdAddr00 => Inputs[3];
+    public Port RdAddr21 => Inputs[2];
+    public Port RdAddr20 => Inputs[3];
     public Port WrAddr1 => Inputs[4];
     public Port WrAddr0 => Inputs[5];
     public Port WrData1 => Inputs[6];
@@ -19,16 +19,16 @@ public class _9Ram2 : Subcircuit
     public Port WrEnable => Inputs[9];  
     public Port RdData11 => Outputs[0];
     public Port RdData10 => Outputs[1];
-    public Port RdData01 => Outputs[2];
-    public Port RdData00 => Outputs[3];
+    public Port RdData21 => Outputs[2];
+    public Port RdData20 => Outputs[3];
     
     public _9Ram2()
     {
         this.AddInputs(
-            nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr01), nameof(RdAddr00),
+            nameof(RdAddr11), nameof(RdAddr10), nameof(RdAddr21), nameof(RdAddr20),
             nameof(WrAddr1), nameof(WrAddr0), nameof(WrData1), nameof(WrData0));
         this.AddBinaryInputs(nameof(Clk), nameof(WrEnable));
-        this.AddOutputs(nameof(RdData11), nameof(RdData10), nameof(RdData01), nameof(RdData00));
+        this.AddOutputs(nameof(RdData11), nameof(RdData10), nameof(RdData21), nameof(RdData20));
 
         var _9BDEMUX = this.AddSubcircuit(new _9BDEMUX());
         var _8Reg2 = this.AddSubcircuit(new _8Reg2());
@@ -77,8 +77,8 @@ public class _9Ram2 : Subcircuit
             (_8Reg2.Q01, _9MUX2_0.D01),
             (_8Reg2.Q00, _9MUX2_0.D00),
 
-            (RdAddr01, _9MUX2_1.Sel1),
-            (RdAddr00, _9MUX2_1.Sel0),
+            (RdAddr21, _9MUX2_1.Sel1),
+            (RdAddr20, _9MUX2_1.Sel0),
             (_8Reg2.Q81, _9MUX2_1.D81),
             (_8Reg2.Q80, _9MUX2_1.D80),
             (_8Reg2.Q71, _9MUX2_1.D71),
@@ -100,8 +100,8 @@ public class _9Ram2 : Subcircuit
 
             (_9MUX2_0.Q1, RdData11),
             (_9MUX2_0.Q0, RdData10),
-            (_9MUX2_1.Q1, RdData01),
-            (_9MUX2_1.Q0, RdData00)
+            (_9MUX2_1.Q1, RdData21),
+            (_9MUX2_1.Q0, RdData20)
         ]);
     }
 

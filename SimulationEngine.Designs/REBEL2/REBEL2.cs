@@ -75,13 +75,13 @@ public class REBEL2 : Subcircuit
             (instr_reg.Rs11, hardwired00.A),
             (instr_reg.Rs10, hardwired00.B),
 
-            (instr_reg.Rs01, hardwired11.A),
-            (instr_reg.Rs00, hardwired11.B),
-            (instr_reg.Rs01, hardwired10.A),
-            (instr_reg.Rs00, hardwired10.B),
+            (instr_reg.Rs21, hardwired11.A),
+            (instr_reg.Rs20, hardwired11.B),
+            (instr_reg.Rs21, hardwired10.A),
+            (instr_reg.Rs20, hardwired10.B),
 
-            (ram.RdData00, hardwired00.C),
-            (ram.RdData01, hardwired01.C),
+            (ram.RdData20, hardwired00.C),
+            (ram.RdData21, hardwired01.C),
             (ram.RdData10, hardwired10.C),
             (ram.RdData11, hardwired11.C),
 
@@ -114,15 +114,15 @@ public class REBEL2 : Subcircuit
 
             (instr_reg.Op1, cpuControl.Op1),
             (instr_reg.Op0, cpuControl.Op0),
-            (instr_reg.Rd01, cpuControl.Rd1),
-            (instr_reg.Rd00, cpuControl.Rd0),
+            (instr_reg.Rd21, cpuControl.Rd21),
+            (instr_reg.Rd20, cpuControl.Rd20),
             (alu.Q0, cpuControl.Cmp),
 
             (_200.Q, ram.Clk),
             (instr_reg.Rs11, ram.RdAddr11),
             (instr_reg.Rs10, ram.RdAddr10),
-            (instr_reg.Rs01, ram.RdAddr01),
-            (instr_reg.Rs00, ram.RdAddr00),
+            (instr_reg.Rs21, ram.RdAddr21),
+            (instr_reg.Rs20, ram.RdAddr20),
             (instr_reg.Rd11, ram.WrAddr1),
             (instr_reg.Rd10, ram.WrAddr0),
             (cpuControl.Wb_Ctr, ram.WrEnable),
@@ -138,8 +138,8 @@ public class REBEL2 : Subcircuit
             (hardwired00.Q, alu_b_mux.C0),
             //(, alu_b_mux.B1), // Always 0 - Not necessary to handle, heptaindex independent of B
             //(, alu_b_mux.B0), // Always 1 - Not necessary to handle, heptaindex independent of B
-            (instr_reg.Rs01, alu_b_mux.A1),
-            (instr_reg.Rs00, alu_b_mux.A0),
+            (instr_reg.Rs21, alu_b_mux.A1),
+            (instr_reg.Rs20, alu_b_mux.A0),
 
             (cpuControl.Add_A_Mux_Ctrl, add_a_mux.Sel),
             (ram.RdData11, add_a_mux.B1),
@@ -148,12 +148,12 @@ public class REBEL2 : Subcircuit
             (prog_ctr.Pc0, add_a_mux.A0),
 
             (cpuControl.Add_B_Mux_Ctrl, add_b_mux.Sel),
-            (instr_reg.Rs01, add_b_mux.C1),
-            (instr_reg.Rs00, add_b_mux.C0),
+            (instr_reg.Rs21, add_b_mux.C1),
+            (instr_reg.Rs20, add_b_mux.C0),
             (instr_reg.Rd11, add_b_mux.B1),
             (instr_reg.Rd10, add_b_mux.B0),
-            (instr_reg.Rd01, add_b_mux.A1),
-            (instr_reg.Rd00, add_b_mux.A0),
+            (instr_reg.Rd21, add_b_mux.A1),
+            (instr_reg.Rd20, add_b_mux.A0),
 
             (cpuControl.Alu_Func2, alu.Func2),
             (cpuControl.Alu_Func1, alu.Func1),

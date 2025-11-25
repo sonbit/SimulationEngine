@@ -7,8 +7,8 @@ public class CPUControl : Subcircuit
 {
     public Port Op1 => Inputs[0];
     public Port Op0 => Inputs[1];
-    public Port Rd1 => Inputs[2];
-    public Port Rd0 => Inputs[3];
+    public Port Rd21 => Inputs[2];
+    public Port Rd20 => Inputs[3];
     public Port Cmp => Inputs[4];
 
     public Port Alu_Func2 => Outputs[0];
@@ -26,8 +26,8 @@ public class CPUControl : Subcircuit
         this.AddInputs(
             nameof(Op1),
             nameof(Op0),
-            nameof(Rd1),
-            nameof(Rd0),
+            nameof(Rd21),
+            nameof(Rd20),
             nameof(Cmp));
         this.AddOutputs(
             nameof(Alu_Func2),
@@ -46,13 +46,13 @@ public class CPUControl : Subcircuit
         this.AddWires([
             (Op1, aluControl.Op1),
             (Op0, aluControl.Op0),
-            (Rd1, aluControl.Rd1),
-            (Rd0, aluControl.Rd0),
+            (Rd21, aluControl.Rd21),
+            (Rd20, aluControl.Rd20),
 
             (Op1, muxControl.Op1),
             (Op0, muxControl.Op0),
-            (Rd1, muxControl.Rd1),
-            (Rd0, muxControl.Rd0),
+            (Rd21, muxControl.Rd21),
+            (Rd20, muxControl.Rd20),
             (Cmp, muxControl.Cmp),
 
             (aluControl.Func2, Alu_Func2),

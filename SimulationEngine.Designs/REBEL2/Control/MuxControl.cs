@@ -1,5 +1,4 @@
-﻿using SimulationEngine.Designs.Subcircuits.Multiplexers;
-using SimulationEngine.Domain.Models;
+﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
 
 namespace SimulationEngine.Designs.REBEL2.Control;
@@ -8,8 +7,8 @@ public class MuxControl : Subcircuit
 {
     public Port Op1 => Inputs[0];
     public Port Op0 => Inputs[1];
-    public Port Rd1 => Inputs[2];
-    public Port Rd0 => Inputs[3];
+    public Port Rd21 => Inputs[2];
+    public Port Rd20 => Inputs[3];
     public Port Cmp => Inputs[4];
 
     public Port AluAMux => Outputs[0];
@@ -24,8 +23,8 @@ public class MuxControl : Subcircuit
         this.AddInputs(
             nameof(Op1),
             nameof(Op0),
-            nameof(Rd1),
-            nameof(Rd0),
+            nameof(Rd21),
+            nameof(Rd20),
             nameof(Cmp));
 
         this.AddOutputs(
@@ -65,9 +64,9 @@ public class MuxControl : Subcircuit
              //RD(2)1 is not connected
             //(Rd1, ???),
             
-            (Rd0, _DZZ.A),
-            (Rd0, _PPK.A),
-            (Rd0, _ZZDDDDXXX.B),
+            (Rd20, _DZZ.A),
+            (Rd20, _PPK.A),
+            (Rd20, _ZZDDDDXXX.B),
 
             (Cmp, _48Z.A),  
             (Cmp, _ZZDDDDXXX.A),  

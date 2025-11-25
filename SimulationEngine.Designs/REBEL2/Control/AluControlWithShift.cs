@@ -8,8 +8,8 @@ public class AluControlWithShift : Subcircuit
 {
     public Port Op1 => Inputs[0];
     public Port Op0 => Inputs[1];
-    public Port Rd1 => Inputs[2];
-    public Port Rd0 => Inputs[3];
+    public Port Rd21 => Inputs[2];
+    public Port Rd20 => Inputs[3];
 
     public Port Func2 => Outputs[0];
     public Port Func1 => Outputs[1];
@@ -20,8 +20,8 @@ public class AluControlWithShift : Subcircuit
         this.AddInputs(
             nameof(Op1),
             nameof(Op0),
-            nameof(Rd1),
-            nameof(Rd0));
+            nameof(Rd21),
+            nameof(Rd20));
 
         this.AddOutputs(
             nameof(Func2),
@@ -39,12 +39,12 @@ public class AluControlWithShift : Subcircuit
 
             (Op1, aluControlFlow.Op1),
             (Op0, aluControlFlow.Op0),
-            (Rd1, aluControlFlow.Rd1),
-            (Rd0, aluControlFlow.Rd0),
+            (Rd21, aluControlFlow.Rd21),
+            (Rd20, aluControlFlow.Rd20),
 
             (gdd.Q, _2MUX2.Sel),
-            (Rd1, _2MUX2.B1),
-            (Rd0, _2MUX2.B0),
+            (Rd21, _2MUX2.B1),
+            (Rd20, _2MUX2.B0),
             (aluControlFlow.Func1, _2MUX2.A1),
             (aluControlFlow.Func0, _2MUX2.A0),
 

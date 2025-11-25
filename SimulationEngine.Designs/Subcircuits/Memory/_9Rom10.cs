@@ -24,12 +24,12 @@ public class _9Rom10 : Subcircuit
     public Port Op0 => Outputs[1];
     public Port Rs11 => Outputs[2];
     public Port Rs10 => Outputs[3];
-    public Port Rs01 => Outputs[4];
-    public Port Rs00 => Outputs[5];
+    public Port Rs21 => Outputs[4];
+    public Port Rs20 => Outputs[5];
     public Port Rd11 => Outputs[6];
     public Port Rd10 => Outputs[7];
-    public Port Rd01 => Outputs[8];
-    public Port Rd00 => Outputs[9];
+    public Port Rd21 => Outputs[8];
+    public Port Rd20 => Outputs[9];
 
     public _9Rom10()
     {
@@ -48,8 +48,8 @@ public class _9Rom10 : Subcircuit
             nameof(Op1), 
             nameof(Op0),
             nameof(Rs11), 
-            nameof(Rs10), nameof(Rs01), nameof(Rs00),
-            nameof(Rd11), nameof(Rd10), nameof(Rd01), nameof(Rd00));
+            nameof(Rs10), nameof(Rs21), nameof(Rs20),
+            nameof(Rd11), nameof(Rd10), nameof(Rd21), nameof(Rd20));
 
         var _9Rom2_0 = this.AddSubcircuit(new _9Rom2());
         var _9Rom2_1 = this.AddSubcircuit(new _9Rom2());
@@ -102,12 +102,12 @@ public class _9Rom10 : Subcircuit
             (_9Rom2_0.Q0, Op0),
             (_9Rom2_1.Q1, Rs11),
             (_9Rom2_1.Q0, Rs10),
-            (_9Rom2_2.Q1, Rs01),
-            (_9Rom2_2.Q0, Rs00),
+            (_9Rom2_2.Q1, Rs21),
+            (_9Rom2_2.Q0, Rs20),
             (_9Rom2_3.Q1, Rd11),
             (_9Rom2_3.Q0, Rd10),
-            (_9Rom2_4.Q1, Rd01),
-            (_9Rom2_4.Q0, Rd00)
+            (_9Rom2_4.Q1, Rd21),
+            (_9Rom2_4.Q0, Rd20)
         ]);
     }
 }
