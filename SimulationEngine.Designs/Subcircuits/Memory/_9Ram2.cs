@@ -36,6 +36,13 @@ public class _9Ram2 : Subcircuit
         var _9MUX2_1 = this.AddSubcircuit(new _9MUX2());
         var _K00 = this.AddLogicGate("K00");
 
+
+        var hardwired00 = this.AddLogicGate("ZTZDDD030");
+        var hardwired01 = this.AddLogicGate("ZTZDDD030");
+        var hardwired10 = this.AddLogicGate("ZTZDDD030");
+        var hardwired11 = this.AddLogicGate("ZTZDDD030");
+
+
         this.AddWires([
             (Clk, _K00.A),
             (WrEnable, _K00.B),
@@ -98,14 +105,30 @@ public class _9Ram2 : Subcircuit
             (_8Reg2.Q01, _9MUX2_1.D01),
             (_8Reg2.Q00, _9MUX2_1.D00),
 
-            (_9MUX2_0.Q1, RdData11),
-            (_9MUX2_0.Q0, RdData10),
-            (_9MUX2_1.Q1, RdData21),
-            (_9MUX2_1.Q0, RdData20)
+            (_9MUX2_0.Q1, hardwired01.C),
+            (_9MUX2_0.Q0, hardwired00.C),
+            (_9MUX2_1.Q1, hardwired11.C),
+            (_9MUX2_1.Q0, hardwired10.C),
+
+            (RdAddr11, hardwired01.B),
+            (RdAddr11, hardwired00.B),
+            (RdAddr10, hardwired01.A),
+            (RdAddr10, hardwired00.A),
+
+            (RdAddr21, hardwired11.B),
+            (RdAddr21, hardwired10.B),
+            (RdAddr20, hardwired11.A),
+            (RdAddr20, hardwired10.A),
+
+            (hardwired01.Q, RdData11),
+            (hardwired00.Q, RdData10),
+            (hardwired11.Q, RdData21),
+            (hardwired10.Q, RdData20)
         ]);
     }
 
     public override string GetTestString() => """
+        0000000000 0000
         --------00 ----
         --------11 ----
         --------00 ----

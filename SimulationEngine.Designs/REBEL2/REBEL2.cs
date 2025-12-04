@@ -63,28 +63,8 @@ public class REBEL2 : Subcircuit
         var alu = this.AddSubcircuit(new ALU2());
         var wr_add = this.AddSubcircuit(new _2TritAdder()); // Ignore Carry
 
-        var hardwired00 = this.AddLogicGate("ZTZDDD030");
-        var hardwired01 = this.AddLogicGate("ZTZDDD030");
-        var hardwired10 = this.AddLogicGate("ZTZDDD030");
-        var hardwired11 = this.AddLogicGate("ZTZDDD030");
-
+       
         this.AddWires([
-
-            (instr_reg.Rs11, hardwired01.A),
-            (instr_reg.Rs10, hardwired01.B),
-            (instr_reg.Rs11, hardwired00.A),
-            (instr_reg.Rs10, hardwired00.B),
-
-            (instr_reg.Rs21, hardwired11.A),
-            (instr_reg.Rs20, hardwired11.B),
-            (instr_reg.Rs21, hardwired10.A),
-            (instr_reg.Rs20, hardwired10.B),
-
-            (ram.RdData20, hardwired00.C),
-            (ram.RdData21, hardwired01.C),
-            (ram.RdData10, hardwired10.C),
-            (ram.RdData11, hardwired11.C),
-
             (Clk, prog_ctr.Clk),
             (cpuControl.Prog_Ctr, prog_ctr.LdEn),
             (wr_add.Q1, prog_ctr.LdAddr1),
@@ -130,12 +110,12 @@ public class REBEL2 : Subcircuit
             (cpuControl.Alu_A_Mux_Ctrl, alu_a_mux.Sel),
             (prog_ctr.Pc1, alu_a_mux.B1),
             (prog_ctr.Pc0, alu_a_mux.B0),
-            (hardwired11.Q, alu_a_mux.A1),
-            (hardwired10.Q, alu_a_mux.A0),
+            (ram.RdData11, alu_a_mux.A1),
+            (ram.RdData10, alu_a_mux.A0),
 
             (cpuControl.Alu_B_Mux_Ctrl, alu_b_mux.Sel),
-            (hardwired01.Q, alu_b_mux.C1),
-            (hardwired00.Q, alu_b_mux.C0),
+            (ram.RdData21, alu_b_mux.C1),
+            (ram.RdData20, alu_b_mux.C0),
             //(, alu_b_mux.B1), // Always 0 - Not necessary to handle, heptaindex independent of B
             //(, alu_b_mux.B0), // Always 1 - Not necessary to handle, heptaindex independent of B
             (instr_reg.Rs21, alu_b_mux.A1),
