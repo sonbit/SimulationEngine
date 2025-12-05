@@ -1,31 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using SimulationEngine.Application.Export.Emitters;
-using SimulationEngine.Application.Services.Database;
-using SimulationEngine.Application.Services.Database.Subcircuits;
-using SimulationEngine.Application.Services.Database.TruthTables;
-using SimulationEngine.Application.Services.Export;
-using SimulationEngine.Cli.Commands;
-using SimulationEngine.Cli.Commands.Database;
-using SimulationEngine.Cli.Commands.Database.Subcircuits;
-using SimulationEngine.Cli.Commands.Database.TruthTables;
-using SimulationEngine.Cli.Commands.Export;
-using SimulationEngine.Cli.Commands.Simulation;
-using SimulationEngine.Cli.Composition;
-using SimulationEngine.Cli.Flows;
-using SimulationEngine.Cli.Flows.Database;
-using SimulationEngine.Cli.Handlers.IO;
-using SimulationEngine.Cli.Handlers.UI;
-using SimulationEngine.Designs.REBEL2;
-using SimulationEngine.Domain.Repositories;
-using SimulationEngine.Infrastructure.DataModel;
-using SimulationEngine.Infrastructure.Export.Emitters;
-using SimulationEngine.Infrastructure.Repositories;
-using SimulationEngine.Infrastructure.UnitOfWork;
-using Spectre.Console;
-using Spectre.Console.Cli;
+﻿using SimulationEngine.Designs.REBEL2;
 using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
@@ -43,26 +16,12 @@ var subcircuits = new List<Subcircuit>
     rebel2.WrAdd
 };
 
-// var testString = """
-//     00-00000--00 $ CommentStyle1
-//     01-00000--00 # CommentStyle2
-//     00-00000-000
-//     01-00000-000
-//     00-00000-+00
-//     01-00000-+00
-//     00-000000-00
-//     01-000000-00
-//     00-000000000
-//     01-000000000
-//     00-000000+00
-//     01-000000+00
-//     00-00000+-00
-//     01-00000+-00
-//     00-00000+000
-//     01-00000+000
-//     00-00000++00
-//     01-00000++00
-// """;
+var options = new PrintOptions
+{
+    SkipFallingEdge = true,
+    SkipROMProgramming = true,
+    PrintROMPage = true
+};
 
 var testString = """
     # ROM PAGE 1: RESET RAM & LOAD CONSTANTS. In the future load constant in furthest neg. registers to max room for stack?
@@ -220,9 +179,26 @@ var tests = TestStringConverter.GetInputOutputPairs(testString);
 
 Console.WriteLine("PC-IN\tPC\tROM\t\tRAM\t\t\tCTRL-IN\tCTRL-OUT\tALU-IN\tALU-OUT\tWR-IN\tWR-OUT");
 
+var romPage = 1;
+var previousWrEnable = '0';
+
 foreach (var (inputs, _) in tests)
 {
     simulationSession.SetInputs(inputs);
+
+    if (options.PrintROMPage && previousWrEnable != '1' && inputs[1] == '1')
+    {
+        Console.WriteLine($"ROM Page {romPage}");
+        romPage++;
+    }
+
+    previousWrEnable = inputs[1];
+
+    if (options.SkipFallingEdge && inputs[0] == '0')
+        continue;
+
+    if (options.SkipROMProgramming && inputs[1] == '1')
+        continue;
 
     var columns = new List<string>();
     foreach (var subcircuit in subcircuits)
@@ -233,4 +209,11 @@ foreach (var (inputs, _) in tests)
     }
 
     Console.WriteLine(string.Join('\t', columns));
+}
+
+record PrintOptions
+{
+    public bool SkipFallingEdge { get; init; }
+    public bool SkipROMProgramming { get; init; }
+    public bool PrintROMPage { get; init; }
 }
