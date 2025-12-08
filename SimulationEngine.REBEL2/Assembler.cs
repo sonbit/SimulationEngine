@@ -130,7 +130,7 @@ public static class Assembler
 
     /// <summary>
     /// Build the full input vector sequence for one or more ROM pages:
-    ///  - For each page, load instructions with WrInst=1, clock toggling each row.
+    ///  - For each page, load instructions with WrInst=1, clock toggling each row (data on falling edge, zeros on rising).
     ///  - Then execute the page once by clocking through all 9 addresses with WrInst=0.
     /// </summary>
     /// <param name="pageAssemblies">Assembly strings, one per page.</param>
@@ -150,7 +150,7 @@ public static class Assembler
             foreach (var instruction in page)
             {
                 sequence.Add(FormatInputVector('0', '1', instruction));
-                sequence.Add(FormatInputVector('1', '1', instruction));
+                sequence.Add(FormatInputVector('1', '1', new string('0', 10)));
             }
 
             // Execute page once: WrInst=0, 9 addresses with clock toggling.
@@ -275,5 +275,61 @@ public static class Assembler
             throw new InvalidOperationException($"Instruction must be 10 trits long, got {tenTritWord.Length}.");
 
         return string.Concat(clk, wrInst, tenTritWord);
+    }
+
+    /// <summary>
+    /// Disassemble a 10-trit machine instruction back into mnemonic and operands.
+    /// Useful for round-tripping existing ROM listings.
+    /// </summary>
+    public static string Disassemble(string instruction)
+    {
+        if (instruction.Length != 10)
+            throw new InvalidOperationException($"Instruction must be 10 trits long, got {instruction.Length}.");
+
+        var opcode = instruction[..2];
+        var opcodeEntry = InstructionSet.FirstOrDefault(kvp => kvp.Value.Opcode == opcode);
+        if (string.IsNullOrEmpty(opcodeEntry.Key))
+            throw new InvalidOperationException($"Unknown opcode '{opcode}'.");
+        var definition = opcodeEntry.Value;
+
+        var rs1 = instruction[2..4];
+        var rs2 = instruction[4..6];
+        var rd1 = instruction[6..8];
+        var rd2 = instruction[8..10];
+
+        var operands = new List<string>();
+        foreach (var target in definition.OperandOrder)
+        {
+            var fieldValue = target switch
+            {
+                Operands.IMM => rs2,
+                Operands.RS1 => rs1,
+                Operands.RS2 => rs2,
+                Operands.RD1 => rd1,
+                Operands.RD2 => rd2,
+                _ => throw new InvalidOperationException($"Unsupported operand target {target}.")
+            };
+
+            operands.Add(FormatOperand(fieldValue));
+        }
+
+        return operands.Count == 0
+            ? opcodeEntry.Key
+            : $"{opcodeEntry.Key} {string.Join(", ", operands)}";
+    }
+
+    private static string FormatOperand(string fieldValue)
+    {
+        foreach (var kvp in RegisterDictionary)
+        {
+            if (kvp.Value == fieldValue)
+                return kvp.Key;
+        }
+
+        var numericIndex = Array.IndexOf(AddressSpace, fieldValue);
+        if (numericIndex >= 0)
+            return (numericIndex - 4).ToString();
+
+        return fieldValue;
     }
 }
