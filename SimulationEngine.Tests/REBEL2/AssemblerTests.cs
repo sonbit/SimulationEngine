@@ -12,7 +12,7 @@ public class AssemblerTests
     }
 
     [Fact]
-    public void Assemble_ResolvesLabelsAndImmediates()
+    public void AssembleInstructions_ResolvesLabelsAndImmediates()
     {
         const string assembly = """
         start: ADDi x0, x-4, ++
@@ -20,7 +20,7 @@ public class AssemblerTests
         PCO x1, loop, 0+
         """;
 
-        var result = Assembler.Assemble(assembly);
+        var result = Assembler.AssembleInstructions(assembly);
 
         Assert.Collection(result,
             inst => Assert.Equal("-0--++00--", inst),
@@ -29,7 +29,7 @@ public class AssemblerTests
     }
 
     [Fact]
-    public void Assemble_AllowsLabelOnOwnLine()
+    public void AssembleInstructions_AllowsLabelOnOwnLine()
     {
         const string assembly = """
         start:
@@ -39,7 +39,7 @@ public class AssemblerTests
         PCO x1, loop, 0+
         """;
 
-        var result = Assembler.Assemble(assembly);
+        var result = Assembler.AssembleInstructions(assembly);
 
         Assert.Collection(result,
             inst => Assert.Equal("-0--++00--", inst),
@@ -55,10 +55,10 @@ public class AssemblerTests
     }
 
     [Fact]
-    public void AssemblePage_PadsWithDefaultInstruction()
+    public void AssemblePageInstructions_PadsWithDefaultInstruction()
     {
         const string assembly = "ADDi x0, x-4, ++";
-        var result = Assembler.AssemblePage(assembly);
+        var result = Assembler.AssemblePageInstructions(assembly);
 
         Assert.Equal(9, result.Count);
         Assert.Equal("-0--++00--", result[0]);
@@ -83,5 +83,16 @@ public class AssemblerTests
         var executeStart = 18; // 9 instructions * 2 edges
         Assert.Equal("000000000000", sequence[executeStart]);
         Assert.Equal("100000000000", sequence[executeStart + 1]);
+    }
+
+    [Fact]
+    public void Assemble_DefaultsToInputSequence()
+    {
+        const string assembly = "ADDi x0, x-4, ++";
+        var sequence = Assembler.Assemble(assembly);
+
+        Assert.Equal(36, sequence.Count);
+        Assert.Equal("01-0--++00--", sequence[0]);
+        Assert.Equal("11-0--++00--", sequence[1]);
     }
 }

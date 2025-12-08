@@ -56,10 +56,22 @@ public static class Assembler
     };
 
     /// <summary>
+    /// Assemble a single page and emit the full input vector sequence (program + execute).
+    /// </summary>
+    public static IReadOnlyList<string> Assemble(string assembly, bool padPage = true) =>
+        BuildInputSequence([assembly], padPage);
+
+    /// <summary>
+    /// Assemble multiple pages and emit the full input vector sequence (program + execute).
+    /// </summary>
+    public static IReadOnlyList<string> AssemblePages(IEnumerable<string> pageAssemblies, bool padPages = true) =>
+        BuildInputSequence(pageAssemblies, padPages);
+
+    /// <summary>
     /// Assemble a block of REBEL2 assembly into a list of 10-trit machine code strings.
     /// Labels are resolved within a single ROM page (9 instructions).
     /// </summary>
-    public static IReadOnlyList<string> Assemble(string assembly)
+    public static IReadOnlyList<string> AssembleInstructions(string assembly)
     {
         var labelDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var instructions = new List<(int lineNumber, string text)>();
@@ -102,9 +114,9 @@ public static class Assembler
     /// <summary>
     /// Assemble a page and pad with NOP-like instructions to fill all 9 slots.
     /// </summary>
-    public static IReadOnlyList<string> AssemblePage(string assembly, string? padInstruction = null)
+    public static IReadOnlyList<string> AssemblePageInstructions(string assembly, string? padInstruction = null)
     {
-        var program = Assemble(assembly);
+        var program = AssembleInstructions(assembly);
         if (program.Count == AddressSpace.Length)
             return program;
 
@@ -130,7 +142,7 @@ public static class Assembler
 
         foreach (var pageAssembly in pageAssemblies)
         {
-            var page = padPages ? AssemblePage(pageAssembly) : Assemble(pageAssembly);
+            var page = padPages ? AssemblePageInstructions(pageAssembly) : AssembleInstructions(pageAssembly);
             if (page.Count != PageInstructionCount)
                 throw new InvalidOperationException($"Page must contain exactly {PageInstructionCount} instructions when padding is disabled.");
 
