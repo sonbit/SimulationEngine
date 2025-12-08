@@ -21,6 +21,7 @@
     <ProjectReference Include="..\SimulationEngine.Designs\SimulationEngine.Designs.csproj" />
     <ProjectReference Include="..\SimulationEngine.Domain\SimulationEngine.Domain.csproj" />
     <ProjectReference Include="..\SimulationEngine.Infrastructure\SimulationEngine.Infrastructure.csproj" />
+    <ProjectReference Include="..\SimulationEngine.REBEL2\SimulationEngine.REBEL2.csproj" />
     <ProjectReference Include="..\SimulationEngine.Simulator\SimulationEngine.Simulator.csproj" />
   </ItemGroup>
 

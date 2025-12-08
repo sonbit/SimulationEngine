@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11222.16 d18.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationEngine.Domain", "SimulationEngine.Domain\SimulationEngine.Domain.csproj", "{34CF52A2-F7B3-4C43-AF90-336A09E173BE}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationEngine.Simulator", "SimulationEngine.Simulator\SimulationEngine.Simulator.csproj", "{0385ECEC-15C0-47E5-B1B0-37574A70C8CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationEngine.Tests", "SimulationEngine.Tests\SimulationEngine.Tests.csproj", "{A86D73CD-1F56-45D4-A789-8203FB73E3D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimulationEngine.REBEL2", "SimulationEngine.REBEL2\SimulationEngine.REBEL2.csproj", "{60F43DEC-B9C9-4DAA-9305-31CD8B4E3B60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{A86D73CD-1F56-45D4-A789-8203FB73E3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A86D73CD-1F56-45D4-A789-8203FB73E3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A86D73CD-1F56-45D4-A789-8203FB73E3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60F43DEC-B9C9-4DAA-9305-31CD8B4E3B60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60F43DEC-B9C9-4DAA-9305-31CD8B4E3B60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60F43DEC-B9C9-4DAA-9305-31CD8B4E3B60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60F43DEC-B9C9-4DAA-9305-31CD8B4E3B60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
