@@ -1,0 +1,31 @@
+using SimulationEngine.REBEL2.Assembly.Models;
+using static SimulationEngine.REBEL2.Assembly.InstructionSet;
+
+namespace SimulationEngine.REBEL2.Assembly;
+
+internal static class PageAssembler
+{
+    public static IReadOnlyList<AssembledInstruction> AssemblePage(string assembly, bool padPage, string padInstruction)
+    {
+        var instructions = new List<AssembledInstruction>(PageInstructionCount);
+        var parsed = InstructionParser.ParsePage(assembly);
+
+        foreach (var parsedInstruction in parsed)
+        {
+            var machineCode = InstructionEncoder.Translate(parsedInstruction);
+            instructions.Add(new AssembledInstruction(instructions.Count, AddressSpace[instructions.Count], parsedInstruction.Text, machineCode));
+        }
+
+        if (padPage && instructions.Count < PageInstructionCount)
+        {
+            var padMachineCode = InstructionEncoder.Translate(padInstruction);
+            while (instructions.Count < PageInstructionCount)
+            {
+                var address = AddressSpace[instructions.Count];
+                instructions.Add(new AssembledInstruction(instructions.Count, address, padInstruction, padMachineCode));
+            }
+        }
+
+        return instructions;
+    }
+}

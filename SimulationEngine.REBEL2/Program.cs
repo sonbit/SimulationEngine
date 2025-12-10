@@ -44,32 +44,35 @@ var pages = new[]
     ADD x-3, x0, x1
     ADDi x-2, x0, ++
     ADDi x0, x0, 00
-    MUDI x-1, x2, x1
-    MIMA x3, x2, x1
-    MIMA x4, x1, x1
-    MIMA x3, x2, x1
-    MIMA x4, x2, x2
+    MUL.T x-1, x2, x1
+    MINW.T x3, x2, x1
+    MINT.T x4, x1, x1
+    MAXW.T x3, x2, x1
+    MAXT.T x4, x2, x2
     """,
     // ROM PAGE 3: TEST REBEL-2 INSTRUCTIONS 0+ to ++
     """
-    SHI x-4, x-4, 0+
-    SHI x-3, x-3, 0+
-    SHI x-2, x-2, +-
-    COMP x-1, x1, x2
-    COMP x-1, x1, x0
-    MIMA x0, x0, x0
-    MIMA x0, x0, x0
-    MIMA x0, x0, x0
-    PCO x4, x0, x0
+    SHI x-4, x-4, 0+, x4
+    SHI x-3, x-3, 0+, x3
+    SHI x-2, x-2, +-, x2
+    CMPW.T x-1, x1, x2
+    CMPW.T x-1, x1, x0
+    MINW.T x0, x0, x0
+    MINT.T x0, x0, x0
+    MAXW.T x0, x0, x0
+    JALR.T x4, x0, 00
     """
 };
 
-var testString = string.Join(Environment.NewLine, Assembler.AssemblePages(pages));
+var assembledVectors = Assembler.AssemblePages(pages, annotate: true);
+
+Console.WriteLine("Assembled input vectors (Clk WrInst Word):");
+foreach (var vector in assembledVectors)
+    Console.WriteLine(vector);
+
+var testString = string.Join(Environment.NewLine, assembledVectors);
 
 var tests = TestStringConverter.GetInputOutputPairs(testString);
-
-foreach (var (inputs, _) in tests)
-    Console.WriteLine(inputs);
 
 return;
 
