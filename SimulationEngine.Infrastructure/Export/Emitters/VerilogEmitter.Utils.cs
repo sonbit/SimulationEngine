@@ -43,7 +43,7 @@ public sealed partial class VerilogEmitter
             : GetOrCreateTerminalNet(startTerminal);
 
         if (startTerminal.IsBinary() && !endTerminal.IsBinary())
-            net = $"{net},!{net}";
+            net = $"{{{net},!{net}}}";
         else if (!startTerminal.IsBinary() && endTerminal.IsBinary())
             net = $"{net}[1]";
 
