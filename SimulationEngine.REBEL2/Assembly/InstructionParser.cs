@@ -5,9 +5,11 @@ namespace SimulationEngine.REBEL2.Assembly;
 
 internal static class InstructionParser
 {
-    public static List<ParsedInstruction> ParsePage(string assembly)
+    public static ParsedPage ParsePage(string assembly)
     {
         var instructions = new List<ParsedInstruction>(PageInstructionCount);
+        var labels = new Dictionary<string, LabelDefinition>(StringComparer.OrdinalIgnoreCase);
+        var pendingLabels = new List<(string Name, int LineNumber)>();
         var lines = assembly.Split(NewLineSeparators, StringSplitOptions.None);
 
         for (int i = 0; i < lines.Length; i++)
@@ -17,8 +19,39 @@ internal static class InstructionParser
             if (string.IsNullOrWhiteSpace(line))
                 continue;
 
-            if (line.Contains(':'))
-                throw new InvalidOperationException($"Labels are not supported in this assembler iteration (line {lineNumber}).");
+            while (true)
+            {
+                var colonIndex = line.IndexOf(':');
+                if (colonIndex < 0)
+                    break;
+
+                var label = line[..colonIndex].Trim();
+                if (string.IsNullOrWhiteSpace(label))
+                    throw new InvalidOperationException($"Missing label name on line {lineNumber}.");
+                if (!IsValidLabel(label))
+                    throw new InvalidOperationException(
+                        $"Invalid label '{label}' on line {lineNumber}. Labels must start with a letter or underscore and contain only letters, digits, or underscores.");
+                if (RegisterDictionary.ContainsKey(label))
+                    throw new InvalidOperationException($"Label '{label}' on line {lineNumber} conflicts with a register name.");
+
+                if (labels.TryGetValue(label, out var existingLabel))
+                    throw new InvalidOperationException($"Label '{label}' is already defined (first seen on line {existingLabel.LineNumber}).");
+                var duplicatePending = pendingLabels.FirstOrDefault(l => string.Equals(l.Name, label, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrEmpty(duplicatePending.Name))
+                    throw new InvalidOperationException($"Label '{label}' is already defined (first seen on line {duplicatePending.LineNumber}).");
+
+                pendingLabels.Add((label, lineNumber));
+                line = line[(colonIndex + 1)..].TrimStart();
+                if (string.IsNullOrEmpty(line))
+                    break;
+            }
+
+            if (string.IsNullOrWhiteSpace(line))
+                continue;
+
+            foreach (var (name, labelLine) in pendingLabels)
+                labels[name] = new LabelDefinition(instructions.Count, labelLine);
+            pendingLabels.Clear();
 
             var parts = line.Split(ArgumentSeparators, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 0)
@@ -29,7 +62,13 @@ internal static class InstructionParser
                 throw new InvalidOperationException("Cannot encode more than 9 instructions in a single ROM page.");
         }
 
-        return instructions;
+        if (pendingLabels.Count > 0)
+        {
+            var dangling = pendingLabels[0];
+            throw new InvalidOperationException($"Label '{dangling.Name}' declared on line {dangling.LineNumber} is not attached to an instruction.");
+        }
+
+        return new ParsedPage(instructions, labels);
     }
 
     public static string StripComments(string line)
@@ -55,5 +94,23 @@ internal static class InstructionParser
 
         var first = new[] { hashIndex, semicolonIndex, dollarIndex, slashIndex }.Where(idx => idx >= 0).DefaultIfEmpty(-1).Min();
         return first >= 0 ? line[..first] : line;
+    }
+
+    private static bool IsValidLabel(string label)
+    {
+        if (string.IsNullOrEmpty(label))
+            return false;
+
+        if (!(char.IsLetter(label[0]) || label[0] == '_'))
+            return false;
+
+        for (int i = 1; i < label.Length; i++)
+        {
+            var ch = label[i];
+            if (!(char.IsLetterOrDigit(ch) || ch == '_'))
+                return false;
+        }
+
+        return true;
     }
 }

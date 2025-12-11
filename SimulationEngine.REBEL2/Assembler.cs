@@ -23,7 +23,6 @@ public static class Assembler
 
     /// <summary>
     /// Assemble a block of REBEL2 assembly into a list of 10-trit machine code strings.
-    /// Labels are intentionally not supported in this iteration.
     /// </summary>
     public static IReadOnlyList<string> AssembleInstructions(string assembly) =>
         [.. PageAssembler.AssemblePage(assembly, padPage: false, DefaultPaddingInstruction).Select(inst => inst.MachineCode)];
@@ -53,7 +52,7 @@ public static class Assembler
         VectorEmitter.BuildInputSequence(pageAssemblies, padPages, annotate);
 
     /// <summary>
-    /// Translate a single instruction without label resolution.
+    /// Translate a single instruction. Labels are resolved within the provided snippet.
     /// </summary>
     public static string Translate(string instruction) =>
         InstructionEncoder.Translate(instruction);

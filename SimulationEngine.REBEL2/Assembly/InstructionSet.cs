@@ -11,7 +11,7 @@ internal static class InstructionSet
     public const string Imm = "imm";
 
     public const string DefaultField = "00"; // Spec: if not specified or don't care, use 0
-    public const string DefaultPaddingInstruction = "ADDi.t x0, x-0, 00"; // Write zero into hardwired zero register: safe NOP
+    public const string DefaultPaddingInstruction = "NOP.T"; // Write zero into hardwired zero register: safe NOP
     public const string ZeroInstruction = "0000000000";
     public const int PageInstructionCount = 9;
 

@@ -8,13 +8,13 @@ internal static class InstructionEncoder
     public static string Translate(string instruction)
     {
         var parsed = InstructionParser.ParsePage(instruction);
-        if (parsed.Count != 1)
+        if (parsed.Instructions.Count != 1)
             throw new InvalidOperationException("Translate expects exactly one instruction.");
 
-        return Translate(parsed[0]);
+        return Translate(parsed.Instructions[0], parsed.Labels);
     }
 
-    public static string Translate(ParsedInstruction instruction)
+    public static string Translate(ParsedInstruction instruction, IReadOnlyDictionary<string, LabelDefinition>? labels = null)
     {
         var mnemonic = instruction.Parts[0];
         var pattern = ResolvePattern(mnemonic) ?? throw new InvalidOperationException($"Unknown mnemonic '{mnemonic}' on line {instruction.LineNumber}.");
@@ -44,7 +44,7 @@ internal static class InstructionEncoder
         {
             var fieldName = pattern.AssemblyOperands[i];
             var targetField = string.Equals(fieldName, Imm, StringComparison.OrdinalIgnoreCase) ? Rs2 : fieldName;
-            var value = ParseOperand(operands[i], targetField, instruction.LineNumber);
+            var value = ParseOperand(operands[i], targetField, instruction.LineNumber, labels);
             fields[targetField] = value;
         }
 
@@ -56,9 +56,17 @@ internal static class InstructionEncoder
             fields[Rd2]);
     }
 
-    private static string ParseOperand(string operand, string field, int lineNumber)
+    private static string ParseOperand(string operand, string field, int lineNumber, IReadOnlyDictionary<string, LabelDefinition>? labels)
     {
         var token = operand.Trim();
+
+        if (labels != null && labels.TryGetValue(token, out var label))
+        {
+            if (label.InstructionIndex < 0 || label.InstructionIndex >= PageInstructionCount)
+                throw new InvalidOperationException($"Label '{token}' on line {lineNumber} resolved to invalid address {label.InstructionIndex}.");
+
+            return AddressSpace[label.InstructionIndex];
+        }
 
         if (RegisterDictionary.TryGetValue(token, out var registerValue))
             return registerValue;
@@ -70,7 +78,7 @@ internal static class InstructionEncoder
             return ToBalancedTritPair(numericValue, lineNumber);
 
         throw new InvalidOperationException(
-            $"Unable to parse operand '{operand}' for field '{field}' on line {lineNumber}. Labels are not supported in this assembler iteration.");
+            $"Unable to parse operand '{operand}' for field '{field}' on line {lineNumber}. Unknown register, immediate value, or label.");
     }
 
     private static InstructionPattern? ResolvePattern(string mnemonic)

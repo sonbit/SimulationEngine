@@ -10,9 +10,9 @@ internal static class PageAssembler
         var instructions = new List<AssembledInstruction>(PageInstructionCount);
         var parsed = InstructionParser.ParsePage(assembly);
 
-        foreach (var parsedInstruction in parsed)
+        foreach (var parsedInstruction in parsed.Instructions)
         {
-            var machineCode = InstructionEncoder.Translate(parsedInstruction);
+            var machineCode = InstructionEncoder.Translate(parsedInstruction, parsed.Labels);
             instructions.Add(new AssembledInstruction(instructions.Count, AddressSpace[instructions.Count], parsedInstruction.Text, machineCode));
         }
 

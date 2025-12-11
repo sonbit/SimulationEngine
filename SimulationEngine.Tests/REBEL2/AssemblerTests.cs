@@ -86,17 +86,57 @@ public class AssemblerTests
     }
 
     [Fact]
-    public void AssembleInstructions_FailsWhenLabelIsProvided()
+    public void AssembleInstructions_ResolvesLabels()
     {
         const string assembly = """
         start:
-        ADDi x0, x-4, ++
-        loop:
-        ADD x-4, x0, x1
-        PCO x1, loop, 0+
+            ADDi x0, x-4, ++
+        loop: ADD x-4, x0, x1
+              PCO x1, loop, 0+
         """;
 
-        Assert.Throws<InvalidOperationException>(() => Assembler.AssembleInstructions(assembly));
+        var result = Assembler.AssembleInstructions(assembly);
+
+        Assert.Equal("-0--++0000", result[0]);
+        Assert.Equal("--000+--00", result[1]);
+        Assert.Equal("++-00+0+00", result[2]);
+    }
+
+    [Fact]
+    public void AssembleInstructions_AllowsForwardLabelReference()
+    {
+        const string assembly = """
+              PCO x0, target, 00
+        target:
+              NOP.T
+        """;
+
+        var result = Assembler.AssembleInstructions(assembly);
+
+        Assert.Equal(2, result.Count);
+        Assert.Equal(Assembler.Translate("PCO x0, -0, 00"), result[0]);
+        Assert.Equal("-000000000", result[1]);
+    }
+
+    [Fact]
+    public void AssembleInstructions_ThrowsOnUnknownLabel()
+    {
+        const string assembly = """
+        ADDi x0, x-4, ++
+        PCO x1, missing, 0+
+        """;
+
+        var ex = Assert.Throws<InvalidOperationException>(() => Assembler.AssembleInstructions(assembly));
+        Assert.Contains("missing", ex.Message);
+    }
+
+    [Fact]
+    public void AssembleInstructions_ThrowsWhenLabelIsNotAttachedToInstruction()
+    {
+        const string assembly = "dangling:";
+
+        var ex = Assert.Throws<InvalidOperationException>(() => Assembler.AssembleInstructions(assembly));
+        Assert.Contains("dangling", ex.Message);
     }
 
     [Fact]
