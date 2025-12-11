@@ -21,7 +21,26 @@ public class _9Ram2 : Subcircuit
     public Port RdData10 => Outputs[1];
     public Port RdData21 => Outputs[2];
     public Port RdData20 => Outputs[3];
-    
+
+    public Port Q81 => Outputs[4];
+    public Port Q80 => Outputs[5];
+    public Port Q71 => Outputs[6];
+    public Port Q70 => Outputs[7];
+    public Port Q61 => Outputs[8];
+    public Port Q60 => Outputs[9];
+    public Port Q51 => Outputs[10];
+    public Port Q50 => Outputs[11];
+    //public Port Q41 => Outputs[8]; x0
+    //public Port Q40 => Outputs[9]; x0
+    public Port Q31 => Outputs[12];
+    public Port Q30 => Outputs[13];
+    public Port Q21 => Outputs[14];
+    public Port Q20 => Outputs[15];
+    public Port Q11 => Outputs[16];
+    public Port Q10 => Outputs[17];
+    public Port Q01 => Outputs[18];
+    public Port Q00 => Outputs[19];
+
     public _9Ram2()
     {
         this.AddInputs(
@@ -29,6 +48,23 @@ public class _9Ram2 : Subcircuit
             nameof(WrAddr1), nameof(WrAddr0), nameof(WrData1), nameof(WrData0));
         this.AddBinaryInputs(nameof(Clk), nameof(WrEnable));
         this.AddOutputs(nameof(RdData11), nameof(RdData10), nameof(RdData21), nameof(RdData20));
+        this.AddOutputs(
+            nameof(Q81),
+            nameof(Q80),
+            nameof(Q71),
+            nameof(Q70),
+            nameof(Q61),
+            nameof(Q60),
+            nameof(Q51),
+            nameof(Q50),
+            nameof(Q31),
+            nameof(Q30),
+            nameof(Q21),
+            nameof(Q20),
+            nameof(Q11),
+            nameof(Q10),
+            nameof(Q01),
+            nameof(Q00));
 
         var _9BDEMUX = this.AddSubcircuit(new _9BDEMUX());
         var _8Reg2 = this.AddSubcircuit(new _8Reg2());
@@ -123,7 +159,24 @@ public class _9Ram2 : Subcircuit
             (hardwired01.Q, RdData11),
             (hardwired00.Q, RdData10),
             (hardwired11.Q, RdData21),
-            (hardwired10.Q, RdData20)
+            (hardwired10.Q, RdData20),
+
+            (_8Reg2.Q81, Q81),
+            (_8Reg2.Q80, Q80),
+            (_8Reg2.Q71, Q71),
+            (_8Reg2.Q70, Q70),
+            (_8Reg2.Q61, Q61),
+            (_8Reg2.Q60, Q60),
+            (_8Reg2.Q51, Q51),
+            (_8Reg2.Q50, Q50),
+            (_8Reg2.Q31, Q31),
+            (_8Reg2.Q30, Q30),
+            (_8Reg2.Q21, Q21),
+            (_8Reg2.Q20, Q20),
+            (_8Reg2.Q11, Q11),
+            (_8Reg2.Q10, Q10),
+            (_8Reg2.Q01, Q01),
+            (_8Reg2.Q00, Q00),
         ]);
     }
 

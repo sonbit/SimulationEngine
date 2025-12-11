@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using SimulationEngine.Designs.REBEL2.ALU;
+﻿using SimulationEngine.Designs.REBEL2.ALU;
 using SimulationEngine.Designs.REBEL2.Control;
 using SimulationEngine.Designs.REBEL2.Fetch;
 using SimulationEngine.Designs.Subcircuits.Adders;
@@ -25,6 +24,25 @@ public class REBEL2 : Subcircuit
     public Port WrData1 => Inputs[10];
     public Port WrData0 => Inputs[11];
 
+    public Port Q81 => Outputs[0];
+    public Port Q80 => Outputs[1];
+    public Port Q71 => Outputs[2];
+    public Port Q70 => Outputs[3];
+    public Port Q61 => Outputs[4];
+    public Port Q60 => Outputs[5];
+    public Port Q51 => Outputs[6];
+    public Port Q50 => Outputs[7];
+    //public Port Q41 => Outputs[8]; x0
+    //public Port Q40 => Outputs[9]; x0
+    public Port Q31 => Outputs[8];
+    public Port Q30 => Outputs[9];
+    public Port Q21 => Outputs[10];
+    public Port Q20 => Outputs[11];
+    public Port Q11 => Outputs[12];
+    public Port Q10 => Outputs[13];
+    public Port Q01 => Outputs[14];
+    public Port Q00 => Outputs[15];
+
     public Subcircuit ProgramCounter => Subcircuits[0];
     public Subcircuit ROM => Subcircuits[1];
     public Subcircuit CPUControl => Subcircuits[2];
@@ -48,6 +66,24 @@ public class REBEL2 : Subcircuit
             nameof(WrData2),
             nameof(WrData1), 
             nameof(WrData0));
+
+        this.AddOutputs(
+            nameof(Q81),
+            nameof(Q80),
+            nameof(Q71),
+            nameof(Q70),
+            nameof(Q61),
+            nameof(Q60),
+            nameof(Q51),
+            nameof(Q50),
+            nameof(Q31),
+            nameof(Q30),
+            nameof(Q21),
+            nameof(Q20),
+            nameof(Q11),
+            nameof(Q10),
+            nameof(Q01),
+            nameof(Q00));
 
         var _K00 = this.AddLogicGate("K00");
         var _200 = this.AddLogicGate("200");
@@ -161,6 +197,23 @@ public class REBEL2 : Subcircuit
             //(alu.Cout, ), 
             (alu.Q1, ram.WrData1),
             (alu.Q0, ram.WrData0),
+
+            (ram.Q81, Q81),
+            (ram.Q80, Q80),
+            (ram.Q71, Q71),
+            (ram.Q70, Q70),
+            (ram.Q61, Q61),
+            (ram.Q60, Q60),
+            (ram.Q51, Q51),
+            (ram.Q50, Q50),
+            (ram.Q31, Q31),
+            (ram.Q30, Q30),
+            (ram.Q21, Q21),
+            (ram.Q20, Q20),
+            (ram.Q11, Q11),
+            (ram.Q10, Q10),
+            (ram.Q01, Q01),
+            (ram.Q00, Q00),
         ]);
     }
 

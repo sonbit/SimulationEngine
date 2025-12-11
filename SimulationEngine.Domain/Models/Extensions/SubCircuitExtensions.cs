@@ -1,5 +1,6 @@
 ﻿using SimulationEngine.Domain.Models.Enums;
 using SimulationEngine.Domain.Models.Metadata.Enums;
+using System.Linq;
 
 namespace SimulationEngine.Domain.Models.Extensions;
 
@@ -82,7 +83,7 @@ public static class SubcircuitExtensions
     {
         var port = new Port(radix)
         {
-            Title = title,
+            Title = title ?? $"{direction}_{subcircuit.Ports.Count(p => p.Direction == direction)}",
             Direction = direction,
             Ordinal = direction == PortDirection.Input
                     ? subcircuit.Inputs.Count
