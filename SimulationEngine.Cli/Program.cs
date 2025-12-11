@@ -122,10 +122,10 @@ var testString = """
     000000000000 #instruction at PC address ++
     100000000000
 
-      # ROM PAGE 3: TEST REBEL-2 INSTRUCTIONS 0+ to ++ 
+    # ROM PAGE 3: TEST REBEL-2 INSTRUCTIONS 0+ to ++ 
     
     #TEST OPCODE 0+ (SHIFT)
-    010+--0+--00 #1. SEEMS WRONG? SHI (x-4) = SHIFT (x-4) with 1 pos to cyclic -> 0- becomes -0     
+    010+--0+--00 #1. SHI (x-4) = SHIFT (x-4) with 1 pos to cyclic -> 0- becomes -0     
     110000000000
     010+-00+-0-+ #2. SHI (x-3) = SHIFT (x-3) with 1 pos to left, add + becomes ++
     110000000000
@@ -139,18 +139,17 @@ var testString = """
     01+-0+000-++ #5. COMPi (x-1) = COMPi( (x1),(x0)) => 0- << 00 write 0+ into x-1
     110000000000
     
-    #TEST OPCODE +0 (BCEG) WORK IN PROGRESS
-    010000000000 #6. BCEG test equal  
+    #TEST OPCODE +0 (BCEG) 
+    01+0++++0+00 #6. BCEG test equal x4 and x4 (goto PC + imm if equal PC + 00 if greater =) 
     110000000000
-    010000000000 #7. BCEG test larger than
+    01+0+0++000+ #7. BCEG test equal x3 and x4 (goto x0 if equal x4 if greater) -1 > -3 
     110000000000
-    010000000000 #8. BCEG test smaller than
+    01+0+++00000 #8. BCEG test smaller x4 and x3 (goto x0 if equal x4 if greater, no goto if smaller) -3 > -1 
     110000000000
-
-    #TEST OPCODE ++ (PCO) WORK IN PROGRESS We need to test JALR and AUIPC later
-    01++0000++0+ #9. PCO JAL test x4 = PC +1 plus jump to PC + imm
+ 
+    #TEST OPCODE ++ (PCO)
+    01++00-0++0+ #9. PCO JAL test x4 = PC +1 plus jump to PC + imm
     110000000000
-
     
     #START EXECUTING INSTRUCTIONS
     000000000000 #instruction at PC address --
@@ -173,6 +172,52 @@ var testString = """
     100000000000
     000000000000 #instruction at PC address ++
     100000000000
+
+
+    # ROM PAGE 4: TEST REBEL-2 INSTRUCTIONS ++ and MISC
+    01++0000++0- #1. PCO AUIPC test x4 = PC + imm plus no jump
+    110000000000
+    01++00--0000 #2. PCO JALR/JUMP test x0 = PC +1 plus jump to PC + imm (RESET to --)
+    110000000000
+    010000000000 #3. NOP
+    110000000000
+    010000000000 #4. NOP
+    110000000000
+    010000000000 #5. NOP
+    110000000000
+    010000000000 #6. NOP
+    110000000000
+    010000000000 #7. NOP
+    110000000000
+    010000000000 #8. NOP
+    110000000000
+    010000000000 #9. NOP
+    110000000000
+
+
+   
+    #START EXECUTING INSTRUCTIONS
+    000000000000 #instruction at PC address --
+    100000000000
+    000000000000 #instruction at PC address -0
+    100000000000
+    000000000000 #instruction at PC address -+
+    100000000000
+
+    000000000000 #instruction at PC address 0-
+    100000000000
+    000000000000 #instruction at PC address 00
+    100000000000
+    000000000000 #instruction at PC address 0+
+    100000000000
+
+    000000000000 #instruction at PC address +-
+    100000000000
+    000000000000 #instruction at PC address +0  
+    100000000000
+    000000000000 #instruction at PC address ++
+    100000000000
+
 """;
    
 var tests = TestStringConverter.GetInputOutputPairs(testString);

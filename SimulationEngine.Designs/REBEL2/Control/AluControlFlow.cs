@@ -29,7 +29,7 @@ public class AluControlFlow : Subcircuit
             nameof(Func0));
 
         var h14 = this.AddLogicGate("H14");
-        var xxx = this.AddLogicGate("XXX");
+        var gxx = this.AddLogicGate("GXX");
         var _060 = this.AddLogicGate("060");
         var _2 = this.AddLogicGate("2");
         var h = this.AddLogicGate("H");
@@ -48,8 +48,8 @@ public class AluControlFlow : Subcircuit
             (Op1, dar.B),
             (Op0, dar.A),
 
-            (Op1, xxx.B),
-            (Op0, xxx.A),
+            (Op1, gxx.B),
+            (Op0, gxx.A),
 
             (Op1, dae.B),
             (Op0, dae.A),
@@ -64,7 +64,7 @@ public class AluControlFlow : Subcircuit
 
             (dar.Q, _3MUX1_0.Sel),
             (_060.Q, _3MUX1_0.C),
-            (xxx.Q, _3MUX1_0.B),
+            (gxx.Q, _3MUX1_0.B),
             (_2.Q, _3MUX1_0.A),
 
             (dae.Q, _3MUX1_1.Sel),

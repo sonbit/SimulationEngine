@@ -51,6 +51,9 @@ public class REBEL2 : Subcircuit
 
         var _K00 = this.AddLogicGate("K00");
         var _200 = this.AddLogicGate("200");
+        var _DPP = this.AddLogicGate("DPP"); // PC load enable AND gate
+        var _Z = this.AddLogicGate("Z"); //Hardwired 1
+        var _D = this.AddLogicGate("D"); //Hardwired 0
 
         var prog_ctr = this.AddSubcircuit(new ProgCtr2());
         var instr_reg = this.AddSubcircuit(new _9Rom10());
@@ -66,9 +69,13 @@ public class REBEL2 : Subcircuit
        
         this.AddWires([
             (Clk, prog_ctr.Clk),
-            (cpuControl.Prog_Ctr, prog_ctr.LdEn),
+            (cpuControl.Prog_Ctr, _DPP.B),
             (wr_add.Q1, prog_ctr.LdAddr1),
             (wr_add.Q0, prog_ctr.LdAddr0),
+
+            (_DPP.Q, prog_ctr.LdEn),
+
+            (WrInst, _DPP.A),
 
             (WrInst, _K00.B),
             (Clk, _K00.A),
@@ -116,10 +123,13 @@ public class REBEL2 : Subcircuit
             (cpuControl.Alu_B_Mux_Ctrl, alu_b_mux.Sel),
             (ram.RdData21, alu_b_mux.C1),
             (ram.RdData20, alu_b_mux.C0),
-            //(, alu_b_mux.B1), // Always 0 - Not necessary to handle, heptaindex independent of B
-            //(, alu_b_mux.B0), // Always 1 - Not necessary to handle, heptaindex independent of B
+            (_D.Q, alu_b_mux.B1), // Always 0 - Not necessary to handle, heptaindex independent of B
+            (_Z.Q, alu_b_mux.B0), // Always 1 - Not necessary to handle, heptaindex independent of B
             (instr_reg.Rs21, alu_b_mux.A1),
             (instr_reg.Rs20, alu_b_mux.A0),
+
+            (Clk,_D.A), //random input for hardwired 1
+            (Clk,_Z.A), //random input for hardwired 1
 
             (cpuControl.Add_A_Mux_Ctrl, add_a_mux.Sel),
             (ram.RdData11, add_a_mux.B1),

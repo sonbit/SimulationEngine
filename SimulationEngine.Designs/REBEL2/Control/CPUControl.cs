@@ -40,6 +40,7 @@ public class CPUControl : Subcircuit
             nameof(Prog_Ctr),
             nameof(Wb_Ctr));
 
+        var PCOoverwriteHack = this.AddLogicGate("HZZDDD900");
         var aluControl = this.AddSubcircuit(new AluControlWithShift());
         var muxControl = this.AddSubcircuit(new MuxControl());
        
@@ -55,8 +56,13 @@ public class CPUControl : Subcircuit
             (Rd20, muxControl.Rd20),
             (Cmp, muxControl.Cmp),
 
+            (Op1, PCOoverwriteHack.A),
+            (Op0, PCOoverwriteHack.B),
+            (aluControl.Func1, PCOoverwriteHack.C),
+            (PCOoverwriteHack.Q, Alu_Func1),
+
             (aluControl.Func2, Alu_Func2),
-            (aluControl.Func1, Alu_Func1),
+           // (aluControl.Func1, Alu_Func1),
             (aluControl.Func0, Alu_Func0),
             (muxControl.AluAMux, Alu_A_Mux_Ctrl),
             (muxControl.AluBMux, Alu_B_Mux_Ctrl),

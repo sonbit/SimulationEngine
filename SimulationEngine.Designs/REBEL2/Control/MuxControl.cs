@@ -36,21 +36,21 @@ public class MuxControl : Subcircuit
             nameof(WrEnable));
 
         var _ZZDDDDXXX = this.AddLogicGate("ZZDDDDXXX");
-        var _RDD = this.AddLogicGate("RDD");
+        var _R4D = this.AddLogicGate("R4D");
         var _9VZ = this.AddLogicGate("9VZ");
         var _4RD = this.AddLogicGate("4RD");
         var _ZHZ = this.AddLogicGate("ZHZ");
-        var _DZZ = this.AddLogicGate("DZZ");
+        var _CVV = this.AddLogicGate("CVV");
         var _PPK = this.AddLogicGate("PPK");
-        var _48Z = this.AddLogicGate("48Z");
+        var _RH8 = this.AddLogicGate("RH8");
 
         
        
        
         this.AddWires([
             //inputs to gates
-            (Op1, _RDD.B),
-            (Op0, _RDD.A),
+            (Op1, _R4D.B),
+            (Op0, _R4D.A),
 
             (Op1, _9VZ.B),
             (Op0, _9VZ.A),
@@ -64,32 +64,32 @@ public class MuxControl : Subcircuit
              //RD(2)1 is not connected
             //(Rd1, ???),
             
-            (Rd20, _DZZ.A),
+            (Rd20, _CVV.A),
             (Rd20, _PPK.A),
             (Rd20, _ZZDDDDXXX.B),
 
-            (Cmp, _48Z.A),  
+            (Cmp, _RH8.A),  
             (Cmp, _ZZDDDDXXX.A),  
             
             //gate 1st column
-            (_RDD.Q, _DZZ.B),
-            (_RDD.Q, AluAMux),
+            (_R4D.Q, _CVV.B),
+            (_R4D.Q, AluAMux),
             
             (_9VZ.Q, _PPK.B),
            
             (_4RD.Q, _ZZDDDDXXX.C),
-            (_4RD.Q, _48Z.B),
+            (_4RD.Q, _RH8.B),
 
             (_ZHZ.Q, WrEnable),
 
             //gate 2nd column
-             (_DZZ.Q, AddAMux),
+             (_CVV.Q, AddAMux),
 
              (_PPK.Q, AluBMux),
 
              (_ZZDDDDXXX.Q, ProgCtr),
 
-             (_48Z.Q, AddBMux),
+             (_RH8.Q, AddBMux),
 
         ]);
     }
