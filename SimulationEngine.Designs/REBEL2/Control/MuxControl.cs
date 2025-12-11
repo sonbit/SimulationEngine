@@ -42,7 +42,7 @@ public class MuxControl : Subcircuit
         var _ZHZ = this.AddLogicGate("ZHZ");
         var _CVV = this.AddLogicGate("CVV");
         var _PPK = this.AddLogicGate("PPK");
-        var _RH8 = this.AddLogicGate("RH8");
+        var _4HH = this.AddLogicGate("4HH");
 
         
        
@@ -68,7 +68,7 @@ public class MuxControl : Subcircuit
             (Rd20, _PPK.A),
             (Rd20, _ZZDDDDXXX.B),
 
-            (Cmp, _RH8.A),  
+            (Cmp, _4HH.A),  
             (Cmp, _ZZDDDDXXX.A),  
             
             //gate 1st column
@@ -78,7 +78,7 @@ public class MuxControl : Subcircuit
             (_9VZ.Q, _PPK.B),
            
             (_4RD.Q, _ZZDDDDXXX.C),
-            (_4RD.Q, _RH8.B),
+            (_4RD.Q, _4HH.B),
 
             (_ZHZ.Q, WrEnable),
 
@@ -89,7 +89,7 @@ public class MuxControl : Subcircuit
 
              (_ZZDDDDXXX.Q, ProgCtr),
 
-             (_RH8.Q, AddBMux),
+             (_4HH.Q, AddBMux),
 
         ]);
     }
