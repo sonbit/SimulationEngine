@@ -31,9 +31,6 @@ public class AssemblerTests
     public void Translate_MUDI()
     {
         Assert.Equal("0-+-+00+00", Assembler.Translate("MUL.T x1, x2, x3"));
-        Assert.Equal("0-+-+00+00", Assembler.Translate("MULU.T x1, x2, x3"));
-        Assert.Equal("0-+-+00+00", Assembler.Translate("DIV.T x1, x2, x3"));
-        Assert.Equal("0-+-+00+00", Assembler.Translate("REM.T x1, x2, x3"));
     }
 
     [Fact]
@@ -48,9 +45,13 @@ public class AssemblerTests
     [Fact]
     public void Translate_SHI()
     {
-        Assert.Equal("0++-++0+0+", Assembler.Translate("SLI.T x1, x2, ++, 0+"));
-        Assert.Equal("0++-++0++0", Assembler.Translate("SRI.T x1, x2, ++, +0"));
-        Assert.Equal("0++-++0+0+", Assembler.Translate("SC.T x1, x2, ++, 0+"));
+        Assert.Equal("0++-++0+--", Assembler.Translate("SLIM.T x1, x2, ++"));
+        Assert.Equal("0++-++0+-0", Assembler.Translate("SLIZ.T x1, x2, ++"));
+        Assert.Equal("0++-++0+-+", Assembler.Translate("SLIP.T x1, x2, ++"));
+        Assert.Equal("0++-++0++-", Assembler.Translate("SRIM.T x1, x2, ++"));
+        Assert.Equal("0++-++0++0", Assembler.Translate("SRIZ.T x1, x2, ++"));
+        Assert.Equal("0++-++0+++", Assembler.Translate("SRIP.T x1, x2, ++"));
+        Assert.Equal("0++-++0+00", Assembler.Translate("SC.T x1, x2, ++"));
     }
 
     [Fact]
@@ -92,21 +93,21 @@ public class AssemblerTests
         start:
             ADDi x0, x-4, ++
         loop: ADD x-4, x0, x1
-              PCO x1, loop, 0+
+              JAL.T x1, loop
         """;
 
         var result = Assembler.AssembleInstructions(assembly);
 
         Assert.Equal("-0--++0000", result[0]);
         Assert.Equal("--000+--00", result[1]);
-        Assert.Equal("++-00+0+00", result[2]);
+        Assert.Equal("++00-00+0+", result[2]);
     }
 
     [Fact]
     public void AssembleInstructions_AllowsForwardLabelReference()
     {
         const string assembly = """
-              PCO x0, target, 00
+              JAL.T x0, target
         target:
               NOP.T
         """;
@@ -114,7 +115,7 @@ public class AssemblerTests
         var result = Assembler.AssembleInstructions(assembly);
 
         Assert.Equal(2, result.Count);
-        Assert.Equal(Assembler.Translate("PCO x0, -0, 00"), result[0]);
+        Assert.Equal(Assembler.Translate("JAL.T x0, -0"), result[0]);
         Assert.Equal("-000000000", result[1]);
     }
 
@@ -123,7 +124,7 @@ public class AssemblerTests
     {
         const string assembly = """
         ADDi x0, x-4, ++
-        PCO x1, missing, 0+
+        JAL.T x1, missing
         """;
 
         var ex = Assert.Throws<InvalidOperationException>(() => Assembler.AssembleInstructions(assembly));
@@ -208,9 +209,9 @@ public class AssemblerTests
             """,
             // ROM PAGE 3: TEST REBEL-2 INSTRUCTIONS 0+ to ++
             """
-            SHI x-4, x-4, 0+, x4
-            SHI x-3, x-3, 0+, x3
-            SHI x-2, x-2, +-, x2
+            SLIM.T x-4, x-4, 0+
+            SLIZ.T x-3, x-3, 0+
+            SRIP.T x-2, x-2, +-
             CMPW.T x-1, x1, x2
             CMPW.T x-1, x1, x0
             MINW.T x0, x0, x0
