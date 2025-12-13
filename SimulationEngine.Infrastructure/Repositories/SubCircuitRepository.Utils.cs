@@ -196,7 +196,7 @@ public partial class SubcircuitRepository
             {
                 Subcircuit = template,
                 TruthTable = truthTable,
-                Pins = [.. logicGate.Pins.Select(pin => new Pin { Role = pin.Role })]
+                Pins = [.. logicGate.Pins.Select(pin => new Pin(pin))]
             };
             dbContext.LogicGates.Add(newLogicGate);
             logicGateMap[logicGate] = newLogicGate;

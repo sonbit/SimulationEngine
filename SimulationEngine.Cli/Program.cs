@@ -73,7 +73,9 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-var app = new CommandApp(new TypeRegistrar(host.Services));
+using var scope = host.Services.CreateScope();
+
+var app = new CommandApp(new TypeRegistrar(scope.ServiceProvider));
 app.Configure(cfg =>
 {
     cfg.SetApplicationName(nameof(SimulationEngine));

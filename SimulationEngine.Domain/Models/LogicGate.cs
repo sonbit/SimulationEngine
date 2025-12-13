@@ -27,7 +27,7 @@ public class LogicGate : BaseEntity
     public LogicGate(LogicGate logicGate)
     {
         TruthTable = logicGate.TruthTable;
-        Pins = [.. logicGate.Pins.Select(pin => new Pin { Role = pin.Role })];
+        Pins = [.. logicGate.Pins.Select(pin => new Pin(pin))];
     }
 
     public LogicGateMetadata Metadata { get; set; } = new LogicGateMetadata();

@@ -10,6 +10,12 @@ public class Pin : Terminal
 
     public Pin(Radix radix) : this() => Metadata = new PinMetadata(radix);
 
+    public Pin(Pin pin) : this(pin.Metadata.Radix)
+    {
+        Role = pin.Role;
+        Title = pin.Title;
+    }
+
     public PinRole Role { get; set; }
 
     public LogicGate LogicGate { get; set; }
