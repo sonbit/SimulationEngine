@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimulationEngine.Application.Export.Emitters;
+using SimulationEngine.Application.Services.Analysis;
 using SimulationEngine.Application.Services.Database;
 using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Application.Services.Database.TruthTables;
@@ -40,6 +41,7 @@ var host = Host.CreateDefaultBuilder(args)
 
         services.AddScoped<IDatabaseService, DatabaseService>();
         services.AddScoped<IExportService, ExportService>();
+        services.AddScoped<ISubcircuitAnalysisService, SubcircuitAnalysisService>();
         services.AddScoped<ISubcircuitService, SubcircuitService>();
         services.AddScoped<ITruthTableService, TruthTableService>();
 
@@ -67,6 +69,7 @@ var host = Host.CreateDefaultBuilder(args)
         services.AddScoped<SubcircuitsListCommand>();
         services.AddScoped<SubcircuitsPopulateCommand>();
         services.AddScoped<SubcircuitsShowTreeCommand>();
+        services.AddScoped<SubcircuitsSummaryCommand>();
         services.AddScoped<TruthTablesFindCommand>();
         services.AddScoped<TruthTablesListCommand>();
         services.AddScoped<TruthTablesPopulateCommand>();
@@ -100,6 +103,7 @@ app.Configure(cfg =>
             sc.AddCommand<SubcircuitsListCommand>("list");
             sc.AddCommand<SubcircuitsPopulateCommand>("populate");
             sc.AddCommand<SubcircuitsShowTreeCommand>("tree");
+            sc.AddCommand<SubcircuitsSummaryCommand>("summary");
             sc.AddCommand<EmitCommand>("emit");
             sc.AddCommand<ExportCommand>("export");
         });

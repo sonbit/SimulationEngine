@@ -1,4 +1,5 @@
-﻿using SimulationEngine.Application.Services.Database.Subcircuits;
+﻿using SimulationEngine.Application.Services.Analysis;
+using SimulationEngine.Application.Services.Database.Subcircuits;
 using SimulationEngine.Cli.Handlers.IO;
 using SimulationEngine.Cli.Handlers.UI;
 using SimulationEngine.Domain.Models;
@@ -11,6 +12,7 @@ public sealed class SubcircuitFlow(
     IPrompter prompter, 
     IRenderer renderer, 
     ISubcircuitService service,
+    ISubcircuitAnalysisService analysisService,
     SimulationFlow simulationFlow, 
     EmitFlow emitFlow,
     ExportFlow exportFlow)
@@ -19,6 +21,7 @@ public sealed class SubcircuitFlow(
     {
         Simulate,
         [Description("Draw tree")] ShowTree,
+        [Description("Count gates")] CountGates,
         Emit,
         Export,
         Back
@@ -55,6 +58,10 @@ public sealed class SubcircuitFlow(
                     BuildTree(subcircuit);
                     break;
 
+                case MenuOptions.CountGates:
+                    await ShowGateSummaryAsync(subcircuit.Id);
+                    break;
+
                 case MenuOptions.Emit:
                     await emitFlow.RunMenuAsync(subcircuit);
                     break;
@@ -81,6 +88,37 @@ public sealed class SubcircuitFlow(
 
         renderer.Clear();
         BuildTree(subcircuit);
+    }
+
+    public async Task ShowGateSummaryAsync(int id)
+    {
+        var subcircuit = await service.GetByIdAsync(id);
+        if (subcircuit is null)
+        {
+            renderer.DrawError($"Subcircuit with id {id} was not found");
+            return;
+        }
+
+        var summary = analysisService.SummarizeGates(subcircuit);
+
+        renderer.Clear();
+        renderer.DrawHeader($"{subcircuit.Title} ({subcircuit.Id}) gate summary");
+
+        var arityTable = new Table().RoundedBorder().BorderColor(Color.Grey).Title("By Arity");
+        arityTable.AddColumn("Arity");
+        arityTable.AddColumn("Count");
+
+        foreach (var kvp in summary.ByArity.OrderBy(pair => pair.Key))
+            arityTable.AddRow(kvp.Key.ToString(), kvp.Value.ToString());
+
+        var heptaTable = new Table().RoundedBorder().BorderColor(Color.Grey).Title("By HeptaIndex");
+        heptaTable.AddColumn("HeptaIndex");
+        heptaTable.AddColumn("Count");
+
+        foreach (var kvp in summary.ByHeptaIndex.OrderByDescending(pair => pair.Value).ThenBy(pair => pair.Key, StringComparer.Ordinal))
+            heptaTable.AddRow(Markup.Escape(kvp.Key), kvp.Value.ToString());
+
+        renderer.Write(new Rows(arityTable, new Markup(string.Empty), heptaTable));
     }
 
     private void BuildTree(Subcircuit parentSubcircuit, int maxDepth = 32)
