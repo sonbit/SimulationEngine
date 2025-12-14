@@ -41,7 +41,7 @@ public partial class Basys3Emitter : IBasys3Emitter
         Builder.AppendLine(");");
 
         foreach (var output in subcircuit.Outputs)
-            Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndTitle(output)};");
+            Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndIdentifier(output)};");
         Builder.AppendLine();
 
         var moduleName = VerilogUtils.GetSubcircuitModuleName(subcircuit);
@@ -52,12 +52,12 @@ public partial class Basys3Emitter : IBasys3Emitter
 
         foreach (var inputPort in subcircuit.Inputs)
         {
-            connections.Add($"\t\t.{inputPort.Title}(sw[{(inputPort.IsBinary() ? "" : $"{switchIndex + 1}:")}{switchIndex}])");
+            connections.Add($"\t\t.{VerilogUtils.GetPortIdentifier(inputPort)}(sw[{(inputPort.IsBinary() ? "" : $"{switchIndex + 1}:")}{switchIndex}])");
             switchIndex += inputPort.IsBinary() ? 1 : 2;
         }
 
         foreach (var outputPort in subcircuit.Outputs)
-            connections.Add($"\t\t.{outputPort.Title}({outputPort.Title})");
+            connections.Add($"\t\t.{VerilogUtils.GetPortIdentifier(outputPort)}({VerilogUtils.GetPortIdentifier(outputPort)})");
 
         Builder.AppendLine(string.Join(",\n", connections));
         Builder.AppendLine("\t);");
@@ -69,7 +69,7 @@ public partial class Basys3Emitter : IBasys3Emitter
         var ledIndex = 0;
         foreach (var output in subcircuit.Outputs)
         {
-            Builder.AppendLine($"\tassign led[{(output.IsBinary() ? "" : $"{ledIndex + 1}:")}{ledIndex}] = {output.Title};");
+            Builder.AppendLine($"\tassign led[{(output.IsBinary() ? "" : $"{ledIndex + 1}:")}{ledIndex}] = {VerilogUtils.GetPortIdentifier(output)};");
             ledIndex += output.IsBinary() ? 1 : 2;
         }
 

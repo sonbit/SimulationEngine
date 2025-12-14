@@ -31,7 +31,7 @@ public sealed partial class VerilogEmitter
 
     private void CreateConnection(List<Wire> wires, Terminal endTerminal, string moduleName, List<string> connections)
     {
-        var name = $"{endTerminal.Title}";
+        var name = VerilogUtils.GetTerminalIdentifier(endTerminal);
 
         var wire = wires.FirstOrDefault(wire => wire.EndTerminal == endTerminal) ??
             throw new NullReferenceException($"Terminal '{name}' of '{moduleName}' is not driven by any wire.");
@@ -39,7 +39,7 @@ public sealed partial class VerilogEmitter
         var startTerminal = wire.StartTerminal;
 
         var net = startTerminal is Port port && port.IsInput() 
-            ? port.Title 
+            ? VerilogUtils.GetPortIdentifier(port) 
             : GetOrCreateTerminalNet(startTerminal);
 
         if (startTerminal.IsBinary() && !endTerminal.IsBinary())

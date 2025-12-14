@@ -19,10 +19,10 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
 
         Builder.AppendLine($"module {moduleName};");
         foreach (var input in subcircuit.Inputs)
-            Builder.AppendLine($"\treg {VerilogUtils.GetPortWidthAndTitle(input)};");
+            Builder.AppendLine($"\treg {VerilogUtils.GetPortWidthAndIdentifier(input)};");
 
         foreach (var output in subcircuit.Outputs)
-            Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndTitle(output)};");
+            Builder.AppendLine($"\twire {VerilogUtils.GetPortWidthAndIdentifier(output)};");
         Builder.AppendLine();
 
         AddDut(subcircuit);
@@ -42,7 +42,7 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
         Builder.AppendLine($"\t{VerilogUtils.GetSubcircuitModuleName(subcircuit)} dut (");
 
         foreach (var port in subcircuit.OrderedPorts)
-            Builder.AppendLine($"\t\t.{port.Title}({port.Title}),");
+            Builder.AppendLine($"\t\t.{VerilogUtils.GetPortIdentifier(port)}({VerilogUtils.GetPortIdentifier(port)}),");
         Builder.Remove(Builder.Length - 3, 1);
 
         Builder.AppendLine("\t);");
@@ -66,7 +66,8 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
             for (int k = 0; k < subcircuit.Inputs.Count; k++)
             {
                 var port = subcircuit.Inputs[k];
-                Builder.AppendLine($"\t\t{port.Title} = {RadixConverter.Convert(port, inputs[k])};");
+                var identifier = VerilogUtils.GetPortIdentifier(port);
+                Builder.AppendLine($"\t\t{identifier} = {RadixConverter.Convert(port, inputs[k])};");
             }
 
             Builder.AppendLine("\t\t#1;");
@@ -74,7 +75,7 @@ public class VerilogTestbenchEmitter : IVerilogTestbenchEmitter
             for (int k = 0; k < subcircuit.Outputs.Count; k++)
             {
                 var port = subcircuit.Outputs[k];
-                var title = port.Title;
+                var title = VerilogUtils.GetPortIdentifier(port);
                 var expectedString = RadixConverter.Convert(port, expectedOutputs[k]);
                 Builder.AppendLine($"\t\tif ({title} !== {expectedString}) begin $display(\"FAIL vec {i}: {title} (got %b at %0d)\", {title}, $time); $stop; end");
             }

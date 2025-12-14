@@ -175,7 +175,10 @@ public partial class Basys3Emitter
     {
         var trits = new List<string>();
         foreach (var port in outputs)
-            trits.Add(port.IsBinary() ? $"{port.Title}, ~{port.Title}" : port.Title);
+        {
+            var identifier = VerilogUtils.GetPortIdentifier(port);
+            trits.Add(port.IsBinary() ? $"{identifier}, ~{identifier}" : identifier);
+        }
 
         var digits = new (string, string)[4]
         {

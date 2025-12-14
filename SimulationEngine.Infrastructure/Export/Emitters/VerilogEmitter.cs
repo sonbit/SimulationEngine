@@ -134,10 +134,10 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         Builder.AppendLine($"module {VerilogUtils.GetSubcircuitModuleName(subcircuit)} (");
 
         for (int i = 0; i < subcircuit.Inputs.Count; i++)
-            Builder.AppendLine($"\tinput {VerilogUtils.GetPortWidthAndTitle(subcircuit.Inputs[i])},");
+            Builder.AppendLine($"\tinput {VerilogUtils.GetPortWidthAndIdentifier(subcircuit.Inputs[i])},");
 
         for (int i = 0; i < subcircuit.Outputs.Count; i++)
-            Builder.AppendLine($"\toutput {VerilogUtils.GetPortWidthAndTitle(subcircuit.Outputs[i])},");
+            Builder.AppendLine($"\toutput {VerilogUtils.GetPortWidthAndIdentifier(subcircuit.Outputs[i])},");
 
         Builder.Remove(Builder.Length - 3, 1);
         Builder.AppendLine(");");
@@ -173,7 +173,7 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
             foreach (var output in childSubcircuit.Outputs)
             {
                 var net = GetOrCreateTerminalNet(output);
-                connections.Add($".{output.Title}({net})");
+                connections.Add($".{VerilogUtils.GetPortIdentifier(output)}({net})");
             }
 
             CreateBody(moduleName, moduleBodyBuilder, connections);
@@ -190,9 +190,9 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         foreach (var output in subcircuit.Outputs)
         {
             var wire = subcircuit.Wires.FirstOrDefault(wire => wire.EndTerminal == output) ?? 
-                throw new NullReferenceException($"Output port '{output.Title}' is not driven by any wire.");
+                throw new NullReferenceException($"Output port '{VerilogUtils.GetPortIdentifier(output)}' is not driven by any wire.");
 
-            Builder.AppendLine($"\tassign {output.Title} = {GetOrCreateTerminalNet(wire.StartTerminal)};");
+            Builder.AppendLine($"\tassign {VerilogUtils.GetPortIdentifier(output)} = {GetOrCreateTerminalNet(wire.StartTerminal)};");
         }
 
         Builder.Append("endmodule");
