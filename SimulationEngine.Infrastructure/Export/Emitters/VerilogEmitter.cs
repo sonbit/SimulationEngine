@@ -72,6 +72,7 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
 
         var inputRoles = logicGate.InputPinsDescending.Select(pin => pin.Role).ToList();
         var isBinary = logicGate.IsBinary();
+        var isSpecialHeptaGate = string.Equals(logicGate.TruthTable.HeptaIndex, "ZD0PPPPPP", StringComparison.Ordinal);
 
         var inputs = new List<string>();
         foreach (var role in inputRoles)
@@ -79,8 +80,21 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
 
         for (int i = 0; i < inputs.Count; i++)
             Builder.AppendLine($"\t{inputs[i]},");
-        Builder.AppendLine($"\toutput wire {VerilogUtils.GetWidth(isBinary)}{PinRole.Q}");
+        Builder.AppendLine($"\toutput {(isSpecialHeptaGate ? "reg" : "wire")} {VerilogUtils.GetWidth(isBinary)}{PinRole.Q}");
         Builder.AppendLine(");");
+
+        if (isSpecialHeptaGate)
+        {
+            Builder.AppendLine("\talways @(posedge C[1]) begin");
+            Builder.AppendLine("\t\tQ <=");
+            Builder.AppendLine("\t\t\t(A == 2'b01) ? 2'b01 :");
+            Builder.AppendLine("\t\t\t(A == 2'b10) ? 2'b10 :");
+            Builder.AppendLine("\t\t\t2'b11;");
+            Builder.AppendLine("\tend");
+
+            Builder.Append("endmodule");
+            return Builder.ToString();
+        }
 
         var arity = HeptaIndexConverter.GetArity(logicGate.TruthTable.HeptaIndex);
         int[] pinOrder = arity > 1
