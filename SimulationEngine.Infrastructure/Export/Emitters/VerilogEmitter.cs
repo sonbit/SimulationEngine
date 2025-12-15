@@ -46,17 +46,18 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
 
         var emittedLogicGateModules = new HashSet<string>(StringComparer.Ordinal);
         var uniqueLogicGates = subcircuits
-            .SelectMany(subcircuit => subcircuit.LogicGates)
-            .DistinctBy(logicGate => logicGate.TruthTable.HeptaIndex);
+            .SelectMany(subcircuit => subcircuit.LogicGates.Select(logicGate => (logicGate, hasFeedbackToB: HasFeedbackToB(subcircuit, logicGate))))
+            .DistinctBy(logicGate => (logicGate.logicGate.TruthTable.HeptaIndex, logicGate.hasFeedbackToB));
 
-        foreach (var logicGate in uniqueLogicGates)
+        foreach (var (logicGate, hasFeedbackToB) in uniqueLogicGates)
         {
-            if (emittedLogicGateModules.Add(VerilogUtils.GetLogicGateModuleName(logicGate)))
+            var moduleName = VerilogUtils.GetLogicGateModuleName(logicGate, hasFeedbackToB);
+            if (emittedLogicGateModules.Add(moduleName))
             {
                 verilog.LogicGateModules.Add(new VerilogModule
                 {
-                    Name = VerilogUtils.GetLogicGateModuleName(logicGate),
-                    Content = EmitLogicGateModule(logicGate)
+                    Name = moduleName,
+                    Content = EmitLogicGateModule(logicGate, hasFeedbackToB)
                 });
             }
         }
@@ -64,15 +65,15 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         return verilog;
     }
 
-    private string EmitLogicGateModule(LogicGate logicGate)
+    private string EmitLogicGateModule(LogicGate logicGate, bool hasFeedbackToB)
     {
         ClearState();
 
-        Builder.AppendLine($"module {VerilogUtils.GetLogicGateModuleName(logicGate)} (");
+        Builder.AppendLine($"module {VerilogUtils.GetLogicGateModuleName(logicGate, hasFeedbackToB)} (");
 
         var inputRoles = logicGate.InputPinsDescending.Select(pin => pin.Role).ToList();
         var isBinary = logicGate.IsBinary();
-        var isSpecialHeptaGate = string.Equals(logicGate.TruthTable.HeptaIndex, "ZD0PPPPPP", StringComparison.Ordinal);
+        var isSpecialHeptaGate = hasFeedbackToB && string.Equals(logicGate.TruthTable.HeptaIndex, "ZD0PPPPPP", StringComparison.Ordinal);
 
         var inputs = new List<string>();
         foreach (var role in inputRoles)
@@ -161,7 +162,8 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
         for (var index = 0; index < subcircuit.LogicGates.Count; index++)
         {
             var logicGate = subcircuit.LogicGates[index];
-            var moduleName = VerilogUtils.GetLogicGateModuleName(logicGate);
+            var hasFeedbackToB = HasFeedbackToB(subcircuit, logicGate);
+            var moduleName = VerilogUtils.GetLogicGateModuleName(logicGate, hasFeedbackToB);
             var connections = new List<string>();
 
             var pinQ = logicGate.Pins.FirstOrDefault(p => p.Role == PinRole.Q);
@@ -211,5 +213,21 @@ public sealed partial class VerilogEmitter : IVerilogEmitter
 
         Builder.Append("endmodule");
         return Builder.ToString();
+    }
+
+    private static bool HasFeedbackToB(Subcircuit subcircuit, LogicGate logicGate)
+    {
+        if (!string.Equals(logicGate.TruthTable.HeptaIndex, "ZD0PPPPPP", StringComparison.Ordinal))
+            return false;
+
+        var qPin = logicGate.Q;
+        var bPin = logicGate.B;
+
+        if (subcircuit?.Wires is null || qPin is null || bPin is null)
+            return false;
+
+        return subcircuit.Wires.Any(wire =>
+            ReferenceEquals(wire.StartTerminal, qPin) &&
+            ReferenceEquals(wire.EndTerminal, bPin));
     }
 }

@@ -9,8 +9,8 @@ public static class VerilogUtils
     private const string LogicGateModulePrefix = "f_";
     private const string SubcircuitModulePrefix = "c_";
 
-    public static string GetLogicGateModuleName(LogicGate logicGate) => 
-        $"{LogicGateModulePrefix}{logicGate.TruthTable.HeptaIndex}";
+    public static string GetLogicGateModuleName(LogicGate logicGate, bool hasFeedbackToB = false) => 
+        $"{LogicGateModulePrefix}{logicGate.TruthTable.HeptaIndex}{(hasFeedbackToB ? "_latch" : string.Empty)}";
 
     public static string GetPinIdentifier(Pin pin) =>
         pin.Role.ToString();
