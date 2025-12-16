@@ -7,7 +7,6 @@ using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using Spectre.Console.Cli;
-using System.Diagnostics;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
@@ -46,14 +45,37 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
             return 1;
         }
 
+        var iterationsAreApplicable = settings.Benchmark && (settings.File is not null || settings.UseTests);
+        var iterationsToUse = iterationsAreApplicable ? settings.Iterations : 1;
+
+        if (!iterationsAreApplicable && settings.Iterations > 1)
+            renderer.DrawWarning("Iterations are only used when benchmarking files or predefined tests. Using a single run.");
+
+        if (settings.UseTests)
+        {
+            return settings.Benchmark
+                ? SimulationTest.Benchmark(subcircuit, renderer, iterationsToUse)
+                : SimulationTest.Simulate(subcircuit, renderer);
+        }
+
         if (settings.File is not null)
-            return await SimulationFile.SimulateFileAsync(subcircuit, settings.File, renderer, settings.Normalize, settings.Benchmark);
+            return await SimulationFile.SimulateFileAsync(subcircuit, settings.File, renderer, settings.Normalize, settings.Benchmark, iterationsToUse);
 
         if (settings.InputString is not null)
-            return SimulateInputStrings(subcircuit, settings.InputString, settings.Normalize, settings.Benchmark);
+        {
+            if (settings.Benchmark)
+                renderer.DrawWarning("Benchmark mode is intended for predefined tests or files. Running inputs without benchmarking.");
+
+            return SimulateInputStrings(subcircuit, settings.InputString, settings.Normalize);
+        }
 
         if (settings.InputVectors.Length > 0 && string.Join(' ',  settings.InputVectors) is string inputs)
-            return SimulateInputStrings(subcircuit, inputs, settings.Normalize, settings.Benchmark);
+        {
+            if (settings.Benchmark)
+                renderer.DrawWarning("Benchmark mode is intended for predefined tests or files. Running inputs without benchmarking.");
+
+            return SimulateInputStrings(subcircuit, inputs, settings.Normalize);
+        }
 
         if (settings.Stream || Console.IsInputRedirected)
             return await SimulateStreamAsync(subcircuit, settings.Normalize);
@@ -61,23 +83,21 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
         return await SimulationRepl.SimulateReplAsync(subcircuit, renderer, settings.Normalize);
     }
 
-    private int SimulateInputStrings(Subcircuit subcircuit, string inputStrings, bool normalize, bool benchmark)
+    private int SimulateInputStrings(Subcircuit subcircuit, string inputStrings, bool normalize)
     {
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
-        var inputStringsArray = inputStrings.Split([',', ' ']);
+        var inputStringsArray = inputStrings.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
+
+        if (inputStringsArray.Length == 0)
+        {
+            renderer.DrawWarning("No inputs provided to simulate.");
+            return 1;
+        }
 
         var simulationSession = SimulationSession.Build(subcircuit);
 
-        var stopWatch = Stopwatch.StartNew();
-
         foreach (var inputs in inputStringsArray)
             Simulate(subcircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
-
-        stopWatch.Stop();
-
-        if (benchmark)
-            renderer.DrawLine($"[green]Elapsed time: {stopWatch.Elapsed}[/]");
-
         return 0;
     }
 

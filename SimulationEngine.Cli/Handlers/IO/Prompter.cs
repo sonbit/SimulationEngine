@@ -30,6 +30,16 @@ public sealed class Prompter(IAnsiConsole console) : IPrompter
         return int.Parse(idString);
     }
 
+    public async Task<int> AskPositiveIntAsync(string title, int defaultValue = 10)
+    {
+        var prompt = new TextPrompt<int>(title)
+            .DefaultValue(defaultValue)
+            .ValidationErrorMessage("[red]Enter a positive number[/]")
+            .Validate(value => value > 0 ? ValidationResult.Success() : ValidationResult.Error("Enter a positive number"));
+
+        return await AnsiConsole.PromptAsync(prompt);
+    }
+
     public async Task<FileInfo?> PickFileAsync(string title, string startDirectoryName, string searchPattern = "*.*")
     {
         var startDirectory = new DirectoryInfo(startDirectoryName);

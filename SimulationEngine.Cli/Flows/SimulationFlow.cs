@@ -24,6 +24,9 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
         [Description("Simulate file")] SimulateFile,
         [Description("Simulate file (Normalized)")] SimulateFileNormalized,
         [Description("Simulate test")] SimulateTest,
+        [Description("Benchmark test (select iterations)")] BenchmarkTest,
+        [Description("Benchmark file (select iterations)")] BenchmarkFile,
+        [Description("Benchmark file (Normalized, select iterations)")] BenchmarkFileNormalized,
         Back
     }
 
@@ -95,6 +98,27 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
                 case SimulationOptions.SimulateTest:
                     SimulationTest.Simulate(subcircuit, renderer);
                     break;
+
+                case SimulationOptions.BenchmarkTest:
+                    {
+                        var iterations = await prompter.AskPositiveIntAsync("Iterations for benchmark:");
+                        SimulationTest.Benchmark(subcircuit, renderer, iterations);
+                        break;
+                    }
+
+                case SimulationOptions.BenchmarkFile:
+                case SimulationOptions.BenchmarkFileNormalized:
+                    {
+                        var iterations = await prompter.AskPositiveIntAsync("Iterations for benchmark:");
+                        await SimulationFile.SimulateFileAsync(
+                            subcircuit,
+                            prompter,
+                            renderer,
+                            simulationOption == SimulationOptions.BenchmarkFileNormalized,
+                            benchmark: true,
+                            iterations: iterations);
+                        break;
+                    }
 
                 case SimulationOptions.Back:
                     renderer.Clear();

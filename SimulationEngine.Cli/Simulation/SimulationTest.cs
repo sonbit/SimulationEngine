@@ -4,21 +4,23 @@ using SimulationEngine.Domain.Converters;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using System.Diagnostics;
+using System.Linq;
 
 namespace SimulationEngine.Cli.Simulation;
 
 public static class SimulationTest
 {
-    public static void Simulate(Subcircuit subcircuit, IRenderer renderer)
+    public static int Simulate(Subcircuit subcircuit, IRenderer renderer)
     {
         var testString = DesignUtils.GetTestString(subcircuit.Title);
         if (string.IsNullOrWhiteSpace(testString))
         {
             renderer.DrawError($"No tests defined for subcircuit {subcircuit.Title}");
-            return;
+            return 1;
         }
 
         Simulate(subcircuit, testString, renderer);
+        return 0;
     }
 
     private static void Simulate(Subcircuit subcircuit, string testString, IRenderer renderer)
@@ -71,5 +73,27 @@ public static class SimulationTest
             renderer.DrawLine($"[red]Some tests failed for {subcircuit.Title}[/]");
 
         renderer.DrawLine($"Elapsed time: {stopWatch.Elapsed}");
+    }
+
+    public static int Benchmark(Subcircuit subcircuit, IRenderer renderer, int iterations)
+    {
+        var testString = DesignUtils.GetTestString(subcircuit.Title);
+        if (string.IsNullOrWhiteSpace(testString))
+        {
+            renderer.DrawError($"No tests defined for subcircuit {subcircuit.Title}");
+            return 1;
+        }
+
+        renderer.Clear();
+
+        var inputPairs = TestStringConverter.GetInputOutputPairs(testString);
+        var inputs = inputPairs.Select(pair => pair.inputs).ToList();
+
+        var benchmarkResult = SimulationBenchmark.Run(subcircuit, inputs, normalize: false, iterations, renderer, captureOutputs: false);
+        if (benchmarkResult is null)
+            return 1;
+
+        SimulationBenchmark.RenderSummary(renderer, benchmarkResult);
+        return 0;
     }
 }
