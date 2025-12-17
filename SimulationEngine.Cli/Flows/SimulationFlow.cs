@@ -24,6 +24,7 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
         [Description("Simulate file")] SimulateFile,
         [Description("Simulate file (Normalized)")] SimulateFileNormalized,
         [Description("Simulate test")] SimulateTest,
+        [Description("Duplicate and open menu")] DuplicateAndSimulate,
         [Description("Benchmark test (select iterations)")] BenchmarkTest,
         [Description("Benchmark file (select iterations)")] BenchmarkFile,
         [Description("Benchmark file (Normalized, select iterations)")] BenchmarkFileNormalized,
@@ -89,6 +90,14 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
                     renderer.Clear();
                     await SimulationRepl.SimulateReplAsync(subcircuit, renderer, simulationOption == SimulationOptions.SimulateNormalized);
                     break;
+
+                case SimulationOptions.DuplicateAndSimulate:
+                    {
+                        var copies = await prompter.AskPositiveIntAsync("Number of copies:");
+                        var duplicated = SubcircuitDuplicator.Create(subcircuit, copies);
+                        await RunSimulationMenuAsync(duplicated);
+                        break;
+                    }
 
                 case SimulationOptions.SimulateFile:
                 case SimulationOptions.SimulateFileNormalized:

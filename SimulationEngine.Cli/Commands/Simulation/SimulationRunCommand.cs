@@ -45,6 +45,9 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
             return 1;
         }
 
+        if (settings.Copies > 1)
+            subcircuit = SubcircuitDuplicator.Create(subcircuit, settings.Copies);
+
         var iterationsAreApplicable = settings.Benchmark && (settings.File is not null || settings.UseTests);
         var iterationsToUse = iterationsAreApplicable ? settings.Iterations : 1;
 

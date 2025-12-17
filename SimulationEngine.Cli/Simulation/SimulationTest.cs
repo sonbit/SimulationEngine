@@ -12,7 +12,7 @@ public static class SimulationTest
 {
     public static int Simulate(Subcircuit subcircuit, IRenderer renderer)
     {
-        var testString = DesignUtils.GetTestString(subcircuit.Title);
+        var testString = ResolveTestString(subcircuit);
         if (string.IsNullOrWhiteSpace(testString))
         {
             renderer.DrawError($"No tests defined for subcircuit {subcircuit.Title}");
@@ -77,7 +77,7 @@ public static class SimulationTest
 
     public static int Benchmark(Subcircuit subcircuit, IRenderer renderer, int iterations)
     {
-        var testString = DesignUtils.GetTestString(subcircuit.Title);
+        var testString = ResolveTestString(subcircuit);
         if (string.IsNullOrWhiteSpace(testString))
         {
             renderer.DrawError($"No tests defined for subcircuit {subcircuit.Title}");
@@ -95,5 +95,14 @@ public static class SimulationTest
 
         SimulationBenchmark.RenderSummary(renderer, benchmarkResult);
         return 0;
+    }
+
+    private static string? ResolveTestString(Subcircuit subcircuit)
+    {
+        var testString = subcircuit.GetTestString();
+        if (!string.IsNullOrWhiteSpace(testString))
+            return testString;
+
+        return DesignUtils.GetTestString(subcircuit.Title);
     }
 }

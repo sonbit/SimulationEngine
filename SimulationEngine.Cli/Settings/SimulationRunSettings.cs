@@ -13,12 +13,16 @@ public sealed class SimulationRunSettings : FindSettings
     [CommandOption("-b|--benchmark")] public bool Benchmark { get; set; }
     [CommandOption("--tests")] public bool UseTests { get; set; }
     [CommandOption("--iterations")] public int Iterations { get; set; } = 10;
+    [CommandOption("-x|--copies")] public int Copies { get; set; } = 1;
 
     public override ValidationResult Validate()
     {
         var validation = base.Validate();
         if (!validation.Successful)
             return validation;
+
+        if (Copies < 1)
+            return ValidationResult.Error("Copies must be at least 1.");
 
         if (Iterations < 1)
             return ValidationResult.Error("Iterations must be at least 1.");
