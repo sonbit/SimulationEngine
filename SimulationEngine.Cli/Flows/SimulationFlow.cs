@@ -69,16 +69,18 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
 
         while (true)
         {
+            var (Inputs, Outputs, LogicGates, Wires, Subcircuits) = GetRecursiveCounts(subcircuit);
+
             renderer.DrawTableWithNameValuePairs(
             [
                 (nameof(Subcircuit.Id), subcircuit.Id),
-                    (nameof(Subcircuit.Title), subcircuit.Title),
-                    (nameof(Subcircuit.Hash), subcircuit.Hash),
-                    (nameof(Subcircuit.Inputs), subcircuit.Inputs.Count),
-                    (nameof(Subcircuit.LogicGates), subcircuit.LogicGates.Count),
-                    (nameof(Subcircuit.Outputs), subcircuit.Outputs.Count),
-                    (nameof(Subcircuit.Subcircuits), subcircuit.Subcircuits.Count),
-                    (nameof(Subcircuit.Wires), subcircuit.Wires.Count)
+                (nameof(Subcircuit.Title), subcircuit.Title),
+                (nameof(Subcircuit.Hash), subcircuit.Hash),
+                (nameof(Subcircuit.Inputs), Inputs),
+                (nameof(Subcircuit.LogicGates), LogicGates),
+                (nameof(Subcircuit.Outputs), Outputs),
+                (nameof(Subcircuit.Subcircuits), Subcircuits),
+                (nameof(Subcircuit.Wires), Wires)
             ]);
 
             var simulationOption = await prompter.SelectEnumAsync<SimulationOptions>($"[bold]{subcircuit.Title} ({subcircuit.Id})[/]");
@@ -170,5 +172,26 @@ public sealed partial class SimulationFlow(IPrompter prompter, IRenderer rendere
             return null;
 
         return await service.GetByIdAsync(selectedSubcircuit!.Id);
+    }
+
+    private static (int Inputs, int Outputs, int LogicGates, int Wires, int Subcircuits) GetRecursiveCounts(Subcircuit subcircuit)
+    {
+        var inputs = subcircuit.Inputs?.Count ?? 0;
+        var outputs = subcircuit.Outputs?.Count ?? 0;
+        var gates = subcircuit.LogicGates?.Count ?? 0;
+        var wires = subcircuit.Wires?.Count ?? 0;
+        var children = subcircuit.Subcircuits?.Count ?? 0;
+
+        foreach (var child in subcircuit.Subcircuits ?? [])
+        {
+            var (Inputs, Outputs, LogicGates, Wires, Subcircuits) = GetRecursiveCounts(child);
+            inputs += Inputs;
+            outputs += Outputs;
+            gates += LogicGates;
+            wires += Wires;
+            children += Subcircuits;
+        }
+
+        return (inputs, outputs, gates, wires, children);
     }
 }
