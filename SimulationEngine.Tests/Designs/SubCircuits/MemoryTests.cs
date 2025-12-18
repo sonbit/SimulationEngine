@@ -6,13 +6,13 @@ namespace SimulationEngine.Tests.Designs.Subcircuits;
 public class MemoryTests(ITestOutputHelper testOutputHelper) : BaseDesignTest(testOutputHelper)
 {
     [Fact]
-    public void _8Reg2_Validate() => TestSimulatation(new _8Reg2(), true);
+    public void _8Reg2_Validate() => TestSimulatation(new _8Reg2());
 
     [Fact]
     public void _8RegArray2_Validate() => TestSimulatation(new _8RegArray2());
 
     [Fact]
-    public void _9Ram2_Validate() => TestSimulatation(new _9Ram2(), true);
+    public void _9Ram2_Validate() => TestSimulatation(new _9Ram2());
 
     [Fact]
     public void _9Reg2_Validate() => TestSimulatation(new _9Reg2());
