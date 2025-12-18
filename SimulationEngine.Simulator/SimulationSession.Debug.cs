@@ -82,7 +82,7 @@ public partial class SimulationSession
         }
     }
 
-    private static void Show(Net net, Dictionary<Terminal, Net> portNetMap, string tag)
+    private static void Show(Net net, IReadOnlyDictionary<Terminal, Net> portNetMap, string tag)
     {
         var ports = portNetMap.Where(kv => kv.Value == net).Select(kv => kv.Key);
         var portTitles = ports.Select(port => port.Title);

@@ -1,33 +1,45 @@
 ﻿using SimulationEngine.Domain.Models;
 using SimulationEngine.Domain.Models.Extensions;
+using SimulationEngine.Simulator.Models;
 
 namespace SimulationEngine.Simulator;
 
 public partial class SimulationSession
 {
-    public byte[] GetOutputBytes() => [.. Subcircuit.Outputs.Select(GetPortByte)];
+    public byte[] GetOutputBytes()
+    {
+        var outputNets = _rootProbe.OutputNets;
+        var bytes = new byte[outputNets.Length];
+
+        for (var i = 0; i < outputNets.Length; i++)
+            bytes[i] = outputNets[i].Value;
+
+        return bytes;
+    }
 
     public string GetOutputs(bool normalize = false)
     {
         if (normalize)
             return string.Join("", GetOutputBytes());
         else
-            return GetOutputsWithRadix(Subcircuit);
+            return GetPortsWithRadix(_rootProbe.OutputPorts, _rootProbe.OutputNets);
     }
 
     public void SetInputBytes(byte[] values)
     {
-        if (values.Length != Subcircuit.Inputs.Count)
-            throw new ArgumentException($"Input length mismatch: expected {Subcircuit.Inputs.Count}, got {values.Length}");
+        var inputNets = _rootProbe.InputNets;
+        if (values.Length != inputNets.Length)
+            throw new ArgumentException($"Input length mismatch: expected {inputNets.Length}, got {values.Length}");
 
         for (int i = 0; i < values.Length; i++)
-            SetInputByte(Subcircuit.Inputs[i], values[i]);
+            SetInputNet(inputNets[i], values[i], _rootProbe.InputPorts[i].Title);
     }
 
     public void SetInputs(string values, bool isNormalized = false)
     {
-        if (values.Length != Subcircuit.Inputs.Count)
-            throw new ArgumentException($"Input length mismatch: expected {Subcircuit.Inputs.Count}, got {values.Length}");
+        var inputPorts = _rootProbe.InputPorts;
+        if (values.Length != inputPorts.Length)
+            throw new ArgumentException($"Input length mismatch: expected {inputPorts.Length}, got {values.Length}");
 
         if (isNormalized)
             SetInputBytes([.. values.Select(ch => (byte)(ch - '0'))]);
@@ -47,11 +59,15 @@ public partial class SimulationSession
 
     private string GetInputsWithRadix(Subcircuit subcircuit)
     {
-        var chars = new char[subcircuit.Inputs.Count];
+        if (_probeBySubcircuit.TryGetValue(subcircuit, out var probe))
+            return GetPortsWithRadix(probe.InputPorts, probe.InputNets);
 
-        for (int i = 0; i < subcircuit.Inputs.Count; i++)
+        var inputPorts = subcircuit.Inputs;
+        var chars = new char[inputPorts.Count];
+
+        for (int i = 0; i < inputPorts.Count; i++)
         {
-            var port = subcircuit.Inputs[i];
+            var port = inputPorts[i];
             var value = GetPortByte(port);
             chars[i] = port.ToChar(value);
         }
@@ -63,11 +79,15 @@ public partial class SimulationSession
 
     private string GetOutputsWithRadix(Subcircuit subcircuit)
     {
-        var chars = new char[subcircuit.Outputs.Count];
+        if (_probeBySubcircuit.TryGetValue(subcircuit, out var probe))
+            return GetPortsWithRadix(probe.OutputPorts, probe.OutputNets);
 
-        for (int i = 0; i < subcircuit.Outputs.Count; i++)
+        var outputPorts = subcircuit.Outputs;
+        var chars = new char[outputPorts.Count];
+
+        for (int i = 0; i < outputPorts.Count; i++)
         {
-            var port = subcircuit.Outputs[i];
+            var port = outputPorts[i];
             var value = GetPortByte(port);
             chars[i] = port.ToChar(value);
         }
@@ -75,24 +95,36 @@ public partial class SimulationSession
         return new string(chars);
     }
 
-    private void SetInputByte(Port port, byte value)
+    private void SetInputNet(Net net, byte value, string portTitle)
     {
         if (value > 2)
-            throw new ArgumentOutOfRangeException(nameof(value), $"Invalid input value {value} for port {port.Title} in {Subcircuit.Title}");
+            throw new ArgumentOutOfRangeException(nameof(value), $"Invalid input value {value} for port {portTitle} in {Subcircuit.Title}");
 
-        _deltaKernel.Set(_netOfTerminals[port], value);
+        _deltaKernel.Set(net, value);
     }
 
     private void SetInputsWithRadix(string values)
     {
-        if (values.Length != Subcircuit.Inputs.Count)
-            throw new ArgumentException($"Input length mismatch: expected {Subcircuit.Inputs.Count}, got {values.Length}");
+        var inputPorts = _rootProbe.InputPorts;
+        if (values.Length != inputPorts.Length)
+            throw new ArgumentException($"Input length mismatch: expected {inputPorts.Length}, got {values.Length}");
 
-        var bytes = new byte[values.Length];
-
+        var inputNets = _rootProbe.InputNets;
         for (int i = 0; i < values.Length; i++)
-            bytes[i] = Subcircuit.Inputs[i].ToByte(values[i]);
+        {
+            var port = inputPorts[i];
+            var value = port.ToByte(values[i]);
+            SetInputNet(inputNets[i], value, port.Title);
+        }
+    }
 
-        SetInputBytes(bytes);
+    private static string GetPortsWithRadix(Port[] ports, Net[] nets)
+    {
+        var chars = new char[ports.Length];
+
+        for (var i = 0; i < ports.Length; i++)
+            chars[i] = ports[i].ToChar(nets[i].Value);
+
+        return new string(chars);
     }
 }

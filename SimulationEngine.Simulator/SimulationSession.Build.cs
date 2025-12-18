@@ -2,6 +2,7 @@
 using SimulationEngine.Simulator.Comparers;
 using SimulationEngine.Simulator.Finders;
 using SimulationEngine.Simulator.Models;
+using System.Collections.Frozen;
 
 namespace SimulationEngine.Simulator;
 
@@ -10,7 +11,10 @@ public partial class SimulationSession
     public readonly Subcircuit Subcircuit;
     private readonly DeltaKernel _deltaKernel = new();
     private readonly List<IProcess> _processes = [];
-    private readonly Dictionary<Terminal, Net> _netOfTerminals = new(ReferenceEqualityComparer<Terminal>.Instance);
+    private FrozenDictionary<Terminal, Net> _netOfTerminals = FrozenDictionary<Terminal, Net>.Empty;
+    private readonly Dictionary<Subcircuit, SubcircuitPortProbe> _probeBySubcircuit =
+        new(ReferenceEqualityComparer<Subcircuit>.Instance);
+    private SubcircuitPortProbe _rootProbe = null!;
 
     public bool Trace 
     { 
@@ -22,29 +26,38 @@ public partial class SimulationSession
 
     public static SimulationSession Build(Subcircuit subcircuit, bool trace = false)
     {
-        var simSession = new SimulationSession(subcircuit) { Trace = trace };
+        return Build(subcircuit, new SimulationSessionBuildOptions { Trace = trace });
+    }
 
-        BuildNets(subcircuit, simSession._netOfTerminals);
-        BuildProcesses(subcircuit, simSession._netOfTerminals, simSession._processes, subcircuit.Title);
+    public static SimulationSession Build(Subcircuit subcircuit, SimulationSessionBuildOptions options)
+    {
+        var simSession = new SimulationSession(subcircuit) { Trace = options.Trace };
 
-        if (trace)
+        var netOf = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
+        var allNets = BuildNets(subcircuit, netOf);
+        BuildProcesses(subcircuit, netOf, simSession._processes, subcircuit.Title);
+        simSession._netOfTerminals = netOf.ToFrozenDictionary(ReferenceEqualityComparer<Terminal>.Instance);
+        simSession.InitializePortProbes(options);
+
+        if (options.Trace)
             simSession.ReportNetIssues();
 
-        simSession._deltaKernel.Prime(simSession._processes, [.. simSession._netOfTerminals.Values]);
+        simSession._deltaKernel.Prime(simSession._processes, allNets);
         return simSession;
     }
 
-    private static void BuildNets(Subcircuit subcircuit, Dictionary<Terminal, Net> map)
+    private static HashSet<Net> BuildNets(Subcircuit subcircuit, Dictionary<Terminal, Net> map)
     {
         var unionFinder = new UnionFinder<Terminal>(ReferenceEqualityComparer<Terminal>.Instance);
+        var terminals = EnumerateAllTerminalsRecursive(subcircuit).ToArray();
 
-        foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
+        foreach (var terminal in terminals)
             unionFinder.Add(terminal);
 
         UnionAllWiresRecursive(subcircuit, unionFinder);
 
         var netByRootTerminal = new Dictionary<Terminal, Net>(ReferenceEqualityComparer<Terminal>.Instance);
-        foreach (var terminal in EnumerateAllTerminalsRecursive(subcircuit))
+        foreach (var terminal in terminals)
         {
             var parentTerminal = unionFinder.Find(terminal);
             if (!netByRootTerminal.TryGetValue(parentTerminal, out var net))
@@ -54,6 +67,8 @@ public partial class SimulationSession
             }
             map[terminal] = net;
         }
+
+        return [.. netByRootTerminal.Values];
     }
 
     private static void BuildProcesses(Subcircuit subcircuit, Dictionary<Terminal, Net> netOf, List<IProcess> processes, string path)

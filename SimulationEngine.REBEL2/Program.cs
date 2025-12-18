@@ -5,7 +5,6 @@ using SimulationEngine.REBEL2.Programs;
 using SimulationEngine.Simulator;
 
 var rebel2 = new REBEL2();
-var simulationSession = SimulationSession.Build(rebel2);
 
 var subcircuits = new List<Subcircuit>
 {
@@ -16,6 +15,11 @@ var subcircuits = new List<Subcircuit>
     rebel2.ALU,
     rebel2.WrAdd
 };
+
+var simulationSession = SimulationSession.Build(rebel2, new SimulationSessionBuildOptions
+{
+    ProbeSubcircuits = subcircuits
+});
 
 var options = new PrintOptions
 {
