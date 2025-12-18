@@ -4,17 +4,17 @@ module c_Register9_top (
 	input [10:0] sw,
 	output [1:0] led
 );
-	wire [1:0] Q;
+	wire [1:0] output_0;
 
 	c_Register9 c_Register9 (
-		.RdAddr1(sw[1:0]),
-		.RdAddr0(sw[3:2]),
-		.WrAddr1(sw[5:4]),
-		.WrAddr0(sw[7:6]),
-		.Clk(sw[8]),
-		.WrData(sw[10:9]),
-		.Q(Q)
+		.input_0(sw[1:0]),
+		.input_1(sw[3:2]),
+		.input_2(sw[5:4]),
+		.input_3(sw[7:6]),
+		.input_4(sw[8]),
+		.input_5(sw[10:9]),
+		.output_0(output_0)
 	);
 
-	assign led[1:0] = Q;
+	assign led[1:0] = output_0;
 endmodule

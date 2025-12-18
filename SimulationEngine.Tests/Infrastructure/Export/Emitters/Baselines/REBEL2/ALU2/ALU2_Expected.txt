@@ -1,14 +1,14 @@
 ﻿module c_ALU2 (
-	input [1:0] Func2,
-	input [1:0] Func1,
-	input [1:0] Func0,
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Cout,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	input [1:0] input_4,
+	input [1:0] input_5,
+	input [1:0] input_6,
+	output [1:0] output_0,
+	output [1:0] output_1,
+	output [1:0] output_2
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
@@ -40,134 +40,134 @@
 
 	f_DGDDDDDAD f_DGDDDDDAD_0 (
 		.C(tnet_1),
-		.B(Func2),
-		.A(Func1),
+		.B(input_0),
+		.A(input_1),
 		.Q(tnet_0)
 	);
 
 	c_Shift2 c_Shift2_0 (
-		.A1(A1),
-		.A0(A0),
-		.Imm1(B1),
-		.Imm0(B0),
-		.Dir(Func1),
-		.Ins(Func0),
-		.Q1(tnet_2),
-		.Q0(tnet_3)
+		.input_0(input_5),
+		.input_1(input_6),
+		.input_2(input_3),
+		.input_3(input_4),
+		.input_4(input_1),
+		.input_5(input_2),
+		.output_0(tnet_2),
+		.output_1(tnet_3)
 	);
 
 	c_2TritMul c_2TritMul_0 (
-		.B1(B1),
-		.B0(B0),
-		.A1(A1),
-		.A0(A0),
-		.Q3(tnet_4),
-		.Q2(tnet_5),
-		.Q1(tnet_6),
-		.Q0(tnet_7)
+		.input_0(input_3),
+		.input_1(input_4),
+		.input_2(input_5),
+		.input_3(input_6),
+		.output_0(tnet_4),
+		.output_1(tnet_5),
+		.output_2(tnet_6),
+		.output_3(tnet_7)
 	);
 
 	c_AddSub2 c_AddSub2_0 (
-		.Sel(Func0),
-		.B1(B1),
-		.B0(B0),
-		.A1(A1),
-		.A0(A0),
-		.Q2(tnet_1),
-		.Q1(tnet_8),
-		.Q0(tnet_9)
+		.input_0(input_2),
+		.input_1(input_3),
+		.input_2(input_4),
+		.input_3(input_5),
+		.input_4(input_6),
+		.output_0(tnet_1),
+		.output_1(tnet_8),
+		.output_2(tnet_9)
 	);
 
 	c_CMP2 c_CMP2_0 (
-		.B1(B1),
-		.B0(B0),
-		.A1(A1),
-		.A0(A0),
-		.Min1(tnet_10),
-		.Min0(tnet_11),
-		.Max1(tnet_12),
-		.Max0(tnet_13),
-		.Cmp(tnet_14)
+		.input_0(input_3),
+		.input_1(input_4),
+		.input_2(input_5),
+		.input_3(input_6),
+		.output_0(tnet_10),
+		.output_1(tnet_11),
+		.output_2(tnet_12),
+		.output_3(tnet_13),
+		.output_4(tnet_14)
 	);
 
 	c_CMP2Tritwise c_CMP2Tritwise_0 (
-		.Mode(Func0),
-		.B1(B1),
-		.B0(B0),
-		.A1(A1),
-		.A0(A0),
-		.Q1(tnet_15),
-		.Q0(tnet_16)
+		.input_0(input_2),
+		.input_1(input_3),
+		.input_2(input_4),
+		.input_3(input_5),
+		.input_4(input_6),
+		.output_0(tnet_15),
+		.output_1(tnet_16)
 	);
 
 	c_2MUX2 c_2MUX2_0 (
-		.Sel(Func0),
-		.B1(tnet_4),
-		.B0(tnet_5),
-		.A1(tnet_6),
-		.A0(tnet_7),
-		.Q1(tnet_17),
-		.Q0(tnet_18)
+		.input_0(input_2),
+		.input_1(tnet_4),
+		.input_2(tnet_5),
+		.input_3(tnet_6),
+		.input_4(tnet_7),
+		.output_0(tnet_17),
+		.output_1(tnet_18)
 	);
 
 	c_2MUX2 c_2MUX2_1 (
-		.Sel(Func1),
-		.B1(tnet_17),
-		.B0(tnet_18),
-		.A1(tnet_8),
-		.A0(tnet_9),
-		.Q1(tnet_19),
-		.Q0(tnet_20)
+		.input_0(input_1),
+		.input_1(tnet_17),
+		.input_2(tnet_18),
+		.input_3(tnet_8),
+		.input_4(tnet_9),
+		.output_0(tnet_19),
+		.output_1(tnet_20)
 	);
 
 	c_2MUX2 c_2MUX2_2 (
-		.Sel(Func1),
-		.B1(tnet_21),
-		.B0(tnet_22),
-		.A1(tnet_15),
-		.A0(tnet_16),
-		.Q1(tnet_23),
-		.Q0(tnet_24)
+		.input_0(input_1),
+		.input_1(tnet_21),
+		.input_2(tnet_22),
+		.input_3(tnet_15),
+		.input_4(tnet_16),
+		.output_0(tnet_23),
+		.output_1(tnet_24)
 	);
 
 	c_3MUX2 c_3MUX2_0 (
-		.Sel(Func0),
-		.C1(tnet_12),
-		.C0(tnet_13),
-		.B1(tnet_14),
-		.B0(tnet_14),
-		.A1(tnet_10),
-		.A0(tnet_11),
-		.Q1(tnet_21),
-		.Q0(tnet_22)
+		.input_0(input_2),
+		.input_1(tnet_12),
+		.input_2(tnet_13),
+		.input_3(tnet_14),
+		.input_4(tnet_14),
+		.input_5(tnet_10),
+		.input_6(tnet_11),
+		.output_0(tnet_21),
+		.output_1(tnet_22)
 	);
 
 	c_3MUX2 c_3MUX2_1 (
-		.Sel(Func2),
-		.C1(tnet_2),
-		.C0(tnet_3),
-		.B1(tnet_19),
-		.B0(tnet_20),
-		.A1(tnet_23),
-		.A0(tnet_24),
-		.Q1(tnet_25),
-		.Q0(tnet_26)
+		.input_0(input_0),
+		.input_1(tnet_2),
+		.input_2(tnet_3),
+		.input_3(tnet_19),
+		.input_4(tnet_20),
+		.input_5(tnet_23),
+		.input_6(tnet_24),
+		.output_0(tnet_25),
+		.output_1(tnet_26)
 	);
 
-	assign Cout = tnet_0;
-	assign Q1 = tnet_25;
-	assign Q0 = tnet_26;
+	assign output_0 = tnet_0;
+	assign output_1 = tnet_25;
+	assign output_2 = tnet_26;
 endmodule
 
 module c_Shift2 (
-	input [1:0] A1,
-	input [1:0] A0,
-	input [1:0] Imm1,
-	input [1:0] Imm0,
-	input [1:0] Dir,
-	input [1:0] Ins,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	input [1:0] input_4,
+	input [1:0] input_5,
+	output [1:0] output_0,
+	output [1:0] output_1
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
@@ -175,75 +175,75 @@ module c_Shift2 (
 	wire [1:0] tnet_3;
 
 	f_063TGT360 f_063TGT360_0 (
-		.C(Dir),
-		.B(Imm1),
-		.A(Imm0),
+		.C(input_4),
+		.B(input_2),
+		.A(input_3),
 		.Q(tnet_0)
 	);
 
 	f_630GTG036 f_630GTG036_0 (
-		.C(Dir),
-		.B(Imm1),
-		.A(Imm0),
+		.C(input_4),
+		.B(input_2),
+		.A(input_3),
 		.Q(tnet_1)
 	);
 
 	c_3MUX1 c_3MUX1_0 (
-		.Sel(tnet_0),
-		.C(A1),
-		.B(A0),
-		.A(Ins),
-		.Q(tnet_2)
+		.input_0(tnet_0),
+		.input_1(input_0),
+		.input_2(input_1),
+		.input_3(input_5),
+		.output_0(tnet_2)
 	);
 
 	c_3MUX1 c_3MUX1_1 (
-		.Sel(tnet_1),
-		.C(A1),
-		.B(A0),
-		.A(Ins),
-		.Q(tnet_3)
+		.input_0(tnet_1),
+		.input_1(input_0),
+		.input_2(input_1),
+		.input_3(input_5),
+		.output_0(tnet_3)
 	);
 
-	assign Q1 = tnet_2;
-	assign Q0 = tnet_3;
+	assign output_0 = tnet_2;
+	assign output_1 = tnet_3;
 endmodule
 
 module c_3MUX1 (
-	input [1:0] Sel,
-	input [1:0] C,
-	input [1:0] B,
-	input [1:0] A,
-	output [1:0] Q
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	output [1:0] output_0
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	f_PPPPPPZD0 f_PPPPPPZD0_0 (
-		.C(Sel),
-		.B(B),
-		.A(A),
+		.C(input_0),
+		.B(input_2),
+		.A(input_3),
 		.Q(tnet_0)
 	);
 
 	f_PPPZD0ZD0 f_PPPZD0ZD0_0 (
-		.C(Sel),
-		.B(C),
+		.C(input_0),
+		.B(input_1),
 		.A(tnet_0),
 		.Q(tnet_1)
 	);
 
-	assign Q = tnet_1;
+	assign output_0 = tnet_1;
 endmodule
 
 module c_2TritMul (
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Q3,
-	output [1:0] Q2,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	output [1:0] output_0,
+	output [1:0] output_1,
+	output [1:0] output_2,
+	output [1:0] output_3
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
@@ -255,83 +255,83 @@ module c_2TritMul (
 	wire [1:0] tnet_7;
 
 	f_PD5 f_PD5_0 (
-		.B(B1),
-		.A(A1),
+		.B(input_0),
+		.A(input_2),
 		.Q(tnet_0)
 	);
 
 	f_PD5 f_PD5_1 (
-		.B(B0),
-		.A(A1),
+		.B(input_1),
+		.A(input_2),
 		.Q(tnet_1)
 	);
 
 	f_PD5 f_PD5_2 (
-		.B(B1),
-		.A(A0),
+		.B(input_0),
+		.A(input_3),
 		.Q(tnet_2)
 	);
 
 	f_PD5 f_PD5_3 (
-		.B(B0),
-		.A(A0),
+		.B(input_1),
+		.A(input_3),
 		.Q(tnet_3)
 	);
 
 	c_TriHalfAdder c_TriHalfAdder_0 (
-		.B(tnet_1),
-		.A(tnet_2),
-		.Cout(tnet_4),
-		.Q(tnet_5)
+		.input_0(tnet_1),
+		.input_1(tnet_2),
+		.output_0(tnet_4),
+		.output_1(tnet_5)
 	);
 
 	c_TriHalfAdder c_TriHalfAdder_1 (
-		.B(tnet_0),
-		.A(tnet_4),
-		.Cout(tnet_6),
-		.Q(tnet_7)
+		.input_0(tnet_0),
+		.input_1(tnet_4),
+		.output_0(tnet_6),
+		.output_1(tnet_7)
 	);
 
-	assign Q3 = tnet_6;
-	assign Q2 = tnet_7;
-	assign Q1 = tnet_5;
-	assign Q0 = tnet_3;
+	assign output_0 = tnet_6;
+	assign output_1 = tnet_7;
+	assign output_2 = tnet_5;
+	assign output_3 = tnet_3;
 endmodule
 
 module c_TriHalfAdder (
-	input [1:0] B,
-	input [1:0] A,
-	output [1:0] Cout,
-	output [1:0] Q
+	input [1:0] input_0,
+	input [1:0] input_1,
+	output [1:0] output_0,
+	output [1:0] output_1
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	f_RDC f_RDC_0 (
-		.B(B),
-		.A(A),
+		.B(input_0),
+		.A(input_1),
 		.Q(tnet_0)
 	);
 
 	f_7PB f_7PB_0 (
-		.B(B),
-		.A(A),
+		.B(input_0),
+		.A(input_1),
 		.Q(tnet_1)
 	);
 
-	assign Cout = tnet_0;
-	assign Q = tnet_1;
+	assign output_0 = tnet_0;
+	assign output_1 = tnet_1;
 endmodule
 
 module c_AddSub2 (
-	input [1:0] Sel,
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Q2,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	input [1:0] input_4,
+	output [1:0] output_0,
+	output [1:0] output_1,
+	output [1:0] output_2
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
@@ -342,78 +342,78 @@ module c_AddSub2 (
 	wire [1:0] tnet_6;
 
 	f_5 f_5_0 (
-		.A(B1),
+		.A(input_3),
 		.Q(tnet_0)
 	);
 
 	f_5 f_5_1 (
-		.A(B0),
+		.A(input_4),
 		.Q(tnet_1)
 	);
 
 	c_2MUX2 c_2MUX2_0 (
-		.Sel(Sel),
-		.B1(tnet_0),
-		.B0(tnet_1),
-		.A1(B1),
-		.A0(B0),
-		.Q1(tnet_2),
-		.Q0(tnet_3)
+		.input_0(input_0),
+		.input_1(tnet_0),
+		.input_2(tnet_1),
+		.input_3(input_3),
+		.input_4(input_4),
+		.output_0(tnet_2),
+		.output_1(tnet_3)
 	);
 
 	c_2TritAdder c_2TritAdder_0 (
-		.B1(tnet_2),
-		.B0(tnet_3),
-		.A1(A1),
-		.A0(A0),
-		.Cout(tnet_4),
-		.Q1(tnet_5),
-		.Q0(tnet_6)
+		.input_0(tnet_2),
+		.input_1(tnet_3),
+		.input_2(input_1),
+		.input_3(input_2),
+		.output_0(tnet_4),
+		.output_1(tnet_5),
+		.output_2(tnet_6)
 	);
 
-	assign Q2 = tnet_4;
-	assign Q1 = tnet_5;
-	assign Q0 = tnet_6;
+	assign output_0 = tnet_4;
+	assign output_1 = tnet_5;
+	assign output_2 = tnet_6;
 endmodule
 
 module c_2MUX2 (
-	input [1:0] Sel,
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	input [1:0] input_4,
+	output [1:0] output_0,
+	output [1:0] output_1
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	f_PPPZD0ZD0 f_PPPZD0ZD0_0 (
-		.C(Sel),
-		.B(B1),
-		.A(A1),
+		.C(input_0),
+		.B(input_1),
+		.A(input_3),
 		.Q(tnet_0)
 	);
 
 	f_PPPZD0ZD0 f_PPPZD0ZD0_1 (
-		.C(Sel),
-		.B(B0),
-		.A(A0),
+		.C(input_0),
+		.B(input_2),
+		.A(input_4),
 		.Q(tnet_1)
 	);
 
-	assign Q1 = tnet_0;
-	assign Q0 = tnet_1;
+	assign output_0 = tnet_0;
+	assign output_1 = tnet_1;
 endmodule
 
 module c_2TritAdder (
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Cout,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	output [1:0] output_0,
+	output [1:0] output_1,
+	output [1:0] output_2
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
@@ -421,63 +421,63 @@ module c_2TritAdder (
 	wire [1:0] tnet_3;
 
 	c_TriHalfAdder c_TriHalfAdder_0 (
-		.B(B0),
-		.A(A0),
-		.Cout(tnet_0),
-		.Q(tnet_1)
+		.input_0(input_1),
+		.input_1(input_3),
+		.output_0(tnet_0),
+		.output_1(tnet_1)
 	);
 
 	c_TriFullAdder c_TriFullAdder_0 (
-		.C(tnet_0),
-		.B(B1),
-		.A(A1),
-		.Cout(tnet_2),
-		.Q(tnet_3)
+		.input_0(tnet_0),
+		.input_1(input_0),
+		.input_2(input_2),
+		.output_0(tnet_2),
+		.output_1(tnet_3)
 	);
 
-	assign Cout = tnet_2;
-	assign Q1 = tnet_3;
-	assign Q0 = tnet_1;
+	assign output_0 = tnet_2;
+	assign output_1 = tnet_3;
+	assign output_2 = tnet_1;
 endmodule
 
 module c_TriFullAdder (
-	input [1:0] C,
-	input [1:0] B,
-	input [1:0] A,
-	output [1:0] Cout,
-	output [1:0] Q
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	output [1:0] output_0,
+	output [1:0] output_1
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	f_XRDRDCDC9 f_XRDRDCDC9_0 (
-		.C(C),
-		.B(B),
-		.A(A),
+		.C(input_0),
+		.B(input_1),
+		.A(input_2),
 		.Q(tnet_0)
 	);
 
 	f_B7P7PBPB7 f_B7P7PBPB7_0 (
-		.C(C),
-		.B(B),
-		.A(A),
+		.C(input_0),
+		.B(input_1),
+		.A(input_2),
 		.Q(tnet_1)
 	);
 
-	assign Cout = tnet_0;
-	assign Q = tnet_1;
+	assign output_0 = tnet_0;
+	assign output_1 = tnet_1;
 endmodule
 
 module c_CMP2 (
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Min1,
-	output [1:0] Min0,
-	output [1:0] Max1,
-	output [1:0] Max0,
-	output [1:0] Cmp
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	output [1:0] output_0,
+	output [1:0] output_1,
+	output [1:0] output_2,
+	output [1:0] output_3,
+	output [1:0] output_4
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
@@ -486,128 +486,128 @@ module c_CMP2 (
 	wire [1:0] tnet_4;
 
 	c_2TritComp c_2TritComp_0 (
-		.B1(B1),
-		.B0(B0),
-		.A1(A1),
-		.A0(A0),
-		.Q(tnet_0)
+		.input_0(input_0),
+		.input_1(input_1),
+		.input_2(input_2),
+		.input_3(input_3),
+		.output_0(tnet_0)
 	);
 
 	c_2MUX2 c_2MUX2_0 (
-		.Sel(tnet_0),
-		.B1(B1),
-		.B0(B0),
-		.A1(A1),
-		.A0(A0),
-		.Q1(tnet_1),
-		.Q0(tnet_2)
+		.input_0(tnet_0),
+		.input_1(input_0),
+		.input_2(input_1),
+		.input_3(input_2),
+		.input_4(input_3),
+		.output_0(tnet_1),
+		.output_1(tnet_2)
 	);
 
 	c_2MUX2 c_2MUX2_1 (
-		.Sel(tnet_0),
-		.B1(A1),
-		.B0(A0),
-		.A1(B1),
-		.A0(B0),
-		.Q1(tnet_3),
-		.Q0(tnet_4)
+		.input_0(tnet_0),
+		.input_1(input_2),
+		.input_2(input_3),
+		.input_3(input_0),
+		.input_4(input_1),
+		.output_0(tnet_3),
+		.output_1(tnet_4)
 	);
 
-	assign Min1 = tnet_1;
-	assign Min0 = tnet_2;
-	assign Max1 = tnet_3;
-	assign Max0 = tnet_4;
-	assign Cmp = tnet_0;
+	assign output_0 = tnet_1;
+	assign output_1 = tnet_2;
+	assign output_2 = tnet_3;
+	assign output_3 = tnet_4;
+	assign output_4 = tnet_0;
 endmodule
 
 module c_2TritComp (
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Q
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	output [1:0] output_0
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	f_H51 f_H51_0 (
-		.B(B1),
-		.A(A1),
+		.B(input_0),
+		.A(input_2),
 		.Q(tnet_0)
 	);
 
 	f_ZZZH51000 f_ZZZH51000_0 (
 		.C(tnet_0),
-		.B(B0),
-		.A(A0),
+		.B(input_1),
+		.A(input_3),
 		.Q(tnet_1)
 	);
 
-	assign Q = tnet_1;
+	assign output_0 = tnet_1;
 endmodule
 
 module c_CMP2Tritwise (
-	input [1:0] Mode,
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	input [1:0] input_4,
+	output [1:0] output_0,
+	output [1:0] output_1
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	f_ZRPH51PC0 f_ZRPH51PC0_0 (
-		.C(Mode),
-		.B(B1),
-		.A(A1),
+		.C(input_0),
+		.B(input_1),
+		.A(input_3),
 		.Q(tnet_0)
 	);
 
 	f_ZRPH51PC0 f_ZRPH51PC0_1 (
-		.C(Mode),
-		.B(B0),
-		.A(A0),
+		.C(input_0),
+		.B(input_2),
+		.A(input_4),
 		.Q(tnet_1)
 	);
 
-	assign Q1 = tnet_0;
-	assign Q0 = tnet_1;
+	assign output_0 = tnet_0;
+	assign output_1 = tnet_1;
 endmodule
 
 module c_3MUX2 (
-	input [1:0] Sel,
-	input [1:0] C1,
-	input [1:0] C0,
-	input [1:0] B1,
-	input [1:0] B0,
-	input [1:0] A1,
-	input [1:0] A0,
-	output [1:0] Q1,
-	output [1:0] Q0
+	input [1:0] input_0,
+	input [1:0] input_1,
+	input [1:0] input_2,
+	input [1:0] input_3,
+	input [1:0] input_4,
+	input [1:0] input_5,
+	input [1:0] input_6,
+	output [1:0] output_0,
+	output [1:0] output_1
 );
 	wire [1:0] tnet_0;
 	wire [1:0] tnet_1;
 
 	c_3MUX1 c_3MUX1_0 (
-		.Sel(Sel),
-		.C(C1),
-		.B(B1),
-		.A(A1),
-		.Q(tnet_0)
+		.input_0(input_0),
+		.input_1(input_1),
+		.input_2(input_3),
+		.input_3(input_5),
+		.output_0(tnet_0)
 	);
 
 	c_3MUX1 c_3MUX1_1 (
-		.Sel(Sel),
-		.C(C0),
-		.B(B0),
-		.A(A0),
-		.Q(tnet_1)
+		.input_0(input_0),
+		.input_1(input_2),
+		.input_2(input_4),
+		.input_3(input_6),
+		.output_0(tnet_1)
 	);
 
-	assign Q1 = tnet_0;
-	assign Q0 = tnet_1;
+	assign output_0 = tnet_0;
+	assign output_1 = tnet_1;
 endmodule
 
 module f_DGDDDDDAD (

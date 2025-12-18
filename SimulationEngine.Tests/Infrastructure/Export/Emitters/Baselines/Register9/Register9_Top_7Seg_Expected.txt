@@ -8,16 +8,16 @@ module c_Register9_top (
 	output dp,
 	output [3:0] an
 );
-	wire [1:0] Q;
+	wire [1:0] output_0;
 
 	c_Register9 c_Register9 (
-		.RdAddr1(sw[1:0]),
-		.RdAddr0(sw[3:2]),
-		.WrAddr1(sw[5:4]),
-		.WrAddr0(sw[7:6]),
-		.Clk(sw[8]),
-		.WrData(sw[10:9]),
-		.Q(Q)
+		.input_0(sw[1:0]),
+		.input_1(sw[3:2]),
+		.input_2(sw[5:4]),
+		.input_3(sw[7:6]),
+		.input_4(sw[8]),
+		.input_5(sw[10:9]),
+		.output_0(output_0)
 	);
 
 	basys3_7segment_display #(
@@ -27,7 +27,7 @@ module c_Register9_top (
 		.clk(clk),
 		.rst_n(1'b1),
 		.digit3_mst(2'b01),
-		.digit3_lst(Q),
+		.digit3_lst(output_0),
 		.digit2_mst(2'b01),
 		.digit2_lst(2'b01),
 		.digit1_mst(2'b01),
@@ -40,5 +40,5 @@ module c_Register9_top (
 		.an(an)
 	);
 
-	assign led[1:0] = Q;
+	assign led[1:0] = output_0;
 endmodule
