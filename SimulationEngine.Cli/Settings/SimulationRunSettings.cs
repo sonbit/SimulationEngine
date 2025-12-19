@@ -12,7 +12,7 @@ public sealed class SimulationRunSettings : FindSettings
     [CommandOption("-n|--normalize")] public bool Normalize { get; set; }
     [CommandOption("-b|--benchmark")] public bool Benchmark { get; set; }
     [CommandOption("--tests")] public bool UseTests { get; set; }
-    [CommandOption("--iterations")] public int Iterations { get; set; } = 10;
+    [CommandOption("--iterations")] public int Iterations { get; set; } = 1;
     [CommandOption("-x|--copies")] public int Copies { get; set; } = 1;
 
     public override ValidationResult Validate()

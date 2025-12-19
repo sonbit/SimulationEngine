@@ -65,20 +65,10 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
             return await SimulationFile.SimulateFileAsync(subcircuit, settings.File, renderer, settings.Normalize, settings.Benchmark, iterationsToUse);
 
         if (settings.InputString is not null)
-        {
-            if (settings.Benchmark)
-                renderer.DrawWarning("Benchmark mode is intended for predefined tests or files. Running inputs without benchmarking.");
-
             return SimulateInputStrings(subcircuit, settings.InputString, settings.Normalize);
-        }
 
         if (settings.InputVectors.Length > 0 && string.Join(' ',  settings.InputVectors) is string inputs)
-        {
-            if (settings.Benchmark)
-                renderer.DrawWarning("Benchmark mode is intended for predefined tests or files. Running inputs without benchmarking.");
-
             return SimulateInputStrings(subcircuit, inputs, settings.Normalize);
-        }
 
         if (settings.Stream || Console.IsInputRedirected)
             return await SimulateStreamAsync(subcircuit, settings.Normalize);
@@ -89,7 +79,9 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
     private int SimulateInputStrings(Subcircuit subcircuit, string inputStrings, bool normalize)
     {
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
-        var inputStringsArray = inputStrings.Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
+        var inputStringsArray = inputStrings
+            .Replace("\'", "")
+            .Split([',', ' '], StringSplitOptions.RemoveEmptyEntries);
 
         if (inputStringsArray.Length == 0)
         {
