@@ -11,6 +11,7 @@ public sealed class SimulationRunSettings : FindSettings
     [CommandOption("-s|--stream")] public bool Stream { get; set; }
     [CommandOption("-n|--normalize")] public bool Normalize { get; set; }
     [CommandOption("-b|--benchmark")] public bool Benchmark { get; set; }
+    [CommandOption("-w|--stopwatch")] public bool Stopwatch { get; set; }
     [CommandOption("--tests")] public bool UseTests { get; set; }
     [CommandOption("--iterations")] public int Iterations { get; set; } = 1;
     [CommandOption("-x|--copies")] public int Copies { get; set; } = 1;

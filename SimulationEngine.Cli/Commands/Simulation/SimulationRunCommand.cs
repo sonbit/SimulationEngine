@@ -7,6 +7,7 @@ using SimulationEngine.Cli.Validators;
 using SimulationEngine.Domain.Models;
 using SimulationEngine.Simulator;
 using Spectre.Console.Cli;
+using System.Diagnostics;
 
 namespace SimulationEngine.Cli.Commands.Simulation;
 
@@ -62,13 +63,13 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
         }
 
         if (settings.File is not null)
-            return await SimulationFile.SimulateFileAsync(subcircuit, settings.File, renderer, settings.Normalize, settings.Benchmark, iterationsToUse);
+            return await SimulationFile.SimulateFileAsync(subcircuit, settings.File, renderer, settings.Normalize, settings.Benchmark, iterationsToUse, settings.Stopwatch);
 
         if (settings.InputString is not null)
-            return SimulateInputStrings(subcircuit, settings.InputString, settings.Normalize);
+            return SimulateInputStrings(subcircuit, settings.InputString, settings.Normalize, settings.Stopwatch);
 
         if (settings.InputVectors.Length > 0 && string.Join(' ',  settings.InputVectors) is string inputs)
-            return SimulateInputStrings(subcircuit, inputs, settings.Normalize);
+            return SimulateInputStrings(subcircuit, inputs, settings.Normalize, settings.Stopwatch);
 
         if (settings.Stream || Console.IsInputRedirected)
             return await SimulateStreamAsync(subcircuit, settings.Normalize);
@@ -76,7 +77,7 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
         return await SimulationRepl.SimulateReplAsync(subcircuit, renderer, settings.Normalize);
     }
 
-    private int SimulateInputStrings(Subcircuit subcircuit, string inputStrings, bool normalize)
+    private int SimulateInputStrings(Subcircuit subcircuit, string inputStrings, bool normalize, bool showElapsed)
     {
         var allowedValuesPerInput = InputValidator.GetAllowedValuesPerInput(subcircuit);
         var inputStringsArray = inputStrings
@@ -90,9 +91,17 @@ public sealed class SimulationRunCommand(IPrompter prompter, IRenderer renderer,
         }
 
         var simulationSession = SimulationSession.Build(subcircuit);
+        var stopwatch = showElapsed ? Stopwatch.StartNew() : null;
 
         foreach (var inputs in inputStringsArray)
             Simulate(subcircuit, simulationSession, inputs, normalize, allowedValuesPerInput);
+
+        if (stopwatch is not null)
+        {
+            stopwatch.Stop();
+            renderer.DrawLine($"[green]Elapsed time: {stopwatch.Elapsed}[/]");
+        }
+
         return 0;
     }
 

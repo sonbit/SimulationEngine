@@ -49,7 +49,7 @@ public static class SimulationFile
         return await SimulateFileAsync(subcircuit, file, renderer, normalize, benchmark, iterations);
     }
 
-    public static async Task<int> SimulateFileAsync(Subcircuit subcircuit, FileInfo file, IRenderer renderer, bool normalize, bool benchmark, int iterations)
+    public static async Task<int> SimulateFileAsync(Subcircuit subcircuit, FileInfo file, IRenderer renderer, bool normalize, bool benchmark, int iterations, bool showElapsed = false)
     {
         if (benchmark)
             return await SimulateFileBenchmarkAsync(subcircuit, file, renderer, normalize, iterations);
@@ -60,6 +60,9 @@ public static class SimulationFile
 
         foreach (var testResult in testResults)
             renderer.DrawLine(testResult.Outputs);
+
+        if (showElapsed)
+            renderer.DrawLine($"[green]Elapsed time: {elapsed}[/]");
 
         return 0;
     }
