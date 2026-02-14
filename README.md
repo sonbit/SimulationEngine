@@ -10,7 +10,7 @@ This project was created to address limitations in the [Mixed Radix Circuit Synt
 
 ## Overview
 
-SimulationEngine is an Electronic Design Automation (EDA) toolchain for **ternary logic circuits**, built in C# on .NET 8. It provides an event-driven circuit simulator, a library of pre-designed ternary components, Verilog export for FPGA synthesis, and a CLI for interacting with all of the above.
+SONIC is an Electronic Design Automation (EDA) toolchain for **ternary logic circuits**, built in C# on .NET 8. It provides an event-driven circuit simulator, a library of pre-designed ternary components, Verilog export for FPGA synthesis, and a CLI for interacting with all of the above.
 
 Where conventional EDA tools operate on binary (0/1) logic, this toolchain is designed for **ternary** circuits. The simulator itself is radix-agnostic, treating all signals as unbalanced ternary (values 0, 1, 2) internally, while metadata on the domain models determines how values are presented to the designer (e.g. balanced ternary -, 0, + or binary 0, 1).
 
