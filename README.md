@@ -1,4 +1,6 @@
-# SimulationEngine
+# SimulationEngine (SONIC)
+
+**S**imulation **O**f Ter**n**ary **I**ntegrated **C**ircuits
 
 This project is the partial work of a master thesis conducted on behalf of the [Ternary Research Group](https://ternaryresearch.com/) at the University of South-Eastern Norway (USN), campus Kongsberg. More information about the group and its research can be found on the [USN Ternary Research page](https://www.usn.no/english/research/our-research-centres-and-groups/technology/ternary-research/).
 
@@ -32,8 +34,6 @@ The solution is organized into the following projects:
 ### Circuit Model
 
 Circuits are modeled as hierarchical `SubCircuit` objects containing `LogicGate` instances connected by `Wire` objects. Subcircuits can nest other subcircuits, enabling composition of complex designs from smaller building blocks. Each gate's behavior is defined by a `TruthTable` that maps ternary input combinations to an output trit. Truth tables are compactly encoded using a base-27 **heptavintimal notation** where each character encodes 3 trit values (e.g. `"RDC"` encodes a 2-input gate's full 9-entry truth table in 3 characters). A `SubCircuitCompiler` flattens hierarchical designs and computes content hashes for deduplication when persisting to the database.
-
-The project includes a **Standard Cell Library** that names common ternary logic functions by their heptaindex (e.g. `"K"` = BUFFER, `"K00"` = MIN, `"RDC"` = MAX, `"20K"` = SUM, `"PD5"` = MULTIPLY). These serve as the fundamental building blocks for all designs.
 
 Binary and ternary ports and gates can be mixed within the same circuit. Each port and pin carries radix metadata (binary, signed binary, unbalanced ternary, or balanced ternary) that determines its bit-width in Verilog export and its display notation in the CLI.
 
