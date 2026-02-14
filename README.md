@@ -1,0 +1,86 @@
+# SimulationEngine
+
+This project is partial work of a master thesis conducted on behalf of the [Ternary Research Group](https://ternaryresearch.com/) at the University of South-Eastern Norway (USN), campus Kongsberg. More information about the group and its research can be found on the [USN Ternary Research page](https://www.usn.no/english/research/our-research-centres-and-groups/technology/ternary-research/).
+
+## Background
+
+This project was created to address limitations in the [Mixed Radix Circuit Synthesizer (MRCS)](https://github.com/aiunderstand/MixedRadixCircuitSynthesis), an EDA tool built in Unity by [Steven Bos](https://github.com/aiunderstand) as part of the ternary research group's work. Rather than extending that codebase, the decision was made to build a new, standalone project targeting pure .NET without a Unity dependency.
+
+## Overview
+
+SimulationEngine is an Electronic Design Automation (EDA) toolchain for **ternary logic circuits**, built in C# on .NET 8. It provides an event-driven circuit simulator, a library of pre-designed ternary components, Verilog export for FPGA synthesis, and a CLI for interacting with all of the above.
+
+Where conventional EDA tools operate on binary (0/1) logic, this toolchain is designed for **ternary** circuits. The simulator itself is radix-agnostic, treating all signals as unbalanced ternary (values 0, 1, 2) internally, while metadata on the domain models determines how values are presented to the designer (e.g. balanced ternary -, 0, + or binary 0, 1).
+
+## Solution Structure
+
+The solution is organized into the following projects:
+
+| Project | Role |
+|---|---|
+| **SimulationEngine.Domain** | Core domain models: `SubCircuit`, `LogicGate`, `Pin`, `Port`, `Wire`, `TruthTable`, and supporting types. |
+| **SimulationEngine.Simulator** | Event-driven simulation engine (`DeltaKernel`) using delta-cycle scheduling. |
+| **SimulationEngine.Designs** | Library of pre-designed ternary circuits (adders, multiplexers, latches, memory, ALU, CPU). |
+| **SimulationEngine.Infrastructure** | EF Core/SQLite persistence, Verilog emitters, and Basys3 FPGA export. |
+| **SimulationEngine.Application** | Service layer orchestrating database operations, export, and analysis. |
+| **SimulationEngine.Cli** | Command-line interface built with Spectre.Console. |
+| **SimulationEngine.REBEL2** | Assembler for the REBEL-2 ternary processor instruction set. |
+| **SimulationEngine.Tests** | xUnit test suite covering designs, emitters, and domain logic. |
+
+## How It Works
+
+### Circuit Model
+
+Circuits are modeled as hierarchical `SubCircuit` objects containing `LogicGate` instances connected by `Wire` objects. Subcircuits can nest other subcircuits, enabling composition of complex designs from smaller building blocks. Each gate's behavior is defined by a `TruthTable` that maps ternary input combinations to an output trit. Truth tables are compactly encoded using a base-27 **heptavintimal notation** where each character encodes 3 trit values (e.g. `"RDC"` encodes a 2-input gate's full 9-entry truth table in 3 characters). A `SubCircuitCompiler` flattens hierarchical designs and computes content hashes for deduplication when persisting to the database.
+
+The project includes a **Standard Cell Library** that names common ternary logic functions by their heptaindex (e.g. `"K"` = BUFFER, `"K00"` = MIN, `"RDC"` = MAX, `"20K"` = SUM, `"PD5"` = MULTIPLY). These serve as the fundamental building blocks for all designs.
+
+Binary and ternary ports and gates can be mixed within the same circuit. Each port and pin carries radix metadata (binary, signed binary, unbalanced ternary, or balanced ternary) that determines its bit-width in Verilog export and its display notation in the CLI.
+
+### Simulation
+
+The `DeltaKernel` implements event-driven simulation with delta-cycle semantics:
+
+1. All ready processes (gates) evaluate their inputs via truth table lookup.
+2. Output changes are staged without committing.
+3. After all evaluations, pending writes are committed.
+4. Newly affected gates are scheduled for the next delta cycle.
+5. This repeats until the circuit reaches quiescence (no more changes).
+
+`SimulationSession` wraps the kernel, handling circuit construction, net merging via a union-find algorithm, input/output radix conversion, and signal probing. The kernel also includes oscillation detection and loop-breaking logic for feedback circuits such as latches and flip-flops.
+
+### Design Library
+
+The circuit designs in this project originate from the ternary research group's work. All designs aside from the complete REBEL-2 CPU were originally created in MRCS and are recreated here programmatically using the SimulationEngine domain model. A key limitation discovered in MRCS was that loading and simulation time increased exponentially with larger designs. This meant that a previous master student's effort to design REBEL-2 in MRCS could only go as far as the individual stages (decode, fetch, and ALU) -- the complete integrated CPU could not be loaded or simulated at all. This project resolved that limitation, enabling the full REBEL-2 design to be completed and simulated.
+
+The `Designs` project contains a broad set of ternary circuit components:
+
+- **Arithmetic** -- half/full adders, 2-trit adders, multipliers, comparators
+- **Data routing** -- multiplexers, demultiplexers, deselectors
+- **Storage** -- SR latches, D latches, T flip-flops, registers, RAM, ROM
+- **Counters** -- synchronous ternary directional loadable counters
+- **Converters** -- radix converters between binary and balanced ternary
+
+### REBEL-2 CPU
+
+The design library includes the complete **REBEL-2** ternary processor, a multi-stage CPU with fetch, decode, execute, and write-back stages. Its ISA has 80+ instructions covering arithmetic, logic, shifts, comparison, and control flow, all operating on balanced ternary data. The `SimulationEngine.REBEL2` project provides an assembler that parses assembly source into machine code for loading into the processor's ROM.
+
+### Verilog Export and FPGA Synthesis
+
+Circuits can be exported to synthesizable **Verilog HDL** with accompanying testbenches. A dedicated `Basys3Emitter` generates top-level modules and XDC constraint files targeting the Xilinx Basys3 FPGA board, including optional 7-segment display integration for ternary output visualization.
+
+### CLI
+
+The command-line interface supports:
+
+- **Simulation** -- run circuits interactively (REPL), from file, or from arguments, with optional benchmarking.
+- **Database** -- populate, list, find, and inspect subcircuits and truth tables stored in SQLite.
+- **Export** -- emit Verilog, testbenches, and Basys3 FPGA packages for any stored circuit.
+
+## Building and Running
+
+```bash
+dotnet build
+dotnet run --project SimulationEngine.Cli
+dotnet test
+```
