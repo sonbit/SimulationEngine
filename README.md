@@ -1,4 +1,4 @@
-# SONIC - <ins>S</ins>imulation <u>O</u>f Ter<u>n</u>ary <u>I</u>ntegrated <u>C</u>ircuits
+# SONIC - <ins>S</ins>imulation <ins>O</ins>f Ter<ins>n</ins>ary <ins>I</ins>ntegrated <ins>C</ins>ircuits
 
 This project is the partial work of a [master thesis](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd) conducted on behalf of the [USN Ternary Research Group](https://www.usn.no/english/research/our-research-centres-and-groups/technology/ternary-research/) at the University of South-Eastern Norway (USN), campus Kongsberg. More information about the group and its research can be found on the [Ternary Research website](https://ternaryresearch.com/).
 
