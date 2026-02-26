@@ -89,7 +89,7 @@ The command-line interface supports:
 
 - **Master thesis** -- [Gate-Level Simulation of Ternary Integrated Circuits (SONIC): Enabling Ternary VLSI with Verilog](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd)
 - **ISMVL 2026** -- An upcoming paper on this work will be presented at the [56th IEEE International Symposium on Multiple-Valued Logic (ISMVL 2026)](https://mvl.jpn.org/ISMVL2026/).
-- **Ole Christian Moholth's thesis** -- [Exploring Ternary Computing: Design of a Superscalar CPU and Carry-Lookahead Adder](https://nva.sikt.no/registration/0199135b86c9-9c515c4c-57ff-45ab-9fd1-ab622d2c1672)
+- **Ole Christian Moholth's master thesis** -- [Exploring Ternary Computing: Design of a Superscalar CPU and Carry-Lookahead Adder](https://nva.sikt.no/registration/0199135b86c9-9c515c4c-57ff-45ab-9fd1-ab622d2c1672)
 
 ## Building and Running
 
