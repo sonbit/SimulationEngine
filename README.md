@@ -6,7 +6,7 @@ This project is the partial work of a [master thesis](https://nva.sikt.no/regist
 
 ## Background
 
-This project was created to address limitations in the [Mixed Radix Circuit Synthesizer (MRCS)](https://github.com/aiunderstand/MixedRadixCircuitSynthesis), an EDA tool built in Unity by [Steven Bos](https://github.com/aiunderstand) as part of the ternary research group's work (see [PhD thesis, pp. 60-71](https://nva.sikt.no/registration/01991379db36-bdd54c2b-e4ec-4e60-8854-030cb3f08217)). Rather than extending that codebase, the decision was made to build a new, standalone project targeting pure .NET without a Unity dependency.
+This project was created to address limitations in the [Mixed Radix Circuit Synthesizer (MRCS)](https://github.com/aiunderstand/MixedRadixCircuitSynthesis), an EDA tool built in Unity by [Steven Bos](https://github.com/aiunderstand) as part of the ternary research group's work (see [Beyond 0 and 1: A mixed radix design and verification workflow for modern ternary computers, pp. 60-71](https://nva.sikt.no/registration/01991379db36-bdd54c2b-e4ec-4e60-8854-030cb3f08217)). Rather than extending that codebase, the decision was made to build a new, standalone project targeting pure .NET without a Unity dependency.
 
 SONIC is being integrated into [MRCS Studio](https://github.com/aiunderstand/MRCS-Studio), the successor to MRCS.
 
@@ -20,16 +20,16 @@ Where conventional EDA tools operate on binary (0/1) logic, this toolchain is de
 
 The solution is organized into the following projects:
 
-| Project | Role |
-|---|---|
-| **SimulationEngine.Domain** | Core domain models: `SubCircuit`, `LogicGate`, `Pin`, `Port`, `Wire`, `TruthTable`, and supporting types. |
-| **SimulationEngine.Simulator** | Event-driven simulation engine (`DeltaKernel`) using delta-cycle scheduling. |
-| **SimulationEngine.Designs** | Library of pre-designed ternary circuits (adders, multiplexers, latches, memory, ALU, CPU). |
-| **SimulationEngine.Infrastructure** | EF Core/SQLite persistence, Verilog emitters, and Basys3 FPGA export. |
-| **SimulationEngine.Application** | Service layer orchestrating database operations, export, and analysis. |
-| **SimulationEngine.Cli** | Command-line interface built with Spectre.Console. |
-| **SimulationEngine.REBEL2** | Assembler for the REBEL-2 ternary processor instruction set. |
-| **SimulationEngine.Tests** | xUnit test suite covering designs, emitters, and domain logic. |
+| Project                             | Role                                                                                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **SimulationEngine.Domain**         | Core domain models: `SubCircuit`, `LogicGate`, `Pin`, `Port`, `Wire`, `TruthTable`, and supporting types. |
+| **SimulationEngine.Simulator**      | Event-driven simulation engine (`DeltaKernel`) using delta-cycle scheduling.                              |
+| **SimulationEngine.Designs**        | Library of pre-designed ternary circuits (adders, multiplexers, latches, memory, ALU, CPU).               |
+| **SimulationEngine.Infrastructure** | EF Core/SQLite persistence, Verilog emitters, and Basys3 FPGA export.                                     |
+| **SimulationEngine.Application**    | Service layer orchestrating database operations, export, and analysis.                                    |
+| **SimulationEngine.Cli**            | Command-line interface built with Spectre.Console.                                                        |
+| **SimulationEngine.REBEL2**         | Assembler for the REBEL-2 ternary processor instruction set.                                              |
+| **SimulationEngine.Tests**          | xUnit test suite covering designs, emitters, and domain logic.                                            |
 
 ## How It Works
 
@@ -87,9 +87,9 @@ The command-line interface supports:
 
 ## References
 
-- **Master thesis** -- [SONIC: Simulation of Ternary Integrated Circuits](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd)
+- **Master thesis** -- [Gate-Level Simulation of Ternary Integrated Circuits (SONIC): Enabling Ternary VLSI with Verilog](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd)
 - **ISMVL 2026** -- An upcoming paper on this work will be presented at the [56th IEEE International Symposium on Multiple-Valued Logic (ISMVL 2026)](https://mvl.jpn.org/ISMVL2026/).
-- **Ole Christian Moholth's thesis** -- [REBEL-2 design in MRCS](https://nva.sikt.no/registration/0199135b86c9-9c515c4c-57ff-45ab-9fd1-ab622d2c1672)
+- **Ole Christian Moholth's thesis** -- [Exploring Ternary Computing: Design of a Superscalar CPU and Carry-Lookahead Adder](https://nva.sikt.no/registration/0199135b86c9-9c515c4c-57ff-45ab-9fd1-ab622d2c1672)
 
 ## Building and Running
 
