@@ -2,6 +2,8 @@
 
 This project is the partial work of a [master thesis](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd) conducted on behalf of the [USN Ternary Research Group](https://www.usn.no/english/research/our-research-centres-and-groups/technology/ternary-research/) at the University of South-Eastern Norway (USN), campus Kongsberg. More information about the group and its research can be found on the [Ternary Research website](https://ternaryresearch.com/).
 
+A research paper based on this work has been submitted to [56th IEEE International Symposium on Multiple-Valued Logic (ISMVL 2026)](https://mvl.jpn.org/ISMVL2026/). 
+
 ## Background
 
 This project was created to address limitations in the [Mixed Radix Circuit Synthesizer (MRCS)](https://github.com/aiunderstand/MixedRadixCircuitSynthesis), an EDA tool built in Unity by [Steven Bos](https://github.com/aiunderstand) as part of the ternary research group's work (see [Beyond 0 and 1: A mixed radix design and verification workflow for modern ternary computers, pp. 60-71](https://nva.sikt.no/registration/01991379db36-bdd54c2b-e4ec-4e60-8854-030cb3f08217)). Rather than extending that codebase, the decision was made to build a new, standalone project targeting pure .NET without a Unity dependency.
@@ -82,12 +84,6 @@ The command-line interface supports:
 - **No bus or multi-trit wire support** -- all wires are single-trit. There is no abstraction for buses or multi-bit/multi-trit signals, so wide data paths must be wired trit by trit.
 - **No graphical UI** -- interaction is limited to the CLI. A full design GUI for schematic capture and visualization is not included.
 - **Scalability** -- larger designs would benefit from multithreading the simulation kernel and optimizing memory usage. In particular, truth table lookup arrays are currently allocated per gate rather than shared across gates with the same truth table. The domain model already separates `LogicGate` and `TruthTable` entities for this reason, but the simulator does not yet deduplicate the in-memory lookup arrays at runtime.
-
-## References
-
-- **Master thesis** -- [Gate-Level Simulation of Ternary Integrated Circuits (SONIC): Enabling Ternary VLSI with Verilog](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd)
-- **ISMVL 2026** -- An upcoming paper on this work will be presented at the [56th IEEE International Symposium on Multiple-Valued Logic (ISMVL 2026)](https://mvl.jpn.org/ISMVL2026/)
-- **Ole Christian Moholth's master thesis** -- [Exploring Ternary Computing: Design of a Superscalar CPU and Carry-Lookahead Adder](https://nva.sikt.no/registration/0199135b86c9-9c515c4c-57ff-45ab-9fd1-ab622d2c1672)
 
 ## Building and Running
 
