@@ -2,7 +2,7 @@
 
 This project is the partial work of a [master thesis](https://nva.sikt.no/registration/019b304241da-7d5ce7a5-5d84-4fbc-88bf-4a4ed4efe2cd) conducted on behalf of the [USN Ternary Research Group](https://www.usn.no/english/research/our-research-centres-and-groups/technology/ternary-research/) at the University of South-Eastern Norway (USN), campus Kongsberg. More information about the group and its research can be found on the [Ternary Research website](https://ternaryresearch.com/).
 
-A research paper based on this work has been submitted to [56th IEEE International Symposium on Multiple-Valued Logic (ISMVL 2026)](https://mvl.jpn.org/ISMVL2026/). 
+A research paper based on this work has been submitted to and approved by [56th IEEE International Symposium on Multiple-Valued Logic (ISMVL 2026)](https://mvl.jpn.org/ISMVL2026/). 
 
 ## Background
 
